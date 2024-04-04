@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:gravity="center" android:orientation="vertical">
+    <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout2" android:layout_width="296dip">
+        <LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayout3" android:background="@drawable/popup_bg_top_left" android:layout_height="wrap_content"></LinearLayout>
+        <LinearLayout android:id="@+id/linearLayout4" android:layout_width="fill_parent" android:layout_weight="1" android:background="#AEAEAE" android:layout_height="fill_parent"></LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayout5" android:background="@drawable/popup_bg_top_right" android:layout_height="wrap_content"></LinearLayout>
+    </LinearLayout>
+<LinearLayout 
+	android:orientation="vertical" android:layout_width="296dip"
+	android:paddingBottom="10.7dip" android:paddingLeft="12dip"
+	android:paddingTop="0dip" android:paddingRight="12dip"
+	android:layout_height="280dip"
+	android:layout_gravity="center" android:background="#AEAEAE">
+
+	<LinearLayout android:id="@+id/dialog_Title"
+		android:orientation="vertical" android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:minWidth="250.7dip"
+			android:gravity="center" android:paddingTop="10.7dip"
+			android:paddingBottom="10.7dip">
+			<TextView android:layout_height="fill_parent"
+				android:id="@+id/dialogAlertTitleTextView" android:gravity="center"
+				android:textSize="30pt" android:layout_width="fill_parent"
+				android:textColor="#171717" android:text="Olleh.com 로그인" />
+		</LinearLayout>
+
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="1.3dip" android:background="@drawable/e_popup_line" />
+	</LinearLayout>
+
+	<LinearLayout android:id="@+id/dialog_Message"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:paddingTop="6.7dip" android:paddingBottom="6.7dip">
+
+		<LinearLayout android:layout_width="fill_parent"
+			android:orientation="vertical" android:gravity="center"
+			android:layout_height="wrap_content">
+			<LinearLayout android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:orientation="vertical"
+				android:layout_weight="1">
+				<TextView android:textSize="22pt" android:layout_width="fill_parent"
+					android:layout_gravity="top" android:textColor="#171717"
+					android:layout_height="wrap_content" android:text="*상품을 구입하기 위해서는 olleh.com 계정 로그인이 필요합니다." />
+				<TextView android:textSize="22pt" android:layout_width="fill_parent"
+					android:layout_gravity="top" android:textColor="#171717"
+					android:layout_height="wrap_content"
+					android:text="*olleh.com 계정이 없는 고객님의 경우 olleh.com 홈페이지에서 회원가입 후 이용하시기 바랍니다." />
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+
+	<LinearLayout android:id="@+id/dialog_LogIn"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:paddingBottom="6.7dip">
+
+		<LinearLayout android:layout_width="fill_parent"
+			android:orientation="vertical" android:gravity="center"
+			android:layout_height="wrap_content">
+			<LinearLayout android:layout_width="fill_parent"
+				android:orientation="horizontal" android:gravity="center_vertical"
+				android:layout_height="33.3dip">
+				<TextView android:layout_width="80dip"
+					android:layout_height="fill_parent" android:gravity="center_vertical"
+					android:textSize="26pt" android:textColor="#171717" android:text="아이디" />
+				<EditText android:id="@+id/login_id" 
+				    android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_weight="1"
+					android:paddingLeft="6dip" android:paddingRight="6dip"
+					android:textSize="22pt" android:textColor="#505050"
+					android:maxLines="1" android:singleLine="true" android:gravity="center_vertical|left"
+					android:imeOptions="actionNext"
+					android:background="@drawable/a_inputbox_n" />
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:orientation="horizontal" android:gravity="center_vertical"
+				android:layout_height="33.3dip">
+				<TextView android:layout_width="80dip"
+					android:layout_height="fill_parent" android:gravity="center_vertical"
+					android:textSize="26pt" android:textColor="#171717" android:text="비밀번호" />
+				<EditText android:id="@+id/login_password" 
+				    android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_weight="1"
+					android:paddingLeft="6dip" android:paddingRight="6dip"
+					android:textSize="22pt" android:textColor="#505050"
+					android:maxLines="1" android:singleLine="true" android:gravity="center_vertical|left"
+					android:inputType="textPassword"
+					android:background="@drawable/a_inputbox_n"
+					android:imeOptions="actionDone" />
+			</LinearLayout>
+
+		</LinearLayout>
+	</LinearLayout>
+
+	<LinearLayout android:id="@+id/Button_Layout"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:minHeight="41.3dip" android:gravity="center">
+		<Button android:id="@+id/Button_1" android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:layout_weight="1"
+			android:background="@drawable/popup_btn" android:textColor="#FFFFFF"
+			android:textSize="28pt" android:gravity="center" android:text="확인" />
+		<Button android:id="@+id/Button_2" android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:layout_weight="1"
+			android:background="@drawable/popup_btn" android:textColor="#FFFFFF"
+			android:textSize="28pt" android:gravity="center"
+			android:layout_marginLeft="4dip" android:text="취소" />
+	</LinearLayout>
+</LinearLayout>
+<LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="296dip">
+    <LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayout6" android:layout_height="wrap_content" android:background="@drawable/popup_bg_botton_left"></LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout7" android:background="#AEAEAE" android:layout_width="fill_parent" android:layout_weight="1" android:layout_height="fill_parent"></LinearLayout>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="fill_parent" android:id="@+id/linearLayout8" android:background="@drawable/popup_bg_botton_right"></LinearLayout>
+</LinearLayout>
+</LinearLayout>

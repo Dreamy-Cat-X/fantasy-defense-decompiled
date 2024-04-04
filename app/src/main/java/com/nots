@@ -1,0 +1,2 @@
+A lot of the classes contain a gorillion unused static vars
+99% of the code is on GameRendered and GLGameSurfaceView for some reason
