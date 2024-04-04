@@ -30,21 +30,21 @@ public class ObjectUnit extends EnemyUnit {
         }
     }
 
-    public void hitObject(int eff, TowerUnit ent) {
-        if (objectType < 0) {
+    @Override
+    public void hit(int eff, TowerUnit ent) {
+        if (objectType < 0)
             return;
-        }
         int soundHitType = getSoundHitType(ent);
-        if (soundHitType != -1) {
+        if (soundHitType != -1)
             playSound(soundHitType);
-        }
+
         unitHP -= ent.unitPower;
         if (unitHP <= 0) {
             getRewardFromObject();
             objectType = -2;
-            addEffectUnit(13, posX, posY, true);
+            DataStage.addEffectUnit(13, posX, posY);
             if (ent.effectType == 1)
-                hitUnitSplash(0, ent, this, 3);
+                ent.hitUnitSplash(0, this);
         }
     }
 

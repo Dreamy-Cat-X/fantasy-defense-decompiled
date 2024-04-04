@@ -57,6 +57,13 @@ public class TowerUnit {
     public int[] unitLockType = new int[3];
     public int[] unitLockNumber = new int[3];
 
+    public int getAttackSpeed() {
+        int es = 60 - towerCoolTimeMax;
+        if (es < 0)
+            es = 0;
+        return (es * 5) + 70;
+    }
+
     /* JADX WARN: Code restructure failed: missing block: B:19:0x0041, code lost:
 
     if (r5 >= 30) goto L22;
@@ -136,43 +143,23 @@ public class TowerUnit {
             }
             return i9 + upgradeUnitRate;
         }
-        return i9 + (((getUpgradeHeroRate(towerUnit[i].heroOrder, 7) + getUpgradeItemRate(towerUnit[i].heroOrder, 2)) * i9) / 100);
+        return i9 + (((getUpgradeHeroRate(heroOrder, 7) + getUpgradeItemRate(heroOrder, 2)) * i9) / 100);
     }
 
-    public static void hitUnitSplash(int i, int i2, int i3, int i4) {
-        int i5;
-        int i6;
-        if (i2 < 0 || i3 < 0) {
-            return;
-        }
-        if (i4 == 3) {
-            i5 = objectUnit[i3].posX;
-            i6 = objectUnit[i3].posY;
-        } else {
-            i5 = monsterUnit[i3].posX;
-            i6 = monsterUnit[i3].posY;
-        }
-        for (int i7 = 0; i7 < monsterUnitCount; i7++) {
-            if (monsterUnit[i7].monsterType != -1 && ((i4 != 0 || i3 != i7) && monsterUnit[i7].unitStatus == 0)) {
-                int abs = Math.abs(i5 - monsterUnit[i7].posX) / 50;
-                int abs2 = Math.abs(i6 - monsterUnit[i7].posY) / 50;
-                if ((abs * abs) + (abs2 * abs2) <= 4556) {
-                    if (i == 0) {
-                        addEffectUnit(37, monsterUnit[i7].posX, monsterUnit[i7].posY, true);
-                    }
-                    monsterUnit[i7].unitHP -= towerUnit[i2].getHitDamage(monsterUnit[i3]);
-                    if (monsterUnit[i7].unitHP <= 0) {
-                        getRewardFromMonster(myWave, i7, i2);
-                        monsterUnit[i7].unitStatus = 1;
-                        monsterUnit[i7].unitStatusCount = 0;
-                        addEffectUnit(13, monsterUnit[i7].posX, monsterUnit[i7].posY, true);
-                        if (monsterUnit[i7].unitStatus == 1 && commonTargetType == 0 && commonTargetNumber == i3) {
-                            commonTargetType = -1;
-                        }
-                    }
+    public void hitUnitSplash(int eff, EnemyUnit eu) {
+        for (MonsterUnit mon : DataStage.monsterUnit)
+            if (mon.monsterType != -1 && eu != mon && mon.unitStatus == 0) {
+                int abs = Math.abs(eu.posX - mon.posX) / 50;
+                int abs2 = Math.abs(eu.posY - mon.posY) / 50;
+                if ((abs * abs) + (abs2 * abs2) <= ArrowUnit.SPLASH_RANGE_MAX_DISTANCE) {
+                    if (eff == 0)
+                        DataStage.addEffectUnit(37, mon.posX, mon.posY);
+
+                    mon.unitHP -= getHitDamage(eu instanceof MonsterUnit ? (MonsterUnit)eu : mon);
+                    if (mon.unitHP <= 0)
+                        mon.getRewardFromMonster(this);
                 }
             }
-        }
     }
 
     public int getSpecialHitDamage(MonsterUnit mon) {

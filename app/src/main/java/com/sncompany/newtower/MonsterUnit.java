@@ -26,9 +26,9 @@ public class MonsterUnit extends EnemyUnit {
     public boolean dotHolyFlag;
     public int fromBlockX;
     public int fromBlockY;
-    public int lastViewDirection;
+    public int lastViewDirection = 2;
     public int monsterSerial;
-    public int monsterType; //Used to differ monster type, -1 means monster is dead
+    public int monsterType; //Used to differ monster type, -1 means monster is dead. Deprecated, use super.type instead
     public boolean slowIceFlag;
     public boolean slowMudFlag;
     public float slowRate;
@@ -38,20 +38,45 @@ public class MonsterUnit extends EnemyUnit {
     public int targetBlockY;
     public int unitDefense;
     public int unitMinSpeed;
-    public int unitSpeed;
-    public int unitStatus;
-    public int unitStatusCount;
+    public int unitSpeed = 150;
+    public int unitStatus = 0;
+    public int unitStatusCount = 0;
 
-    public int init() {
-        stunCount = 0;
-        dotHolyDamage = 0;
-        dotHolyCount = 0;
-        dotFireDamage = 0;
-        dotFireCount = 0;
-        slowIceFlag = false;
-        slowMudFlag = false;
-        slowRate = 0.0f;
-        return i3;
+    public MonsterUnit(int type, boolean bossFlag) {
+        this.type = type;
+        this.bossFlag = bossFlag;
+
+        int[] data = DataMonster.monsterData[type];
+        unitHP = data[1];
+        bodySize = data[2];
+        unitDefense = data[3];
+
+        int i2 = 0;
+        int swave = DataStage.Wave;
+        boolean infWave = DataStage.mapType == 1 && swave >= DataWave.WAVE_MAX_COUNT;
+        if (infWave) {
+            i2 = (swave - DataWave.WAVE_MAX_COUNT) + 1;
+            swave = DataWave.WAVE_MAX_COUNT - 1;
+        }
+
+        if (bossFlag) {
+            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][8] + (DataWave.monsterWaveData[60][8] * i2))) / 100) * DataStage.stageData[DataStage.mapType][3]) / 100;
+            unitDefense += DataWave.monsterWaveData[swave][9];
+            if (infWave)
+                unitDefense += DataWave.monsterWaveData[60][9] * i2;
+            unitSpeed = (((unitSpeed * data[4]) * (DataWave.monsterWaveData[swave][10] + (DataWave.monsterWaveData[60][10] * i2))) / 100) / 100;
+            unitMinSpeed = (unitSpeed * (DataWave.monsterWaveData[swave][11] + (i2 * DataWave.monsterWaveData[60][11]))) / 1000;
+        } else {
+            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][0] + (DataWave.monsterWaveData[60][0] * i2))) / 100) * DataStage.stageData[DataStage.mapType][2]) / 100;
+            unitDefense += DataWave.monsterWaveData[swave][1];
+            if (infWave)
+                unitDefense += DataWave.monsterWaveData[60][1] * i2;
+            unitSpeed = (((unitSpeed * data[4]) * (DataWave.monsterWaveData[swave][2] + (DataWave.monsterWaveData[60][2] * i2))) / 100) / 100;
+            unitMinSpeed = (unitSpeed * (DataWave.monsterWaveData[swave][3] + (i2 * DataWave.monsterWaveData[60][3]))) / 1000;
+        }
+        unitMaxHP = unitHP;
+        if (unitMinSpeed > unitSpeed)
+            unitMinSpeed = unitSpeed;
     }
     
     public boolean update() {
@@ -63,12 +88,12 @@ public class MonsterUnit extends EnemyUnit {
             if (dotHolyCount > 0) {
                 dotHolyCount--;
                 if (dotHolyCount > 0)
-                    hitUnit(1, null);
+                    hit(1, null);
             }
             if (dotFireCount > 0) {
                 dotFireCount--;
                 if (dotFireCount > 0)
-                    hitUnit(2, null);
+                    hit(2, null);
             }
             if (slowIceFlag || slowMudFlag) {
                 slowRate -= 1.0f;
@@ -137,7 +162,7 @@ public class MonsterUnit extends EnemyUnit {
                     int i7 = ((iArr[i6][0] * 45) + 22) * 50;
                     int i8 = ((iArr[i6][1] * 45) + 22) * 50;
                     if (posX == i7 && posY == i8) {
-                        addEffectUnit(36, posX, posY, true);
+                        DataStage.addEffectUnit(36, posX, posY);
                         if (vibrationFlag == 1) {
                             NewTower.vibe.vibrate(250L);
                         }
@@ -165,7 +190,8 @@ public class MonsterUnit extends EnemyUnit {
         return false;
     }
 
-    public void hitUnit(int dmgType, TowerUnit unit) {
+    @Override
+    public void hit(int dmgType, TowerUnit unit) {
         int i4 = monsterType;
         int i5;
         int i6;
@@ -179,32 +205,20 @@ public class MonsterUnit extends EnemyUnit {
         if (unitStatus == 0) {
             if (dmgType == 1) {
                 unitHP -= dotHolyDamage;
-                if (unitHP <= 0) {
+                if (unitHP <= 0)
                     getRewardFromMonster(null);
-                    unitStatus = 1;
-                    unitStatusCount = 0;
-                    addEffectUnit(13, posX, posY, true);
-                }
             } else if (dmgType == 2) {
                 unitHP -= dotFireDamage;
-                if (unitHP <= 0) {
+                if (unitHP <= 0)
                     getRewardFromMonster(null);
-                    unitStatus = 1;
-                    unitStatusCount = 0;
-                    addEffectUnit(13, posX, posY, true);
-                }
             } else {
                 int soundHitType = getSoundHitType(unit);
-                if (soundHitType != -1) {
+                if (soundHitType != -1)
                     playSound(soundHitType);
-                }
+
                 unitHP -= unit.getHitDamage(this);
-                if (unitHP <= 0) {
+                if (unitHP <= 0)
                     getRewardFromMonster(unit);
-                    unitStatus = 1;
-                    unitStatusCount = 0;
-                    addEffectUnit(13, posX, posY, true);
-                }
                 int i13 = unit.effectType;
                 if (i13 == 0) {
                     if (!unit.heroFlag) {
@@ -215,22 +229,17 @@ public class MonsterUnit extends EnemyUnit {
                             i6 = (DataMonster.monsterData[i4][6] * (DataWave.monsterWaveData[i9][4] + 100)) / 100;
                         }
                         i5 = upgradeUnitRate - i6;
-                    } else {
+                    } else
                         i5 = 0;
-                    }
+
                     if (stunCount == 0 && getRandom(100) < i5 && !unit.heroFlag) {
                         stunCount = (DataCharacter.charData[i10][8] * (getUpgradeUnitRate(1, 11) + 100)) / 100;
                         if (bossFlag)
                             stunCount /= 2;
                     }
-                } else if (i13 == 1) {
-                    int i14 = unit.attackType;
-                    if (i14 == 0) {
-                        hitUnitSplash(0, heroSlot, monSlot, 0);
-                    } else if (i14 == 1) {
-                        hitUnitSplash(3, heroSlot, monSlot, 0);
-                    }
-                } else if (i13 == 2) {
+                } else if (i13 == 1)
+                    unit.hitUnitSplash(unit.attackType * 3, this);
+                else if (i13 == 2) {
                     dotHolyFlag = true;
                     int hitDamage = unit.getHitDamage(this);
                     dotHolyDamage = ((hitDamage + ((getUpgradeUnitRate(2, 7) * hitDamage) / 100)) * ((getUpgradeUnitRate(2, 12) + 100) / 100)) / 20;
@@ -238,11 +247,10 @@ public class MonsterUnit extends EnemyUnit {
                 } else if (i13 == 3) {
                     if (!unit.heroFlag) {
                         int upgradeUnitRate2 = (DataCharacter.charData[i10][7] * (getUpgradeUnitRate(3, 14) + 100)) / 100;
-                        if (bossFlag) {
+                        if (bossFlag)
                             i8 = (DataMonster.monsterData[i4][7] * (DataWave.monsterWaveData[i9][13] + 100)) / 100;
-                        } else {
+                        else
                             i8 = (DataMonster.monsterData[i4][7] * (DataWave.monsterWaveData[i9][5] + 100)) / 100;
-                        }
                         i7 = upgradeUnitRate2 - i8;
                     } else {
                         i7 = 0;
@@ -265,9 +273,6 @@ public class MonsterUnit extends EnemyUnit {
                     if (upgradeItemRate2 > 0 && !bossFlag && getRandom(100) < upgradeItemRate2) {
                         unitHP = 0;
                         getRewardFromMonster(unit);
-                        unitStatus = 1;
-                        unitStatusCount = 0;
-                        addEffectUnit(13, posX, posY, true);
                     }
                     int upgradeItemRate3 = getUpgradeItemRate(unit.heroOrder, 12);
                     if (upgradeItemRate3 > 0 && !stunFlag && getRandom(100) < upgradeItemRate3) {
@@ -285,9 +290,6 @@ public class MonsterUnit extends EnemyUnit {
                     }
                 }
             }
-        }
-        if (unitStatus == 1 && commonTargetType == 0 && commonTargetNumber == monSlot) {
-            commonTargetType = -1;
         }
     }
 
@@ -312,23 +314,16 @@ public class MonsterUnit extends EnemyUnit {
         for (int e = 0; e <= abs; e++) {
             int efx = (abs3 * e) + shooter.posX;
             int efy = (abs4 * e) + shooter.posY;
-            for (int l = 0; l < monsterUnitCount; l++) {
-                MonsterUnit mon = DataStage.monsterUnit[l];
+            for (MonsterUnit mon : DataStage.monsterUnit) {
                 if (mon.monsterType != -1 && mon.unitStatus == 0 && !arrow.hitMons.contains(mon)) {
                     int abs5 = Math.abs(efx - mon.posX) / 50;
                     int abs6 = Math.abs(efy - mon.posY) / 50;
                     if ((abs5 * abs5) + (abs6 * abs6) <= 225) {
                         arrow.hitMons.add(mon);
-                        addEffectUnit(shooter.attackEffect, mon.posX, mon.posY, true);
+                        DataStage.addEffectUnit(shooter.attackEffect, mon.posX, mon.posY);
                         mon.unitHP -= shooter.getHitDamage(this);
-                        if (mon.unitHP <= 0) {
+                        if (mon.unitHP <= 0)
                             getRewardFromMonster(shooter);
-                            mon.unitStatus = 1;
-                            mon.unitStatusCount = 0;
-                            addEffectUnit(13, mon.posX, mon.posY, true);
-                            if (mon.unitStatus == 1 && commonTargetType == 0 && commonTargetNumber == i3)
-                                commonTargetType = -1;
-                        }
                     }
                 }
             }
@@ -342,7 +337,7 @@ public class MonsterUnit extends EnemyUnit {
         int i5;
         int i6;
         int i8;
-        if (mapAttackType == 1 && DataStage.Wave >= DataWave.WAVE_MAX_COUNT) {
+        if (DataStage.mapType == 1 && DataStage.Wave >= DataWave.WAVE_MAX_COUNT) {
             i5 = DataWave.WAVE_MAX_COUNT - 1;
             i4 = (DataStage.Wave - DataWave.WAVE_MAX_COUNT) + 1;
             z = true;
@@ -385,6 +380,12 @@ public class MonsterUnit extends EnemyUnit {
         int[] iArr2 = awardDataValue;
         iArr2[33] = iArr2[33] + 1;
         recheckAwardData();
+
+        unitStatus = 1;
+        unitStatusCount = 0;
+        DataStage.addEffectUnit(13, posX, posY);
+        if (DataStage.selectedTarget == this)
+            DataStage.selectedTarget = null;
     }
 
     public void removeMonsterUnit() {

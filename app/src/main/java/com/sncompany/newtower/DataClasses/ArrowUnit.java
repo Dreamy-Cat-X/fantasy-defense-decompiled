@@ -1,5 +1,6 @@
 package com.sncompany.newtower.DataClasses;
 
+import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataStage;
 import com.sncompany.newtower.MonsterUnit;
 
@@ -75,14 +76,10 @@ public class ArrowUnit {
             moveHistory[0][1] = startY;
 
             if (Math.abs(target.posX - startX) <= moveSpeed && Math.abs(target.posY - startY) <= moveSpeed) {
-                if (targetObj == null) {
-                    addEffectUnit(shooter.attackEffect, targetMon.posX, targetMon.posY, true);
-                    hitMons.add(targetMon);
-                    targetMon.hitUnit(3, shooter);
-                } else {
-                    addEffectUnit(shooter.attackEffect, targetObj.posX, targetObj.posY, true);
-                    targetObj.hitObject(3, shooter);
-                }
+                DataStage.addEffectUnit(shooter.attackEffect, target.posX, target.posY);
+                target.hit(3, shooter);
+                if (target instanceof MonsterUnit)
+                    hitMons.add((MonsterUnit) target);
                 arrowType = -1;
             } else {
                 double rotateDegree = getRotateDegree(target.posX - startX, target.posY - startY);
@@ -104,16 +101,15 @@ public class ArrowUnit {
                 moveCount++;
                 float abs3 = Math.abs(((float) Math.cos(Math.toRadians(moveRotateDegree))) * moveSpeed);
                 float abs4 = Math.abs(((float) Math.sin(Math.toRadians(moveRotateDegree))) * moveSpeed);
-                if (moveRotateDegree >= 0.0f && moveRotateDegree < 180.0f) {
+                if (moveRotateDegree >= 0.0f && moveRotateDegree < 180.0f)
                     startX = (int) (startX + abs4);
-                } else {
+                else
                     startX = (int) (startX - abs4);
-                }
-                if ((moveRotateDegree >= 0.0f && moveRotateDegree < 90.0f) || (moveRotateDegree >= 270.0f && moveRotateDegree < 360.0f)) {
+
+                if ((moveRotateDegree >= 0.0f && moveRotateDegree < 90.0f) || (moveRotateDegree >= 270.0f && moveRotateDegree < 360.0f))
                     startY = (int) (startY - abs3);
-                } else {
+                else
                     startY = (int) (startY + abs3);
-                }
             }
         } else {
             switch (arrowType) {
@@ -124,10 +120,9 @@ public class ArrowUnit {
                     break;
                 case 18:
                     startX -= moveSpeed;
-                    for (int ii = 0; ii < monsterUnitCount; ii++) {
-                        MonsterUnit mon = DataStage.monsterUnit[ii];
+                    for (MonsterUnit mon : DataStage.monsterUnit) {
                         if (mon.monsterType != -1 && Math.abs(mon.posX - startX) <= moveSpeed && Math.abs(mon.posY - startY) <= moveSpeed && !hitMons.contains(mon)) {
-                            addEffectUnit(15, mon.posX, mon.posY, true);
+                            DataStage.addEffectUnit(15, mon.posX, mon.posY);
                             playSound(30);
                             hitMons.add(mon);
                         }
@@ -140,45 +135,33 @@ public class ArrowUnit {
                     if (moveCount <= 0) {
                         float abs5 = Math.abs(((float) Math.cos(Math.toRadians(moveRotateDegree))) * moveSpeed);
                         float abs6 = Math.abs(((float) Math.sin(Math.toRadians(moveRotateDegree))) * moveSpeed);
-                        if (moveRotateDegree >= 0.0f && moveRotateDegree < 180.0f) {
+                        if (moveRotateDegree >= 0.0f && moveRotateDegree < 180.0f)
                             startX = (int) (startX + abs6);
-                        } else {
+                        else
                             startX = (int) (startX - abs6);
-                        }
-                        if ((moveRotateDegree >= 0.0f && moveRotateDegree < 90.0f) || (moveRotateDegree >= 270.0f && moveRotateDegree < 360.0f)) {
+
+                        if ((moveRotateDegree >= 0.0f && moveRotateDegree < 90.0f) || (moveRotateDegree >= 270.0f && moveRotateDegree < 360.0f))
                             startY = (int) (startY - abs5);
-                        } else {
+                        else
                             startY = (int) (startY + abs5);
-                        }
                     }
-                    if (moveCount == 0) {
-                        addEffectUnit(33, startX, startY, true);
-                        break;
-                    }
+                    if (moveCount == 0)
+                        DataStage.addEffectUnit(33, startX, startY);
                     break;
                 default:
                     moveCount++;
                     if (moveCount >= moveMaxCount) {
-                        if (targetObj == null) {
-                            if ((shooter.towerType >= 10 && shooter.towerType <= 14) && shooter.heroFlag && rewardDataValue[6] == 1) {
-                                addEffectUnit(38, targetMon.posX, targetMon.posY, true);
-                            } else {
-                                addEffectUnit(shooter.attackEffect, targetMon.posX, targetMon.posY, true);
-                            }
-                            hitMons.add(targetMon);
-                            targetMon.hitUnit(3, shooter);
+                        if ((shooter.towerType >= 10 && shooter.towerType <= 14) && shooter.heroFlag && Config.rewardValues[6])
+                            DataStage.addEffectUnit(38, target.posX, target.posY);
+                        else
+                            DataStage.addEffectUnit(shooter.attackEffect, target.posX, target.posY);
+                        target.hit(3, shooter);
+                        if (target instanceof MonsterUnit mon) {
+                            hitMons.add(mon);
                             if (shooter.effectType == 4)
-                                targetMon.hitUnitFierce(this, shooter);
-                        } else {
-                            if ((shooter.towerType >= 10 && shooter.towerType <= 14) && shooter.heroFlag && rewardDataValue[6] == 1) {
-                                addEffectUnit(38, targetObj.posX, targetObj.posY, true);
-                            } else {
-                                addEffectUnit(shooter.attackEffect, targetObj.posX, targetObj.posY, true);
-                            }
-                            hitObject(3, shootNumber, targetNumber);
+                                mon.hitUnitFierce(this, shooter);
                         }
                         arrowType = -1;
-                        break;
                     }
                     break;
             }

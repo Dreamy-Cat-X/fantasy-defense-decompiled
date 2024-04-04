@@ -11,7 +11,7 @@ public abstract class EnemyUnit {
     public int unitHP;
     public int unitMaxHP;
 
-    //public abstract void hit(int dmgType, TowerUnit uni) { ??? }
+    public abstract void hit(int dmgType, TowerUnit uni);
 
     //public abstract void kill(TowerUnit uni) { type = -1; }
 }

@@ -1016,10 +1016,6 @@ public class GameThread extends Thread {
         }
     }
 
-    public int abs2(int i) {
-        return i < 0 ? -i : i;
-    }
-
     public void moveGameStatusToStatus(int i, int i2) {
     }
 
@@ -1059,34 +1055,20 @@ public class GameThread extends Thread {
 
     @Override // java.lang.Thread, java.lang.Runnable
     public void run() {
-        while (!m_bStop) {
-            if (!pauseFlag && newTower.hasWindowFocus()) {
-                NewTower.glGameSurfaceView.requestRender();
-                int i = gameLoadFlag;
-                if (i == 0) {
-                    switch (loadingStatus) {
-                        case 1000:
-                        case 1001:
-                        case 1002:
-                        case 1003:
-                        case 1004:
-                        case GAME_PLAY2_IMAGE_LOAD /* 1005 */:
-                        case 1006:
-                        case 1007:
-                        case 1008:
-                            sleep(12L);
-                            break;
-                    }
-                } else if (i == 1) {
-                    try {
+        while (!m_bStop)
+            try {
+                if (!pauseFlag && newTower.hasWindowFocus()) {
+                    NewTower.glGameSurfaceView.requestRender();
+                    int i = gameLoadFlag;
+                    if (i == 0 && loadingStatus >= 1000 && loadingStatus <= 1008) {
+                        sleep(12L);
+                        break;
+                    } else if (i == 1)
                         sleep(24L);
-                    } catch (Exception unused) {
-                    }
-                }
-            } else {
-                sleep(1000L);
+                } else
+                    sleep(1000L);
+            } catch (Exception ignored) {
             }
-        }
     }
 
     public void updateGame() {
@@ -1495,139 +1477,30 @@ public class GameThread extends Thread {
         Code decompiled incorrectly, please refer to instructions dump.
     */
     public void update_GAME_OPENING() {
-        boolean z;
         int[] iArr = storyDrawDataBlock;
-        if (iArr[27] < iArr[18]) {
+        if (iArr[27] < iArr[18])
             iArr[27] = iArr[27] + 1;
-        } else if (iArr[19] > 0) {
+        else if (iArr[19] > 0)
             iArr[19] = iArr[19] - 1;
-        } else if (iArr[25] > 0) {
+        else if (iArr[25] > 0)
             iArr[25] = iArr[25] - 1;
-        } else {
+        else {
             if (iArr[26] >= iArr[21]) {
-                z = true;
-                if (z) {
-                    return;
+                if (gameSubStatus < 25)
+                    setOpeningData(gameSubStatus++);
+                else if (gameSubStatus == 25) {
+                    stopLoopSound(2);
+                    gameStatus = 1002;
+                    gameLoadFlag = 0;
+                    loadingStatus = 1002;
+                    loadTipNumber = getRandom(TIP_TEXT.length);
+                    GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
+                    GameRenderer.loadingViewType = getRandom(6);
                 }
-                switch (gameSubStatus) {
-                    case 0:
-                        gameSubStatus = 1;
-                        setOpeningData(1);
-                        return;
-                    case 1:
-                        gameSubStatus = 2;
-                        setOpeningData(2);
-                        return;
-                    case 2:
-                        gameSubStatus = 3;
-                        setOpeningData(3);
-                        return;
-                    case 3:
-                        gameSubStatus = 4;
-                        setOpeningData(4);
-                        return;
-                    case 4:
-                        gameSubStatus = 5;
-                        setOpeningData(5);
-                        return;
-                    case 5:
-                        gameSubStatus = 6;
-                        setOpeningData(6);
-                        return;
-                    case 6:
-                        gameSubStatus = 7;
-                        setOpeningData(7);
-                        return;
-                    case 7:
-                        gameSubStatus = 8;
-                        setOpeningData(8);
-                        return;
-                    case 8:
-                        gameSubStatus = 9;
-                        setOpeningData(9);
-                        return;
-                    case 9:
-                        gameSubStatus = 10;
-                        setOpeningData(10);
-                        return;
-                    case 10:
-                        gameSubStatus = 11;
-                        setOpeningData(11);
-                        return;
-                    case 11:
-                        gameSubStatus = 12;
-                        setOpeningData(12);
-                        return;
-                    case 12:
-                        gameSubStatus = 13;
-                        setOpeningData(13);
-                        return;
-                    case 13:
-                        gameSubStatus = 14;
-                        setOpeningData(14);
-                        return;
-                    case 14:
-                        gameSubStatus = 15;
-                        setOpeningData(15);
-                        return;
-                    case 15:
-                        gameSubStatus = 16;
-                        setOpeningData(16);
-                        return;
-                    case 16:
-                        gameSubStatus = 17;
-                        setOpeningData(17);
-                        return;
-                    case 17:
-                        gameSubStatus = 18;
-                        setOpeningData(18);
-                        return;
-                    case 18:
-                        gameSubStatus = 19;
-                        setOpeningData(19);
-                        return;
-                    case 19:
-                        gameSubStatus = 20;
-                        setOpeningData(20);
-                        return;
-                    case 20:
-                        gameSubStatus = 21;
-                        setOpeningData(21);
-                        return;
-                    case 21:
-                        gameSubStatus = 22;
-                        setOpeningData(22);
-                        return;
-                    case 22:
-                        gameSubStatus = 23;
-                        setOpeningData(23);
-                        return;
-                    case 23:
-                        gameSubStatus = 24;
-                        setOpeningData(24);
-                        return;
-                    case 24:
-                        gameSubStatus = 25;
-                        setOpeningData(25);
-                        return;
-                    case 25:
-                        stopLoopSound(2);
-                        gameStatus = 1002;
-                        gameLoadFlag = 0;
-                        loadingStatus = 1002;
-                        loadTipNumber = getRandom(TIP_TEXT.length);
-                        GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
-                        GameRenderer.loadingViewType = getRandom(6);
-                        return;
-                    default:
-                        return;
-                }
+                return;
             }
             iArr[26] = iArr[26] + 1;
             iArr[25] = 70;
-        }
-        z = false;
-        if (z) {
         }
     }
 
@@ -1723,7 +1596,6 @@ public class GameThread extends Thread {
                     gameSubStatus = 0;
                     shopShopItemSelectPos = 0;
                     getShopList();
-                    return;
             }
         }
     }
@@ -3100,6 +2972,7 @@ public class GameThread extends Thread {
         }
     }
 
+    //TODO - Replace with stage constructor
     public static void gameStartStatSetting() {
         myMoney = (DataStage.stageData[mapNumber][0] * (getUpgradeUnitRate(0, 0) + 100)) / 100;
         int upgradeUnitRate = (DataStage.stageData[mapNumber][1] * (getUpgradeUnitRate(0, 1) + 100)) / 100;
@@ -3191,107 +3064,6 @@ public class GameThread extends Thread {
             }
         }
         return i;
-    }
-
-    public static int addMonsterUnit(int i, boolean z, boolean z2) { //z is always false
-        int i2;
-        boolean z3;
-        int i3;
-        int i4;
-        int i5 = myWave;
-        if (mapAttackType == 1 && i5 >= (i4 = WAVE_MAX_COUNT)) {
-            int i6 = i4 - 1;
-            i2 = (i5 - i4) + 1;
-            i5 = i6;
-            z3 = true;
-        } else {
-            i2 = 0;
-            z3 = false;
-        }
-        if (z) {
-            i3 = 0;
-            while (i3 < monsterUnitCount) {
-                if (monsterUnit[i3].monsterType == -1)
-                    break;
-                i3++;
-            }
-        }
-        if (monsterUnitCount == 99) {
-            return -1;
-        }
-        i3 = monsterUnitCount;
-        monsterUnitCount++;
-
-        monsterUnit[i3].monsterType = i;
-        monsterUnit[i3].unitStatus = 0;
-        monsterUnit[i3].unitStatusCount = 0;
-        monsterUnit[i3].lastViewDirection = 2;
-        monsterUnit[i3].bossFlag = z2;
-        monsterUnit[i3].unitHP = DataMonster.monsterData[i][1];
-        if (z2)
-            monsterUnit[i3].unitHP = (((monsterUnit[i3].unitHP * (DataWave.monsterWaveData[i5][8] + (DataWave.monsterWaveData[60][8] * i2))) / 100) * DataStage.stageData[mapNumber][3]) / 100;
-        else
-            monsterUnit[i3].unitHP = (((monsterUnit[i3].unitHP * (DataWave.monsterWaveData[i5][0] + (DataWave.monsterWaveData[60][0] * i2))) / 100) * DataStage.stageData[mapNumber][2]) / 100;
-
-        monsterUnit[i3].unitMaxHP = monsterUnit[i3].unitHP;
-        monsterUnit[i3].bodySize = DataMonster.monsterData[i][2];
-        monsterUnit[i3].unitDefense = DataMonster.monsterData[i][3];
-        if (z2) {
-            monsterUnit[i3].unitDefense += DataWave.monsterWaveData[i5][9];
-            if (z3) {
-                monsterUnit[i3].unitDefense += DataWave.monsterWaveData[60][9] * i2;
-            }
-        } else {
-            monsterUnit[i3].unitDefense += DataWave.monsterWaveData[i5][1];
-            if (z3) {
-                monsterUnit[i3].unitDefense += DataWave.monsterWaveData[60][1] * i2;
-            }
-        }
-        int i7 = gatePattern;
-        if (i7 == 0) {
-            mapStartPositionLoop = 0;
-        } else if (i7 == 1) {
-            mapStartPositionLoop = 1;
-        }
-        monsterUnit[i3].posX = ((mapStartPosition[mapStartPositionLoop][0] * 45) + 22) * 50;
-        monsterUnit[i3].posY = ((mapStartPosition[mapStartPositionLoop][1] * 45) + 22) * 50;
-        monsterUnit[i3].fromBlockX = mapStartPosition[mapStartPositionLoop][0];
-        monsterUnit[i3].fromBlockY = mapStartPosition[mapStartPositionLoop][1];
-        int[][] iArr = mapStartPosition;
-        int i8 = mapStartPositionLoop;
-        int randomMapDirection = getRandomMapDirection(i3, iArr[i8][0], iArr[i8][1], -1);
-        int i9 = mapStartPositionLoop + 1;
-        mapStartPositionLoop = i9;
-        if (i9 >= mapStartPositionCount) {
-            mapStartPositionLoop = 0;
-        }
-        monsterUnit[i3].direction = randomMapDirection;
-        monsterUnit[i3].targetBlockX = monsterUnit[i3].fromBlockX + DIR_MOVE_POS[randomMapDirection][0];
-        monsterUnit[i3].targetBlockY = monsterUnit[i3].fromBlockY + DIR_MOVE_POS[randomMapDirection][1];
-        monsterUnit[i3].unitSpeed = 150;
-        if (z2) {
-            monsterUnit[i3].unitSpeed = (((monsterUnit[i3].unitSpeed * DataMonster.monsterData[i][4]) * (DataWave.monsterWaveData[i5][10] + (DataWave.monsterWaveData[60][10] * i2))) / 100) / 100;
-            monsterUnit[i3].unitMinSpeed = (monsterUnit[i3].unitSpeed * (DataWave.monsterWaveData[i5][11] + (i2 * DataWave.monsterWaveData[60][11]))) / 1000;
-            if (monsterUnit[i3].unitMinSpeed > monsterUnit[i3].unitSpeed)
-                monsterUnit[i3].unitMinSpeed = monsterUnit[i3].unitSpeed;
-        } else {
-            monsterUnit[i3].unitSpeed = (((monsterUnit[i3].unitSpeed * DataMonster.monsterData[i][4]) * (DataWave.monsterWaveData[i5][2] + (DataWave.monsterWaveData[60][2] * i2))) / 100) / 100;
-            monsterUnit[i3].unitMinSpeed = (monsterUnit[i3].unitSpeed * (DataWave.monsterWaveData[i5][3] + (i2 * DataWave.monsterWaveData[60][3]))) / 1000;
-            if (monsterUnit[i3].unitMinSpeed > monsterUnit[i3].unitSpeed)
-                monsterUnit[i3].unitMinSpeed = monsterUnit[i3].unitSpeed;
-        }
-        monsterUnit[i3].stunFlag = false;
-        monsterUnit[i3].stunCount = 0;
-        monsterUnit[i3].dotHolyFlag = false;
-        monsterUnit[i3].dotHolyDamage = 0;
-        monsterUnit[i3].dotHolyCount = 0;
-        monsterUnit[i3].dotFireFlag = false;
-        monsterUnit[i3].dotFireDamage = 0;
-        monsterUnit[i3].dotFireCount = 0;
-        monsterUnit[i3].slowIceFlag = false;
-        monsterUnit[i3].slowMudFlag = false;
-        monsterUnit[i3].slowRate = 0.0f;
-        return i3;
     }
 
     public void removeMonsterUnit(int i) {
@@ -3835,8 +3607,7 @@ public class GameThread extends Thread {
 
     public static void restatTowerUnit(TowerUnit towerUnit2) {
         int i = towerUnit2.towerType;
-        int i2 = towerUnit2.heroFlag;
-        if (i2 == 0) {
+        if (!towerUnit2.heroFlag) {
             towerUnit2.towerCoolTime = 0;
             towerUnit2.towerCoolTimeMax = DataCharacter.charData[i][3];
             int i3 = DataCharacter.charData[i][11];
@@ -3871,9 +3642,6 @@ public class GameThread extends Thread {
                 return;
             }
             towerUnit2.effectType = 7;
-            return;
-        }
-        if (i2 != 1) {
             return;
         }
         towerUnit2.towerCoolTime = 0;
@@ -4313,10 +4081,10 @@ public class GameThread extends Thread {
                                         int i10 = towerUnit[i3].unitLockType[i9];
                                         if (i10 == 0) {
                                             addEffectUnit(towerUnit[i3].attackEffect, monsterUnit[towerUnit[i3].unitLockNumber[i9]].posX, monsterUnit[towerUnit[i3].unitLockNumber[i9]].posY, true);
-                                            monsterUnit[towerUnit[i3].unitLockNumber[i9]].hitUnit(0, towerUnit[i3]);
+                                            monsterUnit[towerUnit[i3].unitLockNumber[i9]].hit(0, towerUnit[i3]);
                                         } else if (i10 == 1) {
                                             addEffectUnit(towerUnit[i3].attackEffect, objectUnit[towerUnit[i3].unitLockNumber[i9]].posX, objectUnit[towerUnit[i3].unitLockNumber[i9]].posY, true);
-                                            objectUnit[towerUnit[i3].unitLockNumber[i9]].hitObject(0, towerUnit[i3]);
+                                            objectUnit[towerUnit[i3].unitLockNumber[i9]].hit(0, towerUnit[i3]);
                                         }
                                     }
                                 } else if (i8 == 1) {
@@ -4886,7 +4654,7 @@ public class GameThread extends Thread {
             int[] iArr2 = waveMonsterShowCurrent;
             iArr2[i2] = iArr2[i2] + 1;
             if (iArr2[i2] >= waveMonsterShowTime[i2]) {
-                addMonsterUnit(waveMonsterType[i2], false, false);
+                DataStage.addMonsterUnit(waveMonsterType[i2], false);
                 int[] iArr3 = waveMonsterRemainCount;
                 int i3 = waveMonsterOutPos;
                 iArr3[i3] = iArr3[i3] - 1;
@@ -4911,11 +4679,7 @@ public class GameThread extends Thread {
                 int[] iArr6 = waveMonsterShowCurrent;
                 iArr6[i4] = iArr6[i4] + 1;
                 if (iArr6[i4] >= waveMonsterShowTime[i4]) {
-                    if (i4 == 0) {
-                        addMonsterUnit(waveMonsterType[i4], false, true);
-                    } else {
-                        addMonsterUnit(waveMonsterType[i4], false, false);
-                    }
+                    DataStage.addMonsterUnit(waveMonsterType[i4], i4 == 0);
                     int[] iArr7 = waveMonsterRemainCount;
                     int i5 = waveMonsterOutPos;
                     iArr7[i5] = iArr7[i5] - 1;
@@ -4942,7 +4706,7 @@ public class GameThread extends Thread {
         int[] iArr10 = waveMonsterShowCurrent;
         iArr10[i6] = iArr10[i6] + 1;
         if (iArr10[i6] >= waveMonsterShowTime[i6]) {
-            addMonsterUnit(waveMonsterType[i6], false, false);
+            DataStage.addMonsterUnit(waveMonsterType[i6], false);
             int[] iArr11 = waveMonsterRemainCount;
             int i7 = waveMonsterOutPos;
             iArr11[i7] = iArr11[i7] - 1;

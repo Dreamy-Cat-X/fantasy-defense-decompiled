@@ -13,6 +13,7 @@ public class Config {
     public static int heroPoints;
     public static long curPlaytime, totalPlaytime;
     public static boolean movie, tutorial, vibration;
+    public static boolean[] rewardValues = new boolean[10];
 
     /**
      * Writes save Data
@@ -82,10 +83,6 @@ public class Config {
             IntToByteArray(saveTotalBuffer, i7, itemUnitValue[j]);
             i7 += 4;
         }
-        for (int j = 0; j < 10; j++) {
-            IntToByteArray(saveTotalBuffer, i7, rewardDataValue[j]);
-            i7 += 4;
-        }
         for (int j = 0; j < 62; j++) {
             IntToByteArray(saveTotalBuffer, i7, awardDataValue[j]);
             i7 += 4;
@@ -94,17 +91,17 @@ public class Config {
             IntToByteArray(saveTotalBuffer, i7, awardDataFlag[j]);
             i7 += 4;
         }
-
-        ByteToByteArray(saveTotalBuffer, i7 + 1, lastPlayed);
+        for (int j = 0; j < 10; j++) {
+            saveTotalBuffer[i7] = (byte)(rewardValues[j] ? 1 : 0);
+            i7++;
+        }
+        saveTotalBuffer[i7] = lastPlayed;
         try {
             openFileOutput = context.openFileOutput(file2 ? SAVEFILE_NAME2 : SAVEFILE_NAME, 0);
             openFileOutput.write(saveTotalBuffer);
             openFileOutput.close();
         } catch (Exception unused) {
         }
-    }
-    public static void ByteToByteArray(byte[] bArr, int sect, byte num) {
-        bArr[sect] = num;
     }
     public static void IntToByteArray(byte[] bArr, int sect, int num) {
         for (int i3 = 0; i3 < 4; i3++)
