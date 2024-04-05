@@ -16,6 +16,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.internal.view.SupportMenu;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -53,7 +55,6 @@ public class NewTower extends AppCompatActivity {
     static final int PID_DATA_TYPE_UNIT_3 = 7;
     static final int PID_DATA_TYPE_UNIT_7 = 8;
     private static final int PURCHASE_ERROR_DIALOG = 0;
-    public static boolean drmPassFlag = false;
     public static GameRenderer gameRenderer = null;
     public static GameThread gameThread = null;
     public static GLGameSurfaceView glGameSurfaceView = null;
@@ -80,12 +81,12 @@ public class NewTower extends AppCompatActivity {
     boolean isAddView = false;
     boolean isAddMobInit = false;
     boolean isVewing = false;
+    public static int randomNumber;
 
     @Override // androidx.appcompat.app.AppCompatActivity, androidx.fragment.app.FragmentActivity, androidx.core.app.ComponentActivity, android.app.Activity
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         doFullScreen();
-        drmPassFlag = true;
         initActivity();
         MobileAds.initialize(this, new OnInitializationCompleteListener() { // from class: com.sncompany.newtower.NewTower.1
             @Override // com.google.android.gms.ads.initialization.OnInitializationCompleteListener
@@ -211,9 +212,7 @@ public class NewTower extends AppCompatActivity {
                 @Override // com.google.android.gms.ads.rewarded.RewardedAdCallback
                 public void onUserEarnedReward(RewardItem rewardItem) {
                     GameThread.myHeroism += rewardItem.getAmount();
-                    GameThread.timeSave();
-                    GameThread.writeSaveData(NewTower.this, 0);
-                    GameThread.writeSaveData(NewTower.this, 1);
+                    Config.saveAll(GameThread.newTower);
                     NewTower.this.HideAdMob();
                 }
             });
@@ -370,10 +369,6 @@ public class NewTower extends AppCompatActivity {
             GameThread.mgr.adjustStreamVolume(3, -1, 1);
             return true;
         }
-        if (!drmPassFlag) {
-            System.exit(0);
-            return super.onKeyDown(i, keyEvent);
-        }
         if (GameThread.gameStatus == 3 && i == 4) {
             exitDialog();
             return true;
@@ -525,9 +520,7 @@ public class NewTower extends AppCompatActivity {
                     GameThread.freeAdViewTime = System.currentTimeMillis();
                 }
                 GameThread.freeAdViewCount--;
-                GameThread.timeSave();
-                GameThread.writeSaveData(GameThread.newTower, 0);
-                GameThread.writeSaveData(GameThread.newTower, 1);
+                Config.saveAll(GameThread.newTower);
                 dialogInterface.cancel();
                 NewTower.this.HideAdMob();
                 NewTower.this.startAd();
@@ -721,33 +714,14 @@ public class NewTower extends AppCompatActivity {
                 GameThread.mapAttackType = 0;
                 GameThread.loadMap((GameThread.stageSelectChapterNumber * 10) + GameThread.stageSelectStageNumber, true);
                 GameThread.playLoopSound(1);
-                return;
         }
     }
 
-    public String[] getStringArray(int i) {
-        byte[] bArr = null;
-        try {
-            InputStream openRawResource = getResources().openRawResource(i);
-            int available = openRawResource.available();
-            bArr = new byte[available];
-            int i2 = 0;
-            do {
-                int read = openRawResource.read(bArr, i2, available - i2);
-                if (read <= 0) {
-                    break;
-                }
-                i2 += read;
-            } while (i2 < available);
-            openRawResource.close();
-        } catch (Exception unused) {
-        }
-        StringTokenizer stringTokenizer = new StringTokenizer(new String(bArr), "|");
-        int countTokens = stringTokenizer.countTokens();
-        String[] strArr = new String[countTokens];
-        for (int i3 = 0; i3 < countTokens; i3++) {
-            strArr[i3] = new String(stringTokenizer.nextToken());
-        }
-        return strArr;
+    public static int getRandom(int i) {
+        int currentTimeMillis = (int) ((((randomNumber & SupportMenu.USER_MASK) * 93217) + 1 + (System.currentTimeMillis() & 65535)) & 65535);
+        randomNumber = currentTimeMillis >> 1;
+        if (i == 0)
+            return 0;
+        return randomNumber % i;
     }
 }

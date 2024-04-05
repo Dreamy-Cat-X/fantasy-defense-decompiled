@@ -6681,7 +6681,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 setFontSize(16);
                 setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
                 drawStringDoubleM("Do you want to change this unit's class?", CX, 270.0f, 17);
-                drawStringDoubleM(String.valueOf(GameThread.getHitPower(GameThread.towerUnit[GameThread.characterSelectNumber])), 540.0f, 162.0f, 20);
+                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].getHitPower()), 540.0f, 162.0f, 20); //temp
                 if (GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax == 1) {
                     drawStringDoubleM("MAX", 540.0f, 189.0f, 20);
                 } else {
@@ -6692,7 +6692,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 GameThread.compareTowerUnit.towerType = upgradeType;
                 GameThread.compareTowerUnit.heroFlag = false;
                 GameThread.restatTowerUnit(GameThread.compareTowerUnit);
-                drawStringDoubleM(String.valueOf(GameThread.getHitPower(GameThread.compareTowerUnit)), 625.0f, 162.0f, 20);
+                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.getHitPower()), 625.0f, 162.0f, 20);
                 if (GameThread.compareTowerUnit.towerCoolTimeMax == 1) {
                     drawStringDoubleM("MAX", 625.0f, 189.0f, 20);
                 } else {
@@ -6729,7 +6729,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 setFontSize(16);
                 setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
                 drawStringDoubleM("Do you want to Level Up?", CX, 270.0f, 17);
-                drawStringDoubleM(String.valueOf(GameThread.getHitPower(GameThread.towerUnit[GameThread.characterSelectNumber])), 430.0f, 162.0f, 20);
+                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].getHitPower()), 430.0f, 162.0f, 20);
                 if (GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax == 1) {
                     drawStringDoubleM("MAX", 430.0f, 189.0f, 20);
                 } else {
@@ -6740,7 +6740,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 GameThread.compareTowerUnit.towerType = i15 + 1;
                 GameThread.compareTowerUnit.heroFlag = GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag;
                 GameThread.restatTowerUnit(GameThread.compareTowerUnit);
-                drawStringDoubleM(String.valueOf(GameThread.getHitPower(GameThread.compareTowerUnit)), 526.0f, 162.0f, 20);
+                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.getHitPower()), 526.0f, 162.0f, 20);
                 if (GameThread.compareTowerUnit.towerCoolTimeMax == 1) {
                     drawStringDoubleM("MAX", 526.0f, 189.0f, 20);
                 } else {
@@ -6969,7 +6969,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         uiCharEtcImage[towerLevelOrder + 3].drawAtPointOption(519.0f, 314.0f, i10);
         setFontSize(14);
         setFontColor(-8128317);
-        drawStringM(String.valueOf(GameThread.getHitPower(GameThread.towerUnit[i17])), 420.0f, 360.0f, 20);
+        drawStringM(String.valueOf(GameThread.towerUnit[i17].getHitPower()), 420.0f, 360.0f, 20);
         if (GameThread.towerUnit[i17].towerCoolTimeMax == 1) {
             drawStringM("MAX", 420.0f, 388.0f, 20);
         } else {

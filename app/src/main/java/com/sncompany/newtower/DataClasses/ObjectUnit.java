@@ -1,6 +1,7 @@
 package com.sncompany.newtower.DataClasses;
 
 import com.sncompany.newtower.DataStage;
+import com.sncompany.newtower.EffectUnit;
 
 /* loaded from: D:\decomp\classes.dex */
 public class ObjectUnit extends EnemyUnit {
@@ -18,49 +19,50 @@ public class ObjectUnit extends EnemyUnit {
     public int rewardType;
     public int rewardValue;
 
-    public void updateObject() {
-        if (objectType == -2) {
+    @Override
+    public boolean update() {
+        if (type == -2) {
             if (objectLastVanishTime != gameTimeCount) {
                 objectVanishCount++;
                 if (objectVanishCount == 30) {
-                    objectType = -1;
+                    type = -1;
                 }
                 objectLastVanishTime = gameTimeCount;
             }
         }
+        return false;
     }
 
     @Override
     public void hit(int eff, TowerUnit ent) {
-        if (objectType < 0)
+        if (dead())
             return;
+
         int soundHitType = getSoundHitType(ent);
         if (soundHitType != -1)
             playSound(soundHitType);
 
         unitHP -= ent.unitPower;
-        if (unitHP <= 0) {
-            getRewardFromObject();
-            objectType = -2;
-            DataStage.addEffectUnit(13, posX, posY);
-            if (ent.effectType == 1)
-                ent.hitUnitSplash(0, this);
-        }
+        if (unitHP <= 0)
+            kill(ent);
+        if (ent.effectType == 1)
+            ent.hitUnitSplash(0, this);
     }
 
-    public void getRewardFromObject() {
+    @Override
+    public void kill(TowerUnit uni) {
         if (rewardType != 0) {
             if (rewardType != 1)
                 return;
             DataStage.Mana += rewardValue;
             return;
         }
-        int i3 = DataStage.Money + rewardValue;
-        DataStage.Money = i3;
-        int[] iArr = awardDataValue;
-        if (i3 >= iArr[21]) {
-            iArr[21] = i3;
-            recheckAwardData();
-        }
+        DataStage.Money += rewardValue;
+        DataAward.check_money(DataStage.Money);
+
+        type = -2;
+        DataStage.instance.addEffectUnit(EffectUnit.EFFECT_TYPE_DIE, posX, posY);
+        if (DataStage.selectedTarget == this)
+            DataStage.selectedTarget = null;
     }
 }

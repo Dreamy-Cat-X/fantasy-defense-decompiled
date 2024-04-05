@@ -2,6 +2,7 @@ package com.sncompany.newtower.DataClasses;
 
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataStage;
+import com.sncompany.newtower.EffectUnit;
 import com.sncompany.newtower.MonsterUnit;
 
 import java.lang.reflect.Array;
@@ -76,7 +77,7 @@ public class ArrowUnit {
             moveHistory[0][1] = startY;
 
             if (Math.abs(target.posX - startX) <= moveSpeed && Math.abs(target.posY - startY) <= moveSpeed) {
-                DataStage.addEffectUnit(shooter.attackEffect, target.posX, target.posY);
+                DataStage.instance.addEffectUnit(shooter.attackEffect, target.posX, target.posY);
                 target.hit(3, shooter);
                 if (target instanceof MonsterUnit)
                     hitMons.add((MonsterUnit) target);
@@ -121,8 +122,8 @@ public class ArrowUnit {
                 case 18:
                     startX -= moveSpeed;
                     for (MonsterUnit mon : DataStage.monsterUnit) {
-                        if (mon.monsterType != -1 && Math.abs(mon.posX - startX) <= moveSpeed && Math.abs(mon.posY - startY) <= moveSpeed && !hitMons.contains(mon)) {
-                            DataStage.addEffectUnit(15, mon.posX, mon.posY);
+                        if (!mon.dead() && Math.abs(mon.posX - startX) <= moveSpeed && Math.abs(mon.posY - startY) <= moveSpeed && !hitMons.contains(mon)) {
+                            DataStage.instance.addEffectUnit(EffectUnit.EFFECT_TYPE_BLADE1, mon.posX, mon.posY);
                             playSound(30);
                             hitMons.add(mon);
                         }
@@ -146,15 +147,15 @@ public class ArrowUnit {
                             startY = (int) (startY + abs5);
                     }
                     if (moveCount == 0)
-                        DataStage.addEffectUnit(33, startX, startY);
+                        DataStage.instance.addEffectUnit(EffectUnit.EFFECT_TYPE_ARROWRAIN_LEFT, startX, startY);
                     break;
                 default:
                     moveCount++;
                     if (moveCount >= moveMaxCount) {
                         if ((shooter.towerType >= 10 && shooter.towerType <= 14) && shooter.heroFlag && Config.rewardValues[6])
-                            DataStage.addEffectUnit(38, target.posX, target.posY);
+                            DataStage.instance.addEffectUnit(EffectUnit.EFFECT_TYPE_FIREBALL2, target.posX, target.posY);
                         else
-                            DataStage.addEffectUnit(shooter.attackEffect, target.posX, target.posY);
+                            DataStage.instance.addEffectUnit(shooter.attackEffect, target.posX, target.posY);
                         target.hit(3, shooter);
                         if (target instanceof MonsterUnit mon) {
                             hitMons.add(mon);

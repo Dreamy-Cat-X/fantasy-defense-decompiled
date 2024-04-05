@@ -1,26 +1,52 @@
 package com.sncompany.newtower;
 
 import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 /**
  * Manages in-game settings and game data alike.
  */
 public class Config {
-    static byte[] saveTotalBuffer;
+    static final String SAVEFILE_NAME = "SAVEDATA";
+    static final String SAVEFILE_NAME2 = "SAVEDATA2";
+    public static final int SAVEFILE_SIZE = 27392;
+    static byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
     public static int musicVolume, effectVolume, musicMaxVolume;
     public static byte lastPlayed;
-    public static int heroPoints;
-    public static long curPlaytime, totalPlaytime;
+    public static int heroPoints, killCount, top_money;
+    public static long curPlaytime = 0, totalPlaytime;
     public static boolean movie, tutorial, vibration;
-    public static boolean[] rewardValues = new boolean[10];
+    /**
+     * Indicates if a given story reward has been claimed
+     */
+    public static final boolean[] rewardValues = new boolean[10];
+    /**
+     * Indicates if a misc trophy has been claimed
+     */
+    public static final boolean[] awardValues = new boolean[62];
+    public static final int[][] highScores = new int[50][3];
+    public static final byte[][] stageProg = new byte[50][3]; //-1 = locked, 0 = uncleared, 1 = clear, 2 = perfect
+
+    public static void saveAll(NewTower context) {
+        timeSave();
+        saveData(context, false);
+        saveData(context, true);
+    }
+
+    public static void timeSave() {
+        long currentTimeMillis = System.currentTimeMillis();
+        totalPlaytime += (int) ((currentTimeMillis - curPlaytime) / 1000);
+        curPlaytime = currentTimeMillis;
+    }
 
     /**
      * Writes save Data
      * @param context ???
      * @param file2 If this data will be saved in file 2
      */
-    public static void saveData(Context context, boolean file2) {
+    public static void saveData(NewTower context, boolean file2) {
         FileOutputStream openFileOutput;
         Arrays.fill(saveTotalBuffer, (byte) 0);
 
@@ -33,75 +59,143 @@ public class Config {
         IntToByteArray(saveTotalBuffer, 8, heroPoints);
         IntToByteArray(saveTotalBuffer, 12, musicVolume);
         IntToByteArray(saveTotalBuffer, 16, effectVolume);
+        IntToByteArray(saveTotalBuffer, 20, killCount);
+        IntToByteArray(saveTotalBuffer, 24, top_money);
 
-        int i7 = 20;
-        for (int j = 0; j < highScoreValue.length; j++)
-            for (int k = 0; k < highScoreValue[j].length; k++) {
-                IntToByteArray(saveTotalBuffer, i7, highScoreValue[j][k]);
-                i7 += 4;
+        int cbit = 28;
+        for (int[] highScore : highScores)
+            for (int i : highScore) {
+                IntToByteArray(saveTotalBuffer, cbit, i);
+                cbit += 4;
             }
-        //i7 = 170 by this point (hsv[50][3])
-        for (int j = 0; j < 50; j++) {
-            for (int i11 = 0; i11 < 3; i11++) {
-                IntToByteArray(saveTotalBuffer, i7, gamePlayedCount[j][i11]);
-                i7 += 4;
-            }
-        }
-        for (int j = 0; j < 50; j++) {
-            for (int i13 = 0; i13 < 3; i13++) {
-                IntToByteArray(saveTotalBuffer, i7, gameClearedFlag[j][i13]);
-                i7 += 4;
-            }
-        }
-        for (int j = 0; j < 50; j++) {
-            for (int i15 = 0; i15 < 3; i15++) {
-                IntToByteArray(saveTotalBuffer, i7, gamePerfectFlag[j][i15]);
-                i7 += 4;
-            }
-        }
+        //cbit = 628
+        for (byte[] stp : stageProg)
+            for (byte st : stp)
+                saveTotalBuffer[cbit++] = st;
+        //cbit = 778
         for (int j = 0; j < 18; j++) {
-            IntToByteArray(saveTotalBuffer, i7, upgradeUnitValue[j]);
-            i7 += 4;
+            IntToByteArray(saveTotalBuffer, cbit, upgradeUnitValue[j]);
+            cbit += 4;
         }
         for (int j = 0; j < 3; j++) {
-            IntToByteArray(saveTotalBuffer, i7, heroUnitType[j]);
-            i7 += 4;
+            IntToByteArray(saveTotalBuffer, cbit, heroUnitType[j]);
+            cbit += 4;
         }
         for (int j = 0; j < 3; j++) {
             for (int i19 = 0; i19 < 2; i19++) {
-                IntToByteArray(saveTotalBuffer, i7, heroItemType[j][i19]);
-                i7 += 4;
+                IntToByteArray(saveTotalBuffer, cbit, heroItemType[j][i19]);
+                cbit += 4;
             }
         }
         for (int j = 0; j < 3; j++) {
             for (int i21 = 0; i21 < 6; i21++) {
-                IntToByteArray(saveTotalBuffer, i7, heroUpgradeValue[j][i21]);
-                i7 += 4;
+                IntToByteArray(saveTotalBuffer, cbit, heroUpgradeValue[j][i21]);
+                cbit += 4;
             }
         }
         for (int j = 0; j < 24; j++) {
-            IntToByteArray(saveTotalBuffer, i7, itemUnitValue[j]);
-            i7 += 4;
+            IntToByteArray(saveTotalBuffer, cbit, itemUnitValue[j]);
+            cbit += 4;
         }
-        for (int j = 0; j < 62; j++) {
-            IntToByteArray(saveTotalBuffer, i7, awardDataValue[j]);
-            i7 += 4;
-        }
-        for (int j = 0; j < 62; j++) {
-            IntToByteArray(saveTotalBuffer, i7, awardDataFlag[j]);
-            i7 += 4;
-        }
-        for (int j = 0; j < 10; j++) {
-            saveTotalBuffer[i7] = (byte)(rewardValues[j] ? 1 : 0);
-            i7++;
-        }
-        saveTotalBuffer[i7] = lastPlayed;
+        for (int j = 0; j < awardValues.length; j += 2)
+            saveTotalBuffer[cbit++] = BooleansToByte(awardValues[j], awardValues[j+1]);
+        for (int j = 0; j < rewardValues.length; j += 5)
+            saveTotalBuffer[cbit++] = BooleansToByte(rewardValues[j], rewardValues[j+1], rewardValues[j+2], rewardValues[j+3], rewardValues[j+4]);
+        saveTotalBuffer[cbit++] = lastPlayed;
+        saveTotalBuffer[cbit] = BooleansToByte(movie, tutorial, vibration);
         try {
             openFileOutput = context.openFileOutput(file2 ? SAVEFILE_NAME2 : SAVEFILE_NAME, 0);
             openFileOutput.write(saveTotalBuffer);
             openFileOutput.close();
         } catch (Exception unused) {
         }
+    }
+
+    public static void readSaveData(NewTower context, int file) {
+        for (int i6 = 0; i6 < SAVEFILE_SIZE; i6++)
+            saveTotalBuffer[i6] = 0;
+        try {
+            openFileInput = context.openFileInput(file == 1 ? SAVEFILE_NAME : SAVEFILE_NAME2);
+            int readData = openFileInput.read(saveTotalBuffer);
+            openFileInput.close();
+            if (readData <= 0) {
+                return;
+            }
+            totalPlaytime = ByteArrayToLong(saveTotalBuffer, 0);
+            if (totalPlaytime == 0)
+                return;
+
+            heroPoints = ByteArrayToInt(saveTotalBuffer, 8);
+            musicVolume = ByteArrayToInt(saveTotalBuffer, 12);
+            effectVolume = ByteArrayToInt(saveTotalBuffer, 16);
+            killCount = ByteArrayToInt(saveTotalBuffer, 20);
+            top_money = ByteArrayToInt(saveTotalBuffer, 24);
+
+            int cbit = 28;
+            for (int j = 0; j < highScores.length; j++)
+                for (int k = 0; k < highScores[j].length; k++) {
+                    highScores[j][k] = ByteArrayToInt(saveTotalBuffer, cbit);
+                    cbit += 4;
+                }
+            //cbit = 628
+            for (int j = 0; j < stageProg.length; j++)
+                for (int k = 0; k < stageProg[j].length; k++)
+                    stageProg[j][k] = saveTotalBuffer[cbit++];
+            //cbit = 778
+            /*for (int j = 0; j < 18; j++) {
+                    IntToByteArray(saveTotalBuffer, cbit, upgradeUnitValue[j]);
+                    cbit += 4;
+                }
+                for (int j = 0; j < 3; j++) {
+                    IntToByteArray(saveTotalBuffer, cbit, heroUnitType[j]);
+                    cbit += 4;
+                }
+                for (int j = 0; j < 3; j++) {
+                    for (int i19 = 0; i19 < 2; i19++) {
+                        IntToByteArray(saveTotalBuffer, cbit, heroItemType[j][i19]);
+                        cbit += 4;
+                    }
+                }
+                for (int j = 0; j < 3; j++) {
+                    for (int i21 = 0; i21 < 6; i21++) {
+                        IntToByteArray(saveTotalBuffer, cbit, heroUpgradeValue[j][i21]);
+                        cbit += 4;
+                    }
+                }
+                for (int j = 0; j < 24; j++) {
+                    IntToByteArray(saveTotalBuffer, cbit, itemUnitValue[j]);
+                    cbit += 4;
+                }*/
+            for (int j = 0; j < awardValues.length; j += 2) {
+                boolean[] bs = ByteToBooleans(saveTotalBuffer[cbit++]);
+                awardValues[j] = bs[0];
+                awardValues[j + 1] = bs[1];
+            }
+            for (int j = 0; j < rewardValues.length; j += 5) {
+                boolean[] bs = ByteToBooleans(saveTotalBuffer[cbit++]);
+                for (int k = 0; k < 5; k++)
+                    rewardValues[j + k] = bs[k];
+            }
+            lastPlayed = saveTotalBuffer[cbit++];
+            boolean[] lbs = ByteToBooleans(saveTotalBuffer[cbit]);
+            movie = lbs[0];
+            tutorial = lbs[1];
+            vibration = lbs[2];
+        } catch (Exception ignored) {
+        }
+    }
+
+    /**
+     * Convers up to 7 booleans into a byte
+     * @param bools The passed bools.
+     * @return A byte, containing the bitmask of each bool, where 1 << i = true for each.
+     */
+    public static byte BooleansToByte(boolean... bools) {
+        byte tt = 0;
+        for (byte i = 0; i < Math.min(7, bools.length); i++)
+            if (bools[i])
+                tt |= (byte)(1 << i);
+        return tt;
     }
     public static void IntToByteArray(byte[] bArr, int sect, int num) {
         for (int i3 = 0; i3 < 4; i3++)
@@ -110,6 +204,30 @@ public class Config {
     public static void LongToByteArray(byte[] bArr, int sect, long num) {
         for (int i3 = 0; i3 < 8; i3++)
             bArr[sect + i3] = (byte) ((num >> (i3 * 8)) & 255);
+    }
+
+    public static boolean[] ByteToBooleans(byte b) {
+        boolean[] bs = new boolean[8];
+        for (byte i = 0; i < 8; i++)
+            bs[i] = (b & i) > 0;
+        return bs;
+    }
+    public static int ByteArrayToInt(byte[] bArr, int i) {
+        ByteBuffer.allocate(4);
+        byte[] bArr2 = new byte[4];
+        for (int i2 = 0; i2 < 4; i2++) {
+            bArr2[i2] = bArr[(i + 3) - i2];
+        }
+        ByteBuffer wrap = ByteBuffer.wrap(bArr2);
+        wrap.order(ByteOrder.BIG_ENDIAN);
+        return wrap.getInt();
+    }
+    public static long ByteArrayToLong(byte[] bArr, int i) {
+        long j = 0;
+        for (int i2 = 0; i2 < 8; i2++) {
+            j = (j << 8) | (bArr[i + i2] & 255);
+        }
+        return j;
     }
 
     /**
@@ -126,8 +244,7 @@ public class Config {
             if (mediaManagerArr[i] != null) {
                 try {
                     mediaManagerArr[i].setVolume(musicVolume, musicMaxVolume);
-                    Log.d("SET VOLUME", String.format("%d %d", musicVolume, musicMaxVolume));
-                } catch (Exception unused) {
+                } catch (Exception ignored) {
                 }
             }
         }

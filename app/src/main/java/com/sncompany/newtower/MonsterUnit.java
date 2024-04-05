@@ -1,8 +1,13 @@
 package com.sncompany.newtower;
 
+import static com.sncompany.newtower.DataStage.DIR_MOVE_POS;
+import static com.sncompany.newtower.DataStage.getRandomMapDirection;
+
 import com.sncompany.newtower.DataClasses.ArrowUnit;
+import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.EnemyUnit;
+import com.sncompany.newtower.DataClasses.HeroUnit;
 import com.sncompany.newtower.DataClasses.TowerUnit;
 
 /* loaded from: D:\decomp\classes.dex */
@@ -39,7 +44,7 @@ public class MonsterUnit extends EnemyUnit {
     public int unitDefense;
     public int unitMinSpeed;
     public int unitSpeed = 150;
-    public int unitStatus = 0;
+    public int unitStatus = 0; //1 means dead, -1 means removed
     public int unitStatusCount = 0;
 
     public MonsterUnit(int type, boolean bossFlag) {
@@ -52,22 +57,22 @@ public class MonsterUnit extends EnemyUnit {
         unitDefense = data[3];
 
         int i2 = 0;
-        int swave = DataStage.Wave;
-        boolean infWave = DataStage.mapType == 1 && swave >= DataWave.WAVE_MAX_COUNT;
+        int swave = DataStage.instance.waveManager.current;
+        boolean infWave = DataStage.instance.mapType == 1 && swave >= DataWave.WAVE_MAX_COUNT;
         if (infWave) {
             i2 = (swave - DataWave.WAVE_MAX_COUNT) + 1;
             swave = DataWave.WAVE_MAX_COUNT - 1;
         }
 
         if (bossFlag) {
-            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][8] + (DataWave.monsterWaveData[60][8] * i2))) / 100) * DataStage.stageData[DataStage.mapType][3]) / 100;
+            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][8] + (DataWave.monsterWaveData[60][8] * i2))) / 100) * DataStage.stageData[DataStage.instance.mapType][3]) / 100;
             unitDefense += DataWave.monsterWaveData[swave][9];
             if (infWave)
                 unitDefense += DataWave.monsterWaveData[60][9] * i2;
             unitSpeed = (((unitSpeed * data[4]) * (DataWave.monsterWaveData[swave][10] + (DataWave.monsterWaveData[60][10] * i2))) / 100) / 100;
             unitMinSpeed = (unitSpeed * (DataWave.monsterWaveData[swave][11] + (i2 * DataWave.monsterWaveData[60][11]))) / 1000;
         } else {
-            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][0] + (DataWave.monsterWaveData[60][0] * i2))) / 100) * DataStage.stageData[DataStage.mapType][2]) / 100;
+            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][0] + (DataWave.monsterWaveData[60][0] * i2))) / 100) * DataStage.stageData[DataStage.instance.mapType][2]) / 100;
             unitDefense += DataWave.monsterWaveData[swave][1];
             if (infWave)
                 unitDefense += DataWave.monsterWaveData[60][1] * i2;
@@ -78,223 +83,191 @@ public class MonsterUnit extends EnemyUnit {
         if (unitMinSpeed > unitSpeed)
             unitMinSpeed = unitSpeed;
     }
-    
+
+    @Override
     public boolean update() {
-        if (monsterType != -1) {
-            unitStatusCount++;
-            if (stunCount > 0) {
-                stunCount--;
-            }
-            if (dotHolyCount > 0) {
-                dotHolyCount--;
-                if (dotHolyCount > 0)
-                    hit(1, null);
-            }
-            if (dotFireCount > 0) {
-                dotFireCount--;
-                if (dotFireCount > 0)
-                    hit(2, null);
-            }
-            if (slowIceFlag || slowMudFlag) {
-                slowRate -= 1.0f;
-                if (slowRate <= 0.0f) {
-                    slowIceFlag = false;
-                    slowMudFlag = false;
-                }
-            }
-            if (unitStatus == 0) {
-                int espd = unitSpeed;
-                if (stunCount > 0)
-                    espd = 0;
-                else if ((slowIceFlag || slowMudFlag) && (espd = (int) ((espd * (100.0f - slowRate)) / 100.0f)) < unitMinSpeed)
-                    espd = unitMinSpeed;
+        unitStatusCount++;
+        if (stunCount > 0)
+            stunCount--;
 
-                while (espd > 0) {
-                    int i4 = ((targetBlockX * 45) + 22) * 50;
-                    int i5 = ((targetBlockY * 45) + 22) * 50;
-                    if (i4 != posX) {
-                        if (Math.abs(i4 - posX) >= espd) {
-                            if (i4 > posX) {
-                                posX += espd;
-                                lastViewDirection = 2;
-                            } else {
-                                posX -= espd;
-                                lastViewDirection = 6;
-                            }
-                            espd = 0;
-                        } else if (i4 > posX) {
-                            espd -= i4 - posX;
-                            posX = i4;
-                            lastViewDirection = 2;
-                        } else {
-                            espd -= -(i4 - posX);
-                            posX = i4;
-                            lastViewDirection = 6;
-                        }
-                    } else if (i5 != posY) {
-                        if (Math.abs(i5 - posY) >= espd) {
-                            if (i5 > posY) {
-                                posY += espd;
-                                espd = 0;
-                            } else {
-                                posY -= espd;
-                                espd = 0;
-                            }
-                        } else if (i5 > posY) {
-                            espd -= i5 - posY;
-                            posY = i5;
-                        } else {
-                            espd -= -(i5 - posY);
-                            posY = i5;
-                        }
+        if (dotHolyCount > 0) {
+            dotHolyCount--;
+            if (dotHolyCount > 0)
+                damaged(dotHolyDamage, null);
+        }
+        if (dotFireCount > 0) {
+            dotFireCount--;
+            if (dotFireCount > 0)
+                damaged(dotFireDamage, null);
+        }
+        if (slowIceFlag || slowMudFlag) {
+            slowRate -= 1.0f;
+            if (slowRate <= 0.0f) {
+                slowIceFlag = false;
+                slowMudFlag = false;
+            }
+        }
+        if (dead())
+            return false;
+
+        int espd = unitSpeed;
+        if (stunCount > 0)
+            espd = 0;
+        else if ((slowIceFlag || slowMudFlag) && (espd = (int) ((espd * (100.0f - slowRate)) / 100.0f)) < unitMinSpeed)
+            espd = unitMinSpeed;
+
+        while (espd > 0) {
+            int i4 = ((targetBlockX * 45) + 22) * 50;
+            int i5 = ((targetBlockY * 45) + 22) * 50;
+            if (i4 != posX) {
+                if (Math.abs(i4 - posX) >= espd) {
+                    if (i4 > posX) {
+                        posX += espd;
+                        lastViewDirection = 2;
                     } else {
-                        int randomMapDirection = getRandomMapDirection(i, targetBlockX, targetBlockY, -1);
-                        direction = randomMapDirection;
-                        if (randomMapDirection == -1)
-                            break;
+                        posX -= espd;
+                        lastViewDirection = 6;
+                    }
+                    espd = 0;
+                } else if (i4 > posX) {
+                    espd -= i4 - posX;
+                    posX = i4;
+                    lastViewDirection = 2;
+                } else {
+                    espd -= -(i4 - posX);
+                    posX = i4;
+                    lastViewDirection = 6;
+                }
+            } else if (i5 != posY) {
+                if (Math.abs(i5 - posY) >= espd) {
+                    if (i5 > posY) {
+                        posY += espd;
+                    } else {
+                        posY -= espd;
+                    }
+                    espd = 0;
+                } else if (i5 > posY) {
+                    espd -= i5 - posY;
+                    posY = i5;
+                } else {
+                    espd -= -(i5 - posY);
+                    posY = i5;
+                }
+            } else {
+                int randomMapDirection = getRandomMapDirection(targetBlockX, targetBlockY, -1);
+                direction = randomMapDirection;
+                if (randomMapDirection == -1)
+                    break;
 
-                        targetBlockX = fromBlockX + DIR_MOVE_POS[randomMapDirection][0];
-                        targetBlockY = fromBlockY + DIR_MOVE_POS[randomMapDirection][1];
-                    }
+                targetBlockX = fromBlockX + DIR_MOVE_POS[randomMapDirection][0];
+                targetBlockY = fromBlockY + DIR_MOVE_POS[randomMapDirection][1];
+            }
+        }
+        for (int i6 = 0; i6 < mapEndPositionCount; i6++) {
+            int[][] iArr = DataStage.mapEndPosition;
+            int i7 = ((iArr[i6][0] * 45) + 22) * 50;
+            int i8 = ((iArr[i6][1] * 45) + 22) * 50;
+            if (posX == i7 && posY == i8) {
+                DataStage.instance.addEffectUnit(EffectUnit.EFFECT_TYPE_GATE_BREAK, posX, posY);
+                if (Config.vibration) {
+                    NewTower.vibe.vibrate(250L);
                 }
-                for (int i6 = 0; i6 < mapEndPositionCount; i6++) {
-                    int[][] iArr = mapEndPosition;
-                    int i7 = ((iArr[i6][0] * 45) + 22) * 50;
-                    int i8 = ((iArr[i6][1] * 45) + 22) * 50;
-                    if (posX == i7 && posY == i8) {
-                        DataStage.addEffectUnit(36, posX, posY);
-                        if (vibrationFlag == 1) {
-                            NewTower.vibe.vibrate(250L);
-                        }
-                        playSound(12);
-                        monsterType = -1;
-                        GameRenderer.monsterGoalBlinkCount = 6;
-                        if (DataStage.Life > 0) {
-                            int i10 = wavePattern;
-                            if (i10 == 2)
-                                DataStage.Life = Math.max(0, DataStage.Life - 3);
-                            else if (i10 == 3)
-                                DataStage.Life = bossFlag ? 0 : DataStage.Life - 1;
-                            else
-                                DataStage.Life--;
-                        }
-                        if (DataStage.Life <= 0) {
-                            GameRenderer.monsterGoalBlinkCount = 0;
-                            return true;
-                        }
-                    }
+                playSound(12);
+                type = -1;
+                unitHP = 0;
+                GameRenderer.monsterGoalBlinkCount = 6;
+                if (DataStage.Life > 0) {
+                    int i10 = wavePattern;
+                    if (i10 == 2)
+                        DataStage.Life = Math.max(0, DataStage.Life - 3);
+                    else if (i10 == 3)
+                        DataStage.Life = bossFlag ? 0 : DataStage.Life - 1;
+                    else
+                        DataStage.Life--;
                 }
-            } else if (unitStatus == 1 && unitStatusCount >= 10)
-                removeMonsterUnit();
+                if (DataStage.Life <= 0) {
+                    GameRenderer.monsterGoalBlinkCount = 0;
+                    return true;
+                }
+            }
         }
         return false;
     }
 
     @Override
     public void hit(int dmgType, TowerUnit unit) {
-        int i4 = monsterType;
-        int i5;
-        int i6;
-        int i7;
-        int i8;
-        int i9 = Math.min(DataStage.Wave, DataWave.WAVE_MAX_COUNT);
+        int i9 = Math.min(DataStage.instance.waveManager.current, DataWave.WAVE_MAX_COUNT);
         int i10 = unit != null ? unit.towerType : -1;
-        if ((!(dmgType == 1 && i10 == -1) && (unit == null || i10 == -1)) || i4 == -1)
+        if (dead() || unit == null)
             return;
 
-        if (unitStatus == 0) {
-            if (dmgType == 1) {
-                unitHP -= dotHolyDamage;
-                if (unitHP <= 0)
-                    getRewardFromMonster(null);
-            } else if (dmgType == 2) {
-                unitHP -= dotFireDamage;
-                if (unitHP <= 0)
-                    getRewardFromMonster(null);
-            } else {
-                int soundHitType = getSoundHitType(unit);
-                if (soundHitType != -1)
-                    playSound(soundHitType);
+        int soundHitType = getSoundHitType(unit);
+        if (soundHitType != -1)
+            playSound(soundHitType);
 
-                unitHP -= unit.getHitDamage(this);
-                if (unitHP <= 0)
-                    getRewardFromMonster(unit);
-                int i13 = unit.effectType;
-                if (i13 == 0) {
-                    if (!unit.heroFlag) {
-                        int upgradeUnitRate = (DataCharacter.charData[i10][7] * (getUpgradeUnitRate(1, 10) + 100)) / 100;
-                        if (bossFlag) {
-                            i6 = (DataMonster.monsterData[i4][6] * (DataWave.monsterWaveData[i9][12] + 100)) / 100;
-                        } else {
-                            i6 = (DataMonster.monsterData[i4][6] * (DataWave.monsterWaveData[i9][4] + 100)) / 100;
-                        }
-                        i5 = upgradeUnitRate - i6;
-                    } else
-                        i5 = 0;
-
-                    if (stunCount == 0 && getRandom(100) < i5 && !unit.heroFlag) {
+        damaged(unit.getHitDamage(this), unit);
+        if (unit instanceof HeroUnit) {
+            int upgradeItemRate = getUpgradeItemRate(unit.heroOrder, 10);
+            if (upgradeItemRate > 0 && NewTower.getRandom(100) < upgradeItemRate) {
+                dotHolyFlag = true;
+                dotHolyDamage = (unit.getHitDamage(this) * 3) / 100;
+                dotHolyCount = DataCharacter.charData[17][8];
+            }
+            int upgradeItemRate2 = getUpgradeItemRate(unit.heroOrder, 11);
+            if (upgradeItemRate2 > 0 && !bossFlag && NewTower.getRandom(100) < upgradeItemRate2) {
+                unitHP = 0;
+                kill(unit);
+            }
+            int upgradeItemRate3 = getUpgradeItemRate(unit.heroOrder, 12);
+            if (upgradeItemRate3 > 0 && !stunFlag && NewTower.getRandom(100) < upgradeItemRate3) {
+                stunFlag = true;
+                stunCount = DataCharacter.charData[5][8];
+                if (bossFlag)
+                    stunCount /= 2;
+            }
+            int upgradeItemRate4 = getUpgradeItemRate(unit.heroOrder, 13);
+            if (upgradeItemRate4 > 0 && NewTower.getRandom(100) < upgradeItemRate4) {
+                slowIceFlag = true;
+                slowRate += DataCharacter.charData[29][8];
+                if (slowRate > 80.0f)
+                    slowRate = 80.0f;
+            }
+        } else {
+            switch (unit.effectType) {
+                case 0: {
+                    int upgradeRate = (DataCharacter.charData[i10][7] * (getUpgradeUnitRate(1, 10) + 100)) / 100;
+                    int prob = upgradeRate - ((DataMonster.monsterData[type][6] * (DataWave.monsterWaveData[i9][bossFlag ? 12 : 4] + 100)) / 100);
+                    if (stunCount == 0 && NewTower.getRandom(100) < prob) {
                         stunCount = (DataCharacter.charData[i10][8] * (getUpgradeUnitRate(1, 11) + 100)) / 100;
                         if (bossFlag)
                             stunCount /= 2;
                     }
-                } else if (i13 == 1)
+                    break;
+                } case 1:
                     unit.hitUnitSplash(unit.attackType * 3, this);
-                else if (i13 == 2) {
-                    dotHolyFlag = true;
+                    break;
+                case 2:
                     int hitDamage = unit.getHitDamage(this);
                     dotHolyDamage = ((hitDamage + ((getUpgradeUnitRate(2, 7) * hitDamage) / 100)) * ((getUpgradeUnitRate(2, 12) + 100) / 100)) / 20;
                     dotHolyCount = (DataCharacter.charData[i10][8] * (getUpgradeUnitRate(2, 13) + 100)) / 100;
-                } else if (i13 == 3) {
-                    if (!unit.heroFlag) {
-                        int upgradeUnitRate2 = (DataCharacter.charData[i10][7] * (getUpgradeUnitRate(3, 14) + 100)) / 100;
-                        if (bossFlag)
-                            i8 = (DataMonster.monsterData[i4][7] * (DataWave.monsterWaveData[i9][13] + 100)) / 100;
-                        else
-                            i8 = (DataMonster.monsterData[i4][7] * (DataWave.monsterWaveData[i9][5] + 100)) / 100;
-                        i7 = upgradeUnitRate2 - i8;
-                    } else {
-                        i7 = 0;
-                    }
-                    if (getRandom(100) < i7) {
+                    break;
+                case 3:
+                    int base = (DataMonster.monsterData[type][7] * (DataWave.monsterWaveData[i9][bossFlag ? 13 : 5] + 100)) / 100;
+                    int uur2 = ((DataCharacter.charData[i10][7] * (getUpgradeUnitRate(3, 14) + 100)) / 100) - base;
+                    base = uur2 - base;
+                    if (NewTower.getRandom(100) < base) {
                         slowIceFlag = true;
                         slowRate += (DataCharacter.charData[i10][8] * (getUpgradeUnitRate(3, 15) + 100)) / 100;
                         if (slowRate > 80.0f)
                             slowRate = 80.0f;
                     }
-                }
-                if (unit.heroFlag && unitStatus == 0) {
-                    int upgradeItemRate = getUpgradeItemRate(unit.heroOrder, 10);
-                    if (upgradeItemRate > 0 && getRandom(100) < upgradeItemRate) {
-                        dotHolyFlag = true;
-                        dotHolyDamage = (unit.getHitDamage(this) * 3) / 100;
-                        dotHolyCount = DataCharacter.charData[17][8];
-                    }
-                    int upgradeItemRate2 = getUpgradeItemRate(unit.heroOrder, 11);
-                    if (upgradeItemRate2 > 0 && !bossFlag && getRandom(100) < upgradeItemRate2) {
-                        unitHP = 0;
-                        getRewardFromMonster(unit);
-                    }
-                    int upgradeItemRate3 = getUpgradeItemRate(unit.heroOrder, 12);
-                    if (upgradeItemRate3 > 0 && !stunFlag && getRandom(100) < upgradeItemRate3) {
-                        stunFlag = true;
-                        stunCount = DataCharacter.charData[5][8];
-                        if (bossFlag)
-                            stunCount /= 2;
-                    }
-                    int upgradeItemRate4 = getUpgradeItemRate(unit.heroOrder, 13);
-                    if (upgradeItemRate4 > 0 && getRandom(100) < upgradeItemRate4) {
-                        slowIceFlag = true;
-                        slowRate += DataCharacter.charData[29][8];
-                        if (slowRate > 80.0f)
-                            slowRate = 80.0f;
-                    }
-                }
+                    break;
             }
         }
     }
 
     public void hitUnitFierce(ArrowUnit arrow, TowerUnit shooter) {
-        if (shooter == null || monsterType == -1)
+        if (shooter == null || dead())
             return;
 
         int dx = posX - shooter.posX;
@@ -320,31 +293,30 @@ public class MonsterUnit extends EnemyUnit {
                     int abs6 = Math.abs(efy - mon.posY) / 50;
                     if ((abs5 * abs5) + (abs6 * abs6) <= 225) {
                         arrow.hitMons.add(mon);
-                        DataStage.addEffectUnit(shooter.attackEffect, mon.posX, mon.posY);
-                        mon.unitHP -= shooter.getHitDamage(this);
-                        if (mon.unitHP <= 0)
-                            getRewardFromMonster(shooter);
+                        DataStage.instance.addEffectUnit(shooter.attackEffect, mon.posX, mon.posY);
+                        mon.damaged(shooter.getHitDamage(this), shooter);
                     }
                 }
             }
         }
     }
 
-    //Rename to killMonster, mayhaps
-    public void getRewardFromMonster(TowerUnit unit) {
-        int i4;
-        boolean z;
-        int i5;
+    public void damaged(int dmg, TowerUnit unit) {
+        unitHP -= dmg;
+        if (dead())
+            kill(unit);
+    }
+
+    @Override
+    public void kill(TowerUnit unit) {
+        int i4 = 0;
+        int i5 = DataStage.instance.waveManager.current;
         int i6;
         int i8;
-        if (DataStage.mapType == 1 && DataStage.Wave >= DataWave.WAVE_MAX_COUNT) {
+        boolean z = DataStage.instance.mapType == 1 && i5 >= DataWave.WAVE_MAX_COUNT;
+        if (z) {
             i5 = DataWave.WAVE_MAX_COUNT - 1;
-            i4 = (DataStage.Wave - DataWave.WAVE_MAX_COUNT) + 1;
-            z = true;
-        } else {
-            i4 = 0;
-            z = false;
-            i5 = DataStage.Wave;
+            i4 = (DataStage.instance.waveManager.current - DataWave.WAVE_MAX_COUNT) + 1;
         }
 
         if (bossFlag) {
@@ -356,42 +328,26 @@ public class MonsterUnit extends EnemyUnit {
             if (z)
                 i6 += i4 * DataWave.monsterWaveData[60][6];
         }
-        int upgradeUnitRate = i6 + ((DataWave.monsterWaveData[i5][6] * getUpgradeUnitRate(0, 2)) / 100);
-        if (unit != null && unit.heroFlag) {
+        int upgradeUnitRate = i6 + ((DataWave.monsterWaveData[i5][6] * TowerUnit.getUpgradeUnitRate(0, 2)) / 100);
+        if (unit != null && unit.heroFlag)
             upgradeUnitRate += (DataWave.monsterWaveData[i5][6] * getUpgradeItemRate(unit.heroOrder, 8)) / 100;
-        }
+
         DataStage.Money += upgradeUnitRate;
-        int[] iArr = awardDataValue;
-        if (DataStage.Money >= iArr[21]) {
-            iArr[21] = DataStage.Money;
-            recheckAwardData();
-        }
+        DataAward.check_money(DataStage.Money);
+
         i8 = z ? DataWave.monsterWaveData[60][bossFlag ? 15 : 7] : DataWave.monsterWaveData[i5][bossFlag ? 15 : 7];
-        int upgradeUnitRate2 = i8 + ((DataWave.monsterWaveData[i5][7] * getUpgradeUnitRate(0, 3)) / 100);
-        if (unit != null && unit.heroFlag) {
+        int upgradeUnitRate2 = i8 + ((DataWave.monsterWaveData[i5][7] * TowerUnit.getUpgradeUnitRate(0, 3)) / 100);
+        if (unit != null && unit.heroFlag)
             upgradeUnitRate2 += (DataWave.monsterWaveData[i5][7] * getUpgradeItemRate(unit.heroOrder, 8)) / 100;
-        }
+
         DataStage.Mana += upgradeUnitRate2;
-        if (bossFlag) {
-            destroyScore += ((DataStage.Wave * 0.1f) + 1.0f) * 120.0f * 5.0f;
-        } else {
-            destroyScore += ((DataStage.Wave * 0.1f) + 1.0f) * 120.0f;
-        }
-        int[] iArr2 = awardDataValue;
-        iArr2[33] = iArr2[33] + 1;
-        recheckAwardData();
+        DataStage.instance.bScore += ((DataStage.instance.waveManager.current * 0.1f) + 1f) * 120f * (bossFlag ? 5 : 1);
+        DataAward.check_kill();
 
         unitStatus = 1;
         unitStatusCount = 0;
-        DataStage.addEffectUnit(13, posX, posY);
+        DataStage.instance.addEffectUnit(EffectUnit.EFFECT_TYPE_DIE, posX, posY);
         if (DataStage.selectedTarget == this)
             DataStage.selectedTarget = null;
-    }
-
-    public void removeMonsterUnit() {
-        monsterType = -1;
-        unitStatus = -1;
-
-        monsterUnitCount--;
     }
 }

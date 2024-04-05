@@ -345,14 +345,12 @@ public class GLGameSurfaceView extends GLSurfaceView {
             switch (GameThread.loadingStatus) {
                 case 1001:
                     GameThread.gameLoadFlag = 0;
-                    GameThread.loadingStatus = 1001;
                     GameThread.loadTipNumber = GameThread.getRandom(GameThread.TIP_TEXT.length);
                     GameRenderer.loadCount_GAME_PRE_IMAGE_LOAD = 0;
                     GameRenderer.loadingViewType = GameThread.getRandom(6);
                     return;
                 case 1002:
                     GameThread.gameLoadFlag = 0;
-                    GameThread.loadingStatus = 1002;
                     GameThread.loadTipNumber = GameThread.getRandom(GameThread.TIP_TEXT.length);
                     GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
                     GameRenderer.loadingViewType = GameThread.getRandom(6);
@@ -652,16 +650,6 @@ public class GLGameSurfaceView extends GLSurfaceView {
         TouchManager.processTouchStatus();
     }
 
-    public void touchCheck_GAME_PLAYBEAN() {
-        if (TouchManager.lastActionStatus != 2) {
-            return;
-        }
-        GameRenderer.logoSoundPlayFlag = false;
-        GameRenderer.lastCheckTime = System.currentTimeMillis();
-        GameThread.gameStatus = 0;
-        TouchManager.processTouchStatus();
-    }
-
     public void touchCheck_GAME_LOGO() {
         if (TouchManager.lastActionStatus != 2) {
             return;
@@ -767,11 +755,10 @@ public class GLGameSurfaceView extends GLSurfaceView {
                     newTower.HideAdMob();
                     if (GameThread.freeAdViewCount > 0) {
                         newTower.showMainMenuRewardDialog();
-                        break;
                     } else {
                         newTower.showNotRewardDialog();
-                        break;
                     }
+                    break;
             }
         }
         TouchManager.clearTouchStatus();
@@ -1026,10 +1013,8 @@ public class GLGameSurfaceView extends GLSurfaceView {
                     if (GameThread.mapNumber % 10 == 9 && GameThread.mapNumber != 49) {
                         GameRenderer.darkViewCount = 0;
                         GameThread.gameSubStatus = 3;
-                        break;
                     } else {
                         GameThread.gameSubStatus = 1;
-                        break;
                     }
                 }
                 break;
@@ -1198,14 +1183,10 @@ public class GLGameSurfaceView extends GLSurfaceView {
                     if (GameThread.characterMenuSelectFlag != 3) {
                         return;
                     }
-                    if (checkTouchListStatus != 7) {
-                        i = 8;
-                        if (checkTouchListStatus != 8 && checkTouchListStatus != 9) {
+                    i = 8;
+                    if (checkTouchListStatus != 7)
+                        if (checkTouchListStatus != 8 && checkTouchListStatus != 9)
                             return;
-                        }
-                    } else {
-                        i = 8;
-                    }
                     GameThread.characterMenuSelectFlag = 4;
                     GameThread.characterAddOrder = checkTouchListStatus - i;
                     GameThread.characterAddNumber = 0;
@@ -1275,9 +1256,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         GameThread.myHeroism += 300;
                         GameThread.rewardDataValue[0] = 1;
                         GameThread.heroUnitType[0] = 0;
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                     } else {
                         GameThread.gameSubStatus = 22;
                     }
@@ -1359,9 +1338,6 @@ public class GLGameSurfaceView extends GLSurfaceView {
                             case 9:
                             case 10:
                                 switch (checkTouchListStatus) {
-                                    case 8:
-                                        i = GameThread.heroUnitType[0];
-                                        break;
                                     case 9:
                                         i = GameThread.heroUnitType[1];
                                         break;
@@ -1464,11 +1440,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                     return;
                 case 12:
                     GameThread.playSound(14);
-                    if (GameThread.myWaveRunFlag) {
-                        GameThread.myWaveRunFlag = false;
-                    } else {
-                        GameThread.myWaveRunFlag = true;
-                    }
+                    GameThread.myWaveRunFlag = !GameThread.myWaveRunFlag;
                     TouchManager.processTouchStatus();
                     return;
                 case 13:
@@ -1656,7 +1628,6 @@ public class GLGameSurfaceView extends GLSurfaceView {
                             break;
                     }
                     TouchManager.processTouchStatus();
-                    return;
             }
         }
     }
@@ -1720,15 +1691,14 @@ public class GLGameSurfaceView extends GLSurfaceView {
             if (checkTouchListStatus == 1) {
                 GameThread.myScrollbar[0].setUpdatePosition(firstFirstActionTouch.x);
                 Config.updateVolume(GameThread.myScrollbar[0].BarLastValue);
-                return;
             } else {
                 if (checkTouchListStatus != 2) {
                     return;
                 }
                 GameThread.myScrollbar[1].setUpdatePosition(firstFirstActionTouch.x);
                 Config.effectVolume = GameThread.myScrollbar[1].BarLastValue;
-                return;
             }
+            return;
         }
         if (i == 1) {
             int checkTouchListPressed = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
@@ -1760,33 +1730,22 @@ public class GLGameSurfaceView extends GLSurfaceView {
             } else {
                 GameThread.movieViewFlag = 1;
             }
-            GameThread.timeSave();
-            GameThread.writeSaveData(newTower, 0);
-            GameThread.writeSaveData(newTower, 1);
+            Config.saveAll(newTower);
         } else if (checkTouchListStatus2 == 4) {
             GameThread.playSound(14);
-            if (GameThread.vibrationFlag == 1) {
-                GameThread.vibrationFlag = 0;
-            } else {
-                GameThread.vibrationFlag = 1;
-            }
-            GameThread.timeSave();
-            GameThread.writeSaveData(newTower, 0);
-            GameThread.writeSaveData(newTower, 1);
+            Config.vibration = !Config.vibration;
+
+            Config.saveAll(newTower);
         }
         int checkTouchListPressed2 = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
         if (checkTouchListPressed2 == 1) {
             GameThread.myScrollbar[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
             Config.updateVolume(GameThread.myScrollbar[0].BarLastValue);
-            GameThread.timeSave();
-            GameThread.writeSaveData(newTower, 0);
-            GameThread.writeSaveData(newTower, 1);
+            Config.saveAll(newTower);
         } else if (checkTouchListPressed2 == 2) {
             GameThread.myScrollbar[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
             Config.effectVolume = GameThread.myScrollbar[1].BarLastValue;
-            GameThread.timeSave();
-            GameThread.writeSaveData(newTower, 0);
-            GameThread.writeSaveData(newTower, 1);
+            Config.saveAll(newTower);
         }
         TouchManager.processTouchStatus();
     }
@@ -1930,9 +1889,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                             iArr3[12] = iArr3[12] + 1;
                         }
                         GameThread.recheckAwardData();
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                         GameThread.lastUpdateItemPos = GameThread.upgradeUnitSelectPos;
                         GameThread.lastUpdateItemViewDelay = 15;
                         break;
@@ -1991,9 +1948,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                             iArr3[12] = iArr3[12] + 1;
                         }
                         GameThread.recheckAwardData();
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                         GameThread.playSound(13);
                         GameThread.lastUpdateItemPos = (GameThread.upgradeHeroUnitSelectPos * 6) + GameThread.upgradeHeroUpgradeSelectPos;
                         GameThread.lastUpdateItemViewDelay = 15;
@@ -2090,7 +2045,6 @@ public class GLGameSurfaceView extends GLSurfaceView {
                 if (checkTouchListStatus == 34) {
                     GameThread.gameSubStatus = 0;
                     GameRenderer.upgradeItemListDraw.backupCurrentDrawPosition();
-                    return;
                 } else {
                     if (checkTouchListStatus != 35) {
                         return;
@@ -2098,7 +2052,6 @@ public class GLGameSurfaceView extends GLSurfaceView {
                     GameThread.gameSubStatus = 0;
                     GameThread.myScrollbar[4].setUpdatePosition(TouchManager.getFirstFirstActionTouch().y);
                     GameRenderer.upgradeItemListDraw.setAnchorDrawPosition(GameThread.myScrollbar[4].BarLastValue);
-                    return;
                 }
             }
             return;
@@ -2178,14 +2131,12 @@ public class GLGameSurfaceView extends GLSurfaceView {
                                                     GameThread.gameSubStatus = 2;
                                                     break;
                                                 }
-                                            } else if (i7 == 1) {
+                                            } else {
                                                 if (GameThread.buyShopItem(GameThread.shopUnitValue[i6]) == 2) {
                                                     GameThread.gameSubStatus = 7;
                                                 }
                                                 GameThread.playSound(14);
-                                                GameThread.timeSave();
-                                                GameThread.writeSaveData(newTower, 0);
-                                                GameThread.writeSaveData(newTower, 1);
+                                                Config.saveAll(newTower);
                                                 break;
                                             }
                                         }
@@ -2193,7 +2144,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                                 } else {
                                     GameThread.playSound(14);
                                     GameThread.gameSubStatus = 1;
-                                    GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (checkTouchListStatus2 - 0);
+                                    GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (checkTouchListStatus2);
                                     break;
                                 }
                                 break;
@@ -2202,9 +2153,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         int sellShopItem = GameThread.sellShopItem();
                         GameThread.playSound(14);
                         if (sellShopItem == 0) {
-                            GameThread.timeSave();
-                            GameThread.writeSaveData(newTower, 0);
-                            GameThread.writeSaveData(newTower, 1);
+                            Config.saveAll(newTower);
                             break;
                         } else if (sellShopItem == 2) {
                             GameThread.gameSubStatus = 8;
@@ -2310,25 +2259,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         break;
                     }
                     break;
-                case 5:
-                    if (checkTouchListStatus2 == 53) {
-                        GameThread.gameSubStatus = 0;
-                        break;
-                    }
-                    break;
-                case 6:
-                    if (checkTouchListStatus2 == 53) {
-                        GameThread.gameSubStatus = 0;
-                        break;
-                    }
-                    break;
-                case 7:
-                    if (checkTouchListStatus2 == 53) {
-                        GameThread.gameSubStatus = 0;
-                        break;
-                    }
-                    break;
-                case 8:
+                case 5, 6, 7, 8:
                     if (checkTouchListStatus2 == 53) {
                         GameThread.gameSubStatus = 0;
                         break;
@@ -2352,21 +2283,19 @@ public class GLGameSurfaceView extends GLSurfaceView {
                 if (checkTouchListStatus < 10) {
                     if (GameThread.itemUnitValue[(GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + checkTouchListStatus] != -1) {
                         touchStart_GAME_SHOP_EQUIP_NUM = checkTouchListStatus;
-                        return;
                     } else {
                         touchStart_GAME_SHOP_EQUIP_NUM = -1;
-                        return;
                     }
+                    return;
                 }
                 if (checkTouchListStatus < 60) {
                     int i3 = checkTouchListStatus - 10;
                     if (GameThread.heroItemType[i3 / 2][i3 % 2] != -1) {
                         touchStart_GAME_SHOP_EQUIP_NUM = checkTouchListStatus;
-                        return;
                     } else {
                         touchStart_GAME_SHOP_EQUIP_NUM = -1;
-                        return;
                     }
+                    return;
                 }
                 touchStart_GAME_SHOP_EQUIP_NUM = -1;
                 return;
@@ -2384,15 +2313,14 @@ public class GLGameSurfaceView extends GLSurfaceView {
                     if (checkTouchListPressed < 10) {
                         int i5 = GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8);
                         int i6 = touchStart_GAME_SHOP_EQUIP_NUM;
-                        int i7 = i5 + i6 + 0;
+                        int i7 = i5 + i6;
                         if (i6 != -1 && GameThread.itemUnitValue[i7] != -1) {
                             GameThread.gameSubStatus = 7;
                             GameThread.shopShopInventorySelectPos = i7;
-                            return;
                         } else {
                             TouchManager.clearTouchMap();
-                            return;
                         }
+                        return;
                     }
                     if (checkTouchListPressed < 60) {
                         int i8 = checkTouchListPressed - 10;
@@ -2458,9 +2386,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         GameThread.equipItem();
                         GameThread.setEquipHeroSetting();
                         GameThread.gameSubStatus = 3;
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                         TouchManager.processTouchStatus();
                         return;
                     }
@@ -2473,9 +2399,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         GameThread.equipItem();
                         GameThread.setEquipHeroSetting();
                         GameThread.gameSubStatus = 3;
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                         TouchManager.processTouchStatus();
                         return;
                     }
@@ -2488,9 +2412,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         GameThread.equipItem();
                         GameThread.setEquipHeroSetting();
                         GameThread.gameSubStatus = 3;
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                         TouchManager.processTouchStatus();
                         return;
                     }
@@ -2503,9 +2425,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         GameThread.equipItem();
                         GameThread.setEquipHeroSetting();
                         GameThread.gameSubStatus = 3;
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                         TouchManager.processTouchStatus();
                         return;
                     }
@@ -2518,9 +2438,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         GameThread.equipItem();
                         GameThread.setEquipHeroSetting();
                         GameThread.gameSubStatus = 3;
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                         TouchManager.processTouchStatus();
                         return;
                     }
@@ -2533,9 +2451,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         GameThread.equipItem();
                         GameThread.setEquipHeroSetting();
                         GameThread.gameSubStatus = 3;
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                         TouchManager.processTouchStatus();
                         return;
                     }
@@ -2547,9 +2463,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                                 GameThread.playSound(14);
                                 int sellShopItem = GameThread.sellShopItem();
                                 if (sellShopItem == 0) {
-                                    GameThread.timeSave();
-                                    GameThread.writeSaveData(newTower, 0);
-                                    GameThread.writeSaveData(newTower, 1);
+                                    Config.saveAll(newTower);
                                 } else if (sellShopItem == 2) {
                                     GameThread.gameSubStatus = 8;
                                 }
@@ -2574,7 +2488,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
         }
         if (checkTouchListStatus2 != -1 && checkTouchListStatus2 < 10) {
             GameThread.playSound(14);
-            GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (checkTouchListStatus2 - 0);
+            GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (checkTouchListStatus2);
             GameThread.gameSubStatus = 4;
             TouchManager.processTouchStatus();
             return;
@@ -2598,9 +2512,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                     TouchManager.checkTouchListPressed(TouchManager.getFirstLastActionTouch());
                     GameThread.unequipItem();
                     GameThread.setEquipHeroSetting();
-                    GameThread.timeSave();
-                    GameThread.writeSaveData(newTower, 0);
-                    GameThread.writeSaveData(newTower, 1);
+                    Config.saveAll(newTower);
                     GameThread.gameSubStatus = 2;
                 } else if (i12 == 7) {
                     if (checkTouchListStatus2 == 60) {
@@ -2615,9 +2527,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                         GameThread.upgradeHeroEquipSelectPos = i13 % 2;
                         GameThread.equipItem();
                         GameThread.setEquipHeroSetting();
-                        GameThread.timeSave();
-                        GameThread.writeSaveData(newTower, 0);
-                        GameThread.writeSaveData(newTower, 1);
+                        Config.saveAll(newTower);
                     }
                     GameThread.gameSubStatus = 3;
                 }
@@ -2746,9 +2656,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                             GameThread.playSound(14);
                             int sellShopItem = GameThread.sellShopItem();
                             if (sellShopItem == 0) {
-                                GameThread.timeSave();
-                                GameThread.writeSaveData(newTower, 0);
-                                GameThread.writeSaveData(newTower, 1);
+                                Config.saveAll(newTower);
                                 break;
                             } else if (sellShopItem == 2) {
                                 GameThread.gameSubStatus = 5;
@@ -2759,7 +2667,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
                     default:
                         if (checkTouchListStatus < 60) {
                             GameThread.playSound(14);
-                            GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (checkTouchListStatus - 0);
+                            GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (checkTouchListStatus);
                             GameThread.gameSubStatus = 3;
                             TouchManager.processTouchStatus();
                             return;
@@ -2814,32 +2722,28 @@ public class GLGameSurfaceView extends GLSurfaceView {
                 int checkTouchListStatus = TouchManager.checkTouchListStatus();
                 if (checkTouchListStatus == 3) {
                     GameRenderer.rankListDraw.backupCurrentDrawPosition();
-                    return;
                 } else {
                     if (checkTouchListStatus != 4) {
                         return;
                     }
                     GameThread.myScrollbar[2].setUpdatePosition(TouchManager.getFirstFirstActionTouch().y);
                     GameRenderer.rankListDraw.setAnchorDrawPosition(GameThread.myScrollbar[2].BarLastValue);
-                    return;
                 }
+                return;
             }
             if (i2 == 1) {
                 int checkTouchListPressed = TouchManager.checkTouchListPressed(TouchManager.getFirstLastActionTouch());
                 if (checkTouchListPressed == 3) {
-                    if (TouchManager.checkTouchMoveDegree(true)) {
+                    if (TouchManager.checkTouchMoveDegree(true))
                         GameRenderer.rankListDraw.resetWithDegree((int) (-TouchManager.lastMoveCheckDistance.y));
-                        return;
-                    }
-                    return;
                 } else {
                     if (checkTouchListPressed != 4) {
                         return;
                     }
                     GameThread.myScrollbar[2].setUpdatePosition(TouchManager.getFirstLastActionTouch().y);
                     GameRenderer.rankListDraw.setAnchorDrawPosition(GameThread.myScrollbar[2].BarLastValue);
-                    return;
                 }
+                return;
             }
             if (i2 != 2) {
                 return;
@@ -2869,32 +2773,28 @@ public class GLGameSurfaceView extends GLSurfaceView {
             int checkTouchListStatus3 = TouchManager.checkTouchListStatus();
             if (checkTouchListStatus3 == 3) {
                 GameRenderer.awardListDraw.backupCurrentDrawPosition();
-                return;
             } else {
                 if (checkTouchListStatus3 != 4) {
                     return;
                 }
                 GameThread.myScrollbar[3].setUpdatePosition(TouchManager.getFirstFirstActionTouch().y);
                 GameRenderer.awardListDraw.setAnchorDrawPosition(GameThread.myScrollbar[3].BarLastValue);
-                return;
             }
+            return;
         }
         if (i3 == 1) {
             int checkTouchListPressed2 = TouchManager.checkTouchListPressed(TouchManager.getFirstLastActionTouch());
             if (checkTouchListPressed2 == 3) {
-                if (TouchManager.checkTouchMoveDegree(true)) {
+                if (TouchManager.checkTouchMoveDegree(true))
                     GameRenderer.awardListDraw.resetWithDegree((int) (-TouchManager.lastMoveCheckDistance.y));
-                    return;
-                }
-                return;
             } else {
                 if (checkTouchListPressed2 != 4) {
                     return;
                 }
                 GameThread.myScrollbar[3].setUpdatePosition(TouchManager.getFirstLastActionTouch().y);
                 GameRenderer.awardListDraw.setAnchorDrawPosition(GameThread.myScrollbar[3].BarLastValue);
-                return;
             }
+            return;
         }
         if (i3 != 2) {
             return;

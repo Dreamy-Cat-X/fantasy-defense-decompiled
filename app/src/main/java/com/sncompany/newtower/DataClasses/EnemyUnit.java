@@ -3,7 +3,7 @@ package com.sncompany.newtower.DataClasses;
 /**
  * Superclass used to link enemies and objects.
  */
-public abstract class EnemyUnit {
+public abstract class EnemyUnit implements Comparable<EnemyUnit> {
     public int type;
     public int posX;
     public int posY;
@@ -11,7 +11,18 @@ public abstract class EnemyUnit {
     public int unitHP;
     public int unitMaxHP;
 
+    public boolean dead() {
+        return unitHP <= 0;
+    }
+
+    public abstract boolean update();
+
     public abstract void hit(int dmgType, TowerUnit uni);
 
-    //public abstract void kill(TowerUnit uni) { type = -1; }
+    public abstract void kill(TowerUnit uni);
+
+    @Override
+    public int compareTo(EnemyUnit e) {
+        return Integer.compare(posY, e.posY);
+    }
 }

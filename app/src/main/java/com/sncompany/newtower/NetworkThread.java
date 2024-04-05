@@ -308,9 +308,7 @@ public class NetworkThread extends Thread {
             } else {
                 GameThread.getItem(GameThread.shopGiftItemType[i]);
             }
-            GameThread.timeSave();
-            GameThread.writeSaveData(newTower, 0);
-            GameThread.writeSaveData(newTower, 1);
+            Config.saveAll(newTower);
         }
         return ByteArrayToInt;
     }

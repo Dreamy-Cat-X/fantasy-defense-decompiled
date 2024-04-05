@@ -1,7 +1,5 @@
 package com.sncompany.newtower;
 
-import android.util.Log;
-
 /* loaded from: D:\decomp\classes.dex */
 public class MyOscillator {
     public static final int MYOSCILLATOR_MOVETYPE_ONE_WAY = 0;
@@ -60,9 +58,7 @@ public class MyOscillator {
         this.OscOverCount = i5;
         int i6 = 0;
         this.OscCurrentCount = 0;
-        if (this.OscBlockPosition != null) {
-            this.OscBlockPosition = null;
-        }
+
         int i7 = i5 + i3;
         this.OscBlockSize = i7;
         this.OscBlockPosition = new int[i7];
@@ -70,19 +66,16 @@ public class MyOscillator {
             int[] iArr = this.OscBlockPosition;
             double sin = Math.sin((((i8 * 90) * M_PI) / (this.OscCount - 1)) / 180.0f);
             int i9 = this.OscOverPos;
-            int i10 = this.OscStartPos;
-            double d = i9 - i10;
-            Double.isNaN(d);
+            double d = i9 - this.OscStartPos;
             double d2 = sin * d;
-            double d3 = i10;
-            Double.isNaN(d3);
-            iArr[i8] = (int) (d2 + d3);
+
+            iArr[i8] = (int) (d2 + (double) this.OscStartPos);
         }
         this.OscBlockPosition[i3 - 1] = this.OscOverPos;
         while (true) {
             if (i6 < this.OscOverCount) {
                 int[] iArr2 = this.OscBlockPosition;
-                double cos = Math.cos((((i6 * 90) * M_PI) / ((float) (r11 - 1))) / 180.0f);
+                double cos = Math.cos((((i6 * 90) * M_PI) / ((float) (i3 - 1))) / 180.0f);
                 int i11 = this.OscOverPos;
                 int i12 = this.OscEndPos;
                 double d4 = i11 - i12;
@@ -101,10 +94,9 @@ public class MyOscillator {
 
     public int getCurrentPosition() {
         int[] iArr = this.OscBlockPosition;
-        if (iArr == null) {
-            Log.d("OSCILLATOR DEBUG", "CHECK POS " + this.OscCurrentCount + ">=" + this.OscBlockSize);
+        if (iArr == null)
             return 0;
-        }
+
         int i = this.OscCurrentCount;
         int i2 = this.OscBlockSize;
         if (i >= i2) {
