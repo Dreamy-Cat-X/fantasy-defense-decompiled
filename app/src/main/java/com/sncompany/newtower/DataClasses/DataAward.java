@@ -75,6 +75,20 @@ public class DataAward {
 
     }
 
+    public static void check_time() {
+        int mins = (int)(Config.totalPlaytime / 60);
+        Config.awardValues[AWARD_Amateur_Defender] |= mins >= 30;
+
+        int hours = mins / 60;
+        Config.awardValues[AWARD_High_Class_Defender] |= hours >= 2;
+        Config.awardValues[AWARD_Professional_Defender] |= hours >= 5;
+        Config.awardValues[AWARD_Defense_Mania] |= hours >= 10;
+        Config.awardValues[AWARD_Defense_Master] |= hours >= 20;
+        Config.awardValues[AWARD_Defense_Hero] |= hours >= 50;
+        Config.awardValues[AWARD_Defense_King] |= hours >= 100;
+        Config.awardValues[AWARD_Defense_G_O_D] |= hours >= 200;
+    }
+
     public static void clear_award(int SID) {
         Config.awardValues[AWARD_Champion] |= Config.rewardValues[0];
         Config.awardValues[AWARD_Bow_Master] |= Config.rewardValues[2];

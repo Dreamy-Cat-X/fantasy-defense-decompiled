@@ -31,6 +31,8 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.sncompany.newtower.Pages.TPage;
+
 import java.io.InputStream;
 import java.util.StringTokenizer;
 
@@ -83,70 +85,30 @@ public class NewTower extends AppCompatActivity {
     boolean isVewing = false;
     public static int randomNumber;
 
+    public static TPage currentPage;
+
     @Override // androidx.appcompat.app.AppCompatActivity, androidx.fragment.app.FragmentActivity, androidx.core.app.ComponentActivity, android.app.Activity
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         doFullScreen();
         initActivity();
-        MobileAds.initialize(this, new OnInitializationCompleteListener() { // from class: com.sncompany.newtower.NewTower.1
-            @Override // com.google.android.gms.ads.initialization.OnInitializationCompleteListener
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-                Log.d("MobileAds", "initialize -------------------------");
-            }
-        });
-        initAdMob();
-        loadRewardedVideoAd();
     }
 
     private void doFullScreen() {
         getWindow().getDecorView().setSystemUiVisibility(3846);
     }
 
-    public void initAdMob() {
-        AdView adView = new AdView(this);
-        this.mAdView = adView;
-        adView.setAdSize(AdSize.BANNER);
-        this.mAdView.setAdUnitId(this.bannerID);
-        if (this.isAddMobInit || this.mAdView == null) {
-            return;
+    public static void switchPage(TPage p) {
+        TPage par = currentPage;
+        currentPage = p;
+        unloadRec(par);
+    }
+
+    private static void unloadRec(TPage p) {
+        if (p != null && p != currentPage && currentPage.parent != p) {
+            p.unload();
+            unloadRec(p.parent);
         }
-        Log.d("initAdMob", "initAdMob -------------------------");
-        glGameSurfaceView.post(new Runnable() { // from class: com.sncompany.newtower.NewTower.2
-            @Override // java.lang.Runnable
-            public void run() {
-                Log.d("initAdMob", "postDelayed 1 -------------------------");
-                if (NewTower.this.isAddView) {
-                    return;
-                }
-                Log.d("initAdMob", "postDelayed 2 -------------------------");
-                WindowManager windowManager = (WindowManager) NewTower.this.getSystemService("window");
-                WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-                layoutParams.type = 1000;
-                layoutParams.width = -2;
-                layoutParams.height = -2;
-                layoutParams.flags |= 8;
-                layoutParams.gravity = 80;
-                layoutParams.horizontalMargin = -0.02f;
-                windowManager.addView(NewTower.this.mAdView, layoutParams);
-                NewTower.this.isAddView = true;
-                Log.d("initAdMob", "postDelayed 2 -------------------------");
-                new Bundle().putString("max_ad_content_rating", "PG");
-                NewTower.this.mAdView.loadAd(new AdRequest.Builder().build());
-                NewTower.this.mAdView.setVisibility(8);
-                NewTower.this.isAddMobInit = true;
-            }
-        });
-        this.mAdView.setAdListener(new AdListener() { // from class: com.sncompany.newtower.NewTower.3
-            @Override // com.google.android.gms.ads.AdListener
-            public void onAdFailedToLoad(LoadAdError loadAdError) {
-                Toast.makeText(NewTower.this, "onAdFailedToLoad", 1).show();
-                loadAdError.getDomain();
-                loadAdError.getCode();
-                loadAdError.getMessage();
-                Log.d(com.google.ads.AdRequest.LOGTAG, loadAdError.toString());
-                super.onAdFailedToLoad(loadAdError);
-            }
-        });
     }
 
     public void ViewAdMob() {
@@ -217,17 +179,6 @@ public class NewTower extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    public void startAd() {
-        Log.d("startAd", "start ad--------------------------------------------------");
-        runOnUiThread(new Runnable() { // from class: com.sncompany.newtower.NewTower.8
-            @Override // java.lang.Runnable
-            public void run() {
-                Log.d("runOnUiThread", "--------------------------------------------------");
-                NewTower.this.showRewardedVideo();
-            }
-        });
     }
 
     public void onExit() {
@@ -430,135 +381,6 @@ public class NewTower extends AppCompatActivity {
         create.show();
     }
 
-    /**
-     * Shows when stage is over. Prompts ad play for 100 Heroism reward. Useless, delete after sorting this mess of a code out.
-     */
-    public void showRewardDialog() {
-        ViewAdMob();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Watch a Video to 100 Heroism Point");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.17
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d("showRewardDialog", "start ad--------------------------------------------------");
-                dialogInterface.cancel();
-                NewTower.this.HideAdMob();
-                NewTower.this.startAd();
-                if (GameThread.gameSubStatus == 0) {
-                    if (GameThread.myLife == GameThread.maxLife) {
-                        GameThread.gameSubStatus = 5;
-                        return;
-                    }
-                    if (GameThread.rewardShowFlag) {
-                        GameThread.gameSubStatus = 4;
-                        return;
-                    } else if (GameThread.mapNumber % 10 == 9 && GameThread.mapNumber != 49) {
-                        GameRenderer.darkViewCount = 0;
-                        GameThread.gameSubStatus = 3;
-                        return;
-                    } else {
-                        GameThread.gameSubStatus = 1;
-                        return;
-                    }
-                }
-                GameThread.playSound(14);
-                GameThread.gameSubStatus = 1;
-                GameRenderer.startViewCount = 0;
-                GameThread.myOscillator[11].fastForward();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.18
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-                NewTower.this.HideAdMob();
-                if (GameThread.gameSubStatus == 0) {
-                    if (GameThread.myLife == GameThread.maxLife) {
-                        GameThread.gameSubStatus = 5;
-                        return;
-                    }
-                    if (GameThread.rewardShowFlag) {
-                        GameThread.gameSubStatus = 4;
-                        return;
-                    } else if (GameThread.mapNumber % 10 == 9 && GameThread.mapNumber != 49) {
-                        GameRenderer.darkViewCount = 0;
-                        GameThread.gameSubStatus = 3;
-                        return;
-                    } else {
-                        GameThread.gameSubStatus = 1;
-                        return;
-                    }
-                }
-                GameThread.playSound(14);
-                GameThread.gameSubStatus = 1;
-                GameRenderer.startViewCount = 0;
-                GameThread.myOscillator[11].fastForward();
-            }
-        });
-        AlertDialog create = builder.create();
-        create.setTitle("Fantasy Defenders");
-        create.setIcon(R.drawable.icon);
-        create.show();
-    }
-
-    /**
-     * Main menu ad. Useless, delete.
-     */
-    public void showMainMenuRewardDialog() {
-        ViewAdMob();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Watch a Video to 100 Heroism Point");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.19
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (NewTower.this.isLoading) {
-                    return;
-                }
-                if (GameThread.freeAdViewCount == 5) {
-                    GameThread.freeAdViewTime = System.currentTimeMillis();
-                }
-                GameThread.freeAdViewCount--;
-                Config.saveAll(GameThread.newTower);
-                dialogInterface.cancel();
-                NewTower.this.HideAdMob();
-                NewTower.this.startAd();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.20
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-                NewTower.this.HideAdMob();
-            }
-        });
-        AlertDialog create = builder.create();
-        create.setTitle("Fantasy Defenders");
-        create.setIcon(R.drawable.icon);
-        create.show();
-    }
-
-    /**
-     * Appears on video wait. Useless, delete.
-     */
-    public void showNotRewardDialog() {
-        ViewAdMob();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("You have to wait until you can watch video");
-        builder.setCancelable(false);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.21
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        AlertDialog create = builder.create();
-        create.setTitle("Fantasy Defenders");
-        create.setIcon(R.drawable.icon);
-        create.show();
-    }
-
     public void keybackProcess() {
         Log.d("KEY PRESS", "CHECK THIS " + GameThread.gameStatus);
         int i = GameThread.gameLoadFlag;
@@ -594,14 +416,7 @@ public class NewTower extends AppCompatActivity {
                 GameThread.stopLoopSound(1);
                 GameThread.playLoopSound(0);
                 return;
-            case 8:
-                GameThread.gameStatus = 3;
-                GameThread.gameSubStatus = 0;
-                GameThread.gameTitleViewCount = 0;
-                GameThread.stopLoopSound(0);
-                GameThread.playSound(15);
-                return;
-            case 9:
+            case 8, 9:
                 GameThread.gameStatus = 3;
                 GameThread.gameSubStatus = 0;
                 GameThread.gameTitleViewCount = 0;
@@ -624,10 +439,7 @@ public class NewTower extends AppCompatActivity {
                 GameRenderer.titleCount = 0;
                 GameThread.playSound(15);
                 return;
-            case 12:
-                GameThread.gameStatus = 11;
-                return;
-            case 13:
+            case 12, 13:
                 GameThread.gameStatus = 11;
                 return;
             case 14:
@@ -663,17 +475,6 @@ public class NewTower extends AppCompatActivity {
                 GameThread.gameStatus = 7;
                 GameRenderer.titleCount = 0;
                 GameThread.playSound(15);
-                return;
-            case 17:
-                int i3 = GameThread.gameSubStatus;
-                if (i3 == 0 || i3 == 3) {
-                    GameThread.myOscillator[11].initWithTwoWayStartPosition(-150, 0, 15, 30, 10);
-                    GameRenderer.titlePressed = 17;
-                    GameThread.gameStatus = 7;
-                    GameRenderer.titleCount = 0;
-                    GameThread.playSound(15);
-                    return;
-                }
                 return;
             case 18:
                 GameRenderer.titlePressed = 18;

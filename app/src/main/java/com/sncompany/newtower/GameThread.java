@@ -1,19 +1,24 @@
 package com.sncompany.newtower;
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
 import androidx.core.internal.view.SupportMenu;
 import androidx.core.view.InputDeviceCompat;
 
-import com.sncompany.newtower.DataClasses.ArrowUnit;
+import com.sncompany.newtower.Battle.ArrowUnit;
+import com.sncompany.newtower.Battle.EffectUnit;
+import com.sncompany.newtower.Battle.MonsterUnit;
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataHero;
-import com.sncompany.newtower.DataClasses.ObjectUnit;
-import com.sncompany.newtower.DataClasses.TowerUnit;
+import com.sncompany.newtower.DataClasses.DataStage;
+import com.sncompany.newtower.DataClasses.DataUpgradeHero;
+import com.sncompany.newtower.DataClasses.DataUpgradeItem;
+import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
+import com.sncompany.newtower.Battle.ObjectUnit;
+import com.sncompany.newtower.Battle.TowerUnit;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -686,26 +691,18 @@ public class GameThread extends Thread {
     public static SoundPool mSoundPool;
     public static boolean m_bStop;
     public static int mapAttackType;
-    public static int mapBackgroundType;
-    public static int[] mapEndDirection;
-    public static int[][] mapEndPosition;
-    public static int mapEndPositionCount;
-    public static int[][] mapMoveData;
+    public static final int[] mapEndDirection = new int[10];
+    public static final int[][] mapEndPosition = new int[10][2];
     public static int mapNumber;
-    public static int[][] mapStartPosition;
-    public static int mapStartPositionCount;
-    public static int mapStartPositionLoop;
-    public static int[][] mapTileData;
+    public static final int[][] mapTileData = new int[15][10];
     public static int maxLife;
     public static AudioManager mgr;
-    public static boolean[] monsterMeetCheck;
     public static int monsterOpenTime;
     public static boolean monsterSortCheckFlag;
     public static int monsterSortDrawCount;
     public static MonsterUnit[] monsterSortUnit;
-    public static MonsterUnit[] monsterUnit;
+    public static final MonsterUnit[] monsterUnit = new MonsterUnit[100];
     public static int monsterUnitCount;
-    public static int movieViewFlag;
     public static int myHeroism;
     public static int myLife;
     public static int myMana;
@@ -770,7 +767,6 @@ public class GameThread extends Thread {
     public static int tutorialFlag;
     public static int tutorialViewCount;
     public static final int[] upgradeUnitValue = new int[18];
-    public static int vibrationFlag;
     public static int viewCount_GAME_SHOP_EQUIP;
     public static int[][] waveMobData;
     public static int[] waveMonsterRemainCount;
@@ -1064,10 +1060,7 @@ public class GameThread extends Thread {
                 case 16:
                     update_GAME_SHOP_EQUIP();
                     break;
-                case 17:
-                    update_GAME_SHOP_GIFT();
-                    break;
-                case 18:
+                case GAME_HELP:
                     update_GAME_HELP();
                     break;
                 case 19:
@@ -1076,7 +1069,7 @@ public class GameThread extends Thread {
                 case 20:
                     update_GAME_STAGE_START_VIEW();
                     break;
-                case 21:
+                case GAME_INGAME_MENU:
                     update_GAME_INGAME_MENU();
                     break;
                 case 22:
@@ -1089,7 +1082,7 @@ public class GameThread extends Thread {
                     update_GAME_STAGE_START_LOADING();
                     break;
                 case 25:
-                    DataStage.instance.update_GAME_PLAYING();
+                    update_GAME_PLAYING();
                     break;
                 case 26:
                     update_GAME_TUTORIAL();
@@ -1111,12 +1104,12 @@ public class GameThread extends Thread {
             Config.musicMaxVolume = streamMaxVolume;
             Config.musicVolume = streamMaxVolume / 2;
             Config.effectVolume = streamMaxVolume / 2;
-            vibrationFlag = 1;
-            movieViewFlag = 1;
-            tutorialFlag = 0;
-            for (int i2 = 0; i2 < myOscillator.length; i2++) {
+            Config.vibration = true;
+            Config.movie = true;
+            Config.tutorial = false;
+            for (int i2 = 0; i2 < myOscillator.length; i2++)
                 myOscillator[i2] = new MyOscillator(0, 100, 10);
-            }
+
             MyScrollbar[] myScrollbarArr = new MyScrollbar[5];
             myScrollbar = myScrollbarArr;
             myScrollbarArr[0] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
@@ -1126,13 +1119,6 @@ public class GameThread extends Thread {
             myScrollbar[2] = new MyScrollbar(120, 370, 0, 1080);
             myScrollbar[3] = new MyScrollbar(120, 370, 0, 3480);
             myScrollbar[4] = new MyScrollbar(90, GameRenderer.GAME_SHOP_SHOP_SIDEBAR_END_Y, 0, 1820);
-            mapTileData = (int[][]) Array.newInstance((Class<?>) int.class, 15, 10);
-            mapMoveData = (int[][]) Array.newInstance((Class<?>) int.class, 15, 10);
-            mapStartPosition = (int[][]) Array.newInstance((Class<?>) int.class, 10, 2);
-            mapEndPosition = (int[][]) Array.newInstance((Class<?>) int.class, 10, 2);
-            mapEndDirection = new int[10];
-            monsterUnit = new MonsterUnit[100];
-            monsterMeetCheck = new boolean[100];
             monsterSortUnit = new MonsterUnit[100];
             for (int i3 = 0; i3 < 100; i3++) {
                 monsterUnit[i3] = new MonsterUnit();
@@ -1273,7 +1259,7 @@ public class GameThread extends Thread {
             GameRenderer.textTombstone.removeAllTombstones();
             GameRenderer.lastFontName = null;
             GameRenderer.makeBaseStruct();
-            readSaveData(newTower);
+            Config.readSaveData(newTower, 1);
             myScrollbar[0].setReverseUpdatePosition(Config.musicVolume);
             myScrollbar[1].setReverseUpdatePosition(Config.effectVolume);
             if (lastPlayedMapNumber >= 50) {
@@ -1299,7 +1285,6 @@ public class GameThread extends Thread {
             } else {
                 heroUnitType[2] = i;
             }
-            GameRenderer.logoSoundPlayFlag = false;
             GameRenderer.lastCheckTime = System.currentTimeMillis();
             cheatFlag = false;
             GameRenderer.loadCount_GAME_PRE_IMAGE_LOAD = 0;
@@ -1314,7 +1299,6 @@ public class GameThread extends Thread {
     }
 
     public void update_GAME_PRE_IMAGE_LOAD() {
-        GameRenderer.logoSoundPlayFlag = false;
         GameRenderer.lastCheckTime = System.currentTimeMillis();
     }
 
@@ -1332,103 +1316,6 @@ public class GameThread extends Thread {
 
     public void update_GAME_RESUME_TO_MENU() {
         newTower.HideAdMob();
-    }
-
-    public void update_GAME_LOGO() {
-        GameRenderer.currentCheckTime = System.currentTimeMillis();
-        int i = (int) (((GameRenderer.currentCheckTime - GameRenderer.lastCheckTime) * 12) / 1000);
-        if (!GameRenderer.logoSoundPlayFlag && i == 16) {
-            GameRenderer.logoSoundPlayFlag = true;
-            playSound(0);
-        }
-        if (i > 40) {
-            GameRenderer.logoSoundPlayFlag = false;
-            GameRenderer.lastCheckTime = System.currentTimeMillis();
-            gameStatus = 1;
-        }
-    }
-
-    public void update_GAME_USE12() {
-        GameRenderer.currentCheckTime = System.currentTimeMillis();
-        if (GameRenderer.currentCheckTime - GameRenderer.lastCheckTime > 2000) {
-            if (movieViewFlag == 1) {
-                gameSubStatus = 0;
-                setOpeningData(0);
-                gameStatus = 2;
-                playLoopSound(2);
-                return;
-            }
-            gameLoadFlag = 0;
-            loadingStatus = 1002;
-            loadTipNumber = getRandom(TIP_TEXT.length);
-            GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
-            GameRenderer.loadingViewType = getRandom(6);
-        }
-    }
-
-    /* JADX WARN: Removed duplicated region for block: B:62:? A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:6:0x0044  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void update_GAME_OPENING() {
-        if (storyDrawDataBlock[27] < storyDrawDataBlock[18])
-            storyDrawDataBlock[27]++;
-        else if (storyDrawDataBlock[19] > 0)
-            storyDrawDataBlock[19]--;
-        else if (storyDrawDataBlock[25] > 0)
-            storyDrawDataBlock[25]--;
-        else {
-            if (storyDrawDataBlock[26] >= storyDrawDataBlock[21]) {
-                if (gameSubStatus < 25)
-                    setOpeningData(gameSubStatus++);
-                else if (gameSubStatus == 25) {
-                    stopLoopSound(2);
-                    gameStatus = 1002;
-                    gameLoadFlag = 0;
-                    loadingStatus = 1002;
-                    loadTipNumber = getRandom(TIP_TEXT.length);
-                    GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
-                    GameRenderer.loadingViewType = getRandom(6);
-                }
-                return;
-            }
-            storyDrawDataBlock[26]++;
-            storyDrawDataBlock[25] = 70;
-        }
-    }
-
-    public void update_GAME_ENDING() {
-        int[] iArr = story2DrawDataBlock;
-        boolean z = false;
-        if (iArr[9] < iArr[0]) {
-            iArr[9] = iArr[9] + 1;
-        } else if (iArr[1] > 0) {
-            iArr[1] = iArr[1] - 1;
-        } else if (iArr[7] > 0) {
-            iArr[7] = iArr[7] - 1;
-        } else if (iArr[8] < iArr[3]) {
-            iArr[8] = iArr[8] + 1;
-            iArr[7] = 70;
-        } else {
-            z = true;
-        }
-        if (z) {
-            int i = gameSubStatus;
-            if (i == 0) {
-                gameSubStatus = 1;
-                setEndingData(1);
-            } else if (i == 1) {
-                gameSubStatus = 2;
-                setEndingData(2);
-            } else {
-                if (i != 2) {
-                    return;
-                }
-                gameSubStatus = 3;
-                setEndingData(3);
-            }
-        }
     }
 
     public void update_GAME_MAINMENU() {
@@ -1502,153 +1389,6 @@ public class GameThread extends Thread {
         }
     }
 
-    public void update_GAME_STAGE_SELECT() {
-        if (gameSubStatus == 1 && GameRenderer.startViewCount > 0) {
-            GameRenderer.startViewCount++;
-            if (GameRenderer.startViewCount >= 15) {
-                gameStatus = 24;
-                stopLoopSound(1);
-            }
-        }
-        newTower.ViewAdMob();
-    }
-
-    public void update_GAME_STAGE_START_LOADING() {
-        newTower.bViewAdMob = false;
-        characterMenuSelectFlag = 0;
-        int i = stageSelectChapterNumber;
-        int i2 = stageSelectStageNumber;
-        lastPlayedMapNumber = (i * 10) + i2;
-        loadMap((i * 10) + i2, true);
-        clearMonsterUnit();
-        clearTowerUnit();
-        clearEffectUnit();
-        clearArrowUnit();
-        gameStartStatSetting();
-        int[][] iArr = gamePlayedCount;
-        int i3 = mapNumber;
-        int[] iArr2 = iArr[i3];
-        int i4 = mapAttackType;
-        iArr2[i4] = iArr2[i4] + 1;
-        if (iArr[i3][i4] > 3) {
-            int[] iArr3 = awardDataValue;
-            iArr3[52] = iArr3[52] + 1;
-            recheckAwardData();
-        }
-        Config.saveAll(newTower);
-        gameStatus = 20;
-        GameRenderer.startViewCount = 0;
-        myOscillator[0].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-        myOscillator[1].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-        myOscillator[2].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-        myOscillator[3].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-        myOscillator[4].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-        myOscillator[5].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-        myOscillator[6].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-        myOscillator[7].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-        myOscillator[8].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-        myOscillator[9].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-        myOscillator[10].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-        for (int i5 = 0; i5 < 11; i5++) {
-            myOscillator[i5].fastForward();
-        }
-        playLoopSound(2);
-    }
-
-    public void update_GAME_TITLE() {
-        gameTitleViewCount++;
-        newTower.HideAdMob();
-        switch (gameSubStatus) {
-            case 0:
-                if (gameTitleViewCount >= 17) {
-                    gameSubStatus = 1;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 1:
-                if (gameTitleViewCount >= 2) {
-                    gameSubStatus = 2;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 2:
-                if (gameTitleViewCount >= 7) {
-                    gameSubStatus = 3;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 3:
-                if (gameTitleViewCount >= 2) {
-                    gameSubStatus = 4;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 4:
-                if (gameTitleViewCount >= 7) {
-                    gameSubStatus = 5;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 5:
-                if (gameTitleViewCount >= 2) {
-                    gameSubStatus = 6;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 6:
-                if (gameTitleViewCount >= 17) {
-                    gameSubStatus = 7;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 7:
-                if (gameTitleViewCount >= 2) {
-                    gameSubStatus = 8;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 8:
-                if (gameTitleViewCount >= 15) {
-                    gameSubStatus = 9;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 9:
-                if (gameTitleViewCount >= 30) {
-                    gameSubStatus = 10;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 10:
-                if (gameTitleViewCount >= 30) {
-                    gameSubStatus = 11;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 11:
-                if (gameTitleViewCount >= 10) {
-                    gameSubStatus = 12;
-                    gameTitleViewCount = 0;
-                    playLoopSound(0);
-                    return;
-                }
-                return;
-            default:
-                return;
-        }
-    }
-
     public void update_GAME_UPGRADE_LIST() {
         newTower.ViewAdMob();
     }
@@ -1686,10 +1426,6 @@ public class GameThread extends Thread {
         if (i < 30) {
             viewCount_GAME_SHOP_EQUIP = i + 1;
         }
-    }
-
-    public void update_GAME_SHOP_GIFT() {
-        GameRenderer.inventoryItemListDraw.correctDistance();
     }
 
     public void update_GAME_RECORD() {
@@ -3218,32 +2954,6 @@ public class GameThread extends Thread {
         int i27 = playTimeTotalValue + ((int) ((currentTimeMillis - playTimeStartValue) / 1000));
         playTimeTotalValue = i27;
         playTimeStartValue = currentTimeMillis;
-        int i28 = i27 / 60;
-        if (i28 >= 30) {
-            awardDataFlag[54] = 1;
-        }
-        int i29 = i28 / 60;
-        if (i29 >= 2) {
-            awardDataFlag[55] = 1;
-        }
-        if (i29 >= 5) {
-            awardDataFlag[56] = 1;
-        }
-        if (i29 >= 10) {
-            awardDataFlag[57] = 1;
-        }
-        if (i29 >= 20) {
-            awardDataFlag[58] = 1;
-        }
-        if (i29 >= 50) {
-            awardDataFlag[59] = 1;
-        }
-        if (i29 >= 100) {
-            awardDataFlag[60] = 1;
-        }
-        if (i29 >= 200) {
-            awardDataFlag[61] = 1;
-        }
         int i30 = 0;
         for (int i31 = 0; i31 < 62; i31++) {
             if (i31 != 30 && awardDataFlag[i31] == 1) {
@@ -3293,28 +3003,6 @@ public class GameThread extends Thread {
         return i;
     }
 
-    public void setOpeningData(int i) {
-        if (gameSubStatus != 25) {
-            for (int i2 = 0; i2 < 25; i2++) {
-                storyDrawDataBlock[i2] = storyData[gameSubStatus][i2];
-            }
-            int[] iArr = storyDrawDataBlock;
-            iArr[27] = 0;
-            iArr[26] = iArr[20];
-            iArr[25] = 70;
-        }
-    }
-
-    public static void setEndingData(int i) {
-        if (gameSubStatus != 3) {
-            System.arraycopy(story2Data[gameSubStatus], 0, story2DrawDataBlock, 0, 7);
-            int[] iArr = story2DrawDataBlock;
-            iArr[9] = 0;
-            iArr[8] = iArr[2];
-            iArr[7] = 70;
-        }
-    }
-
     public static void resetUpgrade() {
         for (int i = 0; i < 18; i++) {
             while (upgradeUnitValue[i] > 0) {
@@ -3349,26 +3037,4 @@ public class GameThread extends Thread {
         NetworkThread.networkFinishFlag = false;
         NetworkThread.networkState = 0;
     }
-
-    public static void getCountStartNetwork() {
-        for (int i = 0; i < 4; i++) {
-            NetworkThread.networkRequestList[i] = 0;
-        }
-        NetworkThread.networkRequestList[2] = 1;
-        NetworkThread.networkRequestList[3] = 1;
-        NetworkThread.networkFinishFlag = false;
-        NetworkThread.networkState = 0;
-    }
-
-    public static void getItemStartNetwork() {
-        for (int i = 0; i < 4; i++) {
-            NetworkThread.networkRequestList[i] = 0;
-        }
-        NetworkThread.networkRequestList[0] = 1;
-        NetworkThread.networkRequestList[2] = 1;
-        NetworkThread.networkRequestList[3] = 1;
-        NetworkThread.networkFinishFlag = false;
-        NetworkThread.networkState = 0;
-    }
-
 }

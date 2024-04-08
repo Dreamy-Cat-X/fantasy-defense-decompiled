@@ -108,9 +108,12 @@ public class TouchManager {
         lastInputedArray[i2].x = cGPoint.x * scaleX;
         lastInputedArray[i2].y = cGPoint.y * scaleY;
         lastInputedTapCount[i2] = i3;
-        Log.d("processTouchEvent", "addLastInputPoint " + scaleX + "," + scaleY + "touch:" + cGPoint.x + ", " + lastInputedArray[i2].x + " y:" + cGPoint.y + ", " + lastInputedArray[i2].y);
     }
 
+    /**
+     * Processes when the touchscreen is touched
+     * @param i
+     */
     public void processTouchEvent(int i) {
         int i2;
         float f;
@@ -299,34 +302,25 @@ public class TouchManager {
     }
 
     public static void clearTouchStatus() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++)
             touchInputStatus[i] = 0;
-        }
     }
 
     public static void processTouchStatus() {
-        for (int i = 0; i < 2; i++) {
-            int[] iArr = touchInputStatus;
-            int i2 = iArr[i];
-            if (i2 == 1) {
-                iArr[i] = 2;
-            } else if (i2 == 3) {
-                iArr[i] = 0;
-            }
+        for (int i = 0; i < touchInputStatus.length; i++) {
+
+            if (touchInputStatus[i] == 1)
+                touchInputStatus[i] = 2;
+            else if (touchInputStatus[i] == 3)
+                touchInputStatus[i] = 0;
         }
     }
 
     public static void swapTouchMap() {
-        if (touchCheckSlot == 0) {
-            touchCheckSlot = 1;
-            touchSettingSlot = 0;
-        } else {
-            touchCheckSlot = 0;
-            touchSettingSlot = 1;
-        }
-        if (curruptFlag) {
+        touchCheckSlot = 1 - touchCheckSlot;
+        touchSettingSlot = 1 - touchCheckSlot;
+        if (curruptFlag)
             curruptFlag = false;
-        }
     }
 
     public static void clearTouchMap() {
@@ -364,54 +358,37 @@ public class TouchManager {
     }
 
     public static int checkTouchYesnoPressed(CGPoint cGPoint) {
-        for (int i = 0; i < 8; i++) {
-            if (InRect(cGPoint, touchYesnookCheckData[touchCheckSlot][i])) {
+        for (int i = 0; i < 8; i++)
+            if (InRect(cGPoint, touchYesnookCheckData[touchCheckSlot][i]))
                 return i;
-            }
-        }
         return -1;
     }
 
     public static int checkTouchListPressed(CGPoint cGPoint) {
-        int i = 0;
-        while (true) {
-            int[] iArr = touchListCheckCount;
-            int i2 = touchCheckSlot;
-            if (i >= iArr[i2]) {
-                return -1;
-            }
-            if (InRect(cGPoint, touchListCheckData[i2][i])) {
+        for (int i = 0; i < touchListCheckCount[touchCheckSlot]; i++)
+            if (InRect(cGPoint, touchListCheckData[touchCheckSlot][i]))
                 return i;
-            }
-            i++;
-        }
+        return -1;
     }
 
     public static int getFirstValidTouch() {
-        for (int i = 0; i < 2; i++) {
-            int[] iArr = touchInputStatus;
-            if (iArr[i] == 1 || iArr[i] == 2 || iArr[i] == 3) {
+        for (int i = 0; i < touchInputStatus.length; i++)
+            if (touchInputStatus[i] >= 1 && touchInputStatus[i] <= 3)
                 return i;
-            }
-        }
         return -1;
     }
 
     int getFirstEmptyTouch() {
-        for (int i = 0; i < 2; i++) {
-            if (touchInputStatus[i] == 0) {
+        for (int i = 0; i < touchInputStatus.length; i++)
+            if (touchInputStatus[i] == 0)
                 return i;
-            }
-        }
         return -1;
     }
 
     public static CGPoint getFirstFirstActionTouch() {
-        for (int i = 0; i < 2; i++) {
-            if (lastActionSlot[i]) {
+        for (int i = 0; i < 2; i++)
+            if (lastActionSlot[i])
                 return touchStartPosition[i];
-            }
-        }
         return emptyPosition;
     }
 
@@ -419,15 +396,12 @@ public class TouchManager {
         for (int i = 0; i < 2; i++) {
             if (lastActionSlot[i]) {
                 int i2 = lastActionStatus;
-                if (i2 == 0) {
+                if (i2 == 0)
                     return touchStartPosition[i];
-                }
-                if (i2 == 1) {
+                if (i2 == 1)
                     return touchMovedPosition[i][touchMovedUsedCount[i] - 1];
-                }
-                if (i2 == 2) {
+                if (i2 == 2)
                     return touchEndPosition[i];
-                }
             }
         }
         return emptyPosition;
@@ -437,15 +411,12 @@ public class TouchManager {
         for (int i = 0; i < 2; i++) {
             if (lastActionSlot[i]) {
                 int i2 = lastActionStatus;
-                if (i2 == 0) {
+                if (i2 == 0)
                     return touchTapStartCount[i];
-                }
-                if (i2 == 1) {
+                if (i2 == 1)
                     return touchTapMovedCount[i][touchMovedUsedCount[i] - 1];
-                }
-                if (i2 == 2) {
+                if (i2 == 2)
                     return touchTapEndCount[i];
-                }
             }
         }
         return 1;
@@ -453,12 +424,9 @@ public class TouchManager {
 
     public static int getPressedCount() {
         int i = 0;
-        for (int i2 = 0; i2 < 2; i2++) {
-            int i3 = touchInputStatus[i2];
-            if (i3 == 1 || i3 == 2 || i3 == 3) {
+        for (int j = 0; j < touchInputStatus.length; j++)
+            if (touchInputStatus[j] >= 1 && touchInputStatus[j] <= 3)
                 i++;
-            }
-        }
         return i;
     }
 
@@ -609,9 +577,9 @@ public class TouchManager {
         CGPoint[][] cGPointArr = (CGPoint[][]) Array.newInstance((Class<?>) CGPoint.class, 2, 2);
         lastSwipeCheckDistance.x = 0.0f;
         lastSwipeCheckDistance.y = 0.0f;
-        if (getPressedCount() < 2) {
+        if (getPressedCount() < 2)
             return lastSwipeCheckDistance;
-        }
+
         int i = 0;
         for (int i2 = 0; i2 < 2 && i < 2; i2++) {
             int i3 = touchInputStatus[i2];

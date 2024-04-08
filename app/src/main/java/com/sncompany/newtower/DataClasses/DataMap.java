@@ -1,11 +1,10 @@
 package com.sncompany.newtower.DataClasses;
 
-import com.sncompany.newtower.DataObject;
-import com.sncompany.newtower.DataWave;
-import com.sncompany.newtower.DataWaveMob;
+import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
+import com.sncompany.newtower.Texture2D;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,7 +48,6 @@ public class DataMap {
     public final ArrayList<ObjectUnit> objectUnit = new ArrayList<>(50);
     public final int[] mapEndDirection = new int[10];
     public DataWave wav;
-    //public DataStage st;
 
     public static DataMap loadMap(int SID, boolean play) {
         byte[] bArr = null;
@@ -171,8 +169,21 @@ public class DataMap {
         } else {
             GameRenderer.backTileOldImage = GameRenderer.backTileImage0;
         }
-        if (play) {
+        if (play)
             map.wav = DataWave.loadWave(map, SID);
+        return map;
+    }
+
+    public void checkBackBase() {
+        for (int i = 0; i < 5; i++) {
+            if (i != lastShowBackBase && backBaseImageArray[i].name != -1) {
+                backBaseImageArray[i].dealloc();
+            }
+        }
+        if (backBaseImageArray[lastShowBackBase].name == -1) {
+            Texture2D[] texture2DArr = backBaseImageArray;
+            int i2 = lastShowBackBase;
+            texture2DArr[i2].initWithImageName(tileBaseResource[i2]);
         }
     }
 
@@ -210,9 +221,7 @@ public class DataMap {
         }
         o.objectVanishCount = 0;
         o.destroyEnableFlag = DataObject.objectData[o.objectType][1];
-        o.unitHP = DataObject.objectData[o.objectType][2];
-        ObjectUnit[] objectUnitArr = objectUnit;
-        objectUnitArr[i4].unitMaxHP = objectUnitArr[i4].unitHP;
+        o.unitHP = o.unitMaxHP = DataObject.objectData[o.objectType][2];
         o.rewardType = DataObject.objectData[o.objectType][3];
         o.rewardValue = DataObject.objectData[o.objectType][4];
         o.blockSize = DataObject.objectData[o.objectType][5];
@@ -220,28 +229,21 @@ public class DataMap {
         o.blockY = i3;
         o.posX = 0;
         o.posY = 0;
-        int i6 = o.blockSize;
-        if (i6 == 0) {
-            o.posX = ((i2 * 45) + 22) * 50;
-            o.posY = ((i3 * 45) + 22) * 50;
-        } else if (i6 == 1) {
-            o.posX = ((i2 * 45) + 22) * 50;
-            o.posY = (((i3 + 1) * 45) + 22) * 50;
-        } else if (i6 == 2) {
-            o.posX = (i2 + 1) * 45 * 50;
-            o.posY = (((i3 + 1) * 45) + 22) * 50;
-        } else if (i6 == 3) {
-            o.posX = ((i2 * 45) + 22) * 50;
-            o.posY = ((i3 * 45) + 22) * 50;
-        } else if (i6 == 4) {
-            o.posX = ((i2 * 45) + 22) * 50;
-            o.posY = ((i3 * 45) + 22) * 50;
-        } else if (i6 == 5) {
-            o.posX = ((i2 * 45) + 22) * 50;
-            o.posY = ((i3 * 45) + 22) * 50;
+        switch (o.blockSize) {
+            case 0, 3, 4, 5:
+                o.posX = ((i2 * 45) + 22) * 50;
+                o.posY = ((i3 * 45) + 22) * 50;
+                break;
+            case 1:
+                o.posX = ((i2 * 45) + 22) * 50;
+                o.posY = (((i3 + 1) * 45) + 22) * 50;
+                break;
+            case 2:
+                o.posX = (i2 + 1) * 45 * 50;
+                o.posY = (((i3 + 1) * 45) + 22) * 50;
+                break;
         }
-        int i7 = o.objectType;
-        if ((i7 == 28 || i7 == 29 || i7 == 32) && mapNumber < 50) {
+        if ((o.objectType == 28 || o.objectType == 29 || o.objectType == 32) && mapNumber < 50) {
             o.unitHP = DataWaveMob.DATA_WAVE_GATE_HP[mapNumber];
             o.unitMaxHP = o.unitHP;
             if (mapStartPositionCount == 2) {

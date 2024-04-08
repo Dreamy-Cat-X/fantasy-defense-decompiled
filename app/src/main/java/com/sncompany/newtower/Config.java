@@ -1,5 +1,9 @@
 package com.sncompany.newtower;
 
+import android.content.Context;
+
+import com.sncompany.newtower.DataClasses.DataAward;
+
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -28,8 +32,12 @@ public class Config {
     public static final boolean[] awardValues = new boolean[62];
     public static final int[][] highScores = new int[50][3];
     public static final byte[][] stageProg = new byte[50][3]; //-1 = locked, 0 = uncleared, 1 = clear, 2 = perfect
+    public static final byte[][] unitUpgrades = new byte[3][6];
+    public static final byte[][] heroUpgrades = new byte[3][6];
 
-    public static void saveAll(NewTower context) {
+
+    public static void saveAll() {
+        NewTower context = GameThread.newTower;
         timeSave();
         saveData(context, false);
         saveData(context, true);
@@ -39,6 +47,7 @@ public class Config {
         long currentTimeMillis = System.currentTimeMillis();
         totalPlaytime += (int) ((currentTimeMillis - curPlaytime) / 1000);
         curPlaytime = currentTimeMillis;
+        DataAward.check_time();
     }
 
     /**
@@ -46,7 +55,7 @@ public class Config {
      * @param context ???
      * @param file2 If this data will be saved in file 2
      */
-    public static void saveData(NewTower context, boolean file2) {
+    public static void saveData(Context context, boolean file2) {
         FileOutputStream openFileOutput;
         Arrays.fill(saveTotalBuffer, (byte) 0);
 
@@ -73,26 +82,21 @@ public class Config {
             for (byte st : stp)
                 saveTotalBuffer[cbit++] = st;
         //cbit = 778
-        for (int j = 0; j < 18; j++) {
-            IntToByteArray(saveTotalBuffer, cbit, upgradeUnitValue[j]);
-            cbit += 4;
-        }
-        for (int j = 0; j < 3; j++) {
-            IntToByteArray(saveTotalBuffer, cbit, heroUnitType[j]);
-            cbit += 4;
-        }
-        for (int j = 0; j < 3; j++) {
+        for (byte[] cups : unitUpgrades)
+            for (byte cup : cups)
+                saveTotalBuffer[cbit++] = cup;
+        //cbit = 796
+        for (byte[] hups : heroUpgrades)
+            for (byte hup : hups)
+                saveTotalBuffer[cbit++] = hup;
+        //cbit = 814
+
+        for (int j = 0; j < 3; j++)
             for (int i19 = 0; i19 < 2; i19++) {
                 IntToByteArray(saveTotalBuffer, cbit, heroItemType[j][i19]);
                 cbit += 4;
             }
-        }
-        for (int j = 0; j < 3; j++) {
-            for (int i21 = 0; i21 < 6; i21++) {
-                IntToByteArray(saveTotalBuffer, cbit, heroUpgradeValue[j][i21]);
-                cbit += 4;
-            }
-        }
+
         for (int j = 0; j < 24; j++) {
             IntToByteArray(saveTotalBuffer, cbit, itemUnitValue[j]);
             cbit += 4;

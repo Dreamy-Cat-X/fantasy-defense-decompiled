@@ -41,7 +41,7 @@ public class Texture2D {
     static float drawLengthY;
     static float drawStartX;
     static float drawStartY;
-    static GL10 gl;
+    public static GL10 gl;
     static float guideEndX;
     static float guideEndY;
     static float guideStartX;
@@ -100,32 +100,9 @@ public class Texture2D {
         }
     }
 
-    public Texture2D(int i) {
-        if (bounds_ == null) {
-            bounds_ = new Rect();
-        }
-        if (_name == null) {
-            _name = new int[3];
-        }
-        if (coordinates == null) {
-            coordinates = new float[8];
-        }
-        if (vertices == null) {
-            vertices = new float[12];
-        }
-        if (vbb == null) {
-            ByteBuffer allocateDirect = ByteBuffer.allocateDirect(48);
-            vbb = allocateDirect;
-            allocateDirect.order(ByteOrder.nativeOrder());
-            mVertexBuffer = vbb.asFloatBuffer();
-        }
-        if (tbb == null) {
-            ByteBuffer allocateDirect2 = ByteBuffer.allocateDirect(32);
-            tbb = allocateDirect2;
-            allocateDirect2.order(ByteOrder.nativeOrder());
-            coordinatesBuffer = tbb.asFloatBuffer();
-        }
-        initWithImageName(i);
+    public Texture2D(int img) {
+        this();
+        initWithImageName(img);
     }
 
     public void dealloc() {
@@ -146,9 +123,9 @@ public class Texture2D {
     }
 
     public void initWithImageColor(int i) {
-        if (this.name != -1) {
+        if (this.name != -1)
             dealloc();
-        }
+
         gl.glGenTextures(1, _name, 0);
         this.name = _name[0];
         Bitmap createBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
@@ -213,10 +190,9 @@ public class Texture2D {
         createBitmap.recycle();
     }
 
-    public void drawAtPointOption(float f, float f2, int i) {
-        if (this.name == -1) {
+    public void drawAtPointOption(float x, float y, int i) {
+        if (this.name == -1)
             return;
-        }
         float[] fArr = coordinates;
         fArr[0] = 0.0f;
         float f3 = this._maxT;
@@ -232,28 +208,28 @@ public class Texture2D {
         width = f5;
         float f6 = this._height * f3;
         height = f6;
-        pointX = f;
-        pointY = f2;
+        pointX = x;
+        pointY = y;
         if (i == 9) {
-            pointX = f - (f5 / 2.0f);
-            pointY = f2 - (f6 / 2.0f);
+            pointX = x - (f5 / 2.0f);
+            pointY = y - (f6 / 2.0f);
         } else if (i == 10) {
-            pointY = f2 - (f6 / 2.0f);
+            pointY = y - (f6 / 2.0f);
         } else if (i == 12) {
-            pointX = f - f5;
-            pointY = f2 - (f6 / 2.0f);
+            pointX = x - f5;
+            pointY = y - (f6 / 2.0f);
         } else if (i == 17) {
-            pointX = f - (f5 / 2.0f);
+            pointX = x - (f5 / 2.0f);
         } else if (i == 20) {
-            pointX = f - f5;
+            pointX = x - f5;
         } else if (i == 36) {
-            pointX = f - f5;
-            pointY = f2 - f6;
+            pointX = x - f5;
+            pointY = y - f6;
         } else if (i == 33) {
-            pointX = f - (f5 / 2.0f);
-            pointY = f2 - f6;
+            pointX = x - (f5 / 2.0f);
+            pointY = y - f6;
         } else if (i == 34) {
-            pointY = f2 - f6;
+            pointY = y - f6;
         }
         float f7 = VIEW_SCRHEIGHT;
         float f8 = f7 - pointY;
