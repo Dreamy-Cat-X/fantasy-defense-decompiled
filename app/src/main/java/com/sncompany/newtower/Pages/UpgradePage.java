@@ -1,15 +1,60 @@
 package com.sncompany.newtower.Pages;
 
+import androidx.core.util.Consumer;
+
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataUpgradeHero;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
+import javax.microedition.khronos.opengles.GL10;
+
 public class UpgradePage extends TPage {
 
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_0_BACK = 60;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_1_OK_TOTAL = 61;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_2_UNIT = 62;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_3_HERO = 63;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_BOTTOM_SELECT = 70;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_BUY_ARCHER = 66;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_BUY_WARRIOR = 65;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_BUY_WIZARD = 67;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_EQUIP_START = 30;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_ETC_START = 60;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_HERO_START = 20;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_INVEN_START = 0;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_LEFT_ARROW = 68;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_RIGHT_ARROW = 69;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_TOTAL_COUNT = 71;
+    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_UPGRADE_START = 40;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_0_BACK = 24;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_1_UPGRADE = 25;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_2_UNIT = 26;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_3_HERO = 27;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_4_COMMON = 28;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_5_WARRIOR = 29;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_6_ARCHER = 30;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_7_WIZARD = 31;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_ITEM_TOTAL_COUNT = 24;
+    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_TOTAL_COUNT = 32;
+    public static final int[] uiUpgradeResource = {R.drawable.ui_upgrade_btnherooff, R.drawable.ui_upgrade_btnheroon, R.drawable.ui_upgrade_btnunitoff, R.drawable.ui_upgrade_btnuniton, R.drawable.ui_upgrade_titlehero, R.drawable.ui_upgrade_titleunit, R.drawable.ui_upgrade_basehero, R.drawable.ui_upgrade_baseunit, R.drawable.ui_upgrade_tabherooff, R.drawable.ui_upgrade_tabheroon, R.drawable.ui_upgrade_tabunitoff, R.drawable.ui_upgrade_tabuniton, R.drawable.ui_upgrade_baseblack, R.drawable.ui_upgrade_btnupgradeoff, R.drawable.ui_upgrade_btnupgradeon, R.drawable.ui_upgrade_max, R.drawable.ui_upgrade_iconselectn, R.drawable.ui_upgrade_iconselecta, R.drawable.ui_upgrade_uprightbar};
+    public final Texture2D[] uiUpgradeImage = new Texture2D[uiUpgradeResource.length];
+
     public boolean hero = false;
+
+    public UpgradePage(TPage par, int isHero) {
+        super(par);
+        hero = isHero == 1;
+    }
+
+    @Override
+    public void load(Consumer<Float> prog) {
+        for (int i = 0; i < uiUpgradeImage.length; i++)
+            uiUpgradeImage[i] = new Texture2D(uiUpgradeResource[i]);
+    }
 
     public void paint_GAME_UPGRADE_UNIT(GL10 gl10, boolean z) {
         int i;

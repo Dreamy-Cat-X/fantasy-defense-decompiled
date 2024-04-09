@@ -969,21 +969,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static boolean loadViewFlag = false;
     public static int TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT = 20;
     public static int TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT = 30;
-    public static int TITLE_MAINMENU_COUNT_FADE_AWAY_REMOVE_COUNT = 10;
-    public static int TITLE_MAINMENU_COUNT_FADE_IN_START_POS = 20;
-    public static int TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_POS = 0;
-    public static float TITLE_MAINMENU_COUNT_FADE_AWAY_RATE = 0.1f;
-    public static float TITLE_MAINMENU_COUNT_FADE_IN_RATE = 0.1f;
-    static final float TITLE_GLOW_MOVE_DEGREE = 0.05f;
-    public static float TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_RATE = TITLE_GLOW_MOVE_DEGREE;
-    public static float TITLE_MAINMENU_COUNT_FADE_IN_BLACK_DEGREE = TITLE_GLOW_MOVE_DEGREE;
     public static int TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT = 30;
-    public static int TITLE_MAINMENU_REV_COUNT_FADE_AWAY_REMOVE_COUNT = 10;
-    public static int TITLE_MAINMENU_REV_COUNT_FADE_IN_START_POS = 20;
-    public static int TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_POS = 10;
-    public static float TITLE_MAINMENU_REV_COUNT_FADE_AWAY_RATE = 0.1f;
-    public static float TITLE_MAINMENU_REV_COUNT_FADE_OUT_RATE = 0.1f;
-    public static float TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_RATE = TITLE_GLOW_MOVE_DEGREE;
     public static final int[] GAME_TITLE_BOSS_VIEW_POS_LIST = {77, 26, 41, 21, -30};
     public static final String[] effectTypeString = {"Stun", "Splash", "DoT", "Slow", "Pierce", "Slow Mud", "Dot Fire", "Multi Shot", "Double Shot", "None"};
     public static final int[][] testboxCoord = {new int[]{0, 0, 20, 85}, new int[]{138, 0, 20, 85}, new int[]{59, 0, 40, 85}, new int[]{20, 0, 40, 85}};
@@ -1275,11 +1261,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         int i6 = SCRHEIGHT_SMALL;
         float f2 = i5 != i6 ? i5 / i6 : 1.0f;
         Log.d("WINDOW SIZE", "WINDOW SIZE " + SCRWIDTH + "," + SCRHEIGHT + "," + SCRWIDTH_SMALL + "," + SCRHEIGHT_SMALL + "," + f + "," + f2);
-        Log.d("WINDOW SIZE", "WINDOW SIZE " + SCRWIDTH + "," + SCRHEIGHT + "," + SCRWIDTH_SMALL + "," + SCRHEIGHT_SMALL + "," + f + "," + f2);
-        Log.d("WINDOW SIZE", "WINDOW SIZE " + SCRWIDTH + "," + SCRHEIGHT + "," + SCRWIDTH_SMALL + "," + SCRHEIGHT_SMALL + "," + f + "," + f2);
-        Log.d("WINDOW SIZE", "WINDOW SIZE " + SCRWIDTH + "," + SCRHEIGHT + "," + SCRWIDTH_SMALL + "," + SCRHEIGHT_SMALL + "," + f + "," + f2);
-        Log.d("WINDOW SIZE", "WINDOW SIZE " + SCRWIDTH + "," + SCRHEIGHT + "," + SCRWIDTH_SMALL + "," + SCRHEIGHT_SMALL + "," + f + "," + f2);
-        Log.d("WINDOW SIZE", "WINDOW SIZE " + SCRWIDTH + "," + SCRHEIGHT + "," + SCRWIDTH_SMALL + "," + SCRHEIGHT_SMALL + "," + f + "," + f2);
         if (f != 1.0f || f2 != 1.0f) {
             if (f < f2) {
                 DRAW_SCALE_SIZE = f;
@@ -1541,6 +1522,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         }
     }
 
+    //TODO - Delete
     public void drawLoadingViewShot(GL10 gl10, int i, int i2) {
         int i3;
         if (!loadViewFlag || alwaysImage[0].name == -1 || uiLoadingImage[0].name == -1 || uiLoadingImage[1].name == -1 || uiLoadingImage[2].name == -1) {
@@ -3466,7 +3448,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         return f;
     }
 
-    static void drawStringM(String str, float f, float f2, int i) {
+    public static void drawStringM(String str, float f, float f2, int i) {
         Tombstone tombstone = textTombstone;
         int i2 = fontColor;
         int searchTombstone = tombstone.searchTombstone(str, i2, i2, fontSize);
@@ -3506,7 +3488,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         drawStringBuffer.drawAtPointOptionGuide(f, f2, i, cGRect);
     }
 
-    static void drawStringDoubleM(String str, float f, float f2, int i) {
+    public static void drawStringDoubleM(String str, float f, float f2, int i) {
         int searchTombstone = textTombstone.searchTombstone(str, fontColor, strokeColor, fontSize);
         if (searchTombstone != -1) {
             drawStringBuffer = textTombstone.getTombstone(searchTombstone);
@@ -3522,7 +3504,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         drawStringBuffer.drawAtPointOption(f, f2, i);
     }
 
-    static void drawStringDoubleGuideM(String str, float f, float f2, int i, CGRect cGRect) {
+    public static void drawStringDoubleGuideM(String str, float f, float f2, int i, CGRect cGRect) {
         int searchTombstone = textTombstone.searchTombstone(str, fontColor, strokeColor, fontSize);
         if (searchTombstone != -1) {
             drawStringBuffer = textTombstone.getTombstone(searchTombstone);

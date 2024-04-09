@@ -35,6 +35,21 @@ public class Config {
     public static final byte[][] unitUpgrades = new byte[3][6];
     public static final byte[][] heroUpgrades = new byte[3][6];
 
+    public static int getAwardCount() {
+        int t = 0;
+        for (boolean b : awardValues)
+            if (b)
+                t++;
+        return t;
+    }
+
+    public static int getAwardScore() {
+        int t = 0;
+        for (int i = 0; i < awardValues.length; i++)
+            if (awardValues[i])
+                t += DataAward.awardScoreValue[i];
+        return t;
+    }
 
     public static void saveAll() {
         NewTower context = GameThread.newTower;

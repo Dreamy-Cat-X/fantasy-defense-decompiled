@@ -63,28 +63,24 @@ public class Texture2D {
     public float _sizeY;
     public int _width;
     public int name = -1;
-    static Rect bounds_ = new Rect();
-    static float VIEW_SCRWIDTH = 800.0f;
-    static float VIEW_SCRHEIGHT = 480.0f;
+    public static Rect bounds_ = new Rect();
+    public static final float VIEW_SCRWIDTH = 800.0f;
+    public static final float VIEW_SCRHEIGHT = 480.0f;
 
     public Texture2D() {
-        if (bounds_ == null) {
+        if (bounds_ == null)
             bounds_ = new Rect();
-        }
-        if (_name == null) {
+        if (_name == null)
             _name = new int[3];
-        }
-        if (coordinates == null) {
+        if (coordinates == null)
             coordinates = new float[8];
-        }
-        if (vertices == null) {
+        if (vertices == null)
             vertices = new float[12];
-        }
+
         if (tanValue == null) {
             tanValue = new float[90];
-            for (int i = 0; i < 90; i++) {
+            for (int i = 0; i < 90; i++)
                 tanValue[i] = (float) Math.tan(Math.toRadians(i));
-            }
         }
         if (vbb == null) {
             ByteBuffer allocateDirect = ByteBuffer.allocateDirect(48);

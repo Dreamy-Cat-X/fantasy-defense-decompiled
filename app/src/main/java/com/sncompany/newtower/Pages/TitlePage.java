@@ -1,8 +1,12 @@
 package com.sncompany.newtower.Pages;
 
+import androidx.core.util.Consumer;
+
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGPoint;
+import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
@@ -10,133 +14,78 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class TitlePage extends TPage {
 
+    public static final int GAME_ABOUT_TOUCH_LIST_0_BACK = 0;
+    public static final int GAME_ABOUT_TOUCH_LIST_1_DEVELOPER = 1;
+    public static final int GAME_ABOUT_TOUCH_LIST_TOTAL_COUNT = 2;
+    public static final int GAME_OPTION_TOUCH_LIST_0_BACK = 0;
+    public static final int GAME_OPTION_TOUCH_LIST_1_MUSIC = 1;
+    public static final int GAME_OPTION_TOUCH_LIST_2_EFFECT = 2;
+    public static final int GAME_OPTION_TOUCH_LIST_3_MOVIE_ON = 3;
+    public static final int GAME_OPTION_TOUCH_LIST_4_VIBRATION_OFF = 4;
+    public static final int GAME_OPTION_TOUCH_LIST_TOTAL_COUNT = 5;
+    public static final int GAME_TITLE_TOUCH_LIST_0_START = 0;
+    public static final int GAME_TITLE_TOUCH_LIST_1_OPTION = 1;
+    public static final int GAME_TITLE_TOUCH_LIST_2_ABOUT = 2;
+    public static final int GAME_TITLE_TOUCH_LIST_3_FACEBOOK = 3;
+    public static final int GAME_TITLE_TOUCH_LIST_4_TWITTER = 4;
+    public static final int GAME_TITLE_TOUCH_LIST_TOTAL_COUNT = 5;
+    private static final int[] countLimit = {17, 2, 7, 2, 7, 2, 17, 2, 15, 30, 30, 10};
+    public static final int[] titleResource = {R.drawable.ui_title_background, R.drawable.ui_title_background2, R.drawable.ui_title_mob0, R.drawable.ui_title_mob1, R.drawable.ui_title_mobeye, R.drawable.ui_title_title, R.drawable.ui_title_titleglow, R.drawable.ui_title_titlekorean, R.drawable.ui_title_startoff, R.drawable.ui_title_starton, R.drawable.ui_title_optionoff, R.drawable.ui_title_optionon, R.drawable.ui_title_sncompany, R.drawable.ui_title_about, R.drawable.ui_title_twitter, R.drawable.ui_title_facebook};
+
+    private final Texture2D[] titleImage = new Texture2D[titleResource.length];
+    private int gameTitleViewCount = 0, gameSubStatus = 0;
+
+    public TitlePage(TPage p) {
+        super(p);
+        resetAnimations();
+    }
+
+    public void resetAnimations() {
+        gameTitleViewCount = gameSubStatus = 0;
+    }
+
+    @Override
+    public void load(Consumer<Float> prog) {
+        for (int i = 0; i < titleImage.length; i++)
+            titleImage[i] = new Texture2D(titleResource[i]);
+    }
+
+    @Override
     public void update_GAME_TITLE() {
         gameTitleViewCount++;
-        newTower.HideAdMob();
-        switch (gameSubStatus) {
-            case 0:
-                if (gameTitleViewCount >= 17) {
-                    gameSubStatus = 1;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 1:
-                if (gameTitleViewCount >= 2) {
-                    gameSubStatus = 2;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 2:
-                if (gameTitleViewCount >= 7) {
-                    gameSubStatus = 3;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 3:
-                if (gameTitleViewCount >= 2) {
-                    gameSubStatus = 4;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 4:
-                if (gameTitleViewCount >= 7) {
-                    gameSubStatus = 5;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 5:
-                if (gameTitleViewCount >= 2) {
-                    gameSubStatus = 6;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 6:
-                if (gameTitleViewCount >= 17) {
-                    gameSubStatus = 7;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 7:
-                if (gameTitleViewCount >= 2) {
-                    gameSubStatus = 8;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 8:
-                if (gameTitleViewCount >= 15) {
-                    gameSubStatus = 9;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 9:
-                if (gameTitleViewCount >= 30) {
-                    gameSubStatus = 10;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 10:
-                if (gameTitleViewCount >= 30) {
-                    gameSubStatus = 11;
-                    gameTitleViewCount = 0;
-                    return;
-                }
-                return;
-            case 11:
-                if (gameTitleViewCount >= 10) {
-                    gameSubStatus = 12;
-                    gameTitleViewCount = 0;
-                    playLoopSound(0);
-                    return;
-                }
-                return;
-            default:
-                return;
+        if (gameSubStatus < countLimit.length && gameTitleViewCount >= countLimit[gameSubStatus]) {
+            gameSubStatus++;
+            gameTitleViewCount = 0;
+            if (gameSubStatus == 12)
+                GameThread.playLoopSound(0);
         }
     }
 
-    public void paint_GAME_TITLE(GL10 gl10) {
-        int checkTouchListStatus;
+    public void paint_GAME_TITLE(GL10 gl10, boolean init) {
+        int cTLS = TouchManager.checkTouchListStatus();
         float f;
         float f2;
         float f3;
         TouchManager.clearTouchMap();
         if (GameThread.gameSubStatus == 12) {
-            TouchManager.addTouchRectListData(0, CGRectMake(296.0f, 337.0f, 208.0f, 48.0f));
-            TouchManager.addTouchRectListData(1, CGRectMake(326.0f, 412.0f, 148.0f, 36.0f));
-            TouchManager.addTouchRectListData(2, CGRectMake(9.0f, 429.0f, 42.0f, 42.0f));
-            TouchManager.addTouchRectListData(4, CGRectMake(56.0f, 429.0f, 42.0f, 42.0f));
-            TouchManager.addTouchRectListData(3, CGRectMake(104.0f, 429.0f, 42.0f, 42.0f));
-            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 19;
-            checkTouchListStatus = TouchManager.checkTouchListStatus();
+            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_0_START, GameRenderer.CGRectMake(296.0f, 337.0f, 208.0f, 48.0f));
+            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_1_OPTION, GameRenderer.CGRectMake(326.0f, 412.0f, 148.0f, 36.0f));
+            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_2_ABOUT, GameRenderer.CGRectMake(9.0f, 429.0f, 42.0f, 42.0f));
+            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_4_TWITTER, GameRenderer.CGRectMake(56.0f, 429.0f, 42.0f, 42.0f));
+            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_3_FACEBOOK, GameRenderer.CGRectMake(104.0f, 429.0f, 42.0f, 42.0f));
         } else {
-            TouchManager.addTouchRectListData(0, CGRectMake(0.0f, 0.0f, 800.0f, 480.0f));
-            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 19;
-            checkTouchListStatus = TouchManager.checkTouchListStatus();
+            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_0_START, GameRenderer.CGRectMake(0.0f, 0.0f, 800.0f, 480.0f));
         }
+        TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_TITLE_TOUCH_LIST_TOTAL_COUNT;
+
         switch (GameThread.gameSubStatus) {
-            case 0:
-            case 2:
-            case 4:
-            case 6:
+            case 0, 2, 4, 6:
                 titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
                 titleImage[2].drawAtPointOption(0.0f, 9, 18);
                 titleImage[4].drawAtPointOption(64.0f, 38, 18);
                 break;
-            case 1:
-            case 3:
-            case 5:
-            case 7:
-                fillWhiteImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
+            case 1, 3, 5, 7:
+                fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
                 titleImage[3].drawAtPointOption(0.0f, 9, 18);
                 titleImage[4].drawAtPointOption(64.0f, 38, 18);
                 break;
@@ -242,12 +191,12 @@ public class TitlePage extends TPage {
                 Texture2D.gl.glColor4f(f3, f3, f3, f3);
                 titleImage[6].drawAtPointOption(24.0f, 6.0f, 18);
                 Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                if (checkTouchListStatus == 0) {
+                if (cTLS == 0) {
                     titleImage[9].drawAtPointOption(296.0f, 337.0f, 18);
                 } else {
                     titleImage[8].drawAtPointOption(296.0f, 337.0f, 18);
                 }
-                if (checkTouchListStatus == 1) {
+                if (cTLS == 1) {
                     titleImage[11].drawAtPointOption(326.0f, 412.0f, 18);
                 } else {
                     titleImage[10].drawAtPointOption(326.0f, 412.0f, 18);

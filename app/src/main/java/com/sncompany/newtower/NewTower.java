@@ -8,33 +8,23 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.internal.view.SupportMenu;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.sncompany.newtower.Pages.CinematicPage;
+import com.sncompany.newtower.Pages.LoadingPage;
+import com.sncompany.newtower.Pages.MenuPage;
 import com.sncompany.newtower.Pages.TPage;
-
-import java.io.InputStream;
-import java.util.StringTokenizer;
+import com.sncompany.newtower.Pages.TitlePage;
 
 /* loaded from: D:\decomp\classes.dex */
 public class NewTower extends AppCompatActivity {
@@ -63,26 +53,20 @@ public class NewTower extends AppCompatActivity {
     public static boolean initActivityFirstFlag = false;
     public static String myImei;
     public static String myImsi;
-    public static String myPhoneNumber;
-    public static NetworkThread networkThread;
-    public static TelephonyManager telephonyManager;
+    public static String myPhoneNumber; //TODO - Delete
+    public static NetworkThread networkThread; //TODO - Delete
+    public static TelephonyManager telephonyManager; //TODO - Delete
     public static Vibrator vibe;
     public static PowerManager.WakeLock wl;
     boolean isLoading;
     LinearLayout layout;
-    private AdView mAdView;
     LinearLayout mainLayout;
-    private RewardedAd rewardedAd;
     public static String[] PID_DATA = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"};
     public static String[] CID_DATA = {"51200006591694", "51200006591695", "51200006591703", "51200006591704", "51200006591705", "51200006591706", "51200006591707", "51200006591708", "51200006591709", "51200006591710", "51200006591696", "51200006591697", "51200006591698", "51200006591699", "51200006591700", "51200006591701", "51200006591702"};
     private String ErrorTitle = "";
     private String ErrorMessage = "";
     private String rewardID = "ca-app-pub-1943198298123931/5668542964";
     private String bannerID = "ca-app-pub-1943198298123931/5313319745";
-    public boolean bViewAdMob = false;
-    boolean isAddView = false;
-    boolean isAddMobInit = false;
-    boolean isVewing = false;
     public static int randomNumber;
 
     public static TPage currentPage;
@@ -98,86 +82,27 @@ public class NewTower extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(3846);
     }
 
-    public static void switchPage(TPage p) {
+    public static void switchPage(TPage p, boolean unload) {
         TPage par = currentPage;
         currentPage = p;
-        unloadRec(par);
+        if (unload)
+            unloadRec(par);
+        if (!currentPage.loaded)
+            currentPage.load(null);
+    }
+
+    private static boolean checkAncestry(TPage p, TPage targ) {
+        if (p == targ)
+            return true;
+        if (p.parent == null)
+            return false;
+        return checkAncestry(p.parent, targ);
     }
 
     private static void unloadRec(TPage p) {
-        if (p != null && p != currentPage && currentPage.parent != p) {
+        if (p != null && p.loaded && !checkAncestry(currentPage, p)) {
             p.unload();
             unloadRec(p.parent);
-        }
-    }
-
-    public void ViewAdMob() {
-        if (this.bViewAdMob) {
-            return;
-        }
-        runOnUiThread(new Runnable() { // from class: com.sncompany.newtower.NewTower.4
-            @Override // java.lang.Runnable
-            public void run() {
-                if (NewTower.this.mAdView == null || NewTower.this.mAdView.isEnabled()) {
-                    return;
-                }
-                Log.d("runOnUiThread", NewTower.this.mAdView.isEnabled() + " ViewAdMob --------------------------------------------------");
-                NewTower.this.mAdView.setVisibility(0);
-                NewTower.this.mAdView.setEnabled(true);
-            }
-        });
-    }
-
-    public void HideAdMob() {
-        runOnUiThread(new Runnable() { // from class: com.sncompany.newtower.NewTower.5
-            @Override // java.lang.Runnable
-            public void run() {
-                if (NewTower.this.mAdView != null) {
-                    Log.d("runOnUiThread", "HideAdMob --------------------------------------------------");
-                    NewTower.this.mAdView.setVisibility(8);
-                    NewTower.this.mAdView.setEnabled(false);
-                }
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void loadRewardedVideoAd() {
-        RewardedAd rewardedAd = this.rewardedAd;
-        if (rewardedAd == null || !rewardedAd.isLoaded()) {
-            this.isLoading = true;
-            RewardedAd rewardedAd2 = new RewardedAd(this, this.rewardID);
-            this.rewardedAd = rewardedAd2;
-            rewardedAd2.loadAd(new PublisherAdRequest.Builder().build(), new RewardedAdLoadCallback() { // from class: com.sncompany.newtower.NewTower.6
-                @Override // com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-                public void onRewardedAdLoaded() {
-                    NewTower.this.isLoading = false;
-                }
-
-                @Override // com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-                public void onRewardedAdFailedToLoad(LoadAdError loadAdError) {
-                    NewTower.this.isLoading = false;
-                }
-            });
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void showRewardedVideo() {
-        if (this.rewardedAd.isLoaded()) {
-            this.rewardedAd.show(this, new RewardedAdCallback() { // from class: com.sncompany.newtower.NewTower.7
-                @Override // com.google.android.gms.ads.rewarded.RewardedAdCallback
-                public void onRewardedAdClosed() {
-                    NewTower.this.loadRewardedVideoAd();
-                }
-
-                @Override // com.google.android.gms.ads.rewarded.RewardedAdCallback
-                public void onUserEarnedReward(RewardItem rewardItem) {
-                    GameThread.myHeroism += rewardItem.getAmount();
-                    Config.saveAll(GameThread.newTower);
-                    NewTower.this.HideAdMob();
-                }
-            });
         }
     }
 
@@ -259,7 +184,6 @@ public class NewTower extends AppCompatActivity {
     public void onPause() {
         Log.d("PAUSE", "NEWTOWER PAUSE");
         GameRenderer.loadViewFlag = false;
-        this.mAdView.pause();
         super.onPause();
         glGameSurfaceView.onPause();
     }
@@ -267,43 +191,24 @@ public class NewTower extends AppCompatActivity {
     @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
     public void onResume() {
         Log.d("RESUME", "NEWTOWER RESUME");
-        this.mAdView.resume();
         super.onResume();
-        GLGameSurfaceView gLGameSurfaceView = glGameSurfaceView;
-        if (gLGameSurfaceView != null) {
-            gLGameSurfaceView.onResume();
-        }
+        GLGameSurfaceView glView = glGameSurfaceView;
+        if (glView != null)
+            glView.onResume();
     }
 
     @Override // androidx.appcompat.app.AppCompatActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
     public void onDestroy() {
         try {
-            if (wl != null) {
+            if (wl != null)
                 wl.release();
-            }
+            GameThread.stopLoopSound(0);
+            GameThread.stopLoopSound(1);
+            GameThread.stopLoopSound(2);
+            super.onDestroy();
         } catch (Exception unused) {
             Log.d("DESTROY TRY", "DESTROY ERROR 1");
-        }
-        try {
-            GameThread.stopLoopSound(0);
-        } catch (Exception unused2) {
-            Log.d("DESTROY TRY", "DESTROY ERROR 2");
-        }
-        try {
-            GameThread.stopLoopSound(1);
-        } catch (Exception unused3) {
-            Log.d("DESTROY TRY", "DESTROY ERROR 3");
-        }
-        try {
-            GameThread.stopLoopSound(2);
-        } catch (Exception unused4) {
-            Log.d("DESTROY TRY", "DESTROY ERROR 4");
-        }
-        try {
-            this.mAdView.destroy();
-            super.onDestroy();
-        } catch (Exception unused5) {
-            Log.d("DESTROY TRY", "DESTROY ERROR 6");
+            Log.d("STACK TRACE", unused.getStackTrace().toString());
         }
     }
 
@@ -320,10 +225,6 @@ public class NewTower extends AppCompatActivity {
             GameThread.mgr.adjustStreamVolume(3, -1, 1);
             return true;
         }
-        if (GameThread.gameStatus == 3 && i == 4) {
-            exitDialog();
-            return true;
-        }
         if (i == 4) {
             keybackProcess();
             return true;
@@ -335,18 +236,10 @@ public class NewTower extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Do you really want to quit?");
         builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.13
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                System.exit(0);
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.14
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> System.exit(0));
+        builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
         AlertDialog create = builder.create();
         create.setTitle("Fantasy Defenders");
         create.setIcon(R.drawable.icon);
@@ -357,24 +250,17 @@ public class NewTower extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Do you want to return to the Main menu?");
         builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.15
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                GameRenderer.loadCount_GAME_MENU_IMAGE_LOAD = 0;
-                GameThread.gameStatus = 5;
-                GameThread.gameLoadFlag = 0;
-                GameThread.loadingStatus = 1006;
-                GameThread.loadTipNumber = GameThread.getRandom(GameThread.TIP_TEXT.length);
-                GameRenderer.loadingViewType = GameThread.getRandom(6);
-                GameThread.stopLoopSound(2);
-            }
+
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+            TPage p = currentPage;
+            while (!(p instanceof MenuPage) && p != null)
+                p = p.parent;
+
+            switchPage(new LoadingPage(p), true);
+            GameThread.stopLoopSound(2);
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.16
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+        builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
         AlertDialog create = builder.create();
         create.setTitle("Fantasy Defenders");
         create.setIcon(R.drawable.icon);
@@ -382,142 +268,19 @@ public class NewTower extends AppCompatActivity {
     }
 
     public void keybackProcess() {
-        Log.d("KEY PRESS", "CHECK THIS " + GameThread.gameStatus);
-        int i = GameThread.gameLoadFlag;
-        if (i == 0) {
-            int i2 = GameThread.loadingStatus;
+        //TODO - give pages specialized keyback managers to exit menu and such
+        if (currentPage == null || currentPage instanceof LoadingPage)
             return;
-        }
-        if (i != 1) {
-            return;
-        }
-        switch (GameThread.gameStatus) {
-            case 2:
-                GameThread.playSound(14);
-                GameThread.stopLoopSound(2);
-                GameThread.gameLoadFlag = 0;
-                GameThread.loadingStatus = 1002;
-                GameThread.loadTipNumber = GameThread.getRandom(GameThread.TIP_TEXT.length);
-                GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
-                GameRenderer.loadingViewType = GameThread.getRandom(6);
-                return;
-            case 3:
-            case 4:
-            case 6:
-            case 7:
-            case 24:
-            default:
-                return;
-            case 5:
-                GameThread.playSound(15);
-                GameThread.gameStatus = 3;
-                GameThread.gameSubStatus = 12;
-                GameThread.gameTitleViewCount = 0;
-                GameThread.stopLoopSound(1);
-                GameThread.playLoopSound(0);
-                return;
-            case 8, 9:
-                GameThread.gameStatus = 3;
-                GameThread.gameSubStatus = 0;
-                GameThread.gameTitleViewCount = 0;
-                GameThread.stopLoopSound(0);
-                GameThread.playSound(15);
-                return;
-            case 10:
-                GameThread.playSound(15);
-                GameRenderer.loadCount_GAME_MENU_IMAGE_LOAD = 0;
-                GameThread.gameStatus = 5;
-                GameThread.gameLoadFlag = 0;
-                GameThread.loadingStatus = 1006;
-                GameThread.loadTipNumber = GameThread.getRandom(GameThread.TIP_TEXT.length);
-                GameRenderer.loadingViewType = GameThread.getRandom(6);
-                return;
-            case 11:
-                GameRenderer.titlePressed = 11;
-                GameThread.upgradeUnitSelectPos = 0;
-                GameThread.gameStatus = 7;
-                GameRenderer.titleCount = 0;
-                GameThread.playSound(15);
-                return;
-            case 12, 13:
-                GameThread.gameStatus = 11;
-                return;
-            case 14:
-                GameThread.myOscillator[11].initWithTwoWayStartPosition(-150, 0, 15, 30, 10);
-                GameRenderer.titlePressed = 14;
-                GameThread.shopShopChapterSelectPos = 0;
-                GameThread.shopShopItemSelectPos = 0;
-                GameThread.shopShopInventorySelectPos = 0;
-                GameThread.gameStatus = 7;
-                GameRenderer.titleCount = 0;
-                GameThread.playSound(15);
-                return;
-            case 15:
-                if (GameThread.gameSubStatus != 4) {
-                    GameThread.myOscillator[11].initWithTwoWayStartPosition(-150, 0, 15, 30, 10);
-                    GameRenderer.titlePressed = 15;
-                    GameThread.shopShopChapterSelectPos = 0;
-                    GameThread.shopShopItemSelectPos = 0;
-                    GameThread.shopShopInventorySelectPos = 0;
-                    GameThread.getShopList();
-                    GameThread.gameStatus = 7;
-                    GameRenderer.titleCount = 0;
-                    GameThread.playSound(15);
-                    return;
-                }
-                return;
-            case 16:
-                GameThread.myOscillator[11].initWithTwoWayStartPosition(-150, 0, 15, 30, 10);
-                GameRenderer.titlePressed = 16;
-                GameThread.upgradeHeroUnitSelectPos = 0;
-                GameThread.shopShopInventorySelectPos = 0;
-                GameThread.upgradeHeroEquipSelectPos = 0;
-                GameThread.gameStatus = 7;
-                GameRenderer.titleCount = 0;
-                GameThread.playSound(15);
-                return;
-            case 18:
-                GameRenderer.titlePressed = 18;
-                GameThread.gameStatus = 7;
-                GameRenderer.titleCount = 0;
-                GameThread.playSound(15);
-                return;
-            case 19:
-                GameRenderer.titlePressed = 19;
-                GameThread.gameStatus = 7;
-                GameRenderer.titleCount = 0;
-                GameThread.playSound(15);
-                return;
-            case 20:
-                if (GameRenderer.startViewCount == 0) {
-                    GameThread.playSound(14);
-                    GameRenderer.startViewCount = 1;
-                    return;
-                }
-                return;
-            case 21:
-                GameThread.gameStatus = 25;
-                GameThread.playSound(15);
-                return;
-            case 22:
-            case 23:
-            case 25:
-            case 26:
-                GameThread.playSound(15);
-                mainmenuDialog();
-                return;
-            case 27:
-                GameThread.gameStatus = 10;
-                GameThread.gameSubStatus = 0;
-                GameRenderer.startViewCount = 0;
-                GameThread.stageSelectChapterNumber = 4;
-                GameThread.stageSelectStageNumber = 9;
-                GameThread.mapAttackType = 0;
-                GameThread.loadMap((GameThread.stageSelectChapterNumber * 10) + GameThread.stageSelectStageNumber, true);
-                GameThread.playLoopSound(1);
-        }
+        if (currentPage instanceof CinematicPage || currentPage instanceof TitlePage || currentPage instanceof MenuPage)
+            exitDialog();
+        else
+            mainmenuDialog();
     }
 
+    /**
+     * Gets a random number between 0 and i (exclusive)
+     * @param i The upper limit for the number (exclusive).
+     */
     public static int getRandom(int i) {
         int currentTimeMillis = (int) ((((randomNumber & SupportMenu.USER_MASK) * 93217) + 1 + (System.currentTimeMillis() & 65535)) & 65535);
         randomNumber = currentTimeMillis >> 1;

@@ -30,6 +30,48 @@ public class StagePage extends TPage {
     enum STATE {
 
     }
+    public static final int GAME_INGAME_MENU_TOUCH_LIST_0_RESUME = 0;
+    public static final int GAME_INGAME_MENU_TOUCH_LIST_1_RESTART = 1;
+    public static final int GAME_INGAME_MENU_TOUCH_LIST_2_STAGE_SELECT = 2;
+    public static final int GAME_INGAME_MENU_TOUCH_LIST_TOTAL_COUNT = 3;
+    public static final int GAME_OVER_TOUCH_LIST_0_UPGRADE = 0;
+    public static final int GAME_OVER_TOUCH_LIST_1_RETRY = 1;
+    public static final int GAME_OVER_TOUCH_LIST_2_STAGESELECT = 2;
+    public static final int GAME_OVER_TOUCH_LIST_3_TITLE_NEXT = 3;
+    public static final int GAME_OVER_TOUCH_LIST_4_RESULT_NEXT = 4;
+    public static final int GAME_OVER_TOUCH_LIST_TOTAL_COUNT = 5;
+    public static final int GAME_PLAYING_TOUCH_CHAR_BOTTOM_BLOCK = 19;
+    public static final int GAME_PLAYING_TOUCH_CHAR_LEVEL_UP = 16;
+    public static final int GAME_PLAYING_TOUCH_CHAR_OK = 17;
+    public static final int GAME_PLAYING_TOUCH_CHAR_SELL = 14;
+    public static final int GAME_PLAYING_TOUCH_CHAR_SPECIAL = 18;
+    public static final int GAME_PLAYING_TOUCH_CHAR_TOTAL_COUNT = 20;
+    public static final int GAME_PLAYING_TOUCH_CHAR_UPGRADE = 15;
+    public static final int GAME_PLAYING_TOUCH_CH_UP_NO = 21;
+    public static final int GAME_PLAYING_TOUCH_CH_UP_TOTAL_COUNT = 22;
+    public static final int GAME_PLAYING_TOUCH_CH_UP_YES = 20;
+    public static final int GAME_PLAYING_TOUCH_LIST_0_WARRIOR = 0;
+    public static final int GAME_PLAYING_TOUCH_LIST_10_PAUSE_CHECK = 12;
+    public static final int GAME_PLAYING_TOUCH_LIST_11_TURBO_CHECK = 13;
+    public static final int GAME_PLAYING_TOUCH_LIST_1_MAN_AT_ARMS = 1;
+    public static final int GAME_PLAYING_TOUCH_LIST_2_ARCHER = 2;
+    public static final int GAME_PLAYING_TOUCH_LIST_3_HOLY_EYE = 3;
+    public static final int GAME_PLAYING_TOUCH_LIST_4_WIZARD = 4;
+    public static final int GAME_PLAYING_TOUCH_LIST_5_COLD_DIVINER = 5;
+    public static final int GAME_PLAYING_TOUCH_LIST_7_HERO_ICON = 7;
+    public static final int GAME_PLAYING_TOUCH_LIST_8_HERO_SLOT_0 = 8;
+    public static final int GAME_PLAYING_TOUCH_LIST_8_HERO_SLOT_1 = 9;
+    public static final int GAME_PLAYING_TOUCH_LIST_8_HERO_SLOT_2 = 10;
+    public static final int GAME_PLAYING_TOUCH_LIST_9_PLAY_STOP_CHECK = 11;
+    public static final int GAME_PLAYING_TOUCH_LIST_TOTAL_COUNT = 14;
+    public static final int GAME_STAGE_CLEAR_TOUCH_LIST_0_UPGRADE = 0;
+    public static final int GAME_STAGE_CLEAR_TOUCH_LIST_1_NEXT_STAGE = 1;
+    public static final int GAME_STAGE_CLEAR_TOUCH_LIST_2_STAGESELECT = 2;
+    public static final int GAME_STAGE_CLEAR_TOUCH_LIST_3_TITLE_NEXT = 3;
+    public static final int GAME_STAGE_CLEAR_TOUCH_LIST_4_RESULT_NEXT = 4;
+    public static final int GAME_STAGE_CLEAR_TOUCH_LIST_5_REWARD_OK = 5;
+    public static final int GAME_STAGE_CLEAR_TOUCH_LIST_6_ENDING_VIEW_OK = 6;
+    public static final int GAME_STAGE_CLEAR_TOUCH_LIST_TOTAL_COUNT = 7;
 
     private final DataStage st;
     private final DataMap map;

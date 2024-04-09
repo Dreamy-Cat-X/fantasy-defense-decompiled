@@ -151,7 +151,7 @@ public class TouchManager {
                 touchMovedUsedCount[0] = 0;
                 lastActionSlot[0] = true;
             }
-            lastActionStatus = 0;
+            lastActionStatus = TOUCH_STATUS_NO_INPUT;
         } else if (i == 1) {
             if (multiTouchFlag) {
                 int firstValidTouch = getFirstValidTouch();
@@ -246,7 +246,7 @@ public class TouchManager {
                 iArr10[0] = iArr10[0] + 1;
                 lastActionSlot[0] = true;
             }
-            lastActionStatus = 1;
+            lastActionStatus = TOUCH_STATUS_START_INPUTED;
         } else if (i == 2) {
             if (multiTouchFlag) {
                 for (int i18 = 0; i18 < lastInputedCount; i18++) {
@@ -291,7 +291,7 @@ public class TouchManager {
                 touchTapEndCount[0] = lastInputedTapCount[0];
                 lastActionSlot[0] = true;
             }
-            lastActionStatus = 2;
+            lastActionStatus = TOUCH_STATUS_START_PROCESSED;
         }
         for (int i24 = 0; i24 < 2; i24++) {
             int i25 = touchInputStatus[i24];

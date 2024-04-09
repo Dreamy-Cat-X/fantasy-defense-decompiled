@@ -11,6 +11,11 @@ import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
 public class EquipPage extends TPage {
+
+    public EquipPage(TPage par) {
+        super(par);
+    }
+
     public void paint_GAME_SHOP_EQUIP(GL10 gl10, boolean z) {
         int i;
         int i2;

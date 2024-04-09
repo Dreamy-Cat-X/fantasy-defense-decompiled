@@ -813,9 +813,7 @@ public class GameThread extends Thread {
     public static final int[] storyDataResource = {R.drawable.story_1, R.drawable.story_2, R.drawable.story_3_1, R.drawable.story_3_2, R.drawable.story_3_3, R.drawable.story_4, R.drawable.story_5, R.drawable.story_5_b, R.drawable.story_5_k, R.drawable.story_a_1, R.drawable.story_a_2, R.drawable.story_a_3, R.drawable.story_b_1, R.drawable.story_b_2, R.drawable.story_b_3, R.drawable.story_b_4, R.drawable.story_b_5, R.drawable.story_b_6, R.drawable.story_b_7};
     public static final int[] story2DataResource = {R.drawable.story2_1};
     public static int[] storyDrawDataBlock = new int[28];
-    public static final int[][] storyData = {new int[]{103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 30, 0, 0, 3, 1, 0, 100}, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 4, 7, 0, 0, 100}, new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 30, 0, 8, 9, 0, 0, 100}, new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 30, 0, 10, 11, 0, 0, 100}, new int[]{9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 30, 0, -1, -1, 0, 0, 100}, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 102, 0, 0, 0, 0, 0, 30, 0, 12, 15, 1, 0, 100}, new int[]{102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 30, 0, 16, 18, 0, 0, 100}, new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 30, 0, 19, 20, 1, 0, 100}, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 15, 40, -1, -1, 0, 0, 50}, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 15, 0, 21, 22, 0, 0, 100}, new int[]{3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 10, 0, 23, 27, 0, 0, 100}, new int[]{4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 10, 0, 28, 29, 0, 0, 100}, new int[]{3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 30, 0, -1, -1, 0, 0, 100}, new int[]{5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 15, 0, 30, 30, 0, 0, 100}, new int[]{5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 15, 0, 31, 31, 0, 0, 100}, new int[]{5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 15, 40, -1, -1, 0, 0, 50}, new int[]{5, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 5, 1, 1, 1, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 15, 0, 32, 33, 0, 0, 100}, new int[]{5, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 10, 0, 34, 35, 0, 0, 100}, new int[]{11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 1, 1, 20, 0, -1, -1, 0, 0, 100}, new int[]{6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 6, 0, 0, 0, 0, 1, 20, 0, 36, 38, 0, 0, 100}};
     public static int[] story2DrawDataBlock = new int[10];
-    public static final int[][] story2Data = {new int[]{30, 0, 0, 6, 0, 0, 100}, new int[]{30, 150, 7, 14, 0, 0, 100}, new int[]{30, 90, 15, 22, 1, 0, 100}};
     static final String[] TIP_TEXT = {"Tip 1  : Equip the item on your Hero under the [Item] > [Equipment] menu.", "Tip 2  : Clear stages and acquire up to 3 Heroes.", "Tip 3  : Certain stages reward you with a Hero character.", "Tip 4  : Use Mana to increase the levels of your Heroes.", "Tip 5  : Heroes consume Mana to use their special skills.", "Tip 6  : Special skills have a downtime after each use.", "Tip 7  : Clear a stage to receive Hero Points.", "Tip 8  : Configure your game settings under the [Title Screen] > Settings.", "Tip 9  : Basic units can be upgraded up to Level 3.", "Tip 10 : Hero units can be upgraded up to Level 5.", "Tip 11 : Upgrade your units to give them stronger abilities.", "Tip 12 : Use gold to advance your units to higher classes or increase their levels.", "Tip 13 : Increase the level of your units to improve their combat capabilities.", "Tip 14 : Advance your units to higher classes for more versatile abilities. ", "Tip 15 : Reselling a unit returns to you a portion _ of the money that you spent to hire the unit.", "Tip 16 : You will fail a Boss stage if you fail to defeat the bosses.", "Tip 17 : Boss monsters have high HP, but they move slowly.", "Tip 18 : Monsters drop gold and mana upon death.", "Tip 19 : Use Hero Points to buy items under [Item] > [Shop].", "Tip 20 : Use Hero Points to upgrade your Hero and basic units under the [Skill] menu.", "Tip 21 : Knights, the 2nd advanced class of Warrior, _ have high Attack Speed.", "Tip 22 : Warlords, the 3rd advanced class of Warrior, _ inflict Splashed damage to multiple enemies.", "Tip 23 : Special Warrior Brandishers attack monsters with a chance of causing Stun.", "Tip 24 : Splatters, the 2nd advanced class of Archer, _ shoot multi arrows and attack up to 3 enemies at the same time.", "Tip 25 : Sky Arrows, the 3rd advanced class of Archer, _ strike enemies with their extremely Long Attack Range.", "Tip 26 : Special Archer Holy Eyes specialize in DoT (Damage over Time) attacks.", "Tip 27 : Sorceresses, the 2nd advanced class of Wizard, inflict Piercing damage.", "Tip 28 : Blasters, the 3rd advanced class of Wizard, _ inflict Splashed damage with their Fire magic.", "Tip 29 : Special Wizard Ice Mages attack monsters with a chance of causing Slow.", "Tip 30 : Clear all the normal stages to unlock two special modes: _ Destroy the Moon and Infinite.", "Tip 31 : A stage's Infinite Mode is only opened _ when you clear it with a perfect score.", "Tip 32 : The objective of Destroy the Moon is to destroy _ the monster gates where monsters spawn.", "Tip 33 : Destroy stage objects to obtain gold and mana.", "Tip 34 : When clearing a normal stage more than twice,_ you will receive only 70% of the Hero Point reward from the stage.", "Tip 35 : Touch a monster or object to manually attack it.", "Tip 36 : Blasters, the 3rd advanced class of Wizard, _ inflict Splashed damage with their Fire magic.", "Tip 37 : Special Wizard Ice Mages attack monsters with a chance of causing Slow.", "Tip 38 : You will receive a Hero unit or additional ability _each time you clear 5 stages.", "Tip 39 : Clear 25 stages to upgrade your units up to 10 levels.", "Tip 40 : Clear 5 stages to unlock the special skill of your Hero units.", "Tip 41 : Clear 30 stages to unlock the special attack ability _of your Hero units. (Splashed damage or Double Shot)", "Tip 42 : Never hesitate to upgrade your Heroes and basic units _ when facing a difficult stage.", "Tip 43 : Certain stages contain special items for you to discover.", "Tip 43 : Cash items endow special abilities."};
     public static boolean[] cheatData = new boolean[5];
 
@@ -1096,7 +1094,6 @@ public class GameThread extends Thread {
     }
 
     public void update_GAME_PRE_LOAD() {
-        int i;
         if (Texture2D.gl != null) {
             AudioManager audioManager = (AudioManager) newTower.getSystemService("audio");
             mgr = audioManager;
@@ -1110,60 +1107,29 @@ public class GameThread extends Thread {
             for (int i2 = 0; i2 < myOscillator.length; i2++)
                 myOscillator[i2] = new MyOscillator(0, 100, 10);
 
-            MyScrollbar[] myScrollbarArr = new MyScrollbar[5];
-            myScrollbar = myScrollbarArr;
-            myScrollbarArr[0] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
-            myScrollbar[0].setReverseUpdatePosition(Config.musicVolume);
-            myScrollbar[1] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
+            myScrollbar[0] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
+            myScrollbar[0].setReverseUpdatePosition(Config.musicVolume); //Used at title page, for music vol
+            myScrollbar[1] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume); //Used at TitlePage, for SE vol
             myScrollbar[1].setReverseUpdatePosition(Config.effectVolume);
-            myScrollbar[2] = new MyScrollbar(120, 370, 0, 1080);
-            myScrollbar[3] = new MyScrollbar(120, 370, 0, 3480);
-            myScrollbar[4] = new MyScrollbar(90, GameRenderer.GAME_SHOP_SHOP_SIDEBAR_END_Y, 0, 1820);
-            monsterSortUnit = new MonsterUnit[100];
-            for (int i3 = 0; i3 < 100; i3++) {
-                monsterUnit[i3] = new MonsterUnit();
-                monsterUnit[i3].monsterSerial = i3;
-                monsterSortUnit[i3] = monsterUnit[i3];
-            }
-            towerUnit = new TowerUnit[150];
-            towerSortUnit = new TowerUnit[150];
-            for (int i4 = 0; i4 < 150; i4++) {
-                towerUnit[i4] = new TowerUnit();
-                towerSortUnit[i4] = towerUnit[i4];
-            }
-            compareTowerUnit = new TowerUnit();
-            objectUnit = new ObjectUnit[100];
-            objectSortUnit = new ObjectUnit[100];
-            for (int i5 = 0; i5 < 100; i5++) {
-                objectUnit[i5] = new ObjectUnit();
-                objectUnit[i5].objectSerial = i5;
-                objectSortUnit[i5] = objectUnit[i5];
-            }
-            effectUnit = new EffectUnit[200];
-            for (int i6 = 0; i6 < 200; i6++) {
-                effectUnit[i6] = new EffectUnit();
-            }
-            arrowUnit = new ArrowUnit[200];
-            for (int i7 = 0; i7 < 200; i7++) {
-                arrowUnit[i7] = new ArrowUnit();
-            }
+            myScrollbar[4] = new MyScrollbar(90, GameRenderer.GAME_SHOP_SHOP_SIDEBAR_END_Y, 0, 1820); //Used at Shop, for ???
+
             waveMonsterType = new int[2];
             waveMonsterRemainCount = new int[2];
             waveMonsterShowTime = new int[2];
             waveMonsterShowCurrent = new int[2];
-            specialDataValue = (int[][]) Array.newInstance((Class<?>) int.class, 20, 4);
+            specialDataValue = (int[][]) Array.newInstance(int.class, 20, 4);
             shopGiftItemSerial = new int[3];
             shopGiftItemType = new int[3];
             shopGiftItemCount = new int[3];
-            shopGiftPhoneNumberByte = (byte[][]) Array.newInstance((Class<?>) byte.class, 3, 25);
+            shopGiftPhoneNumberByte = (byte[][]) Array.newInstance(byte.class, 3, 25);
             shopGiftPhoneNumber = new String[3];
             for (int i8 = 0; i8 < 3; i8++) {
                 shopGiftItemType[i8] = -1;
             }
             shopSendPhoneNumber = new int[11];
             heroUnitType = new int[3];
-            heroItemType = (int[][]) Array.newInstance((Class<?>) int.class, 3, 2);
-            heroUpgradeValue = (int[][]) Array.newInstance((Class<?>) int.class, 3, 6);
+            heroItemType = (int[][]) Array.newInstance(int.class, 3, 2);
+            heroUpgradeValue = (int[][]) Array.newInstance(int.class, 3, 6);
             itemUnitValue = new int[24];
             shopUnitValue = new int[30];
             for (int i9 = 0; i9 < 3; i9++) {
@@ -1186,17 +1152,17 @@ public class GameThread extends Thread {
             myHeroism = 0;
             freeAdViewCount = 5;
             freeAdViewTime = System.currentTimeMillis();
-            waveMobData = (int[][]) Array.newInstance((Class<?>) int.class, WAVE_MAX_COUNT, 8);
-            highScoreValue = (int[][]) Array.newInstance((Class<?>) int.class, 50, 3);
-            gamePlayedCount = (int[][]) Array.newInstance((Class<?>) int.class, 50, 3);
-            gameClearedFlag = (int[][]) Array.newInstance((Class<?>) int.class, 50, 3);
-            gamePerfectFlag = (int[][]) Array.newInstance((Class<?>) int.class, 50, 3);
+            waveMobData = (int[][]) Array.newInstance(int.class, WAVE_MAX_COUNT, 8);
+            highScoreValue = (int[][]) Array.newInstance(int.class, 50, 3);
+            gamePlayedCount = (int[][]) Array.newInstance(int.class, 50, 3);
+            gameClearedFlag = (int[][]) Array.newInstance(int.class, 50, 3);
+            gamePerfectFlag = (int[][]) Array.newInstance(int.class, 50, 3);
             for (int i14 = 0; i14 < 50; i14++) {
-                int[][] iArr = gamePlayedCount;
-                iArr[i14][0] = -1;
-                iArr[i14][1] = -1;
-                iArr[i14][2] = -1;
+                gamePlayedCount[i14][0] = -1;
+                gamePlayedCount[i14][1] = -1;
+                gamePlayedCount[i14][2] = -1;
             }
+            //TODO - Set all config perfect flags to -1 herte
             gamePlayedCount[0][0] = 0;
             rewardDataValue = new int[10];
             awardDataValue = new int[62];
@@ -1208,14 +1174,12 @@ public class GameThread extends Thread {
                 soundPlayCheckFlag[i15] = false;
                 soundPlayDelayCount[i15] = 0;
             }
-            MediaManager[] mediaManagerArr = new MediaManager[3];
-            bgmMedia = mediaManagerArr;
-            mediaManagerArr[0] = new MediaManager(newTower, R.raw.bgm_1);
+            bgmMedia = new MediaManager[3];
+            bgmMedia[0] = new MediaManager(newTower, R.raw.bgm_1);
             bgmMedia[1] = new MediaManager(newTower, R.raw.bgm_2);
             bgmMedia[2] = new MediaManager(newTower, R.raw.bgm_3);
-            MediaManager2 mediaManager2 = new MediaManager2(31);
-            effectMedia = mediaManager2;
-            mediaManager2.setMediaFile(0, newTower, R.raw.snlogo, false);
+            effectMedia = new MediaManager2(31);;
+            effectMedia.setMediaFile(0, newTower, R.raw.snlogo, false);
             effectMedia.setMediaFile(1, newTower, R.raw.att_1, false);
             effectMedia.setMediaFile(2, newTower, R.raw.att_2, false);
             effectMedia.setMediaFile(3, newTower, R.raw.att_3, false);
@@ -1270,20 +1234,18 @@ public class GameThread extends Thread {
             stageSelectStageNumber = i16 % 10;
             if (rewardDataValue[0] == 1) {
                 heroUnitType[0] = 0;
-                i = -1;
             } else {
-                i = -1;
                 heroUnitType[0] = -1;
             }
             if (rewardDataValue[2] == 1) {
                 heroUnitType[1] = 5;
             } else {
-                heroUnitType[1] = i;
+                heroUnitType[1] = -1;
             }
             if (rewardDataValue[4] == 1) {
                 heroUnitType[2] = 10;
             } else {
-                heroUnitType[2] = i;
+                heroUnitType[2] = -1;
             }
             GameRenderer.lastCheckTime = System.currentTimeMillis();
             cheatFlag = false;
@@ -1302,99 +1264,7 @@ public class GameThread extends Thread {
         GameRenderer.lastCheckTime = System.currentTimeMillis();
     }
 
-    public void update_GAME_PLAY_IMAGE_LOAD() {
-        newTower.HideAdMob();
-    }
-
-    public void update_GAME_PLAY2_IMAGE_LOAD() {
-        newTower.HideAdMob();
-    }
-
-    public void update_GAME_MENU_IMAGE_LOAD() {
-        newTower.HideAdMob();
-    }
-
-    public void update_GAME_RESUME_TO_MENU() {
-        newTower.HideAdMob();
-    }
-
-    public void update_GAME_MAINMENU() {
-        myOscillator[11].updatePosition();
-        newTower.ViewAdMob();
-    }
-
-    public void update_GAME_MAINMENU_MOVING() {
-        GameRenderer.titleCount++;
-        if (GameRenderer.titleCount >= GameRenderer.TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT) {
-            int i = GameRenderer.titlePressed;
-            if (i == 10) {
-                newTower.HideAdMob();
-                if (tutorialFlag == 0) {
-                    loadMap(50, false);
-                    gameLoadFlag = 0;
-                    loadingStatus = GAME_PLAY2_IMAGE_LOAD;
-                    loadTipNumber = getRandom(TIP_TEXT.length);
-                    GameRenderer.loadCount_GAME_PLAY_IMAGE_LOAD = 0;
-                    GameRenderer.loadingViewType = getRandom(6);
-                    stopLoopSound(0);
-                    for (int i2 = 0; i2 < 22; i2++) {
-                        tutorialBoxTouchFlag[i2] = 0;
-                    }
-                } else {
-                    gameLoadFlag = 0;
-                    loadingStatus = 1004;
-                    loadTipNumber = getRandom(TIP_TEXT.length);
-                    GameRenderer.loadCount_GAME_PLAY_IMAGE_LOAD = 0;
-                    GameRenderer.loadingViewType = getRandom(6);
-                    stopLoopSound(1);
-                }
-            } else if (i == 18) {
-                gameStatus = 18;
-                gameHelpViewNum = 0;
-            } else if (i == 19) {
-                recheckAwardData();
-                gameStatus = 19;
-                gameSubStatus = 0;
-            }
-        }
-        if (GameRenderer.titleCount >= GameRenderer.TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT) {
-            switch (GameRenderer.titlePressed) {
-                case 11:
-                    gameStatus = 11;
-                    return;
-                case 12:
-                    gameStatus = 12;
-                    upgradeUnitSelectPos = 0;
-                    return;
-                case 13:
-                default:
-                    return;
-                case 14:
-                    gameStatus = 14;
-                    return;
-                case 15:
-                    gameStatus = 15;
-                    gameSubStatus = 0;
-                    shopShopItemSelectPos = 0;
-                    getShopList();
-            }
-        }
-    }
-
-    public void update_GAME_MAINMENU_REV_MOVING() {
-        newTower.HideAdMob();
-        GameRenderer.titleCount++;
-        if (GameRenderer.titleCount >= GameRenderer.TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT) {
-            gameStatus = 5;
-        }
-    }
-
-    public void update_GAME_UPGRADE_LIST() {
-        newTower.ViewAdMob();
-    }
-
     public void update_GAME_UPGRADE_UNIT() {
-        newTower.HideAdMob();
         int i = lastUpdateItemViewDelay;
         if (i > 0) {
             lastUpdateItemViewDelay = i - 1;
@@ -1402,42 +1272,23 @@ public class GameThread extends Thread {
     }
 
     public void update_GAME_UPGRADE_HERO() {
-        newTower.HideAdMob();
         int i = lastUpdateItemViewDelay;
         if (i > 0) {
             lastUpdateItemViewDelay = i - 1;
         }
     }
 
-    public void update_GAME_SHOP_LIST() {
-        newTower.ViewAdMob();
-    }
-
     public void update_GAME_SHOP_SHOP() {
-        newTower.HideAdMob();
         GameRenderer.upgradeItemListDraw.correctDistance();
         GameRenderer.inventoryItemListDraw.correctDistance();
     }
 
     public void update_GAME_SHOP_EQUIP() {
-        newTower.HideAdMob();
         GameRenderer.inventoryItemListDraw.correctDistance();
         int i = viewCount_GAME_SHOP_EQUIP;
         if (i < 30) {
             viewCount_GAME_SHOP_EQUIP = i + 1;
         }
-    }
-
-    public void update_GAME_RECORD() {
-        GameRenderer.rankListDraw.correctDistance();
-        GameRenderer.awardListDraw.correctDistance();
-    }
-
-    //TODO - Replace with stage constructor
-    public static void gameStartStatSetting() {
-        DataStage.instance = new DataStage(mapNumber, mapAttackType);
-        tempCharacterRangeViewNumber = -1;
-        commonTargetType = -1;
     }
 
     public static void setEquipHeroSetting() {
@@ -2981,26 +2832,6 @@ public class GameThread extends Thread {
         if (i34 >= 30) {
             awardDataFlag[32] = 1;
         }
-    }
-
-    public static int getAwardDataCount() {
-        int i = 0;
-        for (int i2 = 0; i2 < 62; i2++) {
-            if (awardDataFlag[i2] == 1) {
-                i++;
-            }
-        }
-        return i;
-    }
-
-    public static int getAwardScoreCount() {
-        int i = 0;
-        for (int i2 = 0; i2 < 62; i2++) {
-            if (awardDataFlag[i2] == 1) {
-                i += DataAward.awardScoreValue[i2];
-            }
-        }
-        return i;
     }
 
     public static void resetUpgrade() {

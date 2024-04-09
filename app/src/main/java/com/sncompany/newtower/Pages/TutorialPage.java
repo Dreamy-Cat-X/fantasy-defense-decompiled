@@ -1,6 +1,7 @@
 package com.sncompany.newtower.Pages;
 
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.DataMap;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
@@ -8,11 +9,50 @@ import com.sncompany.newtower.TouchManager;
 
 public class TutorialPage extends TPage {
 
+    public static final int GAME_TUTORIAL_TOUCH_BOX_ARCHER = 20;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_CLEAR1 = 27;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_CLEAR2 = 28;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_COLDDIVINER = 23;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_ENEMYGATE = 15;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_FINISH1 = 29;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_FINISH2 = 30;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_GATELIFE = 17;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_GOLD = 10;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_GOLDBOX = 25;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_HERO = 24;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_HOLYEYE = 21;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_MANA = 11;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_MANASTONE = 26;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_MANATARMS = 19;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_OURGATE = 16;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_PAUSESWITCHMENU = 13;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_UNITS = 14;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_WARRIOR = 18;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_WAVE = 12;
+    public static final int GAME_TUTORIAL_TOUCH_BOX_WIZARD = 22;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_0_WARRIOR = 0;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_10_HERO_SLOT_2 = 9;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_1_MAN_AT_ARMS = 1;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_2_ARCHER = 2;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_3_HOLY_EYE = 3;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_4_WIZARD = 4;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_5_COLD_DIVINER = 5;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_7_HERO_ICON = 6;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_8_HERO_SLOT_0 = 7;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_9_HERO_SLOT_1 = 8;
+    public static final int GAME_TUTORIAL_TOUCH_LIST_TOTAL_COUNT = 31;
+    public final int[] tutorialBoxTouchFlag = new int[22];
+    public final DataMap tmap = DataMap.loadMap(50, false);
+
+    public TutorialPage(TPage par) {
+        super(par);
+    }
+
     public void update_GAME_TUTORIAL() {
         int i;
-        for (int i2 = 0; i2 < 11; i2++) {
+        for (int i2 = 0; i2 < 11; i2++)
             myOscillator[i2].updatePosition();
-        }
+
         sortTowerEnemyUnit();
         for (int i3 = 0; i3 < 22; i3++) {
             int[] iArr = tutorialBoxTouchFlag;

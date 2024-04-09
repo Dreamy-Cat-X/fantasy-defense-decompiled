@@ -1,5 +1,7 @@
 package com.sncompany.newtower.Pages;
 
+import androidx.core.util.Consumer;
+
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataMap;
 import com.sncompany.newtower.DataClasses.DataStage;
@@ -15,6 +17,20 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class StageSelectPage extends TPage {
 
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_0_BACK = 0;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_10_CHAPTER1 = 10;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_11_CHAPTER2 = 11;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_12_CHAPTER3 = 12;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_13_CHAPTER4 = 13;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_14_CHAPTER5 = 14;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_3_STAGE_LEFT = 3;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_4_STAGE_RIGHT = 4;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_5_ENGAGE = 5;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_6_NORMAL = 6;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_7_INFINITY = 7;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_8_GATEBREAKER = 8;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_9_MAP_VIEW = 9;
+    public static final int GAME_STAGE_SELECT_TOUCH_LIST_TOTAL_COUNT = 15;
     public static final int BACK = 0, START = 1, ARROW_L = 2, ARROW_R = 3, MIN_MAPMODE = 4, MAX_MAPMODE = MIN_MAPMODE + 2, MIN_CHAPTER = MAX_MAPMODE + 2, MAX_CHAPTER = MIN_CHAPTER + 4;
     public static final int[] numberStagePointResource = {R.drawable.num_stage_point_0, R.drawable.num_stage_point_1, R.drawable.num_stage_point_2, R.drawable.num_stage_point_3, R.drawable.num_stage_point_4, R.drawable.num_stage_point_5, R.drawable.num_stage_point_6, R.drawable.num_stage_point_7, R.drawable.num_stage_point_8, R.drawable.num_stage_point_9};
     public static final int[] uiStageResource = {R.drawable.ui_stage_leftwindow, R.drawable.ui_stage_rightwindow, R.drawable.ui_stage_effect1, R.drawable.ui_stage_effect2, R.drawable.ui_stage_effect3, R.drawable.ui_stage_effect4, R.drawable.ui_stage_effect5, R.drawable.ui_stage_back_off, R.drawable.ui_stage_back_on, R.drawable.ui_stage_chapterleft_off, R.drawable.ui_stage_chapterleft_on, R.drawable.ui_stage_chapterright_off, R.drawable.ui_stage_chapterright_on, R.drawable.ui_stage_stageleft_off, R.drawable.ui_stage_stageleft_on, R.drawable.ui_stage_stageright_off, R.drawable.ui_stage_stageright_on, R.drawable.ui_stage_chapter, R.drawable.ui_stage_1, R.drawable.ui_stage_2, R.drawable.ui_stage_3, R.drawable.ui_stage_4, R.drawable.ui_stage_5, R.drawable.ui_stage_name1, R.drawable.ui_stage_name2, R.drawable.ui_stage_name3, R.drawable.ui_stage_name4, R.drawable.ui_stage_name5, R.drawable.ui_stage_wave, R.drawable.ui_stage_highscore, R.drawable.ui_stage_stagebox, R.drawable.ui_stage_stageselect, R.drawable.ui_stage_engage_off, R.drawable.ui_stage_engage_on, R.drawable.ui_stage_mapline, R.drawable.ui_stage_normal_off, R.drawable.ui_stage_normal_on, R.drawable.ui_stage_infinity_off, R.drawable.ui_stage_infinity_on, R.drawable.ui_stage_gatebreaker_off, R.drawable.ui_stage_gatebreaker_on, R.drawable.ui_stage_infinity_noselect, R.drawable.ui_stage_gatebreaker_noselect, R.drawable.ui_stage_new, R.drawable.ui_stage_stage, R.drawable.ui_stage_lock, R.drawable.ui_stage_perfect};
@@ -32,7 +48,7 @@ public class StageSelectPage extends TPage {
     }
 
     @Override
-    public void load() {
+    public void load(Consumer<Float> prog) {
         for (int i = 0; i < numberStagePointImage.length; i++)
             numberStagePointImage[i] = new Texture2D(numberStagePointResource[i]);
         for (int i = 0; i < uiStageImage.length; i++)
@@ -43,20 +59,16 @@ public class StageSelectPage extends TPage {
 
     @Override
     public void update() {
-        //TODO
-    }
-
-    public void update_GAME_STAGE_SELECT() {
         if (mapNumber >= 0 && stageLoad > 0) {
             stageLoad++;
             if (stageLoad >= 15) {
-                gameStatus = 24; //Start loading stage
+                stageLoad = -1;
                 GameThread.stopLoopSound(1);
             }
-        }
-    }
+        } //End of update_GAME_STAGE_SELECT
+        if (stageLoad != -1)
+            return;
 
-    public void update_GAME_STAGE_START_LOADING() {
         Config.lastPlayed = (byte)((stageSelectChapterNumber * 10) + stageSelectStageNumber);
         int[][] iArr = gamePlayedCount;
         int i3 = mapNumber;
@@ -82,7 +94,7 @@ public class StageSelectPage extends TPage {
         DataStage nst = new DataStage(mapNumber, mapAttackType);
 
         GameThread.playLoopSound(2);
-        NewTower.switchPage(new LoadingPage(new StagePage(this, nst, map)));
+        NewTower.switchPage(new LoadingPage(new StagePage(this, nst, map)), true); //End of update_GAME_STAGE_START_LOADING
     }
 
     public void paint_GAME_STAGE_SELECT(GL10 gl10) {
@@ -250,7 +262,7 @@ public class StageSelectPage extends TPage {
                 case 0:
                     GameThread.playSound(15);
                     GameThread.stopLoopSound(1);
-                    NewTower.switchPage(new LoadingPage(parent));
+                    NewTower.switchPage(new LoadingPage(parent), true);
                     break;
                 case 1:
                     if (stageSelectStageNumber > 0) {

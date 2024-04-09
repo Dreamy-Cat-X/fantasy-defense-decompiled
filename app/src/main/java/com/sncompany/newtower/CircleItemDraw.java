@@ -47,51 +47,47 @@ public class CircleItemDraw {
     }
 
     public void getArrayAndCorrection() {
-        int i = Math.abs(this.currentDrawPosition);
+        int i = Math.abs(currentDrawPosition);
 
-        int i2 = this.FIRST_BLOCK_SIZE;
-        if (i2 == 0) {
-            for (int i3 = 0; i3 < this.totalBlockSize; i3++)
-                this.blockCurrentArray[i3] = 0;
-
-            this.blockCorrectionPixel = 0;
+        if (FIRST_BLOCK_SIZE == 0) {
+            for (int i3 = 0; i3 < totalBlockSize; i3++)
+                blockCurrentArray[i3] = 0;
+            blockCorrectionPixel = 0;
             return;
         }
-        int i4 = i / i2;
-        int i5 = i % i2;
-        if (i5 > i2 / 2) {
+        int i4 = i / FIRST_BLOCK_SIZE;
+        int i5 = i % FIRST_BLOCK_SIZE;
+        if (i5 > FIRST_BLOCK_SIZE / 2) {
             i4++;
-            i5 -= i2;
+            i5 -= FIRST_BLOCK_SIZE;
         }
 
-        this.blockCorrectionPixel = this.currentDrawPosition < 0 ? i5 : -i5;
-        if (this.currentDrawPosition < 0)
+        blockCorrectionPixel = currentDrawPosition < 0 ? i5 : -i5;
+        if (currentDrawPosition < 0)
             i4 = -i4;
 
-        int i6 = i4 - this.totalHalfBlockSize;
+        int i6 = i4 - totalHalfBlockSize;
         int i7 = 0;
-        while (i7 < this.totalBlockSize) {
-            if (!this.moveCloseFlag) {
-                if (i6 < 0) {
-                    int i8 = this.totalDataBlockSize;
-                    i6 = i8 - ((-i6) % i8);
-                }
-                this.blockCurrentArray[i7] = i6 % this.totalDataBlockSize;
+        while (i7 < totalBlockSize) {
+            if (!moveCloseFlag) {
+                if (i6 < 0)
+                    i6 = totalDataBlockSize - ((-i6) % totalDataBlockSize);
+                blockCurrentArray[i7] = i6 % totalDataBlockSize;
             } else if (i6 < 0 || i6 >= this.totalDataBlockSize) {
-                this.blockCurrentArray[i7] = -1;
+                blockCurrentArray[i7] = -1;
             } else
-                this.blockCurrentArray[i7] = i6;
+                blockCurrentArray[i7] = i6;
             i7++;
             i6++;
         }
-        this.leftArrowDrawFlag = true;
-        this.rightArrowDrawFlag = true;
-        if (this.moveCloseFlag) {
-            if (this.currentDrawPosition == 0)
-                this.leftArrowDrawFlag = false;
+        leftArrowDrawFlag = true;
+        rightArrowDrawFlag = true;
+        if (moveCloseFlag) {
+            if (currentDrawPosition == 0)
+                leftArrowDrawFlag = false;
 
-            if (this.currentDrawPosition == (this.totalDataBlockSize - 1) * this.FIRST_BLOCK_SIZE)
-                this.rightArrowDrawFlag = false;
+            if (currentDrawPosition == (totalDataBlockSize - 1) * FIRST_BLOCK_SIZE)
+                rightArrowDrawFlag = false;
         }
     }
 
