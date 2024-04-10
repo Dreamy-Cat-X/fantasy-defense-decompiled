@@ -1,11 +1,16 @@
 package com.sncompany.newtower.Pages;
 
+import android.content.Intent;
+import android.net.Uri;
+
 import androidx.core.util.Consumer;
 
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.MyScrollbar;
+import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -13,6 +18,12 @@ import com.sncompany.newtower.TouchManager;
 import javax.microedition.khronos.opengles.GL10;
 
 public class TitlePage extends TPage {
+
+    enum MENUMODE {
+        TITLE,
+        OPTION,
+        ABOUT
+    }
 
     public static final int GAME_ABOUT_TOUCH_LIST_0_BACK = 0;
     public static final int GAME_ABOUT_TOUCH_LIST_1_DEVELOPER = 1;
@@ -29,14 +40,31 @@ public class TitlePage extends TPage {
     public static final int GAME_TITLE_TOUCH_LIST_3_FACEBOOK = 3;
     public static final int GAME_TITLE_TOUCH_LIST_4_TWITTER = 4;
     public static final int GAME_TITLE_TOUCH_LIST_TOTAL_COUNT = 5;
+    static final float TITLE_GLOW_MOVE_DEGREE = 0.05f;
+    public static final int[] GAME_TITLE_BOSS_VIEW_POS_LIST = {77, 26, 41, 21, -30};
     private static final int[] countLimit = {17, 2, 7, 2, 7, 2, 17, 2, 15, 30, 30, 10};
     public static final int[] titleResource = {R.drawable.ui_title_background, R.drawable.ui_title_background2, R.drawable.ui_title_mob0, R.drawable.ui_title_mob1, R.drawable.ui_title_mobeye, R.drawable.ui_title_title, R.drawable.ui_title_titleglow, R.drawable.ui_title_titlekorean, R.drawable.ui_title_startoff, R.drawable.ui_title_starton, R.drawable.ui_title_optionoff, R.drawable.ui_title_optionon, R.drawable.ui_title_sncompany, R.drawable.ui_title_about, R.drawable.ui_title_twitter, R.drawable.ui_title_facebook};
+    public static final int[] titleBoss0Resource = {R.drawable.ui_title0_0, R.drawable.ui_title0_1, R.drawable.ui_title0_2, R.drawable.ui_title0_3};
+    public static final int[] titleBoss1Resource = {R.drawable.ui_title1_0, R.drawable.ui_title1_1, R.drawable.ui_title1_2, R.drawable.ui_title1_3};
+    public static final int[] titleBoss2Resource = {R.drawable.ui_title2_0, R.drawable.ui_title2_1, R.drawable.ui_title2_2, R.drawable.ui_title2_3};
+    public static final int[] titleBoss3Resource = {R.drawable.ui_title3_0, R.drawable.ui_title3_1, R.drawable.ui_title3_2, R.drawable.ui_title3_3};
+    public static final int[] titleBoss4Resource = {R.drawable.ui_title4_0, R.drawable.ui_title4_1, R.drawable.ui_title4_2, R.drawable.ui_title4_3};
+    public static final int[][] BossResources = {titleBoss0Resource, titleBoss1Resource, titleBoss2Resource, titleBoss3Resource, titleBoss4Resource};
 
     private final Texture2D[] titleImage = new Texture2D[titleResource.length];
-    private int gameTitleViewCount = 0, gameSubStatus = 0;
+    private final Texture2D[] titleBossImage = new Texture2D[titleBoss0Resource.length];
+    private int gameTitleViewCount = 0, gameSubStatus = 0, GAME_TITLE_BOSS_VIEW_POS = 0;
+    private MENUMODE mode = MENUMODE.TITLE;
+    private final MyScrollbar[] myScrollbar = new MyScrollbar[2];
 
     public TitlePage(TPage p) {
         super(p);
+        myScrollbar[0] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
+        myScrollbar[0].setReverseUpdatePosition(Config.musicVolume); //Used at title page, for music vol
+        myScrollbar[1] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume); //Used at TitlePage, for SE vol
+        myScrollbar[1].setReverseUpdatePosition(Config.effectVolume);
+        for (int i = 0; i < titleBossImage.length; i++)
+            titleBossImage[i] = new Texture2D();
         resetAnimations();
     }
 
@@ -46,371 +74,317 @@ public class TitlePage extends TPage {
 
     @Override
     public void load(Consumer<Float> prog) {
-        for (int i = 0; i < titleImage.length; i++)
+        int tot = titleImage.length + titleBossImage.length;
+        reloadBoss(prog, tot);
+        for (int i = 0; i < titleImage.length; i++) {
             titleImage[i] = new Texture2D(titleResource[i]);
+            if (prog != null)
+                prog.accept((i + titleBossImage.length + 1f) / tot);
+        }
+        loaded = true;
+    }
+
+    public void reloadBoss(Consumer<Float> prog, int tot) {
+        int random = NewTower.getRandom(5);
+        GAME_TITLE_BOSS_VIEW_POS = GAME_TITLE_BOSS_VIEW_POS_LIST[random];
+        for (int i = 0; i < titleBossImage.length; i++) {
+            titleBossImage[i].initWithImageName(BossResources[random][i]);
+            if (prog != null)
+                prog.accept((i + 1f) / tot);
+        }
     }
 
     @Override
-    public void update_GAME_TITLE() {
+    public void unload() {
+        for (Texture2D timg : titleImage)
+            timg.dealloc();
+        for (Texture2D timg : titleBossImage)
+            timg.dealloc();
+    }
+
+    @Override
+    public void update() {
+        if (gameSubStatus == countLimit.length) //countLimit length is 12
+            return;
         gameTitleViewCount++;
-        if (gameSubStatus < countLimit.length && gameTitleViewCount >= countLimit[gameSubStatus]) {
+        if (gameTitleViewCount >= countLimit[gameSubStatus]) {
             gameSubStatus++;
             gameTitleViewCount = 0;
-            if (gameSubStatus == 12)
+            if (gameSubStatus == countLimit.length)
                 GameThread.playLoopSound(0);
         }
     }
 
-    public void paint_GAME_TITLE(GL10 gl10, boolean init) {
+    @Override
+    public void paint(GL10 gl10, boolean init) {
         int cTLS = TouchManager.checkTouchListStatus();
-        float f;
-        float f2;
-        float f3;
         TouchManager.clearTouchMap();
-        if (GameThread.gameSubStatus == 12) {
-            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_0_START, GameRenderer.CGRectMake(296.0f, 337.0f, 208.0f, 48.0f));
-            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_1_OPTION, GameRenderer.CGRectMake(326.0f, 412.0f, 148.0f, 36.0f));
-            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_2_ABOUT, GameRenderer.CGRectMake(9.0f, 429.0f, 42.0f, 42.0f));
-            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_4_TWITTER, GameRenderer.CGRectMake(56.0f, 429.0f, 42.0f, 42.0f));
-            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_3_FACEBOOK, GameRenderer.CGRectMake(104.0f, 429.0f, 42.0f, 42.0f));
-        } else {
-            TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_0_START, GameRenderer.CGRectMake(0.0f, 0.0f, 800.0f, 480.0f));
-        }
-        TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_TITLE_TOUCH_LIST_TOTAL_COUNT;
 
-        switch (GameThread.gameSubStatus) {
-            case 0, 2, 4, 6:
-                titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-                titleImage[2].drawAtPointOption(0.0f, 9, 18);
-                titleImage[4].drawAtPointOption(64.0f, 38, 18);
-                break;
-            case 1, 3, 5, 7:
-                fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                titleImage[3].drawAtPointOption(0.0f, 9, 18);
-                titleImage[4].drawAtPointOption(64.0f, 38, 18);
-                break;
-            case 8:
-                float f4 = (((GAME_TITLE_BOSS_VIEW_POS - ((int) titleBossImage[0]._sizeY)) - ((int) titleBossImage[1]._sizeY)) - ((int) titleBossImage[2]._sizeY)) - ((int) titleBossImage[3]._sizeY);
-                float f5 = 1.0f - (GameThread.gameTitleViewCount * 0.066f);
-                titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-                titleBossImage[2].drawAtPointOption(0.0f, ((int) r3[0]._sizeY) + f4 + ((int) titleBossImage[1]._sizeY), 18);
-                titleBossImage[3].drawAtPointOption(0.0f, f4 + ((int) r3[0]._sizeY) + ((int) titleBossImage[1]._sizeY) + ((int) titleBossImage[2]._sizeY), 18);
-                if (f5 > 0.0f) {
+        if (mode == MENUMODE.TITLE) {
+            float f = GameThread.gameTimeCount % 40 <= 20 ? (GameThread.gameTimeCount % 40) * TITLE_GLOW_MOVE_DEGREE : 1.0f - (((GameThread.gameTimeCount % 40) - 20) * TITLE_GLOW_MOVE_DEGREE);
+            if (gameSubStatus == 12) {
+                TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_0_START, GameRenderer.CGRectMake(296.0f, 337.0f, 208.0f, 48.0f));
+                TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_1_OPTION, GameRenderer.CGRectMake(326.0f, 412.0f, 148.0f, 36.0f));
+                TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_2_ABOUT, GameRenderer.CGRectMake(9.0f, 429.0f, 42.0f, 42.0f));
+                TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_4_TWITTER, GameRenderer.CGRectMake(56.0f, 429.0f, 42.0f, 42.0f));
+                TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_3_FACEBOOK, GameRenderer.CGRectMake(104.0f, 429.0f, 42.0f, 42.0f));
+            } else
+                TouchManager.addTouchRectListData(GAME_TITLE_TOUCH_LIST_0_START, GameRenderer.CGRectMake(0.0f, 0.0f, 800.0f, 480.0f));
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_TITLE_TOUCH_LIST_TOTAL_COUNT;
+
+            switch (gameSubStatus) {
+                case 0, 2, 4, 6:
+                    titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleImage[2].drawAtPointOption(0.0f, 9, 18);
+                    titleImage[4].drawAtPointOption(64.0f, 38, 18);
+                    break;
+                case 1, 3, 5, 7:
+                    fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                    titleImage[3].drawAtPointOption(0.0f, 9, 18);
+                    titleImage[4].drawAtPointOption(64.0f, 38, 18);
+                    break;
+                case 8: {
+                    float bPos = (((GAME_TITLE_BOSS_VIEW_POS - ((int) titleBossImage[0]._sizeY)) - ((int) titleBossImage[1]._sizeY)) - ((int) titleBossImage[2]._sizeY)) - ((int) titleBossImage[3]._sizeY);
+                    float alpha = 1.0f - (gameTitleViewCount * 0.066f);
+                    titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleBossImage[2].drawAtPointOption(0.0f, ((int) titleBossImage[0]._sizeY) + bPos + ((int) titleBossImage[1]._sizeY), 18);
+                    titleBossImage[3].drawAtPointOption(0.0f, bPos + ((int) titleBossImage[0]._sizeY) + ((int) titleBossImage[1]._sizeY) + ((int) titleBossImage[2]._sizeY), 18);
+                    if (alpha > 0.0f) {
+                        Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                        Texture2D.gl.glColor4f(1f, 1f, 1f, alpha);
+                        fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    }
+                    titleImage[3].drawAtPointOption(0.0f, 9, 18);
+                    titleImage[4].drawAtPointOption(64.0f, 38, 18);
+                    break;
+                } case 9: {
+                    float bPos = Math.min(GAME_TITLE_BOSS_VIEW_POS, ((((GAME_TITLE_BOSS_VIEW_POS - ((int) titleBossImage[0]._sizeY)) - ((int) titleBossImage[1]._sizeY)) - ((int) titleBossImage[2]._sizeY)) - ((int) titleBossImage[3]._sizeY)) + (GameThread.gameTitleViewCount * 54));
+
+                    titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleBossImage[0].drawAtPointOption(0.0f, bPos, 18);
+                    titleBossImage[1].drawAtPointOption(0.0f, ((int) titleBossImage[0]._sizeY) + bPos, 18);
+                    titleBossImage[2].drawAtPointOption(0.0f, ((int) titleBossImage[0]._sizeY) + bPos + ((int) titleBossImage[1]._sizeY), 18);
+                    titleBossImage[3].drawAtPointOption(0.0f, bPos + ((int) titleBossImage[0]._sizeY) + ((int) titleBossImage[1]._sizeY) + ((int) titleBossImage[2]._sizeY), 18);
+
+                    int y1 = (gameTitleViewCount * 108) + 9;
+                    titleImage[3].drawAtPointOption(0.0f, y1, 18);
+                    int y2 = (gameTitleViewCount * 108) + 38;
+                    titleImage[4].drawAtPointOption(64.0f, y2, 18);
+                    break;
+                } case 10:
+                    titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleImage[1].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleBossImage[0].drawAtPointOption(0.0f, GAME_TITLE_BOSS_VIEW_POS, 18);
+                    titleBossImage[1].drawAtPointOption(0.0f, GAME_TITLE_BOSS_VIEW_POS + ((int) titleBossImage[0]._sizeY), 18);
+                    titleImage[7].drawAtPointOption(277.0f, 30.0f, 18);
+                    titleImage[5].drawAtPointOption(41.0f, 22.0f, 18);
+
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(f5, f5, f5, f5);
-                    fillWhiteImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                }
-                titleImage[3].drawAtPointOption(0.0f, 9, 18);
-                titleImage[4].drawAtPointOption(64.0f, 38, 18);
-                break;
-            case 9:
-                int i = (GameThread.gameTitleViewCount * 108) + 9;
-                int i2 = (GameThread.gameTitleViewCount * 108) + 38;
-                float f6 = ((((GAME_TITLE_BOSS_VIEW_POS - ((int) titleBossImage[0]._sizeY)) - ((int) titleBossImage[1]._sizeY)) - ((int) titleBossImage[2]._sizeY)) - ((int) titleBossImage[3]._sizeY)) + (GameThread.gameTitleViewCount * 54);
-                int i3 = GAME_TITLE_BOSS_VIEW_POS;
-                if (f6 > i3) {
-                    f6 = i3;
-                }
-                titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-                titleBossImage[0].drawAtPointOption(0.0f, f6, 18);
-                titleBossImage[1].drawAtPointOption(0.0f, ((int) r4[0]._sizeY) + f6, 18);
-                titleBossImage[2].drawAtPointOption(0.0f, ((int) r4[0]._sizeY) + f6 + ((int) titleBossImage[1]._sizeY), 18);
-                titleBossImage[3].drawAtPointOption(0.0f, f6 + ((int) r4[0]._sizeY) + ((int) titleBossImage[1]._sizeY) + ((int) titleBossImage[2]._sizeY), 18);
-                titleImage[3].drawAtPointOption(0.0f, i, 18);
-                titleImage[4].drawAtPointOption(64.0f, i2, 18);
-                break;
-            case 10:
-                float f7 = GAME_TITLE_BOSS_VIEW_POS;
-                int i4 = GameThread.gameTitleViewCount;
-                titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-                titleImage[1].drawAtPointOption(0.0f, 0.0f, 18);
-                titleBossImage[0].drawAtPointOption(0.0f, f7, 18);
-                titleBossImage[1].drawAtPointOption(0.0f, f7 + ((int) r2[0]._sizeY), 18);
-                titleImage[7].drawAtPointOption(277.0f, 30.0f, 18);
-                titleImage[5].drawAtPointOption(41.0f, 22.0f, 18);
-                if (GameThread.gameTimeCount % 40 <= 20) {
-                    f = (GameThread.gameTimeCount % 40) * TITLE_GLOW_MOVE_DEGREE;
-                } else {
-                    f = 1.0f - (((GameThread.gameTimeCount % 40) - 20) * TITLE_GLOW_MOVE_DEGREE);
-                }
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(f, f, f, f);
-                titleImage[6].drawAtPointOption(24.0f, 6.0f, 18);
-                Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                if (f > 0.0f) {
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, f);
+                    titleImage[6].drawAtPointOption(24.0f, 6.0f, 18);
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    if (f > 0.0f) {
+                        Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                        Texture2D.gl.glColor4f(1f, 1f, 1f, f);
+                        fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                        break;
+                    }
+                    break;
+                case 11:
+                    titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleImage[1].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleBossImage[0].drawAtPointOption(0.0f, GAME_TITLE_BOSS_VIEW_POS, 18);
+                    titleBossImage[1].drawAtPointOption(0.0f, GAME_TITLE_BOSS_VIEW_POS + ((int) titleBossImage[0]._sizeY), 18);
+                    titleImage[7].drawAtPointOption(277.0f, 30.0f, 18);
+                    titleImage[5].drawAtPointOption(41.0f, 22.0f, 18);
+
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f, f, f, f);
-                    fillWhiteImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                    break;
-                }
-                break;
-            case 11:
-                float f8 = GAME_TITLE_BOSS_VIEW_POS;
-                titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-                titleImage[1].drawAtPointOption(0.0f, 0.0f, 18);
-                titleBossImage[0].drawAtPointOption(0.0f, f8, 18);
-                titleBossImage[1].drawAtPointOption(0.0f, f8 + ((int) r2[0]._sizeY), 18);
-                titleImage[7].drawAtPointOption(277.0f, 30.0f, 18);
-                titleImage[5].drawAtPointOption(41.0f, 22.0f, 18);
-                if (GameThread.gameTimeCount % 40 <= 20) {
-                    f2 = (GameThread.gameTimeCount % 40) * TITLE_GLOW_MOVE_DEGREE;
-                } else {
-                    f2 = 1.0f - (((GameThread.gameTimeCount % 40) - 20) * TITLE_GLOW_MOVE_DEGREE);
-                }
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(f2, f2, f2, f2);
-                titleImage[6].drawAtPointOption(24.0f, 6.0f, 18);
-                Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                float f9 = GameThread.gameTitleViewCount * 0.1f;
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(f9, f9, f9, f9);
-                titleImage[8].drawAtPointOption(296.0f, 337.0f, 18);
-                titleImage[10].drawAtPointOption(326.0f, 412.0f, 18);
-                titleImage[12].drawAtPointOption(CX, 456.0f, 17);
-                titleImage[13].drawAtPointOption(9.0f, 429.0f, 18);
-                titleImage[14].drawAtPointOption(56.0f, 429.0f, 18);
-                titleImage[15].drawAtPointOption(104.0f, 429.0f, 18);
-                Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                break;
-            case 12:
-                float f10 = GAME_TITLE_BOSS_VIEW_POS;
-                titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-                titleImage[1].drawAtPointOption(0.0f, 0.0f, 18);
-                titleBossImage[0].drawAtPointOption(0.0f, f10, 18);
-                titleBossImage[1].drawAtPointOption(0.0f, f10 + ((int) r2[0]._sizeY), 18);
-                titleImage[7].drawAtPointOption(277.0f, 30.0f, 18);
-                titleImage[5].drawAtPointOption(41.0f, 22.0f, 18);
-                if (GameThread.gameTimeCount % 40 <= 20) {
-                    f3 = (GameThread.gameTimeCount % 40) * TITLE_GLOW_MOVE_DEGREE;
-                } else {
-                    f3 = 1.0f - (((GameThread.gameTimeCount % 40) - 20) * TITLE_GLOW_MOVE_DEGREE);
-                }
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(f3, f3, f3, f3);
-                titleImage[6].drawAtPointOption(24.0f, 6.0f, 18);
-                Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                if (cTLS == 0) {
-                    titleImage[9].drawAtPointOption(296.0f, 337.0f, 18);
-                } else {
+                    titleImage[6].drawAtPointOption(24.0f, 6.0f, 18);
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    float alp = GameThread.gameTitleViewCount * 0.1f;
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                    Texture2D.gl.glColor4f(alp, alp, alp, alp);
                     titleImage[8].drawAtPointOption(296.0f, 337.0f, 18);
-                }
-                if (cTLS == 1) {
-                    titleImage[11].drawAtPointOption(326.0f, 412.0f, 18);
-                } else {
                     titleImage[10].drawAtPointOption(326.0f, 412.0f, 18);
+                    titleImage[12].drawAtPointOption(GameRenderer.CX, 456.0f, 17);
+                    titleImage[13].drawAtPointOption(9.0f, 429.0f, 18);
+                    titleImage[14].drawAtPointOption(56.0f, 429.0f, 18);
+                    titleImage[15].drawAtPointOption(104.0f, 429.0f, 18);
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    break;
+                case 12:
+                    titleImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleImage[1].drawAtPointOption(0.0f, 0.0f, 18);
+                    titleBossImage[0].drawAtPointOption(0.0f, GAME_TITLE_BOSS_VIEW_POS, 18);
+                    titleBossImage[1].drawAtPointOption(0.0f, GAME_TITLE_BOSS_VIEW_POS + ((int) titleBossImage[0]._sizeY), 18);
+                    titleImage[7].drawAtPointOption(277.0f, 30.0f, 18);
+                    titleImage[5].drawAtPointOption(41.0f, 22.0f, 18);
+
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, f);
+                    titleImage[6].drawAtPointOption(24.0f, 6.0f, 18);
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1.0f);
+
+                    titleImage[cTLS == 0 ? 9 : 8].drawAtPointOption(296.0f, 337.0f, 18);
+                    titleImage[cTLS == 1 ? 11 : 10].drawAtPointOption(326.0f, 412.0f, 18);
+                    titleImage[12].drawAtPointOption(GameRenderer.CX, 456.0f, 17);
+                    titleImage[13].drawAtPointOption(9.0f, 429.0f, 18);
+                    titleImage[14].drawAtPointOption(56.0f, 429.0f, 18);
+                    titleImage[15].drawAtPointOption(104.0f, 429.0f, 18);
+                    break;
+            }
+        } else if (mode == MENUMODE.OPTION) {
+            TouchManager.addTouchRectListData(GAME_OPTION_TOUCH_LIST_0_BACK, GameRenderer.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
+            TouchManager.addTouchRectListData(GAME_OPTION_TOUCH_LIST_1_MUSIC, GameRenderer.CGRectMake(310.0f, 140.0f, 390.0f, 40.0f));
+            TouchManager.addTouchRectListData(GAME_OPTION_TOUCH_LIST_2_EFFECT, GameRenderer.CGRectMake(310.0f, 225.0f, 390.0f, 40.0f));
+            TouchManager.addTouchRectListData(GAME_OPTION_TOUCH_LIST_3_MOVIE_ON, GameRenderer.CGRectMake(218.0f, 307.0f, 118.0f, 46.0f));
+            TouchManager.addTouchRectListData(GAME_OPTION_TOUCH_LIST_4_VIBRATION_OFF, GameRenderer.CGRectMake(583.0f, 307.0f, 118.0f, 46.0f));
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_OPTION_TOUCH_LIST_TOTAL_COUNT;
+
+            alwaysImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+            uiEtcImage[3].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
+            uiEtcImage[4].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
+
+            uiEtcImage[Config.movie ? 5 : 8].drawAtPointOption(218.0f, 307.0f, 18);
+            uiEtcImage[Config.vibration ? 5 : 8].drawAtPointOption(583.0f, 307.0f, 18);
+
+            uiEtcImage[14].drawAtPointOption(myScrollbar[0].BarLastPosition, 159.0f, 9);
+            uiEtcImage[14].drawAtPointOption(myScrollbar[1].BarLastPosition, 244.0f, 9);
+            uiEtcImage[cTLS == 0 ? 2 : 1].drawAtPointOption(11.0f, 412.0f, 18);
+        } else {
+            TouchManager.addTouchRectListData(GAME_ABOUT_TOUCH_LIST_0_BACK, GameRenderer.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
+            TouchManager.addTouchRectListData(GAME_ABOUT_TOUCH_LIST_1_DEVELOPER, GameRenderer.CGRectMake(340.0f, 130.0f, 260.0f, 50.0f));
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_ABOUT_TOUCH_LIST_TOTAL_COUNT;
+
+            alwaysImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+            uiEtcImage[0].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
+            if (gameSubStatus == 0) {
+                uiEtcImage[11].drawAtPointOption(GameRenderer.CX, 5.0f, 17);
+                GameRenderer.setFontSize(20);
+                GameRenderer.setFontColor(-1);
+                GameRenderer.drawStringM("'Fantasy Defence' Version 2.0.1", GameRenderer.CX, 100.0f, 17);
+                GameRenderer.drawStringM("Developed by SN Mobile Technology Inc.", GameRenderer.CX, 150.0f, 17);
+                GameRenderer.drawStringM("Copyright 2011", GameRenderer.CX, 175.0f, 17);
+                GameRenderer.drawStringM("SN Mobile Technology", GameRenderer.CX, 200.0f, 17);
+                GameRenderer.drawStringM("All rights reserved", GameRenderer.CX, 225.0f, 17);
+                GameRenderer.drawStringM("For support, please contact", GameRenderer.CX, 250.0f, 17);
+                GameRenderer.drawStringM("cs@sncompany.com", GameRenderer.CX, 275.0f, 17);
+            } else if (gameSubStatus == 1) {
+                uiEtcImage[12].drawAtPointOption(GameRenderer.CX, 5.0f, 17);
+                GameRenderer.setFontSize(20);
+                GameRenderer.setFontColor(-1);
+                GameRenderer.drawStringM("General Director : Dong Hwa, Woo.", GameRenderer.CX, 140.0f, 17);
+                GameRenderer.drawStringM("Producer : Min Young, Han.", GameRenderer.CX, 165.0f, 17);
+                GameRenderer.drawStringM("Programmer : Haeng Bok, Lee.", GameRenderer.CX, 190.0f, 17);
+                GameRenderer.drawStringM("Artist : Han Joo, Kang.", GameRenderer.CX, 215.0f, 17);
+                GameRenderer.drawStringM("Game Designer : Min Young, Han.", GameRenderer.CX, 240.0f, 17);
+                GameRenderer.drawStringM("Sub. Game Designer : Jin Kook, Park.", GameRenderer.CX, 265.0f, 17);
+                GameRenderer.drawStringM("Production Company : SN Mobile Technology.", GameRenderer.CX, 290.0f, 17);
+            }
+            uiEtcImage[cTLS == 0 ? 2 : 1].drawAtPointOption(11.0f, 412.0f, 18);
+        }
+        TouchManager.swapTouchMap();
+    }
+
+    @Override
+    public void touchCheck() {
+        if (mode == MENUMODE.OPTION) {
+            if (TouchManager.lastActionStatus == TouchManager.TOUCH_STATUS_NO_INPUT) {
+                CGPoint action = TouchManager.getFirstFirstActionTouch();
+                int cTLS = TouchManager.checkTouchListStatus();
+                if (cTLS == GAME_OPTION_TOUCH_LIST_1_MUSIC) {
+                    myScrollbar[0].setUpdatePosition(action.x);
+                    Config.updateVolume(myScrollbar[0].BarLastValue);
+                } else if (cTLS == GAME_OPTION_TOUCH_LIST_2_EFFECT) {
+                    myScrollbar[1].setUpdatePosition(action.x);
+                    Config.effectVolume = myScrollbar[1].BarLastValue;
                 }
-                titleImage[12].drawAtPointOption(CX, 456.0f, 17);
-                titleImage[13].drawAtPointOption(9.0f, 429.0f, 18);
-                titleImage[14].drawAtPointOption(56.0f, 429.0f, 18);
-                titleImage[15].drawAtPointOption(104.0f, 429.0f, 18);
-                break;
-        }
-        TouchManager.swapTouchMap();
-    }
+            } else if (TouchManager.lastActionStatus == TouchManager.TOUCH_STATUS_START_INPUTED) {
+                int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
+                if (cTLP == GAME_OPTION_TOUCH_LIST_1_MUSIC) {
+                    myScrollbar[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
+                    Config.updateVolume(myScrollbar[0].BarLastValue);
+                    return;
+                }
+                if (cTLP != GAME_OPTION_TOUCH_LIST_2_EFFECT)
+                    return;
 
-    public void paint_GAME_OPTION(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        TouchManager.addTouchRectListData(0, CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
-        TouchManager.addTouchRectListData(1, CGRectMake(310.0f, 140.0f, 390.0f, 40.0f));
-        TouchManager.addTouchRectListData(2, CGRectMake(310.0f, 225.0f, 390.0f, 40.0f));
-        TouchManager.addTouchRectListData(3, CGRectMake(218.0f, 307.0f, 118.0f, 46.0f));
-        TouchManager.addTouchRectListData(4, CGRectMake(583.0f, 307.0f, 118.0f, 46.0f));
-        TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 5;
-        int checkTouchListStatus = TouchManager.checkTouchListStatus();
-        alwaysImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-        uiEtcImage[3].drawAtPointOption(CX, 6.0f, 17);
-        uiEtcImage[4].drawAtPointOption(CX, 77.0f, 17);
+                myScrollbar[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
+                Config.effectVolume = myScrollbar[1].BarLastValue;
+                return;
+            }
+            if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
+                return;
 
-        uiEtcImage[Config.movie ? 5 : 8].drawAtPointOption(218.0f, 307.0f, 18);
-        uiEtcImage[Config.vibration ? 5 : 8].drawAtPointOption(583.0f, 307.0f, 18);
-
-        uiEtcImage[14].drawAtPointOption(GameThread.myScrollbar[0].BarLastPosition, 159.0f, 9);
-        uiEtcImage[14].drawAtPointOption(GameThread.myScrollbar[1].BarLastPosition, 244.0f, 9);
-        if (checkTouchListStatus == 0) {
-            uiEtcImage[2].drawAtPointOption(11.0f, 412.0f, 18);
-        } else {
-            uiEtcImage[1].drawAtPointOption(11.0f, 412.0f, 18);
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_ABOUT(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        TouchManager.addTouchRectListData(0, CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
-        TouchManager.addTouchRectListData(1, CGRectMake(340.0f, 130.0f, 260.0f, 50.0f));
-        TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 2;
-        int checkTouchListStatus = TouchManager.checkTouchListStatus();
-        alwaysImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-        uiEtcImage[0].drawAtPointOption(CX, 77.0f, 17);
-        int i = GameThread.gameSubStatus;
-        if (i == 0) {
-            uiEtcImage[11].drawAtPointOption(CX, 5.0f, 17);
-            setFontSize(20);
-            setFontColor(-1);
-            drawStringM("'Fantasy Defence' Version 2.0.1", CX, 100.0f, 17);
-            drawStringM("Developed by SN Mobile Technology Inc.", CX, 150.0f, 17);
-            drawStringM("Copyright 2011", CX, 175.0f, 17);
-            drawStringM("SN Mobile Technology", CX, 200.0f, 17);
-            drawStringM("All rights reserved", CX, 225.0f, 17);
-            drawStringM("For support, please contact", CX, 250.0f, 17);
-            drawStringM("cs@sncompany.com", CX, 275.0f, 17);
-        } else if (i == 1) {
-            uiEtcImage[12].drawAtPointOption(CX, 5.0f, 17);
-            setFontSize(20);
-            setFontColor(-1);
-            drawStringM("General Director : Dong Hwa, Woo.", CX, 140.0f, 17);
-            drawStringM("Producer : Min Young, Han.", CX, 165.0f, 17);
-            drawStringM("Programmer : Haeng Bok, Lee.", CX, 190.0f, 17);
-            drawStringM("Artist : Han Joo, Kang.", CX, 215.0f, 17);
-            drawStringM("Game Designer : Min Young, Han.", CX, 240.0f, 17);
-            drawStringM("Sub. Game Designer : Jin Kook, Park.", CX, 265.0f, 17);
-            drawStringM("Production Company : SN Mobile Technology.", CX, 290.0f, 17);
-        }
-        if (checkTouchListStatus == 0) {
-            uiEtcImage[2].drawAtPointOption(11.0f, 412.0f, 18);
-        } else {
-            uiEtcImage[1].drawAtPointOption(11.0f, 412.0f, 18);
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public void touchCheck_GAME_TITLE() {
-        if (TouchManager.lastActionStatus != 2) {
+            int cTLS = TouchManager.checkTouchListStatus();
+            if (cTLS == GAME_OPTION_TOUCH_LIST_0_BACK) {
+                mode = MENUMODE.TITLE;
+                gameSubStatus = countLimit.length;
+                gameTitleViewCount = 0;
+                GameThread.playSound(15);
+            } else if (cTLS == GAME_OPTION_TOUCH_LIST_3_MOVIE_ON) {
+                GameThread.playSound(14);
+                Config.movie = !Config.movie;
+            } else if (cTLS == GAME_OPTION_TOUCH_LIST_4_VIBRATION_OFF) {
+                GameThread.playSound(14);
+                Config.vibration = !Config.vibration;
+            }
+            int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
+            if (cTLP == GAME_OPTION_TOUCH_LIST_1_MUSIC) {
+                myScrollbar[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
+                Config.updateVolume(myScrollbar[0].BarLastValue);
+            } else if (cTLP == GAME_OPTION_TOUCH_LIST_2_EFFECT) {
+                myScrollbar[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
+                Config.effectVolume = myScrollbar[1].BarLastValue;
+            }
+            Config.saveAll();
             return;
         }
-        switch (GameThread.gameSubStatus) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 11:
+        if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
+            return;
+
+        int cTLS = TouchManager.checkTouchListStatus();
+        if (mode == MENUMODE.TITLE) {
+            if (gameSubStatus < countLimit.length) {
                 if (TouchManager.checkTouchListStatus() == 0) {
-                    GameThread.gameSubStatus = 12;
+                    gameSubStatus = countLimit.length;
                     GameThread.playLoopSound(0);
-                    break;
                 }
-                break;
-            case 12:
-                int checkTouchListStatus = TouchManager.checkTouchListStatus();
-                if (checkTouchListStatus == 0) {
-                    GameThread.gameStatus = 5;
+            } else {
+                if (cTLS == GAME_TITLE_TOUCH_LIST_0_START) {
                     GameThread.playSound(14);
                     GameThread.stopLoopSound(0);
                     GameThread.playLoopSound(1);
+                    NewTower.switchPage(new MenuPage(this), true);
                     TouchManager.curruptFlag = true;
-                    break;
-                } else if (checkTouchListStatus == 1) {
+                } else if (cTLS == GAME_TITLE_TOUCH_LIST_1_OPTION) {
                     GameThread.playSound(14);
-                    GameThread.gameStatus = 9;
-                    break;
-                } else if (checkTouchListStatus == 2) {
+                    mode = MENUMODE.OPTION;
+                } else if (cTLS == GAME_TITLE_TOUCH_LIST_2_ABOUT) {
                     GameThread.playSound(14);
-                    GameThread.gameStatus = 8;
-                    GameThread.gameSubStatus = 0;
-                    break;
-                } else if (checkTouchListStatus == 3) {
-                    newTower.startActivityForResult(new Intent("android.intent.action.VIEW", Uri.parse("http://www.facebook.com/fandikor")), 1);
-                    break;
-                } else if (checkTouchListStatus == 4) {
-                    newTower.startActivityForResult(new Intent("android.intent.action.VIEW", Uri.parse("http://www.twitter.com/fandi_kor")), 1);
-                    break;
+                    mode = MENUMODE.ABOUT;
+                    gameSubStatus = 0;
+                } else if (cTLS == GAME_TITLE_TOUCH_LIST_3_FACEBOOK) //TODO - Delete
+                    GameThread.newTower.startActivityForResult(new Intent("android.intent.action.VIEW", Uri.parse("http://www.facebook.com/fandikor")), 1);
+                else if (cTLS == GAME_TITLE_TOUCH_LIST_4_TWITTER) //TODO - Delete
+                    GameThread.newTower.startActivityForResult(new Intent("android.intent.action.VIEW", Uri.parse("http://www.twitter.com/fandi_kor")), 1);
+            }
+        } else {
+            if (gameSubStatus != 0) {
+                if (cTLS == GAME_ABOUT_TOUCH_LIST_0_BACK) {
+                    gameSubStatus = 0;
+                    GameThread.playSound(15);
                 }
-                break;
-        }
-        TouchManager.processTouchStatus();
-    }
-
-    public void touchCheck_GAME_ABOUT() {
-        if (TouchManager.lastActionStatus != 2) {
-            return;
-        }
-        int checkTouchListStatus = TouchManager.checkTouchListStatus();
-        int i = GameThread.gameSubStatus;
-        if (i != 0) {
-            if (i == 1 && checkTouchListStatus == 0) {
-                GameThread.gameSubStatus = 0;
+            } else if (cTLS == GAME_ABOUT_TOUCH_LIST_0_BACK) {
+                mode = MENUMODE.TITLE;
+                gameSubStatus = countLimit.length;
+                gameTitleViewCount = 0;
                 GameThread.playSound(15);
-            }
-        } else if (checkTouchListStatus == 0) {
-            GameThread.gameStatus = 3;
-            GameThread.gameSubStatus = 12;
-            GameThread.gameTitleViewCount = 0;
-            GameThread.playSound(15);
-        } else if (checkTouchListStatus == 1) {
-            GameThread.gameSubStatus = 1;
+            } else if (cTLS == GAME_ABOUT_TOUCH_LIST_1_DEVELOPER)
+                gameSubStatus = 1;
         }
-        TouchManager.processTouchStatus();
-    }
-
-    public void touchCheck_GAME_OPTION() {
-        int i = TouchManager.lastActionStatus;
-        if (i == 0) {
-            CGPoint firstFirstActionTouch = TouchManager.getFirstFirstActionTouch();
-            int checkTouchListStatus = TouchManager.checkTouchListStatus();
-            if (checkTouchListStatus == 1) {
-                GameThread.myScrollbar[0].setUpdatePosition(firstFirstActionTouch.x);
-                Config.updateVolume(GameThread.myScrollbar[0].BarLastValue);
-            } else {
-                if (checkTouchListStatus != 2) {
-                    return;
-                }
-                GameThread.myScrollbar[1].setUpdatePosition(firstFirstActionTouch.x);
-                Config.effectVolume = GameThread.myScrollbar[1].BarLastValue;
-            }
-            return;
-        }
-        if (i == 1) {
-            int checkTouchListPressed = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
-            if (checkTouchListPressed == 1) {
-                GameThread.myScrollbar[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-                Config.updateVolume(GameThread.myScrollbar[0].BarLastValue);
-                return;
-            }
-            if (checkTouchListPressed != 2) {
-                return;
-            }
-            GameThread.myScrollbar[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-            Config.effectVolume = GameThread.myScrollbar[1].BarLastValue;
-            return;
-        }
-        if (i != 2) {
-            return;
-        }
-        int checkTouchListStatus2 = TouchManager.checkTouchListStatus();
-        if (checkTouchListStatus2 == 0) {
-            GameThread.gameStatus = 3;
-            GameThread.gameSubStatus = 12;
-            GameThread.gameTitleViewCount = 0;
-            GameThread.playSound(15);
-        } else if (checkTouchListStatus2 == 3) {
-            GameThread.playSound(14);
-            Config.movie = !Config.movie;
-            Config.saveAll(newTower);
-        } else if (checkTouchListStatus2 == 4) {
-            GameThread.playSound(14);
-            Config.vibration = !Config.vibration;
-
-            Config.saveAll(newTower);
-        }
-        int checkTouchListPressed2 = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
-        if (checkTouchListPressed2 == 1) {
-            GameThread.myScrollbar[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-            Config.updateVolume(GameThread.myScrollbar[0].BarLastValue);
-            Config.saveAll(newTower);
-        } else if (checkTouchListPressed2 == 2) {
-            GameThread.myScrollbar[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-            Config.effectVolume = GameThread.myScrollbar[1].BarLastValue;
-            Config.saveAll(newTower);
-        }
-        TouchManager.processTouchStatus();
     }
 }

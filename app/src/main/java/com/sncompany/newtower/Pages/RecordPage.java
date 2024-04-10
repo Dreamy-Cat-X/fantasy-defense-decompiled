@@ -118,7 +118,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                         float f5 = CorrectedBLA + 162 + (j * 20);
                         GameRenderer.drawStringDoubleGuideM(String.format("Stage %d", stInd + 1), 80.0f, f5, 18, GameRenderer._CGRect);
                         for (int k = 0; k < 3; k++)
-                            GameRenderer.drawStringDoubleGuideM(String.valueOf(Config.highScores[stInd][k]), (k * 190) + 245, f5, 17, GameRenderer._CGRect);
+                            GameRenderer.drawStringDoubleGuideM(String.valueOf(Math.max(0, Config.highScores[stInd][k])), (k * 190) + 245, f5, 17, GameRenderer._CGRect);
                     }
                     px = CorrectedBLA;
                 }

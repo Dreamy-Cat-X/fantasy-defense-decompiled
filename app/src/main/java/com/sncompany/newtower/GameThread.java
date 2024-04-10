@@ -8,6 +8,7 @@ import androidx.core.view.InputDeviceCompat;
 
 import com.sncompany.newtower.Battle.ArrowUnit;
 import com.sncompany.newtower.Battle.EffectUnit;
+import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.MonsterUnit;
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.DataAward;
@@ -21,6 +22,7 @@ import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /* loaded from: D:\decomp\classes.dex */
@@ -642,7 +644,7 @@ public class GameThread extends Thread {
     public static int arrowUnitCount;
     public static int[] awardDataFlag;
     public static int[] awardDataValue;
-    public static MediaManager[] bgmMedia;
+    public static final MediaManager[] bgmMedia = new MediaManager[3];
     public static boolean characterAddBoolean;
     public static boolean characterAddHeroFlag;
     public static int characterAddNumber;
@@ -662,7 +664,7 @@ public class GameThread extends Thread {
     public static long currentDrawDate;
     public static int currentFrameCount;
     public static float destroyScore;
-    public static MediaManager2 effectMedia;
+    public static final MediaManager2 effectMedia = new MediaManager2(31);
     public static EffectUnit[] effectUnit;
     public static int effectUnitCount;
 
@@ -745,8 +747,8 @@ public class GameThread extends Thread {
     public static int shopSendPhoneNumberCount;
     public static int[] shopUnitValue;
     public static final boolean soundFlag = true;
-    public static boolean[] soundPlayCheckFlag;
-    public static int[] soundPlayDelayCount;
+    public static final boolean[] soundPlayCheckFlag = new boolean[31];
+    public static int[] soundPlayDelayCount = new int[31];
     public static HashMap<Integer, Integer> soundPoolMap;
     public static int specialAttackFrameCount;
     public static boolean specialAttackSkipFlag;
@@ -977,140 +979,22 @@ public class GameThread extends Thread {
     }
 
     public void updateGame() {
-        int i = gameLoadFlag;
-        if (i == 0) {
-            switch (loadingStatus) {
-                case 1000:
-                    update_GAME_PRE_LOAD();
-                    break;
-                case 1001:
-                    update_GAME_PRE_IMAGE_LOAD();
-                    break;
-                case 1002:
-                    update_GAME_PRE_TOTAL_IMAGE_LOAD();
-                    break;
-                case 1003:
-                    update_GAME_NEW_MENU_IMAGE_LOAD();
-                    break;
-                case 1004:
-                    update_GAME_PLAY_IMAGE_LOAD();
-                    break;
-                case GAME_PLAY2_IMAGE_LOAD /* 1005 */:
-                    update_GAME_PLAY2_IMAGE_LOAD();
-                    break;
-                case 1006:
-                    update_GAME_MENU_IMAGE_LOAD();
-                    break;
-                case 1007:
-                    update_GAME_RESUME_TO_MENU();
-                    break;
-                case 1008:
-                    update_GAME_RESUME_TO_PLAY();
-                    break;
-            }
-        } else if (i == 1) {
-            switch (gameStatus) {
-                case 0:
-                    update_GAME_LOGO();
-                    break;
-                case 1:
-                    update_GAME_USE12();
-                    break;
-                case 2:
-                    update_GAME_OPENING();
-                    break;
-                case 3:
-                    update_GAME_TITLE();
-                    break;
-                case 5:
-                    update_GAME_MAINMENU();
-                    break;
-                case 6:
-                    update_GAME_MAINMENU_MOVING();
-                    break;
-                case 7:
-                    update_GAME_MAINMENU_REV_MOVING();
-                    break;
-                case 8:
-                    update_GAME_ABOUT();
-                    break;
-                case 9:
-                    update_GAME_OPTION();
-                    break;
-                case 10:
-                    update_GAME_STAGE_SELECT();
-                    break;
-                case 11:
-                    update_GAME_UPGRADE_LIST();
-                    break;
-                case 12:
-                    update_GAME_UPGRADE_UNIT();
-                    break;
-                case 13:
-                    update_GAME_UPGRADE_HERO();
-                    break;
-                case 14:
-                    update_GAME_SHOP_LIST();
-                    break;
-                case 15:
-                    update_GAME_SHOP_SHOP();
-                    break;
-                case 16:
-                    update_GAME_SHOP_EQUIP();
-                    break;
-                case GAME_HELP:
-                    update_GAME_HELP();
-                    break;
-                case 19:
-                    update_GAME_RECORD();
-                    break;
-                case 20:
-                    update_GAME_STAGE_START_VIEW();
-                    break;
-                case GAME_INGAME_MENU:
-                    update_GAME_INGAME_MENU();
-                    break;
-                case 22:
-                    update_GAME_STAGE_CLEAR();
-                    break;
-                case 23:
-                    update_GAME_OVER();
-                    break;
-                case 24:
-                    update_GAME_STAGE_START_LOADING();
-                    break;
-                case 25:
-                    update_GAME_PLAYING();
-                    break;
-                case 26:
-                    update_GAME_TUTORIAL();
-                    break;
-                case 27:
-                    update_GAME_ENDING();
-                    break;
-            }
-        }
+        if (NewTower.currentPage != null)
+            NewTower.currentPage.update();
         playSound2();
     }
 
-    public void update_GAME_PRE_LOAD() {
+    public static void update_GAME_PRE_LOAD() {
         if (Texture2D.gl != null) {
-            AudioManager audioManager = (AudioManager) newTower.getSystemService("audio");
-            mgr = audioManager;
-            int streamMaxVolume = audioManager.getStreamMaxVolume(3);
+            mgr = (AudioManager) newTower.getSystemService("audio");
+            int streamMaxVolume = mgr.getStreamMaxVolume(3);
             Config.musicMaxVolume = streamMaxVolume;
             Config.musicVolume = streamMaxVolume / 2;
             Config.effectVolume = streamMaxVolume / 2;
-            Config.vibration = true;
-            Config.movie = true;
-            Config.tutorial = false;
+
             for (int i2 = 0; i2 < myOscillator.length; i2++)
                 myOscillator[i2] = new MyOscillator(0, 100, 10);
 
-            myScrollbar[0] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
-            myScrollbar[0].setReverseUpdatePosition(Config.musicVolume); //Used at title page, for music vol
-            myScrollbar[1] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume); //Used at TitlePage, for SE vol
-            myScrollbar[1].setReverseUpdatePosition(Config.effectVolume);
             myScrollbar[4] = new MyScrollbar(90, GameRenderer.GAME_SHOP_SHOP_SIDEBAR_END_Y, 0, 1820); //Used at Shop, for ???
 
             waveMonsterType = new int[2];
@@ -1118,98 +1002,23 @@ public class GameThread extends Thread {
             waveMonsterShowTime = new int[2];
             waveMonsterShowCurrent = new int[2];
             specialDataValue = (int[][]) Array.newInstance(int.class, 20, 4);
-            shopGiftItemSerial = new int[3];
-            shopGiftItemType = new int[3];
-            shopGiftItemCount = new int[3];
-            shopGiftPhoneNumberByte = (byte[][]) Array.newInstance(byte.class, 3, 25);
-            shopGiftPhoneNumber = new String[3];
-            for (int i8 = 0; i8 < 3; i8++) {
-                shopGiftItemType[i8] = -1;
-            }
-            shopSendPhoneNumber = new int[11];
-            heroUnitType = new int[3];
+
             heroItemType = (int[][]) Array.newInstance(int.class, 3, 2);
             heroUpgradeValue = (int[][]) Array.newInstance(int.class, 3, 6);
             itemUnitValue = new int[24];
             shopUnitValue = new int[30];
-            for (int i9 = 0; i9 < 3; i9++) {
-                heroUnitType[i9] = -1;
-                for (int i10 = 0; i10 < 2; i10++) {
-                    heroItemType[i9][i10] = -1;
-                }
-                for (int i11 = 0; i11 < 6; i11++) {
-                    heroUpgradeValue[i9][i11] = 0;
-                }
-            }
+
             for (int i12 = 0; i12 < 30; i12++) {
                 shopUnitValue[i12] = -1;
             }
-            stageSelectChapterNumber = 0;
-            stageSelectStageNumber = 0;
             for (int i13 = 0; i13 < 24; i13++) {
                 itemUnitValue[i13] = -1;
             }
-            myHeroism = 0;
-            freeAdViewCount = 5;
-            freeAdViewTime = System.currentTimeMillis();
             waveMobData = (int[][]) Array.newInstance(int.class, WAVE_MAX_COUNT, 8);
-            highScoreValue = (int[][]) Array.newInstance(int.class, 50, 3);
-            gamePlayedCount = (int[][]) Array.newInstance(int.class, 50, 3);
-            gameClearedFlag = (int[][]) Array.newInstance(int.class, 50, 3);
-            gamePerfectFlag = (int[][]) Array.newInstance(int.class, 50, 3);
-            for (int i14 = 0; i14 < 50; i14++) {
-                gamePlayedCount[i14][0] = -1;
-                gamePlayedCount[i14][1] = -1;
-                gamePlayedCount[i14][2] = -1;
-            }
-            //TODO - Set all config perfect flags to -1 herte
-            gamePlayedCount[0][0] = 0;
-            rewardDataValue = new int[10];
-            awardDataValue = new int[62];
-            awardDataFlag = new int[62];
+
             tutorialBoxTouchFlag = new int[22];
-            soundPlayCheckFlag = new boolean[31];
-            soundPlayDelayCount = new int[31];
-            for (int i15 = 0; i15 < 31; i15++) {
-                soundPlayCheckFlag[i15] = false;
-                soundPlayDelayCount[i15] = 0;
-            }
-            bgmMedia = new MediaManager[3];
-            bgmMedia[0] = new MediaManager(newTower, R.raw.bgm_1);
-            bgmMedia[1] = new MediaManager(newTower, R.raw.bgm_2);
-            bgmMedia[2] = new MediaManager(newTower, R.raw.bgm_3);
-            effectMedia = new MediaManager2(31);;
-            effectMedia.setMediaFile(0, newTower, R.raw.snlogo, false);
-            effectMedia.setMediaFile(1, newTower, R.raw.att_1, false);
-            effectMedia.setMediaFile(2, newTower, R.raw.att_2, false);
-            effectMedia.setMediaFile(3, newTower, R.raw.att_3, false);
-            effectMedia.setMediaFile(4, newTower, R.raw.att_4, false);
-            effectMedia.setMediaFile(5, newTower, R.raw.att_5, false);
-            effectMedia.setMediaFile(6, newTower, R.raw.att_6, false);
-            effectMedia.setMediaFile(7, newTower, R.raw.att_7, false);
-            effectMedia.setMediaFile(8, newTower, R.raw.att_8, false);
-            effectMedia.setMediaFile(9, newTower, R.raw.att_9, false);
-            effectMedia.setMediaFile(10, newTower, R.raw.etc_1, false);
-            effectMedia.setMediaFile(11, newTower, R.raw.etc_2, false);
-            effectMedia.setMediaFile(12, newTower, R.raw.etc_3, false);
-            effectMedia.setMediaFile(13, newTower, R.raw.etc_4, false);
-            effectMedia.setMediaFile(14, newTower, R.raw.etc_5, false);
-            effectMedia.setMediaFile(15, newTower, R.raw.etc_6, false);
-            effectMedia.setMediaFile(16, newTower, R.raw.etc_7, false);
-            effectMedia.setMediaFile(17, newTower, R.raw.etc_8, false);
-            effectMedia.setMediaFile(18, newTower, R.raw.etc_9, false);
-            effectMedia.setMediaFile(19, newTower, R.raw.etc_10, false);
-            effectMedia.setMediaFile(20, newTower, R.raw.etc_11, false);
-            effectMedia.setMediaFile(21, newTower, R.raw.voice_1, false);
-            effectMedia.setMediaFile(22, newTower, R.raw.voice_2, false);
-            effectMedia.setMediaFile(23, newTower, R.raw.voice_3, false);
-            effectMedia.setMediaFile(24, newTower, R.raw.voice_4, false);
-            effectMedia.setMediaFile(25, newTower, R.raw.voice_5, false);
-            effectMedia.setMediaFile(26, newTower, R.raw.voice_6, false);
-            effectMedia.setMediaFile(27, newTower, R.raw.voice_7, false);
-            effectMedia.setMediaFile(28, newTower, R.raw.voice_8, false);
-            effectMedia.setMediaFile(29, newTower, R.raw.voice_9, false);
-            effectMedia.setMediaFile(30, newTower, R.raw.spebladehit, false);
+
+            loadSounds();
             gameTimeCount = 0;
             startDate = System.currentTimeMillis();
             lastFrameCount = 0;
@@ -1224,99 +1033,50 @@ public class GameThread extends Thread {
             GameRenderer.lastFontName = null;
             GameRenderer.makeBaseStruct();
             Config.readSaveData(newTower, 1);
-            myScrollbar[0].setReverseUpdatePosition(Config.musicVolume);
-            myScrollbar[1].setReverseUpdatePosition(Config.effectVolume);
-            if (lastPlayedMapNumber >= 50) {
-                lastPlayedMapNumber = 0;
-            }
-            int i16 = lastPlayedMapNumber;
-            stageSelectChapterNumber = i16 / 10;
-            stageSelectStageNumber = i16 % 10;
-            if (rewardDataValue[0] == 1) {
-                heroUnitType[0] = 0;
-            } else {
-                heroUnitType[0] = -1;
-            }
-            if (rewardDataValue[2] == 1) {
-                heroUnitType[1] = 5;
-            } else {
-                heroUnitType[1] = -1;
-            }
-            if (rewardDataValue[4] == 1) {
-                heroUnitType[2] = 10;
-            } else {
-                heroUnitType[2] = -1;
-            }
+
             GameRenderer.lastCheckTime = System.currentTimeMillis();
             cheatFlag = false;
             GameRenderer.loadCount_GAME_PRE_IMAGE_LOAD = 0;
-            gameLoadFlag = 0;
-            loadingStatus = 1001;
-            GameRenderer.loadingViewType = getRandom(6);
-            loadTipNumber = getRandom(TIP_TEXT.length);
-            returnGameStatus = 0;
             return;
         }
         Log.d("UPDATE", "GL NO!!!");
     }
 
-    public void update_GAME_PRE_IMAGE_LOAD() {
-        GameRenderer.lastCheckTime = System.currentTimeMillis();
-    }
-
-    public void update_GAME_UPGRADE_UNIT() {
-        int i = lastUpdateItemViewDelay;
-        if (i > 0) {
-            lastUpdateItemViewDelay = i - 1;
-        }
-    }
-
-    public void update_GAME_UPGRADE_HERO() {
-        int i = lastUpdateItemViewDelay;
-        if (i > 0) {
-            lastUpdateItemViewDelay = i - 1;
-        }
-    }
-
-    public void update_GAME_SHOP_SHOP() {
-        GameRenderer.upgradeItemListDraw.correctDistance();
-        GameRenderer.inventoryItemListDraw.correctDistance();
-    }
-
-    public void update_GAME_SHOP_EQUIP() {
-        GameRenderer.inventoryItemListDraw.correctDistance();
-        int i = viewCount_GAME_SHOP_EQUIP;
-        if (i < 30) {
-            viewCount_GAME_SHOP_EQUIP = i + 1;
-        }
-    }
-
-    public static void setEquipHeroSetting() {
-        towerUnitCount = 0;
-        if (rewardDataValue[0] == 1) {
-            heroUnitType[0] = 0;
-        } else {
-            heroUnitType[0] = -1;
-        }
-        if (rewardDataValue[2] == 1) {
-            heroUnitType[1] = 5;
-        } else {
-            heroUnitType[1] = -1;
-        }
-        if (rewardDataValue[4] == 1) {
-            heroUnitType[2] = 10;
-        } else {
-            heroUnitType[2] = -1;
-        }
-        if (heroUnitType[0] != -1) {
-            addHeroTowerUnit(heroUnitType[0], 0, 0, 0, true, true);
-        }
-        if (heroUnitType[1] != -1) {
-            addHeroTowerUnit(heroUnitType[1], 1, 0, 0, true, true);
-        }
-        if (heroUnitType[2] != -1) {
-            addHeroTowerUnit(heroUnitType[2], 2, 0, 0, true, true);
-        }
+    public static void loadSounds() {
+        bgmMedia[0] = new MediaManager(newTower, R.raw.bgm_1);
+        bgmMedia[1] = new MediaManager(newTower, R.raw.bgm_2);
+        bgmMedia[2] = new MediaManager(newTower, R.raw.bgm_3);
+        effectMedia.setMediaFile(0, newTower, R.raw.snlogo, false);
+        effectMedia.setMediaFile(1, newTower, R.raw.att_1, false);
+        effectMedia.setMediaFile(2, newTower, R.raw.att_2, false);
+        effectMedia.setMediaFile(3, newTower, R.raw.att_3, false);
+        effectMedia.setMediaFile(4, newTower, R.raw.att_4, false);
+        effectMedia.setMediaFile(5, newTower, R.raw.att_5, false);
+        effectMedia.setMediaFile(6, newTower, R.raw.att_6, false);
+        effectMedia.setMediaFile(7, newTower, R.raw.att_7, false);
+        effectMedia.setMediaFile(8, newTower, R.raw.att_8, false);
+        effectMedia.setMediaFile(9, newTower, R.raw.att_9, false);
+        effectMedia.setMediaFile(10, newTower, R.raw.etc_1, false);
+        effectMedia.setMediaFile(11, newTower, R.raw.etc_2, false);
+        effectMedia.setMediaFile(12, newTower, R.raw.etc_3, false);
+        effectMedia.setMediaFile(13, newTower, R.raw.etc_4, false);
+        effectMedia.setMediaFile(14, newTower, R.raw.etc_5, false);
+        effectMedia.setMediaFile(15, newTower, R.raw.etc_6, false);
+        effectMedia.setMediaFile(16, newTower, R.raw.etc_7, false);
+        effectMedia.setMediaFile(17, newTower, R.raw.etc_8, false);
+        effectMedia.setMediaFile(18, newTower, R.raw.etc_9, false);
+        effectMedia.setMediaFile(19, newTower, R.raw.etc_10, false);
+        effectMedia.setMediaFile(20, newTower, R.raw.etc_11, false);
+        effectMedia.setMediaFile(21, newTower, R.raw.voice_1, false);
+        effectMedia.setMediaFile(22, newTower, R.raw.voice_2, false);
+        effectMedia.setMediaFile(23, newTower, R.raw.voice_3, false);
+        effectMedia.setMediaFile(24, newTower, R.raw.voice_4, false);
+        effectMedia.setMediaFile(25, newTower, R.raw.voice_5, false);
+        effectMedia.setMediaFile(26, newTower, R.raw.voice_6, false);
+        effectMedia.setMediaFile(27, newTower, R.raw.voice_7, false);
+        effectMedia.setMediaFile(28, newTower, R.raw.voice_8, false);
+        effectMedia.setMediaFile(29, newTower, R.raw.voice_9, false);
+        effectMedia.setMediaFile(30, newTower, R.raw.spebladehit, false);
     }
 
     public static void clearMonsterUnit() {
@@ -1331,87 +1091,6 @@ public class GameThread extends Thread {
             towerUnit[i].towerType = -1;
         }
         towerUnitCount = 0;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public int addTowerUnit(int i, int i2, int i3, boolean z) {
-        int i4;
-        if (z) {
-            i4 = 0;
-            while (i4 < towerUnitCount) {
-                if (towerUnit[i4].towerType == -1) {
-                    break;
-                }
-                i4++;
-            }
-        }
-        i4 = -1;
-        if (i4 == -1 && towerUnitCount == 149) {
-            return -1;
-        }
-        if (i4 == -1) {
-            i4 = towerUnitCount;
-            towerUnit[i4].towerType = -1;
-            towerUnitCount++;
-        }
-        towerUnit[i4].heroFlag = false;
-        towerUnit[i4].towerType = i;
-        towerUnit[i4].unitStatus = 2;
-        towerUnit[i4].unitStatusCount = 0;
-        towerUnit[i4].lastViewDirection = 6;
-        towerUnit[i4].blockX = i2;
-        towerUnit[i4].blockY = i3;
-        towerUnit[i4].posX = ((i2 * 45) + 22) * 50;
-        towerUnit[i4].posY = ((i3 * 45) + 22) * 50;
-        towerUnit[i4].originalPosX = towerUnit[i4].posX;
-        towerUnit[i4].originalPosY = towerUnit[i4].posY;
-        towerUnit[i4].attackCount = 0;
-        restatTowerUnit(towerUnit[i4]);
-        towerUnit[i4].headRotateDegree = 0.0f;
-        return i4;
-    }
-
-    public static int addHeroTowerUnit(int i, int i2, int i3, int i4, boolean z, boolean z2) {
-        int i5;
-        if (z) {
-            i5 = 0;
-            while (i5 < towerUnitCount) {
-                if (towerUnit[i5].towerType == -1) {
-                    break;
-                }
-                i5++;
-            }
-        }
-        i5 = -1;
-        if (i5 == -1 && towerUnitCount == 149) {
-            return -1;
-        }
-        if (i5 == -1) {
-            i5 = towerUnitCount;
-            towerUnitCount = i5 + 1;
-        }
-        towerUnit[i5].heroFlag = true;
-        towerUnit[i5].heroOrder = i2;
-        towerUnit[i5].towerType = i;
-        towerUnit[i5].unitStatus = 2;
-        towerUnit[i5].unitStatusCount = 0;
-        towerUnit[i5].lastViewDirection = 6;
-        towerUnit[i5].blockX = i3;
-        towerUnit[i5].blockY = i4;
-        towerUnit[i5].posX = ((i3 * 45) + 22) * 50;
-        towerUnit[i5].posY = ((i4 * 45) + 22) * 50;
-        TowerUnit[] towerUnitArr = towerUnit;
-        towerUnitArr[i5].originalPosX = towerUnitArr[i5].posX;
-        TowerUnit[] towerUnitArr2 = towerUnit;
-        towerUnitArr2[i5].originalPosY = towerUnitArr2[i5].posY;
-        towerUnit[i5].specialCooltime = 0;
-        towerUnit[i5].specialShowCount = 0;
-        towerUnit[i5].attackCount = 0;
-        if (z2) {
-            restatTowerUnit(towerUnit[i5]);
-        }
-        towerUnit[i5].headRotateDegree = 0.0f;
-        return i5;
     }
 
     public static void clearObjectUnit() {
@@ -2462,40 +2141,34 @@ public class GameThread extends Thread {
         }
     }
 
-    public static int getSoundHitType(int i) {
-        int i2 = towerUnit[i].towerType;
+    public static int getSoundHitType(TowerUnit tu) {
+        int i2 = tu.towerType;
         if (i2 == -1) {
             return -1;
         }
-        if (towerUnit[i].heroFlag != 0) {
+        if (tu instanceof HeroUnit) {
             int i3 = DataHero.heroData[i2][13];
-            if (i3 == 0) {
-                return 1;
-            }
-            if (i3 != 1) {
-                return i3 != 2 ? -1 : 7;
-            }
-            return 4;
+            return i3 > 2 || i3 < 0 ? -1 : 1 + (i3 * 3);
         }
         switch (DataCharacter.charData[i2][12]) {
-            case 0:
-            case 2:
-            case 3:
+            case 0://Warrior
+            case 2://Knight
+            case 3://Warlord
                 return 1;
-            case 1:
+            case 1://Brandisher
                 return 2;
-            case 4:
-            case 6:
-            case 7:
+            case 4://Archer
+            case 6://Sharpshooter
+            case 7://Sky Arrow
                 return 3;
-            case 5:
+            case 5://Holy Eye
                 return 4;
-            case 8:
+            case 8://Mage
                 return 5;
-            case 9:
+            case 9://IceMage
                 return 7;
-            case 10:
-            case 11:
+            case 10://Sorceress
+            case 11://Blaster
                 return 6;
             default:
                 return -1;

@@ -2,6 +2,7 @@ package com.sncompany.newtower.DataClasses;
 
 import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.GameRenderer;
+import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
@@ -37,148 +38,150 @@ public class DataMap {
     public static final int MAP_TILE_TYPE_ROAD_SW = 5;
     public static final int MAP_TILE_TYPE_ROAD_WE = 1;
     public static final int MAP_TUTORIAL = 50;
+    public static final int[][] DIR_MOVE_POS = {new int[]{0, -1}, new int[]{1, -1}, new int[]{1, 0}, new int[]{1, 1}, new int[]{0, 1}, new int[]{-1, 1}, new int[]{-1, 0}, new int[]{-1, -1}};
+    public static final int[] mapDataResource = {R.raw.map0, R.raw.map1, R.raw.map2, R.raw.map3, R.raw.map4, R.raw.map5, R.raw.map6, R.raw.map7, R.raw.map8, R.raw.map9, R.raw.map10, R.raw.map11, R.raw.map12, R.raw.map13, R.raw.map14, R.raw.map15, R.raw.map16, R.raw.map17, R.raw.map18, R.raw.map19, R.raw.map20, R.raw.map21, R.raw.map22, R.raw.map23, R.raw.map24, R.raw.map25, R.raw.map26, R.raw.map27, R.raw.map28, R.raw.map29, R.raw.map30, R.raw.map31, R.raw.map32, R.raw.map33, R.raw.map34, R.raw.map35, R.raw.map36, R.raw.map37, R.raw.map38, R.raw.map39, R.raw.map40, R.raw.map41, R.raw.map42, R.raw.map43, R.raw.map44, R.raw.map45, R.raw.map46, R.raw.map47, R.raw.map48, R.raw.map49, R.raw.map_tutorial};
+    public static final int[][] tileTileResource = {new int[]{R.drawable.map_t0_0, R.drawable.map_t0_1, R.drawable.map_t0_2, R.drawable.map_t0_3, R.drawable.map_t0_4, R.drawable.map_t0_5, R.drawable.map_t0_6, R.drawable.map_t0_7, R.drawable.map_t0_8, R.drawable.map_t0_9}, new int[]{R.drawable.map_t1_0, R.drawable.map_t1_1, R.drawable.map_t1_2, R.drawable.map_t1_3, R.drawable.map_t1_4, R.drawable.map_t1_5, R.drawable.map_t1_6, R.drawable.map_t1_7, R.drawable.map_t1_8, R.drawable.map_t1_9}, new int[]{R.drawable.map_t2_0, R.drawable.map_t2_1, R.drawable.map_t2_2, R.drawable.map_t2_3, R.drawable.map_t2_4, R.drawable.map_t2_5, R.drawable.map_t2_6, R.drawable.map_t2_7, R.drawable.map_t2_8, R.drawable.map_t2_9}, new int[]{R.drawable.map_t3_0, R.drawable.map_t3_1, R.drawable.map_t3_2, R.drawable.map_t3_3, R.drawable.map_t3_4, R.drawable.map_t3_5, R.drawable.map_t3_6, R.drawable.map_t3_7, R.drawable.map_t3_8, R.drawable.map_t3_9}, new int[]{R.drawable.map_t4_0, R.drawable.map_t4_1, R.drawable.map_t4_2, R.drawable.map_t4_3, R.drawable.map_t4_4, R.drawable.map_t4_5, R.drawable.map_t4_6, R.drawable.map_t4_7, R.drawable.map_t4_8, R.drawable.map_t4_9}};
+    public static final int[] tileBaseResource = {R.drawable.map_b0, R.drawable.map_b1, R.drawable.map_b2, R.drawable.map_b3, R.drawable.map_b4};
+    public static final Texture2D[] backTileImage0 = new Texture2D[tileTileResource[0].length];
+    public static final Texture2D[] backTileImage1 = new Texture2D[tileTileResource[1].length];
+    public static final Texture2D[] backTileImage2 = new Texture2D[tileTileResource[2].length];
+    public static final Texture2D[] backTileImage3 = new Texture2D[tileTileResource[3].length];
+    public static final Texture2D[] backTileImage4 = new Texture2D[tileTileResource[4].length];
+
+    public final int mapEndPositionCount, mapBackgroundType, lastShowBackBase, SID;
+    public int mapStartPositionLoop = 0, mapStartPositionCount, gatePattern;
+    public final ArrayList<ObjectUnit> objectUnit = new ArrayList<>(50);
+    public final Texture2D[] backObjectImage = new Texture2D[DataObject.objectImageResource.length];
+    public final int[] mapEndDirection = new int[10];
+    public final Texture2D[] backBaseImageArray = new Texture2D[tileBaseResource.length];
+    public final Texture2D[] backTileOldImage;
     public final int[][] mapStartPosition = new int[10][2];
     public final int[][] mapEndPosition = new int[10][2];
     public final int[][] mapMoveData = new int[15][10];
     public final int[][] mapTileData = new int[15][10];
-    public static final int[][] DIR_MOVE_POS = {new int[]{0, -1}, new int[]{1, -1}, new int[]{1, 0}, new int[]{1, 1}, new int[]{0, 1}, new int[]{-1, 1}, new int[]{-1, 0}, new int[]{-1, -1}};
-    public static final int[] mapDataResource = {R.raw.map0, R.raw.map1, R.raw.map2, R.raw.map3, R.raw.map4, R.raw.map5, R.raw.map6, R.raw.map7, R.raw.map8, R.raw.map9, R.raw.map10, R.raw.map11, R.raw.map12, R.raw.map13, R.raw.map14, R.raw.map15, R.raw.map16, R.raw.map17, R.raw.map18, R.raw.map19, R.raw.map20, R.raw.map21, R.raw.map22, R.raw.map23, R.raw.map24, R.raw.map25, R.raw.map26, R.raw.map27, R.raw.map28, R.raw.map29, R.raw.map30, R.raw.map31, R.raw.map32, R.raw.map33, R.raw.map34, R.raw.map35, R.raw.map36, R.raw.map37, R.raw.map38, R.raw.map39, R.raw.map40, R.raw.map41, R.raw.map42, R.raw.map43, R.raw.map44, R.raw.map45, R.raw.map46, R.raw.map47, R.raw.map48, R.raw.map49, R.raw.map_tutorial};
-
-    public int mapStartPositionLoop = 0, mapStartPositionCount, mapEndPositionCount, gatePattern, mapBackgroundType;
-    public final ArrayList<ObjectUnit> objectUnit = new ArrayList<>(50);
-    public final int[] mapEndDirection = new int[10];
     public DataWave wav;
 
     public static DataMap loadMap(int SID, boolean play) {
-        byte[] bArr = null;
+        byte[] mdata = null;
         try {
-            InputStream openRawResource = newTower.getResources().openRawResource(mapDataResource[SID]);
+            InputStream openRawResource = GameThread.newTower.getResources().openRawResource(mapDataResource[SID]);
             int available = openRawResource.available();
-            bArr = new byte[available];
-            int i3 = 0;
+            mdata = new byte[available];
+            int ibit = 0;
             do {
-                int read = openRawResource.read(bArr, i3, available - i3);
-                if (read <= 0) {
+                int read = openRawResource.read(mdata, ibit, available - ibit);
+                if (read <= 0)
                     break;
-                } else {
-                    i3 += read;
-                }
-            } while (i3 < available);
+                else
+                    ibit += read;
+
+            } while (ibit < available);
             openRawResource.close();
         } catch (Exception ignored) {
         }
-        DataMap map = new DataMap();
+        DataMap map = new DataMap(SID, mdata);
 
-        for (int i4 = 0; i4 < 10; i4++) {
-            for (int i5 = 0; i5 < 15; i5++) {
-                map.mapTileData[i5][i4] = bArr[(i4 * 15) + i5];
+        if (play)
+            map.wav = DataWave.loadWave(map, SID);
+        return map;
+    }
+
+    public DataMap(int stage, byte[] mdata) {
+        SID = stage;
+        for (int j = 0; j < 10; j++)
+            for (int k = 0; k < 15; k++)
+                mapTileData[k][j] = mdata[(j * 15) + k];
+        for (int j = 0; j < 10; j++)
+            for (int k = 0; k < 15; k++)
+                mapMoveData[k][j] = mdata[(j * 15) + 150 + k];
+        for (int j = 0; j < 10; j++)
+            for (int k = 0; k < 15; k++) {
+                int objp = (j * 15) + 300 + k;
+                if (mdata[objp] != -1)
+                    addObjectUnit(mdata[objp], k, j);
             }
+        byte b = mdata[LOAD_MAP_START_COUNT];
+        mapStartPositionCount = b;
+
+        for (int sPos = 0; sPos < mapStartPositionCount; sPos++) {
+            int pcor = (sPos * 2) + 451;
+            mapStartPosition[sPos][0] = mdata[pcor];
+            mapStartPosition[sPos][1] = mdata[pcor + 1];
         }
-        for (int i6 = 0; i6 < 10; i6++) {
-            for (int i7 = 0; i7 < 15; i7++) {
-                map.mapMoveData[i7][i6] = bArr[(i6 * 15) + 150 + i7];
-            }
-        }
-        for (int i8 = 0; i8 < 10; i8++) {
-            for (int i9 = 0; i9 < 15; i9++) {
-                int i10 = (i8 * 15) + 300 + i9;
-                if (bArr[i10] != -1) {
-                    map.addObjectUnit(bArr[i10], i9, i8, true);
-                }
-            }
-        }
-        byte b = bArr[LOAD_MAP_START_COUNT];
-        map.mapStartPositionCount = b;
-        int i11 = 0;
-        while (i11 < map.mapStartPositionCount) {
-            int[][] iArr = map.mapStartPosition;
-            int i12 = (i11 * 2) + 451;
-            iArr[i11][0] = bArr[i12];
-            iArr[i11][1] = bArr[i12 + 1];
-            i11++;
-        }
-        for (int i13 = map.mapStartPositionCount - 1; i13 > 0; i13--) {
+
+        for (int i13 = mapStartPositionCount - 1; i13 > 0; i13--) {
             int i14 = i13 - 1;
             while (true) {
                 if (i14 >= 0) {
-                    int[][] iArr2 = map.mapStartPosition;
+                    int[][] iArr2 = mapStartPosition;
                     if (iArr2[i14][0] == iArr2[i13][0] && iArr2[i14][1] == iArr2[i13][1]) {
-                        map.mapStartPositionCount--;
+                        mapStartPositionCount--;
                         break;
                     }
                     i14--;
                 }
             }
         }
-        for (int i15 = 0; i15 < map.mapStartPositionCount; i15++) {
-            int[][] iArr3 = map.mapMoveData;
-            int[][] iArr4 = map.mapStartPosition;
+        for (int i15 = 0; i15 < mapStartPositionCount; i15++) {
+            int[][] iArr3 = mapMoveData;
+            int[][] iArr4 = mapStartPosition;
             if ((4 & iArr3[iArr4[i15][0]][iArr4[i15][1]]) != 0) {
-                map.addObjectUnit(207, iArr4[i15][0], iArr4[i15][1], true);
+                addObjectUnit(207, iArr4[i15][0], iArr4[i15][1]);
             } else if ((iArr3[iArr4[i15][0]][iArr4[i15][1]] & 16) != 0) {
-                map.addObjectUnit(200, iArr4[i15][0], iArr4[i15][1], true);
+                addObjectUnit(200, iArr4[i15][0], iArr4[i15][1]);
             } else if ((iArr3[iArr4[i15][0]][iArr4[i15][1]] & 64) != 0) {
-                map.addObjectUnit(201, iArr4[i15][0], iArr4[i15][1], true);
+                addObjectUnit(201, iArr4[i15][0], iArr4[i15][1]);
             }
         }
         int i16 = b * 2;
-        map.mapEndPositionCount = bArr[i16 + LOAD_MAP_START_COUNT + 1];
-        for (int i17 = 0; i17 < map.mapEndPositionCount; i17++) {
-            int[][] iArr5 = map.mapEndPosition;
+        mapEndPositionCount = mdata[i16 + LOAD_MAP_START_COUNT + 1];
+        for (int i17 = 0; i17 < mapEndPositionCount; i17++) {
+            int[][] iArr5 = mapEndPosition;
             int i18 = i16 + 452 + (i17 * 2);
-            iArr5[i17][0] = bArr[i18];
-            iArr5[i17][1] = bArr[i18 + 1];
+            iArr5[i17][0] = mdata[i18];
+            iArr5[i17][1] = mdata[i18 + 1];
             int i19 = iArr5[i17][0] - 1;
             int i20 = iArr5[i17][1];
-            if (i19 >= 0 && (map.mapMoveData[i19][i20] & 4) != 0) {
-                map.addObjectUnit(GameRenderer.GAME_SHOP_EQUIP_SKILL_START_X, iArr5[i17][0], iArr5[i17][1], true);
-                map.mapEndDirection[i17] = 203;
+            if (i19 >= 0 && (mapMoveData[i19][i20] & 4) != 0) {
+                addObjectUnit(GameRenderer.GAME_SHOP_EQUIP_SKILL_START_X, iArr5[i17][0], iArr5[i17][1]);
+                mapEndDirection[i17] = 203;
             } else {
-                int[][] iArr6 = map.mapEndPosition;
+                int[][] iArr6 = mapEndPosition;
                 int i21 = iArr6[i17][0] + 1;
                 int i22 = iArr6[i17][1];
-                if (i21 < 15 && (map.mapMoveData[i21][i22] & 64) != 0) {
-                    map.addObjectUnit(208, iArr6[i17][0], iArr6[i17][1], true);
-                    map.mapEndDirection[i17] = 208;
+                if (i21 < 15 && (mapMoveData[i21][i22] & 64) != 0) {
+                    addObjectUnit(208, iArr6[i17][0], iArr6[i17][1]);
+                    mapEndDirection[i17] = 208;
                 } else {
-                    int[][] iArr7 = map.mapEndPosition;
-                    map.addObjectUnit(202, iArr7[i17][0], iArr7[i17][1] + 1, true);
-                    map.mapEndDirection[i17] = 202;
+                    int[][] iArr7 = mapEndPosition;
+                    addObjectUnit(202, iArr7[i17][0], iArr7[i17][1] + 1);
+                    mapEndDirection[i17] = 202;
                 }
             }
         }
-        map.mapStartPositionLoop = 0;
         int i23 = SID / 10;
-        map.mapBackgroundType = i23;
-        if (i23 >= 5) {
-            GameRenderer.lastShowBackBase = 0;
-        } else {
-            GameRenderer.lastShowBackBase = i23;
-        }
-        int i24 = map.mapBackgroundType;
-        if (i24 == 0) {
-            GameRenderer.backTileOldImage = GameRenderer.backTileImage0;
-        } else if (i24 == 1) {
-            GameRenderer.backTileOldImage = GameRenderer.backTileImage1;
-        } else if (i24 == 2) {
-            GameRenderer.backTileOldImage = GameRenderer.backTileImage2;
-        } else if (i24 == 3) {
-            GameRenderer.backTileOldImage = GameRenderer.backTileImage3;
-        } else if (i24 == 4) {
-            GameRenderer.backTileOldImage = GameRenderer.backTileImage4;
-        } else {
-            GameRenderer.backTileOldImage = GameRenderer.backTileImage0;
-        }
-        if (play)
-            map.wav = DataWave.loadWave(map, SID);
-        return map;
+        mapBackgroundType = i23;
+        lastShowBackBase = i23 >= 5 ? 0 : i23;
+
+        if (mapBackgroundType <= 0 || mapBackgroundType > 4) {
+            backTileOldImage = backTileImage0;
+        } else if (mapBackgroundType == 1) {
+            backTileOldImage = backTileImage1;
+        } else if (mapBackgroundType == 2) {
+            backTileOldImage = backTileImage2;
+        } else if (mapBackgroundType == 3) {
+            backTileOldImage = backTileImage3;
+        } else
+            backTileOldImage = backTileImage4;
+
+        for (int i = 0; i < backObjectImage.length; i++)
+            backObjectImage[i] = new Texture2D(DataObject.objectImageResource.length);
     }
 
     public void checkBackBase() {
         for (int i = 0; i < 5; i++) {
-            if (i != lastShowBackBase && backBaseImageArray[i].name != -1) {
+            if (i != lastShowBackBase && backBaseImageArray[i].name != -1)
                 backBaseImageArray[i].dealloc();
-            }
         }
         if (backBaseImageArray[lastShowBackBase].name == -1) {
             Texture2D[] texture2DArr = backBaseImageArray;
@@ -187,74 +190,8 @@ public class DataMap {
         }
     }
 
-    public int addObjectUnit(int i, int i2, int i3, boolean z) {
-        int i4;
-        if (z) {
-            i4 = 0;
-            while (i4 < objectUnitCount) {
-                if (o.objectType == -1) {
-                    break;
-                }
-                i4++;
-            }
-        }
-        i4 = -1;
-        if (i4 == -1 && objectUnitCount == 99) {
-            return -1;
-        }
-        if (i4 == -1) {
-            i4 = objectUnitCount;
-            objectUnitCount = i4 + 1;
-        }
-        ObjectUnit o = new ObjectUnit();
-        o.type = -1;
-        int i5 = 0;
-        while (true) {
-            if (i5 >= 34) {
-                break;
-            }
-            if (i == DataObject.objectData[i5][0]) {
-                o.objectType = i5;
-                break;
-            }
-            i5++;
-        }
-        o.objectVanishCount = 0;
-        o.destroyEnableFlag = DataObject.objectData[o.objectType][1];
-        o.unitHP = o.unitMaxHP = DataObject.objectData[o.objectType][2];
-        o.rewardType = DataObject.objectData[o.objectType][3];
-        o.rewardValue = DataObject.objectData[o.objectType][4];
-        o.blockSize = DataObject.objectData[o.objectType][5];
-        o.blockX = i2;
-        o.blockY = i3;
-        o.posX = 0;
-        o.posY = 0;
-        switch (o.blockSize) {
-            case 0, 3, 4, 5:
-                o.posX = ((i2 * 45) + 22) * 50;
-                o.posY = ((i3 * 45) + 22) * 50;
-                break;
-            case 1:
-                o.posX = ((i2 * 45) + 22) * 50;
-                o.posY = (((i3 + 1) * 45) + 22) * 50;
-                break;
-            case 2:
-                o.posX = (i2 + 1) * 45 * 50;
-                o.posY = (((i3 + 1) * 45) + 22) * 50;
-                break;
-        }
-        if ((o.objectType == 28 || o.objectType == 29 || o.objectType == 32) && mapNumber < 50) {
-            o.unitHP = DataWaveMob.DATA_WAVE_GATE_HP[mapNumber];
-            o.unitMaxHP = o.unitHP;
-            if (mapStartPositionCount == 2) {
-                o.unitHP /= 2;
-                o.unitMaxHP /= 2;
-            }
-            if (mapAttackType == 2) {
-                o.destroyEnableFlag = 0;
-            }
-        }
-        return i4;
+    public void addObjectUnit(int oType, int bX, int bY) {
+        ObjectUnit o = new ObjectUnit(oType, bX, bY);
     }
 
     public int getRandomMapDirection(int i2, int i3, int i4) {

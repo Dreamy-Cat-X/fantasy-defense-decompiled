@@ -45,7 +45,7 @@ public class DataWave {
     public static DataWave loadWave(DataMap map, int SID) {
         byte[] bArr = null;
         try {
-            InputStream openRawResource = newTower.getResources().openRawResource(waveDataResource[SID]);
+            InputStream openRawResource = GameThread.newTower.getResources().openRawResource(waveDataResource[SID]);
             int available = openRawResource.available();
             bArr = new byte[available];
             int dats = 0;

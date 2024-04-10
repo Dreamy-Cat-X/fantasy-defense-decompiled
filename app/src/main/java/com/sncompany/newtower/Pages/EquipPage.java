@@ -6,6 +6,7 @@ import androidx.core.view.ViewCompat;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
+import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -14,6 +15,14 @@ public class EquipPage extends TPage {
 
     public EquipPage(TPage par) {
         super(par);
+    }
+
+    public void update_GAME_SHOP_EQUIP() {
+        GameRenderer.inventoryItemListDraw.correctDistance();
+        int i = viewCount_GAME_SHOP_EQUIP;
+        if (i < 30) {
+            viewCount_GAME_SHOP_EQUIP = i + 1;
+        }
     }
 
     public void paint_GAME_SHOP_EQUIP(GL10 gl10, boolean z) {
@@ -531,5 +540,33 @@ public class EquipPage extends TPage {
             GameThread.gameSubStatus = 2;
         }
         TouchManager.processTouchStatus();
+    }
+
+    public static void setEquipHeroSetting() {
+        towerUnitCount = 0;
+        if (rewardDataValue[0] == 1) {
+            heroUnitType[0] = 0;
+        } else {
+            heroUnitType[0] = -1;
+        }
+        if (rewardDataValue[2] == 1) {
+            heroUnitType[1] = 5;
+        } else {
+            heroUnitType[1] = -1;
+        }
+        if (rewardDataValue[4] == 1) {
+            heroUnitType[2] = 10;
+        } else {
+            heroUnitType[2] = -1;
+        }
+        if (heroUnitType[0] != -1) {
+            addHeroTowerUnit(heroUnitType[0], 0, 0, 0, true, true);
+        }
+        if (heroUnitType[1] != -1) {
+            addHeroTowerUnit(heroUnitType[1], 1, 0, 0, true, true);
+        }
+        if (heroUnitType[2] != -1) {
+            addHeroTowerUnit(heroUnitType[2], 2, 0, 0, true, true);
+        }
     }
 }

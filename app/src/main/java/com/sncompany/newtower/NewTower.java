@@ -112,27 +112,19 @@ public class NewTower extends AppCompatActivity {
         builder.setCancelable(false);
         builder.setTitle(this.ErrorTitle);
         builder.setMessage(this.ErrorMessage);
-        builder.setPositiveButton("종료", new DialogInterface.OnClickListener() { // from class: com.sncompany.newtower.NewTower.9
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                NewTower.this.finish();
-                System.exit(1);
-            }
+
+        builder.setPositiveButton("종료", (dialogInterface, i) -> {
+            NewTower.this.finish();
+            System.exit(1);
         });
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.sncompany.newtower.NewTower.10
-            @Override // android.content.DialogInterface.OnCancelListener
-            public void onCancel(DialogInterface dialogInterface) {
-                NewTower.this.finish();
-                System.exit(1);
-            }
+        builder.setOnCancelListener(dialogInterface -> {
+            NewTower.this.finish();
+            System.exit(1);
         });
-        builder.setOnKeyListener(new DialogInterface.OnKeyListener() { // from class: com.sncompany.newtower.NewTower.11
-            @Override // android.content.DialogInterface.OnKeyListener
-            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
-                NewTower.this.finish();
-                System.exit(1);
-                return true;
-            }
+        builder.setOnKeyListener((dialogInterface, i, keyEvent) -> {
+            NewTower.this.finish();
+            System.exit(1);
+            return true;
         });
         builder.show();
     }

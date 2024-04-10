@@ -170,14 +170,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int GAME_STAGE_CLEAR_TOTAL_SCORE_COUNT = 180;
     static final float GAME_STAGE_DARK_ALPHA_DEGREE = 0.033f;
     public static final int GAME_STAGE_DARK_VIEW_TOTAL_COUNT = 45;
-    static final float GAME_STAGE_SELECT_STAGE_FADE_DEGREE = 0.0294f;
-    static final float GAME_STAGE_SELECT_VIEW_FADE_DEGREE = 0.047f;
-    public static final int GAME_STAGE_SELECT_VIEW_FADE_IN_END_POS = 34;
-    public static final int GAME_STAGE_SELECT_VIEW_FADE_OUT_FULL_POS = 17;
-    public static final int GAME_STAGE_SELECT_VIEW_FADE_OUT_START_POS = 0;
-    public static final int GAME_STAGE_SELECT_VIEW_LOOP_BLOCK_SIZE = 28;
-    public static final int GAME_STAGE_SELECT_VIEW_MOVE_COUNT = 15;
-    static final float GAME_STAGE_SELECT_VIEW_MOVE_DEGREE = 0.066f;
     public static int GAME_TITLE_BOSS_VIEW_POS = 0;
     public static final int GAME_TITLE_MAIN_VIEW_BOSS_MOVE_POS = 54;
     public static final int GAME_TITLE_MAIN_VIEW_UNIT_MOVE_POS = 108;
@@ -1614,7 +1606,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     public void paint_GAME_PRE_LOAD(GL10 gl10) {
         TouchManager.clearTouchMap();
-        TouchManager.clearTouchMap();
     }
 
     public void paint_GAME_PRE_IMAGE_LOAD(GL10 gl10) {
@@ -2606,17 +2597,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             }
         }
         return true;
-    }
-
-    public void drawMapTile(GL10 gl10) {
-        for (int i = 0; i < 15; i++) {
-            for (int i2 = 0; i2 < 10; i2++) {
-                int i3 = GameThread.mapTileData[i][i2];
-                if (i3 != -1) {
-                    backTileOldImage[i3].drawAtPointOption((i * 45) + 62, (i2 * 45) + 30, 18);
-                }
-            }
-        }
     }
 
     public void drawPlayingUi(boolean z, boolean z2) {

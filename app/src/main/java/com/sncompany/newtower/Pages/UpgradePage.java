@@ -56,6 +56,20 @@ public class UpgradePage extends TPage {
             uiUpgradeImage[i] = new Texture2D(uiUpgradeResource[i]);
     }
 
+    public void update_GAME_UPGRADE_UNIT() {
+        int i = lastUpdateItemViewDelay;
+        if (i > 0) {
+            lastUpdateItemViewDelay = i - 1;
+        }
+    }
+
+    public void update_GAME_UPGRADE_HERO() {
+        int i = lastUpdateItemViewDelay;
+        if (i > 0) {
+            lastUpdateItemViewDelay = i - 1;
+        }
+    }
+
     public void paint_GAME_UPGRADE_UNIT(GL10 gl10, boolean z) {
         int i;
         int i2;

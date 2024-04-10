@@ -4,7 +4,7 @@ package com.sncompany.newtower.Battle;
  * Superclass used to link enemies and objects.
  */
 public abstract class EnemyUnit implements Comparable<EnemyUnit> {
-    public int type;
+    public int type = -1;
     public int posX;
     public int posY;
 

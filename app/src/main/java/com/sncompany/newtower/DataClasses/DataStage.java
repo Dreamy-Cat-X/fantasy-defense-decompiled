@@ -38,38 +38,40 @@ public class DataStage {
     public final ArrayList<ArrowUnit> arrowUnit = new ArrayList<>(100);
     public final ArrayList<EffectUnit> effectUnit = new ArrayList<>(100);
 
-    public ArrayList<MonsterUnit> monsterUnit = new ArrayList<>(50);
-    public ArrayList<ObjectUnit> objectUnit = new ArrayList<>(50); //Depreacted, objectUnit has been moved to DataMap
+    public final ArrayList<MonsterUnit> monsterUnit = new ArrayList<>(50);
     public EnemyUnit selectedTarget;
 
-    public ArrayList<TowerUnit> towerUnit = new ArrayList<>(50);
+    public final ArrayList<TowerUnit> towerUnit = new ArrayList<>(50);
     public TowerUnit selectedUnit;
 
     public final int SID, mapType;
-    public static int Life = maxLife;
-    public static int Mana = 0, Money = 0, Wave = 0;
-    public DataWave waveManager;
-    public DataMap map;
+    public int Life = maxLife;
+    public int Mana, Money;
+    public final DataWave waveManager;
+    public final DataMap map;
     public byte turbo = 1;
     public float bScore = 0.0f, victoryH;
 
-    public DataStage(int mapNumber, int type) {
-        SID = mapNumber;
+    public DataStage(DataMap m, int type) {
+        SID = m.SID;
         mapType = type;
-        instance = this;
         Money = (DataStage.stageData[SID][DATA_STAGE_START_MONEY] * (getUpgradeUnitRate(0, 0) + 100)) / 100;
         Mana = (DataStage.stageData[SID][DATA_STAGE_START_MANA] * (getUpgradeUnitRate(0, 1) + 100)) / 100;
-
-        heroAvail[0] = Config.rewardValues[0];
-        heroAvail[1] = Config.rewardValues[2];
-        heroAvail[2] = Config.rewardValues[4];
 
         GameRenderer.upgradeCount = 0;
         GameRenderer.levelUpCount = 0;
         GameRenderer.specialBlinkCount = 0;
         GameRenderer.monsterGoalBlinkCount = 0;
-        tempCharacterRangeViewNumber = -1;
-        waveManager = new DataWave();
+        map = m;
+        waveManager = m.wav;
+
+        if (mapType == 2)
+            for (ObjectUnit o : map.objectUnit)
+                if (o.objectType == 28 || o.objectType == 29 || o.objectType == 32) {
+                    o.unitHP = DataWaveMob.DATA_WAVE_GATE_HP[SID] / map.mapStartPositionCount;
+                    o.unitMaxHP = o.unitHP / map.mapStartPositionCount;
+                    o.destroyEnableFlag = 0;
+                }
         setCurrentWave();
     }
 
@@ -91,33 +93,15 @@ public class DataStage {
     }
 
     public void addMonsterUnit(int type, boolean bossFlag) {
-        MonsterUnit nm = new MonsterUnit(type, bossFlag);
+        map.mapStartPositionLoop = map.gatePattern;
+        MonsterUnit nm = new MonsterUnit(this, type, bossFlag);
         monsterUnit.add(nm);
 
-        int i7 = map.gatePattern;
-        if (i7 == 0) { //switch to bool
-            map.mapStartPositionLoop = 0;
-        } else if (i7 == 1) {
-            map.mapStartPositionLoop = 1;
-        }
-        nm.posX = ((map.mapStartPosition[map.mapStartPositionLoop][0] * 45) + 22) * 50;
-        nm.posY = ((map.mapStartPosition[map.mapStartPositionLoop][1] * 45) + 22) * 50;
-        nm.fromBlockX = map.mapStartPosition[map.mapStartPositionLoop][0];
-        nm.fromBlockY = map.mapStartPosition[map.mapStartPositionLoop][1];
-        int[][] iArr = map.mapStartPosition;
-        int i8 = map.mapStartPositionLoop;
-        int randomMapDirection = map.getRandomMapDirection(iArr[i8][0], iArr[i8][1], -1);
-        map.mapStartPositionLoop++;
-        if (map.mapStartPositionLoop >= map.mapStartPositionCount) {
-            map.mapStartPositionLoop = 0;
-        }
-        nm.direction = randomMapDirection;
-        nm.targetBlockX = nm.fromBlockX + DIR_MOVE_POS[randomMapDirection][0];
-        nm.targetBlockY = nm.fromBlockY + DIR_MOVE_POS[randomMapDirection][1];
+        map.mapStartPositionLoop = (map.mapStartPositionLoop + 1) % map.mapStartPositionCount;
     }
     public void addEffectUnit(int effType, float x, float y) {
         EffectUnit efu = new EffectUnit(effType, (int) x, (int) y);
-        efu.lastGameUpdateCount = gameTimeCount;
+        efu.lastGameUpdateCount = GameThread.gameTimeCount;
         effectUnit.add(efu);
     }
 
@@ -139,6 +123,9 @@ public class DataStage {
      */
     public boolean updateMonsterUnit() {
         monsterUnit.removeIf(m -> m.dead() && m.unitStatusCount >= 10);
+        if (Life == 0)
+            return false;
+
         for (MonsterUnit m : monsterUnit)
             if (m.update())
                 return true;
@@ -146,8 +133,8 @@ public class DataStage {
     }
 
     public void updateObjectUnit() {
-        objectUnit.removeIf(o -> o.type == -1);
-        for (ObjectUnit o : objectUnit)
+        map.objectUnit.removeIf(o -> o.type == -1);
+        for (ObjectUnit o : map.objectUnit)
             o.update();
     }
 
@@ -161,9 +148,9 @@ public class DataStage {
     }
 
     public void unlockTowerUnit() {
-        for (int i = 0; i < towerUnitCount; i++)
-            if (towerUnit[i].towerType != -1 && towerUnit[i].unitStatus == 2)
-                towerUnit[i].unitStatus = 0;
+        for (TowerUnit two : towerUnit)
+            if (two.unitStatus == 2)
+                two.unitStatus = 0;
     }
 
     public int getTotalScore() {
@@ -181,13 +168,94 @@ public class DataStage {
         return scr;
     }
 
-    public static boolean perfectClear() {
+    public boolean perfectClear() {
         return Life == maxLife;
     }
 
     public void sortTowerEnemyUnit() {
         monsterUnit.sort(null);
         towerUnit.sort(null);
-        objectUnit.sort(null);
+        map.objectUnit.sort(null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: package-private */
+    public int addTowerUnit(int i, int i2, int i3, boolean z) {
+        int i4;
+        if (z) {
+            i4 = 0;
+            while (i4 < towerUnitCount) {
+                if (towerUnit[i4].towerType == -1) {
+                    break;
+                }
+                i4++;
+            }
+        }
+        i4 = -1;
+        if (i4 == -1 && towerUnitCount == 149) {
+            return -1;
+        }
+        if (i4 == -1) {
+            i4 = towerUnitCount;
+            towerUnit[i4].towerType = -1;
+            towerUnitCount++;
+        }
+        towerUnit[i4].heroFlag = false;
+        towerUnit[i4].towerType = i;
+        towerUnit[i4].unitStatus = 2;
+        towerUnit[i4].unitStatusCount = 0;
+        towerUnit[i4].lastViewDirection = 6;
+        towerUnit[i4].blockX = i2;
+        towerUnit[i4].blockY = i3;
+        towerUnit[i4].posX = ((i2 * 45) + 22) * 50;
+        towerUnit[i4].posY = ((i3 * 45) + 22) * 50;
+        towerUnit[i4].originalPosX = towerUnit[i4].posX;
+        towerUnit[i4].originalPosY = towerUnit[i4].posY;
+        towerUnit[i4].attackCount = 0;
+        restatTowerUnit(towerUnit[i4]);
+        towerUnit[i4].headRotateDegree = 0.0f;
+        return i4;
+    }
+
+    public static int addHeroTowerUnit(int i, int i2, int i3, int i4, boolean z, boolean z2) {
+        int i5;
+        if (z) {
+            i5 = 0;
+            while (i5 < towerUnitCount) {
+                if (towerUnit[i5].towerType == -1) {
+                    break;
+                }
+                i5++;
+            }
+        }
+        i5 = -1;
+        if (i5 == -1 && towerUnitCount == 149) {
+            return -1;
+        }
+        if (i5 == -1) {
+            i5 = towerUnitCount;
+            towerUnitCount = i5 + 1;
+        }
+        towerUnit[i5].heroFlag = true;
+        towerUnit[i5].heroOrder = i2;
+        towerUnit[i5].towerType = i;
+        towerUnit[i5].unitStatus = 2;
+        towerUnit[i5].unitStatusCount = 0;
+        towerUnit[i5].lastViewDirection = 6;
+        towerUnit[i5].blockX = i3;
+        towerUnit[i5].blockY = i4;
+        towerUnit[i5].posX = ((i3 * 45) + 22) * 50;
+        towerUnit[i5].posY = ((i4 * 45) + 22) * 50;
+        TowerUnit[] towerUnitArr = towerUnit;
+        towerUnitArr[i5].originalPosX = towerUnitArr[i5].posX;
+        TowerUnit[] towerUnitArr2 = towerUnit;
+        towerUnitArr2[i5].originalPosY = towerUnitArr2[i5].posY;
+        towerUnit[i5].specialCooltime = 0;
+        towerUnit[i5].specialShowCount = 0;
+        towerUnit[i5].attackCount = 0;
+        if (z2) {
+            restatTowerUnit(towerUnit[i5]);
+        }
+        towerUnit[i5].headRotateDegree = 0.0f;
+        return i5;
     }
 }

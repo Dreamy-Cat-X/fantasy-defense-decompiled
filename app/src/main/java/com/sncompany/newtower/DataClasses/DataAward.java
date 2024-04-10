@@ -1,5 +1,7 @@
 package com.sncompany.newtower.DataClasses;
 
+import static com.sncompany.newtower.DataClasses.DataStage.heroAvail;
+
 import com.sncompany.newtower.Config;
 
 /* loaded from: D:\decomp\classes.dex */
@@ -98,6 +100,10 @@ public class DataAward {
         Config.awardValues[AWARD_Cleared_Wilderness] |= SID == 29;
         Config.awardValues[AWARD_Cleared_Volcano] |= SID == 39;
         Config.awardValues[AWARD_Cleared_Ether_Region] |= SID == 49;
+
+        heroAvail[0] = Config.rewardValues[0];
+        heroAvail[1] = Config.rewardValues[2];
+        heroAvail[2] = Config.rewardValues[4];
 
         boolean all = true, perfect = true, moon = true;
         for (byte[] scores : Config.stageProg) {//In the real game, time attack and base destroyer clear aren't required for the Crasto Guardian trophy, but that made it no different than EtherRegion clear trophy

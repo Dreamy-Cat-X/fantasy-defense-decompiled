@@ -12,13 +12,14 @@ public class MediaManager2 {
         this.mPlayer = new MediaPlayer[i];
     }
 
-    public void setMediaFile(int i, Context context, int i2, boolean z) {
+    //Z is always false lol
+    public void setMediaFile(int i, Context context, int rid, boolean loop) {
         MediaPlayer[] mediaPlayerArr = this.mPlayer;
-        if (i >= mediaPlayerArr.length) {
+        if (i >= mediaPlayerArr.length)
             return;
-        }
-        mediaPlayerArr[i] = MediaPlayer.create(context, i2);
-        this.mPlayer[i].setLooping(z);
+
+        mediaPlayerArr[i] = MediaPlayer.create(context, rid);
+        this.mPlayer[i].setLooping(loop);
         this.mPlayer[i].setOnCompletionListener(new MediaPlayer.OnCompletionListener() { // from class: com.sncompany.newtower.MediaManager2.1
             @Override // android.media.MediaPlayer.OnCompletionListener
             public final void onCompletion(MediaPlayer mediaPlayer) {

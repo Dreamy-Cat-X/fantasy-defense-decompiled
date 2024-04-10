@@ -62,6 +62,11 @@ public class ShopPage extends TPage {
         super(par);
     }
 
+    public void update_GAME_SHOP_SHOP() {
+        GameRenderer.upgradeItemListDraw.correctDistance();
+        GameRenderer.inventoryItemListDraw.correctDistance();
+    }
+
     public void paint_GAME_SHOP_SHOP(GL10 gl10, boolean z) {
         int i;
         float f;

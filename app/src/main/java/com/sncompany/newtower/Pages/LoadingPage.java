@@ -6,6 +6,7 @@ import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
+import com.sncompany.newtower.TouchManager;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -71,10 +72,8 @@ public class LoadingPage extends TPage {
         super(par);
         reloadTip();
         loadingViewType = NewTower.getRandom(6);
-    }
 
-    @Override
-    public void load(Consumer<Float> prog) {
+        //Due to how loading page works, it loads pre-emptively
         alwaysImage[0].initWithImageName(alwaysResource[0]);
         for (int i = 0; i < uiLoadingImage.length; i++)
             uiLoadingImage[i] = new Texture2D(uiLoadingResource[i]);
@@ -90,7 +89,10 @@ public class LoadingPage extends TPage {
             }
         }
         loaded = true;
+    }
 
+    @Override
+    public void load(Consumer<Float> prog) {
         parent.load(con);
         NewTower.switchPage(parent, true);
     }
@@ -155,6 +157,9 @@ public class LoadingPage extends TPage {
 
     @Override
     public void touchCheck() {
+        if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
+            return;
+
         reloadTip();
     }
 

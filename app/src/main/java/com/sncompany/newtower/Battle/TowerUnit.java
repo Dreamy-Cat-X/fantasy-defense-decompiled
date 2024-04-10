@@ -52,7 +52,9 @@ public class TowerUnit implements Comparable<TowerUnit> {
     public int targetMaxNum;
     public int towerCoolTime;
     public int towerCoolTimeMax;
-    public int towerType;
+    public int towerType; //deprecated, replace with [type] and [level]
+    public int level = 1;
+    public int type;
     public int unitPower;
     public int unitStatus;
     public int unitStatusCount;

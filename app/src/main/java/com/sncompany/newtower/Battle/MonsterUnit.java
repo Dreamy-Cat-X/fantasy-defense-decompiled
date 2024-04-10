@@ -1,15 +1,14 @@
 package com.sncompany.newtower.Battle;
 
-import static com.sncompany.newtower.DataClasses.DataStage.DIR_MOVE_POS;
-import static com.sncompany.newtower.DataClasses.DataStage.getRandomMapDirection;
-
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataCharacter;
+import com.sncompany.newtower.DataClasses.DataMap;
 import com.sncompany.newtower.DataClasses.DataMonster;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataWave;
 import com.sncompany.newtower.GameRenderer;
+import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 
 /* loaded from: D:\decomp\classes.dex */
@@ -48,8 +47,10 @@ public class MonsterUnit extends EnemyUnit {
     public int unitSpeed = 150;
     public int unitStatus = 0; //1 means dead, -1 means removed
     public int unitStatusCount = 0;
+    private final DataStage st;
 
-    public MonsterUnit(int type, boolean bossFlag) {
+    public MonsterUnit(DataStage s, int type, boolean bossFlag) {
+        st = s;
         this.type = type;
         this.bossFlag = bossFlag;
 
@@ -59,22 +60,22 @@ public class MonsterUnit extends EnemyUnit {
         unitDefense = data[3];
 
         int i2 = 0;
-        int swave = DataStage.instance.waveManager.current;
-        boolean infWave = DataStage.instance.mapType == 1 && swave >= DataWave.WAVE_MAX_COUNT;
+        int swave = st.waveManager.current;
+        boolean infWave = st.mapType == 1 && swave >= DataWave.WAVE_MAX_COUNT;
         if (infWave) {
             i2 = (swave - DataWave.WAVE_MAX_COUNT) + 1;
             swave = DataWave.WAVE_MAX_COUNT - 1;
         }
 
         if (bossFlag) {
-            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][8] + (DataWave.monsterWaveData[60][8] * i2))) / 100) * DataStage.stageData[DataStage.instance.mapType][3]) / 100;
+            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][8] + (DataWave.monsterWaveData[60][8] * i2))) / 100) * DataStage.stageData[st.mapType][3]) / 100;
             unitDefense += DataWave.monsterWaveData[swave][9];
             if (infWave)
                 unitDefense += DataWave.monsterWaveData[60][9] * i2;
             unitSpeed = (((unitSpeed * data[4]) * (DataWave.monsterWaveData[swave][10] + (DataWave.monsterWaveData[60][10] * i2))) / 100) / 100;
             unitMinSpeed = (unitSpeed * (DataWave.monsterWaveData[swave][11] + (i2 * DataWave.monsterWaveData[60][11]))) / 1000;
         } else {
-            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][0] + (DataWave.monsterWaveData[60][0] * i2))) / 100) * DataStage.stageData[DataStage.instance.mapType][2]) / 100;
+            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][0] + (DataWave.monsterWaveData[60][0] * i2))) / 100) * DataStage.stageData[st.mapType][2]) / 100;
             unitDefense += DataWave.monsterWaveData[swave][1];
             if (infWave)
                 unitDefense += DataWave.monsterWaveData[60][1] * i2;
@@ -84,6 +85,18 @@ public class MonsterUnit extends EnemyUnit {
         unitMaxHP = unitHP;
         if (unitMinSpeed > unitSpeed)
             unitMinSpeed = unitSpeed;
+
+        posX = ((s.map.mapStartPosition[s.map.mapStartPositionLoop][0] * 45) + 22) * 50;
+        posY = ((s.map.mapStartPosition[s.map.mapStartPositionLoop][1] * 45) + 22) * 50;
+        fromBlockX = s.map.mapStartPosition[s.map.mapStartPositionLoop][0];
+        fromBlockY = s.map.mapStartPosition[s.map.mapStartPositionLoop][1];
+        int[][] iArr = s.map.mapStartPosition;
+        int i8 = s.map.mapStartPositionLoop;
+        int randomMapDirection = s.map.getRandomMapDirection(iArr[i8][0], iArr[i8][1], -1);
+
+        direction = randomMapDirection;
+        targetBlockX = fromBlockX + DataMap.DIR_MOVE_POS[randomMapDirection][0];
+        targetBlockY = fromBlockY + DataMap.DIR_MOVE_POS[randomMapDirection][1];
     }
 
     @Override
@@ -156,38 +169,38 @@ public class MonsterUnit extends EnemyUnit {
                     posY = i5;
                 }
             } else {
-                int randomMapDirection = getRandomMapDirection(targetBlockX, targetBlockY, -1);
+                int randomMapDirection = st.map.getRandomMapDirection(targetBlockX, targetBlockY, -1);
                 direction = randomMapDirection;
                 if (randomMapDirection == -1)
                     break;
 
-                targetBlockX = fromBlockX + DIR_MOVE_POS[randomMapDirection][0];
-                targetBlockY = fromBlockY + DIR_MOVE_POS[randomMapDirection][1];
+                targetBlockX = fromBlockX + DataMap.DIR_MOVE_POS[randomMapDirection][0];
+                targetBlockY = fromBlockY + DataMap.DIR_MOVE_POS[randomMapDirection][1];
             }
         }
-        for (int i6 = 0; i6 < mapEndPositionCount; i6++) {
-            int[][] iArr = DataStage.mapEndPosition;
+        for (int i6 = 0; i6 < st.map.mapEndPositionCount; i6++) {
+            int[][] iArr = st.map.mapEndPosition;
             int i7 = ((iArr[i6][0] * 45) + 22) * 50;
             int i8 = ((iArr[i6][1] * 45) + 22) * 50;
             if (posX == i7 && posY == i8) {
-                DataStage.instance.addEffectUnit(EffectUnit.EFFECT_TYPE_GATE_BREAK, posX, posY);
+                st.addEffectUnit(EffectUnit.EFFECT_TYPE_GATE_BREAK, posX, posY);
                 if (Config.vibration) {
                     NewTower.vibe.vibrate(250L);
                 }
-                playSound(12);
+                GameThread.playSound(12);
                 type = -1;
                 unitHP = 0;
                 GameRenderer.monsterGoalBlinkCount = 6;
-                if (DataStage.Life > 0) {
-                    int i10 = wavePattern;
+                if (st.Life > 0) {
+                    int i10 = st.waveManager.wavePattern;
                     if (i10 == 2)
-                        DataStage.Life = Math.max(0, DataStage.Life - 3);
+                        st.Life = Math.max(0, st.Life - 3);
                     else if (i10 == 3)
-                        DataStage.Life = bossFlag ? 0 : DataStage.Life - 1;
+                        st.Life = bossFlag ? 0 : st.Life - 1;
                     else
-                        DataStage.Life--;
+                        st.Life--;
                 }
-                if (DataStage.Life <= 0) {
+                if (st.Life <= 0) {
                     GameRenderer.monsterGoalBlinkCount = 0;
                     return true;
                 }
@@ -198,14 +211,14 @@ public class MonsterUnit extends EnemyUnit {
 
     @Override
     public void hit(int dmgType, TowerUnit unit) {
-        int i9 = Math.min(DataStage.instance.waveManager.current, DataWave.WAVE_MAX_COUNT);
+        int i9 = Math.min(st.waveManager.current, DataWave.WAVE_MAX_COUNT);
         int i10 = unit != null ? unit.towerType : -1;
         if (dead() || unit == null)
             return;
 
-        int soundHitType = getSoundHitType(unit);
+        int soundHitType = GameThread.getSoundHitType(unit);
         if (soundHitType != -1)
-            playSound(soundHitType);
+            GameThread.playSound(soundHitType);
 
         damaged(unit.getHitDamage(this), unit);
         if (unit instanceof HeroUnit) {
@@ -289,13 +302,13 @@ public class MonsterUnit extends EnemyUnit {
         for (int e = 0; e <= abs; e++) {
             int efx = (abs3 * e) + shooter.posX;
             int efy = (abs4 * e) + shooter.posY;
-            for (MonsterUnit mon : DataStage.monsterUnit) {
+            for (MonsterUnit mon : st.monsterUnit) {
                 if (mon.monsterType != -1 && mon.unitStatus == 0 && !arrow.hitMons.contains(mon)) {
                     int abs5 = Math.abs(efx - mon.posX) / 50;
                     int abs6 = Math.abs(efy - mon.posY) / 50;
                     if ((abs5 * abs5) + (abs6 * abs6) <= 225) {
                         arrow.hitMons.add(mon);
-                        DataStage.instance.addEffectUnit(shooter.attackEffect, mon.posX, mon.posY);
+                        st.addEffectUnit(shooter.attackEffect, mon.posX, mon.posY);
                         mon.damaged(shooter.getHitDamage(this), shooter);
                     }
                 }
@@ -312,13 +325,13 @@ public class MonsterUnit extends EnemyUnit {
     @Override
     public void kill(TowerUnit unit) {
         int i4 = 0;
-        int i5 = DataStage.instance.waveManager.current;
+        int i5 = st.waveManager.current;
         int i6;
         int i8;
-        boolean z = DataStage.instance.mapType == 1 && i5 >= DataWave.WAVE_MAX_COUNT;
+        boolean z = st.mapType == 1 && i5 >= DataWave.WAVE_MAX_COUNT;
         if (z) {
             i5 = DataWave.WAVE_MAX_COUNT - 1;
-            i4 = (DataStage.instance.waveManager.current - DataWave.WAVE_MAX_COUNT) + 1;
+            i4 = (st.waveManager.current - DataWave.WAVE_MAX_COUNT) + 1;
         }
 
         if (bossFlag) {
@@ -334,22 +347,22 @@ public class MonsterUnit extends EnemyUnit {
         if (unit != null && unit.heroFlag)
             upgradeUnitRate += (DataWave.monsterWaveData[i5][6] * getUpgradeItemRate(unit.heroOrder, 8)) / 100;
 
-        DataStage.Money += upgradeUnitRate;
-        DataAward.check_money(DataStage.Money);
+        st.Money += upgradeUnitRate;
+        DataAward.check_money(st.Money);
 
         i8 = z ? DataWave.monsterWaveData[60][bossFlag ? 15 : 7] : DataWave.monsterWaveData[i5][bossFlag ? 15 : 7];
         int upgradeUnitRate2 = i8 + ((DataWave.monsterWaveData[i5][7] * TowerUnit.getUpgradeUnitRate(0, 3)) / 100);
         if (unit != null && unit.heroFlag)
             upgradeUnitRate2 += (DataWave.monsterWaveData[i5][7] * getUpgradeItemRate(unit.heroOrder, 8)) / 100;
 
-        DataStage.Mana += upgradeUnitRate2;
-        DataStage.instance.bScore += ((DataStage.instance.waveManager.current * 0.1f) + 1f) * 120f * (bossFlag ? 5 : 1);
+        st.Mana += upgradeUnitRate2;
+        st.bScore += ((st.waveManager.current * 0.1f) + 1f) * 120f * (bossFlag ? 5 : 1);
         DataAward.check_kill();
 
         unitStatus = 1;
         unitStatusCount = 0;
-        DataStage.instance.addEffectUnit(EffectUnit.EFFECT_TYPE_DIE, posX, posY);
-        if (DataStage.selectedTarget == this)
-            DataStage.selectedTarget = null;
+        st.addEffectUnit(EffectUnit.EFFECT_TYPE_DIE, posX, posY);
+        if (st.selectedTarget == this)
+            st.selectedTarget = null;
     }
 }

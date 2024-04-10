@@ -1,6 +1,7 @@
 package com.sncompany.newtower.Pages;
 
 import androidx.core.internal.view.SupportMenu;
+import androidx.core.util.Consumer;
 import androidx.core.view.ViewCompat;
 
 import com.sncompany.newtower.Config;
@@ -8,6 +9,7 @@ import com.sncompany.newtower.DataClasses.DataStory;
 import com.sncompany.newtower.DataClasses.DataStory2;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -35,16 +37,17 @@ public class CinematicPage extends TPage {
         ENDING
     }
 
-    private RunMode mode;
-    public Texture2D[] imgs;
-
+    private RunMode mode = RunMode.LOGO;
+    public long currentCheckTime = 0, lastCheckTime = System.currentTimeMillis();
+    int gameSubStatus = 0;
     private boolean logoSoundPlayFlag = false;
     public final Texture2D[] logoImage = new Texture2D[logoResource.length]; //all temp
     public final Texture2D[] storyImage = new Texture2D[storyDataResource.length]; //also temp
     public final Texture2D[] story2Image = new Texture2D[story2DataResource.length]; //temp
+    private LoadingPage root;
 
-    public CinematicPage(RunMode m) {
-        mode = m;
+    public CinematicPage(TPage p) {
+        super(p);
 
         for (int i = 0; i < logoImage.length; i++) {
             logoImage[i] = new Texture2D();
@@ -61,528 +64,299 @@ public class CinematicPage extends TPage {
     }
 
     @Override
+    public void load(Consumer<Float> prog) {
+        int tot = logoImage.length + storyImage.length + story2Image.length;
+        for (int i = 0; i < logoImage.length; i++) {
+            logoImage[i] = new Texture2D(logoResource[i]);
+            if (prog != null)
+                prog.accept((i + 1f) / tot);
+        }
+        for (int i = 0; i < storyImage.length; i++) {
+            storyImage[i] = new Texture2D(storyDataResource[i]);
+            if (prog != null)
+                prog.accept((i + logoImage.length + 1f) / tot);
+        }
+        for (int i = 0; i < story2Image.length; i++) {
+            story2Image[i] = new Texture2D(story2DataResource[i]);
+            if (prog != null)
+                prog.accept((i + logoImage.length + storyImage.length + 1f) / tot);
+        }
+        loaded = true;
+    }
+
+    @Override
+    public void unload() {
+
+    }
+
+    @Override
     public void update() {
         switch (mode) {
             case LOGO:
-                update_GAME_LOGO();
+                currentCheckTime = System.currentTimeMillis();
+                int i = (int) (((currentCheckTime - lastCheckTime) * 12) / 1000);
+                if (!logoSoundPlayFlag && i == 16) {
+                    logoSoundPlayFlag = true;
+                    GameThread.playSound(0);
+                }
+                if (i > 40) {
+                    logoSoundPlayFlag = false;
+                    lastCheckTime = System.currentTimeMillis();
+                    GameThread.update_GAME_PRE_LOAD();
+                    mode = RunMode.USE12;
+                    root = new LoadingPage(new TitlePage(null));
+                }
                 break;
             case USE12:
-                update_GAME_USE12();
+                currentCheckTime = System.currentTimeMillis();
+                if (currentCheckTime - lastCheckTime > 2000) {
+                    if (Config.movie) {
+                        gameSubStatus = 0;
+                        setOpeningData();
+                        GameThread.playLoopSound(2);
+                        mode = RunMode.USE12;
+                    } else
+                        NewTower.switchPage(root, true);
+                }
                 break;
             case OPENING:
-                update_GAME_OPENING();
+                if (storyDrawDataBlock[27] < storyDrawDataBlock[18])
+                    storyDrawDataBlock[27]++;
+                else if (storyDrawDataBlock[19] > 0)
+                    storyDrawDataBlock[19]--;
+                else if (storyDrawDataBlock[25] > 0)
+                    storyDrawDataBlock[25]--;
+                else {
+                    if (storyDrawDataBlock[26] >= storyDrawDataBlock[21]) {
+                        if (gameSubStatus < 25) {
+                            gameSubStatus++;
+                            setOpeningData();
+                        } else if (gameSubStatus == 25)
+                            NewTower.switchPage(root, true);
+                        return;
+                    }
+                    storyDrawDataBlock[26]++;
+                    storyDrawDataBlock[25] = 70;
+                }
                 break;
             case ENDING:
-                update_GAME_ENDING();
+                boolean z = false;
+                if (story2DrawDataBlock[9] < story2DrawDataBlock[0]) {
+                    story2DrawDataBlock[9]++;
+                } else if (story2DrawDataBlock[1] > 0) {
+                    story2DrawDataBlock[1]--;
+                } else if (story2DrawDataBlock[7] > 0) {
+                    story2DrawDataBlock[7]--;
+                } else if (story2DrawDataBlock[8] < story2DrawDataBlock[3]) {
+                    story2DrawDataBlock[8]++;
+                    story2DrawDataBlock[7] = 70;
+                } else
+                    z = gameSubStatus <= 2;
+
+                if (z) {
+                    gameSubStatus++;
+                    setEndingData();
+                }
                 break;
         }
     }
 
-    public void update_GAME_LOGO() {
-        GameRenderer.currentCheckTime = System.currentTimeMillis();
-        int i = (int) (((GameRenderer.currentCheckTime - GameRenderer.lastCheckTime) * 12) / 1000);
-        if (!logoSoundPlayFlag && i == 16) {
-            logoSoundPlayFlag = true;
-            GameThread.playSound(0);
-        }
-        if (i > 40) {
-            logoSoundPlayFlag = false;
-            GameRenderer.lastCheckTime = System.currentTimeMillis();
-            mode = RunMode.USE12;
-        }
-    }
+    private static final float[][] logoDrawCoords = {{0, 16.5f, -318f}, {0, -18f, -279f}, {0, -46.5f, -247.5f}, {1, -61.5f, -223.5f}, {2, -61.5f, -202.5f}, {3, -61.5f, -202.5f},
+            {4, -61.5f, -139.5f, 7, -336f, 52.5f}, {5, -61.5f, -135f, 7, -279f, 0}, {6, -61.5f, -129f, 7, -241.5f, -34.5f}, {6, -61.5f, -129.0f, 8, -202.5f, -69f},
+            {9, -165f, -129f}, {10, -142.5f, -129f}, {11, -127.5f, -129f}, {12, -123f, -129f}, {13, -121.5f, -129f}};
+    private static final float[][] moonCords = {{316f, 156f},{266f, 289f},{185f, 60f},{472f, 286f},{509f, 30f},{110f, 307f},{622f, 197f}};
+    private static final float[][] wCords = {{0 ,200f}, {0, 39f}};
 
-    public void update_GAME_USE12() {
-        GameRenderer.currentCheckTime = System.currentTimeMillis();
-        if (GameRenderer.currentCheckTime - GameRenderer.lastCheckTime > 2000) {
-            if (Config.movie) {
-                gameSubStatus = 0;
-                setOpeningData(0);
-                gameStatus = 2;
-                GameThread.playLoopSound(2);
-                return;
-            }
-            gameLoadFlag = 0;
-            loadingStatus = 1002;
-            loadTipNumber = getRandom(TIP_TEXT.length);
-            GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
-            GameRenderer.loadingViewType = getRandom(6);
-        }
-    }
-
-    /* JADX WARN: Removed duplicated region for block: B:62:? A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:6:0x0044  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void update_GAME_OPENING() {
-        if (storyDrawDataBlock[27] < storyDrawDataBlock[18])
-            storyDrawDataBlock[27]++;
-        else if (storyDrawDataBlock[19] > 0)
-            storyDrawDataBlock[19]--;
-        else if (storyDrawDataBlock[25] > 0)
-            storyDrawDataBlock[25]--;
-        else {
-            if (storyDrawDataBlock[26] >= storyDrawDataBlock[21]) {
-                if (gameSubStatus < 25)
-                    setOpeningData(gameSubStatus++);
-                else if (gameSubStatus == 25) {
-                    GameThread.stopLoopSound(2);
-                    gameStatus = 1002;
-                    gameLoadFlag = 0;
-                    loadingStatus = 1002;
-                    loadTipNumber = getRandom(TIP_TEXT.length);
-                    GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
-                    GameRenderer.loadingViewType = getRandom(6);
+    @Override
+    public void paint(GL10 gl10, boolean init) {
+        TouchManager.clearTouchMap();
+        switch (mode) {
+            case LOGO: {
+                long currentTimeMillis = System.currentTimeMillis();
+                currentCheckTime = currentTimeMillis;
+                int i = (int) (((currentTimeMillis - lastCheckTime) * 12) / 1000);
+                fillWhiteImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                if (i > 0 && i < 16) {
+                    float[] cords = logoDrawCoords[i - 1];
+                    for (int j = 0; j < cords.length; j += 3)
+                        logoImage[(int) cords[j]].drawAtPointOptionSize(GameRenderer.CX + cords[j + 1], GameRenderer.CX + cords[j + 2], 18, 1.5f);
+                } else if (i >= 16) {
+                    logoImage[14].drawAtPointOptionSize(GameRenderer.CX - 118.5f, GameRenderer.CY - 129f, 18, 1.5f);
+                    if (i >= 17 && i <= 23) {
+                        gl10.glTexEnvf(8960, 8704, 8448f);
+                        gl10.glColor4f(1f, 1f, 1f, (((float) (i - 17)) * 0.07f) + 0.5f);
+                    }
+                    if (i >= 17)
+                        logoImage[15].drawAtPointOptionSize(GameRenderer.CX - 120f, GameRenderer.CY - 129f, 18, 1.5f);
                 }
-                return;
+                gl10.glColor4f(1f, 1f, 1f, 1f);
+                break;
+            } case USE12:
+                fillWhiteImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                logoImage[17].drawAtPointOption(0f, 0f, 18);
+                logoImage[16].drawAtPointOption(GameRenderer.CX, GameRenderer.CY, 9);
+                break;
+            case OPENING: {
+                int bg = storyDrawDataBlock[0];
+                if (bg >= 102)
+                    fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                else if (bg >= 100)
+                    fillBlackImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                else
+                    storyImage[storyDrawDataBlock[0]].drawAtPointOption(0f, 0f, 18);
+
+                byte ind = 1;
+                while (ind < 8 && storyDrawDataBlock[ind] == 1) {
+                    storyImage[ind + 11].drawAtPointOption(moonCords[ind - 1][0], moonCords[ind - 1][1], 18);
+                    ind++;
+                }
+                if (storyDrawDataBlock[8] == 1) {
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
+                    Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                    storyImage[9].drawAtPointOption(0f, 0f, 18);
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                }
+                if (storyDrawDataBlock[9] == 1) {
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
+                    Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                    storyImage[10].drawAtPointOption(0f, 0f, 18);
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                }
+                if (storyDrawDataBlock[10] == 1)
+                    storyImage[7].drawAtPointOption(0f, 200f, 18);
+                if (storyDrawDataBlock[11] == 1)
+                    storyImage[8].drawAtPointOption(0f, 39f, 18);
+
+                float moonAlpha = (storyDrawDataBlock[23] + (((storyDrawDataBlock[24] - storyDrawDataBlock[23]) * storyDrawDataBlock[27]) / (float) storyDrawDataBlock[18])) / 100f;
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
+                Texture2D.gl.glColor4f(moonAlpha, moonAlpha, moonAlpha, moonAlpha);
+                int i3 = storyDrawDataBlock[12];
+                if (i3 == 7)
+                    storyImage[7].drawAtPointOption(0f, 200f, 18);
+                else if (i3 == 100)
+                    fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                else if (i3 == 102)
+                    fillWhiteImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                else if (i3 >= 12 && i3 <= 18)
+                    storyImage[i3].drawAtPointOption(moonCords[i3 - 12][0], moonCords[i3 - 12][1], 18);
+                else
+                    storyImage[storyDrawDataBlock[12]].drawAtPointOption(0f, 0f, 18);
+
+                for (int li = 13; li < 18; li++) {
+                    int imgi = li < 16 ? li - 1 : li - 9;
+                    float[] crds = li < 16 ? moonCords[li - 13] : wCords[li - 16];
+                    if (storyDrawDataBlock[li] == 1)
+                        storyImage[imgi].drawAtPointOption(crds[0], crds[1], 18);
+                }
+                Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+
+                if (storyDrawDataBlock[18] == storyDrawDataBlock[27] && storyDrawDataBlock[19] == 0 && storyDrawDataBlock[26] != -1) {
+                    int i = 10;
+                    if (storyDrawDataBlock[25] > 60) {
+                        i = 70 - storyDrawDataBlock[25];
+                    } else if (storyDrawDataBlock[25] < 10) {
+                        i = storyDrawDataBlock[25];
+                    }
+                    float f2 = Math.min(Math.max(0f, i * 0.1f), 1f);
+
+                    if (f2 < 1f) {
+                        Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
+                        Texture2D.gl.glColor4f(f2, f2, f2, f2);
+                    }
+                    GameRenderer.setFontSize(28);
+                    GameRenderer.setFontDoubleColor(-1, -16777216);
+                    String[] split = DataStory.storyText[storyDrawDataBlock[26]].split("_");
+                    if (storyDrawDataBlock[22] != 1) {
+                        for (int i4 = 0; i4 < split.length; i4++)
+                            GameRenderer.drawStringDoubleM(split[i4], GameRenderer.CX, GameRenderer.CY + (i4 * 35), 17);
+                    } else {
+                        for (int i5 = 0; i5 < split.length; i5++)
+                            GameRenderer.drawStringDoubleM(split[i5], GameRenderer.CX, (i5 * 35) + 390, 17);
+                    }
+                    if (f2 < 1f) {
+                        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    }
+                }
+                break;
+            } case ENDING: {
+                story2Image[0].drawAtPointOption(0f, 0f, 18);
+                float ia = 0.5f;
+                if (gameSubStatus == 0)
+                    ia = 1f;
+                else if (gameSubStatus == 1 && story2DrawDataBlock[9] < story2DrawDataBlock[0])
+                    ia = (story2DrawDataBlock[9] * 0.5f) / story2DrawDataBlock[0];
+
+                if (ia != 1f) {
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
+                    Texture2D.gl.glColor4f(ia, ia, ia, ia);
+                    fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                }
+                if (story2DrawDataBlock[0] == story2DrawDataBlock[9] && story2DrawDataBlock[1] == 0 && story2DrawDataBlock[8] != -1) {
+                    int i = 10;
+                    if (story2DrawDataBlock[7] > 60) {
+                        i = 70 - story2DrawDataBlock[7];
+                    } else if (story2DrawDataBlock[7] < 10) {
+                        i = story2DrawDataBlock[7];
+                    }
+                    float a = Math.min(Math.max(0, i * 0.1f), 1f);
+
+                    if (a < 1f) {
+                        Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
+                        Texture2D.gl.glColor4f(a, a, a, a);
+                    }
+                    GameRenderer.setFontSize(32);
+                    if (gameSubStatus != 1)
+                        GameRenderer.setFontDoubleColor(SupportMenu.CATEGORY_MASK, ViewCompat.MEASURED_STATE_MASK);
+                    else
+                        GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+
+                    String[] split = DataStory2.storyText[story2DrawDataBlock[8]].split("_");
+                    int length = story2DrawDataBlock[4] != 1 ? GameRenderer.CY - ((split.length * 35) / 2) : 415 - ((split.length - 1) * 35);
+
+                    for (int i3 = 0; i3 < split.length; i3++)
+                        GameRenderer.drawStringDoubleM(split[i3], GameRenderer.CX, (i3 * 35) + length, 17);
+                    if (a < 1f)
+                        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                }
+                break;
             }
-            storyDrawDataBlock[26]++;
+        }
+        TouchManager.swapTouchMap();
+    }
+
+    @Override
+    public void touchCheck() {
+        if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
+            return;
+
+        if (mode == RunMode.OPENING) {
+            GameThread.playSound(14);
+            GameThread.stopLoopSound(2);
+            NewTower.switchPage(root, true);
+        } else if (mode == RunMode.ENDING) {
+            GameThread.playSound(14);
+            GameThread.stopLoopSound(2);
+            //Switch back to stage select page, on last stage played. First we must find out how exactly is ending page accessed tho
+            GameThread.playLoopSound(1);
+        }
+    }
+
+    public void setOpeningData() {
+        if (gameSubStatus != 25) {
+            System.arraycopy(storyData[gameSubStatus], 0, storyDrawDataBlock, 0, 25);
+            storyDrawDataBlock[27] = 0;
+            storyDrawDataBlock[26] = storyDrawDataBlock[20];
             storyDrawDataBlock[25] = 70;
         }
     }
 
-    public void update_GAME_ENDING() {
-        int[] iArr = story2DrawDataBlock;
-        boolean z = false;
-        if (iArr[9] < iArr[0]) {
-            iArr[9] = iArr[9] + 1;
-        } else if (iArr[1] > 0) {
-            iArr[1] = iArr[1] - 1;
-        } else if (iArr[7] > 0) {
-            iArr[7] = iArr[7] - 1;
-        } else if (iArr[8] < iArr[3]) {
-            iArr[8] = iArr[8] + 1;
-            iArr[7] = 70;
-        } else {
-            z = true;
-        }
-        if (z) {
-            int i = gameSubStatus;
-            if (i == 0) {
-                gameSubStatus = 1;
-                setEndingData(1);
-            } else if (i == 1) {
-                gameSubStatus = 2;
-                setEndingData(2);
-            } else {
-                if (i != 2) {
-                    return;
-                }
-                gameSubStatus = 3;
-                setEndingData(3);
-            }
-        }
-    }
-
-    public void paint_GAME_LOGO(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        long currentTimeMillis = System.currentTimeMillis();
-        currentCheckTime = currentTimeMillis;
-        int i = (int) (((currentTimeMillis - lastCheckTime) * 12) / 1000);
-        fillWhiteImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-        switch (i) {
-            case 1:
-                logoImage[0].drawAtPointOptionSize(CX + 16.5f, CY - 318.0f, 18, 1.5f);
-                break;
-            case 2:
-                logoImage[0].drawAtPointOptionSize(CX - 18.0f, CY - 279.0f, 18, 1.5f);
-                break;
-            case 3:
-                logoImage[0].drawAtPointOptionSize(CX - 46.5f, CY - 247.5f, 18, 1.5f);
-                break;
-            case 4:
-                logoImage[1].drawAtPointOptionSize(CX - 61.5f, CY - 223.5f, 18, 1.5f);
-                break;
-            case 5:
-                logoImage[2].drawAtPointOptionSize(CX - 61.5f, CY - 202.5f, 18, 1.5f);
-                break;
-            case 6:
-                logoImage[3].drawAtPointOptionSize(CX - 61.5f, CY - 175.5f, 18, 1.5f);
-                break;
-            case 7:
-                logoImage[4].drawAtPointOptionSize(CX - 61.5f, CY - 139.5f, 18, 1.5f);
-                logoImage[7].drawAtPointOptionSize(CX - 336.0f, CY + 52.5f, 18, 1.5f);
-                break;
-            case 8:
-                logoImage[5].drawAtPointOptionSize(CX - 61.5f, CY - 135.0f, 18, 1.5f);
-                logoImage[7].drawAtPointOptionSize(CX - 279.0f, CY, 18, 1.5f);
-                break;
-            case 9:
-                logoImage[6].drawAtPointOptionSize(CX - 61.5f, CY - 129.0f, 18, 1.5f);
-                logoImage[7].drawAtPointOptionSize(CX - 241.5f, CY - 34.5f, 18, 1.5f);
-                break;
-            case 10:
-                logoImage[6].drawAtPointOptionSize(CX - 61.5f, CY - 129.0f, 18, 1.5f);
-                logoImage[8].drawAtPointOptionSize(CX - 202.5f, CY - 69.0f, 18, 1.5f);
-                break;
-            case 11:
-                logoImage[9].drawAtPointOptionSize(CX - 165.0f, CY - 129.0f, 18, 1.5f);
-                break;
-            case 12:
-                logoImage[10].drawAtPointOptionSize(CX - 142.5f, CY - 129.0f, 18, 1.5f);
-                break;
-            case 13:
-                logoImage[11].drawAtPointOptionSize(CX - 127.5f, CY - 129.0f, 18, 1.5f);
-                break;
-            case 14:
-                logoImage[12].drawAtPointOptionSize(CX - 123.0f, CY - 129.0f, 18, 1.5f);
-                break;
-            case 15:
-                logoImage[13].drawAtPointOptionSize(CX - 121.5f, CY - 129.0f, 18, 1.5f);
-                break;
-        }
-        if (i >= 16) {
-            logoImage[14].drawAtPointOptionSize(CX - 118.5f, CY - 129.0f, 18, 1.5f);
-        }
-        if (i >= 17 && i <= 23) {
-            gl10.glTexEnvf(8960, 8704, 8448.0f);
-            gl10.glColor4f(1.0f, 1.0f, 1.0f, (((float) (i - 17)) * 0.07f) + 0.5f);
-        }
-        if (i >= 17) {
-            logoImage[15].drawAtPointOptionSize(CX - 120.0f, CY - 129.0f, 18, 1.5f);
-        }
-        gl10.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_USE12(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        fillWhiteImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-        logoImage[17].drawAtPointOption(0.0f, 0.0f, 18);
-        TouchManager.swapTouchMap();
-    }
-
-    /* JADX WARN: Removed duplicated region for block: B:76:0x02bb  */
-    /* JADX WARN: Removed duplicated region for block: B:79:0x02c2  */
-    /* JADX WARN: Removed duplicated region for block: B:82:0x02c8  */
-    /* JADX WARN: Removed duplicated region for block: B:85:0x02f5  */
-    /* JADX WARN: Removed duplicated region for block: B:92:0x0324  */
-    /* JADX WARN: Removed duplicated region for block: B:93:0x030a  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void paint_GAME_OPENING(GL10 gl10) {
-        float f;
-        float f2;
-        int i;
-        float f3;
-        TouchManager.clearTouchMap();
-        int i2 = GameThread.storyDrawDataBlock[0];
-        if (i2 == 100) {
-            fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-        } else if (i2 == 102) {
-            fillWhiteImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-        } else if (i2 == 103) {
-            fillWhiteImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-            logoImage[17].drawAtPointOption(0.0f, 0.0f, 18);
-        } else {
-            storyImage[GameThread.storyDrawDataBlock[0]].drawAtPointOption(0.0f, 0.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[1] == 1) {
-            storyImage[12].drawAtPointOption(316.0f, 156.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[2] == 1) {
-            storyImage[13].drawAtPointOption(266.0f, 289.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[3] == 1) {
-            storyImage[14].drawAtPointOption(185.0f, 60.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[4] == 1) {
-            storyImage[15].drawAtPointOption(472.0f, 286.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[5] == 1) {
-            storyImage[16].drawAtPointOption(509.0f, 30.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[6] == 1) {
-            storyImage[17].drawAtPointOption(110.0f, 307.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[7] == 1) {
-            storyImage[18].drawAtPointOption(622.0f, 197.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[8] == 1) {
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
-            storyImage[9].drawAtPointOption(0.0f, 0.0f, 18);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-        if (GameThread.storyDrawDataBlock[9] == 1) {
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
-            storyImage[10].drawAtPointOption(0.0f, 0.0f, 18);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-        if (GameThread.storyDrawDataBlock[10] == 1) {
-            storyImage[7].drawAtPointOption(0.0f, 200.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[11] == 1) {
-            storyImage[8].drawAtPointOption(0.0f, 39.0f, 18);
-        }
-        float f4 = (GameThread.storyDrawDataBlock[23] + (((GameThread.storyDrawDataBlock[24] - GameThread.storyDrawDataBlock[23]) * GameThread.storyDrawDataBlock[27]) / GameThread.storyDrawDataBlock[18])) / 100.0f;
-        Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-        Texture2D.gl.glColor4f(f4, f4, f4, f4);
-        int i3 = GameThread.storyDrawDataBlock[12];
-        if (i3 != 7) {
-            if (i3 != 100) {
-                if (i3 == 102) {
-                    fillWhiteImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-                } else {
-                    switch (i3) {
-                        case 12:
-                            storyImage[12].drawAtPointOption(316.0f, 156.0f, 18);
-                            break;
-                        case 13:
-                            storyImage[13].drawAtPointOption(266.0f, 289.0f, 18);
-                            break;
-                        case 14:
-                            storyImage[14].drawAtPointOption(185.0f, 60.0f, 18);
-                            break;
-                        case 15:
-                            storyImage[15].drawAtPointOption(472.0f, 286.0f, 18);
-                            break;
-                        case 16:
-                            storyImage[16].drawAtPointOption(509.0f, 30.0f, 18);
-                            break;
-                        case 17:
-                            storyImage[17].drawAtPointOption(110.0f, 307.0f, 18);
-                            break;
-                        case 18:
-                            storyImage[18].drawAtPointOption(622.0f, 197.0f, 18);
-                            break;
-                        default:
-                            storyImage[GameThread.storyDrawDataBlock[12]].drawAtPointOption(0.0f, 0.0f, 18);
-                            break;
-                    }
-                }
-            } else {
-                fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-            }
-        } else {
-            storyImage[7].drawAtPointOption(0.0f, 200.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[13] == 1) {
-            storyImage[12].drawAtPointOption(316.0f, 156.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[14] == 1) {
-            storyImage[13].drawAtPointOption(266.0f, 289.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[15] == 1) {
-            storyImage[14].drawAtPointOption(185.0f, 60.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[16] == 1) {
-            storyImage[7].drawAtPointOption(0.0f, 200.0f, 18);
-        }
-        if (GameThread.storyDrawDataBlock[17] == 1) {
-            storyImage[8].drawAtPointOption(0.0f, 39.0f, 18);
-        }
-        Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        if (GameThread.storyDrawDataBlock[18] == GameThread.storyDrawDataBlock[27] && GameThread.storyDrawDataBlock[19] == 0 && GameThread.storyDrawDataBlock[26] != -1) {
-            if (GameThread.storyDrawDataBlock[25] > 60) {
-                i = 70 - GameThread.storyDrawDataBlock[25];
-            } else if (GameThread.storyDrawDataBlock[25] < 10) {
-                i = GameThread.storyDrawDataBlock[25];
-            } else {
-                f = 1.0f;
-                f2 = 1.0f;
-                if (f2 > f) {
-                    f2 = 1.0f;
-                }
-                f3 = f2 >= 0.0f ? f2 : 0.0f;
-                if (f3 < f) {
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(f3, f3, f3, f3);
-                }
-                setFontSize(28);
-                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                String[] split = DataStory.storyText[GameThread.storyDrawDataBlock[26]].split("_");
-                if (GameThread.storyDrawDataBlock[22] != 1) {
-                    for (int i4 = 0; i4 < split.length; i4++) {
-                        drawStringDoubleM(split[i4], CX, CY + (i4 * 35), 17);
-                    }
-                } else {
-                    for (int i5 = 0; i5 < split.length; i5++) {
-                        drawStringDoubleM(split[i5], CX, (i5 * 35) + GAME_SHOP_SHOP_INVENTORY_START_Y, 17);
-                    }
-                }
-                if (f3 < 1.0f) {
-                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                }
-            }
-            f2 = i * 0.1f;
-            f = 1.0f;
-            if (f2 > f) {
-            }
-            if (f2 >= 0.0f) {
-            }
-            if (f3 < f) {
-            }
-            setFontSize(28);
-            setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-            String[] split2 = DataStory.storyText[GameThread.storyDrawDataBlock[26]].split("_");
-            if (GameThread.storyDrawDataBlock[22] != 1) {
-            }
-            if (f3 < 1.0f) {
-            }
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    /* JADX WARN: Removed duplicated region for block: B:22:0x009d  */
-    /* JADX WARN: Removed duplicated region for block: B:25:0x00a4  */
-    /* JADX WARN: Removed duplicated region for block: B:28:0x00a9  */
-    /* JADX WARN: Removed duplicated region for block: B:31:0x00be  */
-    /* JADX WARN: Removed duplicated region for block: B:34:0x00dc  */
-    /* JADX WARN: Removed duplicated region for block: B:38:0x00ee A[LOOP:0: B:36:0x00eb->B:38:0x00ee, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:42:0x0103  */
-    /* JADX WARN: Removed duplicated region for block: B:43:0x00e5  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x00c2  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void paint_GAME_ENDING(GL10 gl10) {
-        float f;
-        int i;
-        float f2;
-        String[] split;
-        int length;
-        TouchManager.clearTouchMap();
-        story2Image[0].drawAtPointOption(0.0f, 0.0f, 18);
-        int i2 = GameThread.gameSubStatus;
-        float f3 = 0.5f;
-        if (i2 == 0) {
-            f3 = 1.0f;
-        } else if (i2 == 1 && GameThread.story2DrawDataBlock[9] < GameThread.story2DrawDataBlock[0]) {
-            f3 = (GameThread.story2DrawDataBlock[9] * 0.5f) / GameThread.story2DrawDataBlock[0];
-        }
-        if (f3 != 1.0f) {
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(f3, f3, f3, f3);
-            fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-        if (GameThread.story2DrawDataBlock[0] == GameThread.story2DrawDataBlock[9] && GameThread.story2DrawDataBlock[1] == 0 && GameThread.story2DrawDataBlock[8] != -1) {
-            if (GameThread.story2DrawDataBlock[7] > 60) {
-                i = 70 - GameThread.story2DrawDataBlock[7];
-            } else if (GameThread.story2DrawDataBlock[7] < 10) {
-                i = GameThread.story2DrawDataBlock[7];
-            } else {
-                f = 1.0f;
-                if (f > 1.0f) {
-                    f = 1.0f;
-                }
-                f2 = f >= 0.0f ? f : 0.0f;
-                if (f2 < 1.0f) {
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(f2, f2, f2, f2);
-                }
-                setFontSize(32);
-                if (GameThread.gameSubStatus != 1) {
-                    setFontDoubleColor(SupportMenu.CATEGORY_MASK, ViewCompat.MEASURED_STATE_MASK);
-                } else {
-                    setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                }
-                split = DataStory2.storyText[GameThread.story2DrawDataBlock[8]].split("_");
-                if (GameThread.story2DrawDataBlock[4] != 1) {
-                    length = CY - ((split.length * 35) / 2);
-                } else {
-                    length = 415 - ((split.length - 1) * 35);
-                }
-                for (int i3 = 0; i3 < split.length; i3++) {
-                    drawStringDoubleM(split[i3], CX, (i3 * 35) + length, 17);
-                }
-                if (f2 < 1.0f) {
-                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                }
-            }
-            f = i * 0.1f;
-            if (f > 1.0f) {
-            }
-            if (f >= 0.0f) {
-            }
-            if (f2 < 1.0f) {
-            }
-            setFontSize(32);
-            if (GameThread.gameSubStatus != 1) {
-            }
-            split = DataStory2.storyText[GameThread.story2DrawDataBlock[8]].split("_");
-            if (GameThread.story2DrawDataBlock[4] != 1) {
-            }
-            while (i3 < split.length) {
-            }
-            if (f2 < 1.0f) {
-            }
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public void touchCheck_GAME_LOGO() {
-        if (TouchManager.lastActionStatus != 2) {
-            return;
-        }
-        TouchManager.processTouchStatus();
-    }
-
-    public void touchCheck_GAME_USE12() {
-        if (TouchManager.lastActionStatus != 2) {
-            return;
-        }
-        TouchManager.processTouchStatus();
-    }
-
-    public void touchCheck_GAME_OPENING() {
-        if (TouchManager.lastActionStatus != 2) {
-            return;
-        }
-        GameThread.playSound(14);
-        GameThread.stopLoopSound(2);
-        GameThread.gameLoadFlag = 0;
-        GameThread.loadingStatus = 1002;
-        GameThread.loadTipNumber = GameThread.getRandom(GameThread.TIP_TEXT.length);
-        GameRenderer.loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = 0;
-        GameRenderer.loadingViewType = GameThread.getRandom(6);
-        TouchManager.processTouchStatus();
-    }
-
-    public void touchCheck_GAME_ENDING() {
-        if (TouchManager.lastActionStatus != 2) {
-            return;
-        }
-        GameThread.playSound(14);
-        GameThread.stopLoopSound(2);
-        GameThread.gameStatus = 10;
-        GameThread.gameSubStatus = 0;
-        GameRenderer.startViewCount = 0;
-        GameThread.stageSelectChapterNumber = 4;
-        GameThread.stageSelectStageNumber = 9;
-        GameThread.mapAttackType = 0;
-        GameThread.loadMap((GameThread.stageSelectChapterNumber * 10) + GameThread.stageSelectStageNumber, true);
-        GameThread.playLoopSound(1);
-        TouchManager.processTouchStatus();
-    }
-
-    public void setOpeningData(int i) {
-        if (gameSubStatus != 25) {
-            for (int i2 = 0; i2 < 25; i2++) {
-                storyDrawDataBlock[i2] = storyData[gameSubStatus][i2];
-            }
-            int[] iArr = storyDrawDataBlock;
-            iArr[27] = 0;
-            iArr[26] = iArr[20];
-            iArr[25] = 70;
-        }
-    }
-
-    public static void setEndingData(int i) {
+    public void setEndingData() {
         if (gameSubStatus != 3) {
             System.arraycopy(story2Data[gameSubStatus], 0, story2DrawDataBlock, 0, 7);
-            int[] iArr = story2DrawDataBlock;
-            iArr[9] = 0;
-            iArr[8] = iArr[2];
-            iArr[7] = 70;
+            story2DrawDataBlock[9] = 0;
+            story2DrawDataBlock[8] = story2DrawDataBlock[2];
+            story2DrawDataBlock[7] = 70;
         }
-    }
-
-    public void reload() {
-
     }
 }
