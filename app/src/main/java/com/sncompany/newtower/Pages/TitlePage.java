@@ -76,22 +76,14 @@ public class TitlePage extends TPage {
     public void load(Consumer<Float> prog) {
         int tot = titleImage.length + titleBossImage.length;
         reloadBoss(prog, tot);
-        for (int i = 0; i < titleImage.length; i++) {
-            titleImage[i] = new Texture2D(titleResource[i]);
-            if (prog != null)
-                prog.accept((i + titleBossImage.length + 1f) / tot);
-        }
+        loadP(titleImage, titleResource, prog, titleBossImage.length + 1, tot);
         loaded = true;
     }
 
     public void reloadBoss(Consumer<Float> prog, int tot) {
         int random = NewTower.getRandom(5);
         GAME_TITLE_BOSS_VIEW_POS = GAME_TITLE_BOSS_VIEW_POS_LIST[random];
-        for (int i = 0; i < titleBossImage.length; i++) {
-            titleBossImage[i].initWithImageName(BossResources[random][i]);
-            if (prog != null)
-                prog.accept((i + 1f) / tot);
-        }
+        loadP(titleBossImage, BossResources[random], prog, 1, tot);
     }
 
     @Override
@@ -324,6 +316,7 @@ public class TitlePage extends TPage {
                 mode = MENUMODE.TITLE;
                 gameSubStatus = countLimit.length;
                 gameTitleViewCount = 0;
+                reloadBoss(null, 0);
                 GameThread.playSound(15);
             } else if (cTLS == GAME_OPTION_TOUCH_LIST_3_MOVIE_ON) {
                 GameThread.playSound(14);
@@ -351,6 +344,7 @@ public class TitlePage extends TPage {
             if (gameSubStatus < countLimit.length) {
                 if (TouchManager.checkTouchListStatus() == 0) {
                     gameSubStatus = countLimit.length;
+                    gameTitleViewCount = 0;
                     GameThread.playLoopSound(0);
                 }
             } else {
@@ -382,6 +376,7 @@ public class TitlePage extends TPage {
                 mode = MENUMODE.TITLE;
                 gameSubStatus = countLimit.length;
                 gameTitleViewCount = 0;
+                reloadBoss(null, 0);
                 GameThread.playSound(15);
             } else if (cTLS == GAME_ABOUT_TOUCH_LIST_1_DEVELOPER)
                 gameSubStatus = 1;

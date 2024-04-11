@@ -30,11 +30,7 @@ public class HelpPage extends TPage {
 
     @Override
     public void load(Consumer<Float> prog) {
-        for (byte i = 0; i < uiHelpImage.length; i++) {
-            uiHelpImage[i] = new Texture2D(uiHelpResource[i]);
-            if (prog != null)
-                prog.accept((i + 1f) / (uiHelpImage.length + 1f));
-        }
+        loadP(uiHelpImage, uiHelpResource, prog, 1, uiHelpImage.length + 1);
         uiHelpShotImage.initWithImageName(uiHelpShotResource[0]);
         if (prog != null)
             prog.accept(1f);

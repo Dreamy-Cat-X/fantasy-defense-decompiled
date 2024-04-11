@@ -31,8 +31,8 @@ public class TowerUnit implements Comparable<TowerUnit> {
     public int attackEffect;
     public int attackRange;
     public int attackType;
-    public int blockX;
-    public int blockY;
+    public final int blockX;
+    public final int blockY;
     public int effectType;
     public float headRotateDegree;
     public boolean heroFlag;//Replace with (this instanceof HeroUnit)
@@ -56,15 +56,27 @@ public class TowerUnit implements Comparable<TowerUnit> {
     public int level = 1;
     public int type;
     public int unitPower;
-    public int unitStatus;
-    public int unitStatusCount;
+    public int unitStatus = 2;
+    public int unitStatusCount = 0;
     public int[] unitLockType = new int[3];
     public int[] unitLockNumber = new int[3];
 
+    public TowerUnit(int tType, int bX, int bY) {
+        heroFlag = false;
+        towerType = tType;
+        type = level;
+        lastViewDirection = 6;
+        blockX = bX;
+        blockY = bY;
+        posX = ((bX * 45) + 22) * 50;
+        posY = ((bY * 45) + 22) * 50;
+        originalPosX = posX;
+        originalPosY = posY;
+        attackCount = 0;
+    }
+
     public int getAttackSpeed() {
-        int es = 60 - towerCoolTimeMax;
-        if (es < 0)
-            es = 0;
+        int es = Math.max(0, 60 - towerCoolTimeMax);
         return (es * 5) + 70;
     }
 

@@ -77,156 +77,122 @@ public class StageSelectPage extends TPage {
             samePlay[1] = 0;
         }
         Config.saveAll();
-
-        for (int i5 = 0; i5 < 11; i5++) {
-            if (i5 < 8)
-                myOscillator[i5].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-            else
-                myOscillator[i5].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-            myOscillator[i5].fastForward();
-        }
         DataStage nst = new DataStage(map, mapAttackType);
 
         GameThread.playLoopSound(2);
         NewTower.switchPage(new LoadingPage(new StagePage(this, nst)), true); //End of update_GAME_STAGE_START_LOADING
     }
 
+    private static final float[][] uiStageCoords = {{0f, 286f},{169f, 252f},{0f, 49f},{189f, 0f},{0f, 0f}};
     @Override
     public void paint(GL10 gl10, boolean init) {
         TouchManager.clearTouchMap();
 
-        TouchManager.addTouchRectListData(BACK, GameRenderer.CGRectMake(0.0f, 392.0f, 75.0f, 88.0f));
-        TouchManager.addTouchRectListData(START, GameRenderer.CGRectMake(429.0f, 180.0f, 54.0f, 82.0f));
+        TouchManager.addTouchRectListData(BACK, GameRenderer.CGRectMake(0f, 392f, 75f, 88f));
+        TouchManager.addTouchRectListData(START, GameRenderer.CGRectMake(429f, 180f, 54f, 82f));
         if (stageSelectStageNumber > 0)
-            TouchManager.addTouchRectListData(ARROW_L, GameRenderer.CGRectMake(717.0f, 180.0f, 54.0f, 82.0f));
+            TouchManager.addTouchRectListData(ARROW_L, GameRenderer.CGRectMake(717f, 180f, 54f, 82f));
         if (stageSelectStageNumber < 9)
-            TouchManager.addTouchRectListData(ARROW_R, GameRenderer.CGRectMake(519.0f, 286.0f, 161.0f, 53.0f));
-        if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][0] != -1)
-            TouchManager.addTouchRectListData(MIN_MAPMODE, GameRenderer.CGRectMake(409.0f, 368.0f, 130.0f, 44.0f));
-        if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][0] >= 1)
-            TouchManager.addTouchRectListData(MIN_MAPMODE + 1, GameRenderer.CGRectMake(535.0f, 368.0f, 130.0f, 44.0f));
-        if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][0] == 2)
-            TouchManager.addTouchRectListData(MAX_MAPMODE, GameRenderer.CGRectMake(661.0f, 368.0f, 130.0f, 44.0f));
-        TouchManager.addTouchRectListData(7, GameRenderer.CGRectMake(500.0f, 160.0f, 200.0f, 120.0f)); //Appears to be the minimap box
-        TouchManager.addTouchRectListData(MIN_CHAPTER, GameRenderer.CGRectMake(0.0f, 301.0f, 204.0f, 147.0f));
-        TouchManager.addTouchRectListData(MIN_CHAPTER + 1, GameRenderer.CGRectMake(184.0f, 274.0f, 214.0f, 133.0f));
-        TouchManager.addTouchRectListData(MIN_CHAPTER + 2, GameRenderer.CGRectMake(0.0f, 161.0f, 211.0f, 140.0f));
-        TouchManager.addTouchRectListData(MIN_CHAPTER + 3, GameRenderer.CGRectMake(210.0f, 0.0f, 190.0f, 224.0f));
-        TouchManager.addTouchRectListData(MAX_CHAPTER, GameRenderer.CGRectMake(0.0f, 0.0f, 211.0f, 161.0f));
+            TouchManager.addTouchRectListData(ARROW_R, GameRenderer.CGRectMake(519f, 286f, 161f, 53f));
+        if (Config.stageProg[getStageIndex()][0] != -1)
+            TouchManager.addTouchRectListData(MIN_MAPMODE, GameRenderer.CGRectMake(409f, 368f, 130f, 44f));
+        if (Config.stageProg[getStageIndex()][0] >= 1)
+            TouchManager.addTouchRectListData(MIN_MAPMODE + 1, GameRenderer.CGRectMake(535f, 368f, 130f, 44f));
+        if (Config.stageProg[getStageIndex()][0] == 2)
+            TouchManager.addTouchRectListData(MAX_MAPMODE, GameRenderer.CGRectMake(661f, 368f, 130f, 44f));
+        TouchManager.addTouchRectListData(7, GameRenderer.CGRectMake(500f, 160f, 200f, 120f)); //Appears to be the minimap box
+        TouchManager.addTouchRectListData(MIN_CHAPTER, GameRenderer.CGRectMake(0f, 301f, 204f, 147f));
+        TouchManager.addTouchRectListData(MIN_CHAPTER + 1, GameRenderer.CGRectMake(184f, 274f, 214f, 133f));
+        TouchManager.addTouchRectListData(MIN_CHAPTER + 2, GameRenderer.CGRectMake(0f, 161f, 211f, 140f));
+        TouchManager.addTouchRectListData(MIN_CHAPTER + 3, GameRenderer.CGRectMake(210f, 0f, 190f, 224f));
+        TouchManager.addTouchRectListData(MAX_CHAPTER, GameRenderer.CGRectMake(0f, 0f, 211f, 161f));
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = MAX_CHAPTER + 1;
 
         int LTS = TouchManager.checkTouchListStatus();
-        uiStageImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-        uiStageImage[1].drawAtPointOption(400.0f, 0.0f, 18);
-        uiStageBossImage.drawAtPointOption(400.0f, 0.0f, 18);
-        uiStageImage[34].drawAtPointOption(496.0f, 156.0f, 18);
+        uiStageImage[0].drawAtPointOption(0f, 0f, 18);
+        uiStageImage[1].drawAtPointOption(400f, 0f, 18);
+        uiStageBossImage.drawAtPointOption(400f, 0f, 18);
+        uiStageImage[34].drawAtPointOption(496f, 156f, 18);
 
-        uiStageImage[LTS == 0 ? 8 : 7].drawAtPointOption(1.0f, 421.0f, 18);
-        uiStageImage[stageSelectChapterNumber + 23].drawAtPointOption(600.0f, 38.0f, 17);
+        uiStageImage[LTS == 0 ? 8 : 7].drawAtPointOption(1f, 421f, 18);
+        uiStageImage[stageSelectChapterNumber + 23].drawAtPointOption(600f, 38f, 17);
 
-        uiStageImage[44].drawAtPointOption(470.0f, 96.0f, 18);
-        GameRenderer.drawNumberBlock((stageSelectChapterNumber * 10) + stageSelectStageNumber + 1, numberStagePointImage, 581.0f, 97.0f, 0, 20, 1);
-        uiStageImage[28].drawAtPointOption(624.0f, 96.0f, 18);
-        GameRenderer.drawNumberBlock(DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[(stageSelectChapterNumber * 10) + stageSelectStageNumber], numberStagePointImage, 705.0f, 97.0f, 0, 18, 2);
-        uiStageImage[29].drawAtPointOption(469.0f, 124.0f, 18);
-        GameRenderer.drawNumberBlock(Math.max(0, Config.highScores[(stageSelectChapterNumber * 10) + stageSelectStageNumber][mapAttackType]), numberStagePointImage, 732.0f, 125.0f, 0, 20, 1);
+        uiStageImage[44].drawAtPointOption(470f, 96f, 18);
+        GameRenderer.drawNumberBlock(getStageIndex() + 1, numberStagePointImage, 581f, 97f, 0, 20, 1);
+        uiStageImage[28].drawAtPointOption(624f, 96f, 18);
+        GameRenderer.drawNumberBlock(DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[getStageIndex()], numberStagePointImage, 705f, 97f, 0, 18, 2);
+        uiStageImage[29].drawAtPointOption(469f, 124f, 18);
+        GameRenderer.drawNumberBlock(Math.max(0, Config.highScores[getStageIndex()][mapAttackType]), numberStagePointImage, 732f, 125f, 0, 20, 1);
 
         if (stageSelectStageNumber > 0)
-            uiStageImage[LTS == 3 ? 14 : 13].drawAtPointOption(429.0f, 180.0f, 18);
+            uiStageImage[LTS == 3 ? 14 : 13].drawAtPointOption(429f, 180f, 18);
         if (stageSelectStageNumber < 9)
-            uiStageImage[LTS == 4 ? 16 : 15].drawAtPointOption(717.0f, 180.0f, 18);
-
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_STAGE_SELECT(GL10 gl10) {
-        float f;
-        //TODO - Pass all of this to the other paint function
+            uiStageImage[LTS == 4 ? 16 : 15].drawAtPointOption(717f, 180f, 18);
         map.checkBackBase();
-        drawSmallMap(500.0f, 160.0f, 0.25f);
-        if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][0] == 2)
-            uiStageImage[46].drawAtPointOption(503.0f, 163.0f, 18);
-
-        if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][0] == -1) {
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+        drawSmallMap(500f, 160f, 0.25f);
+        if (Config.stageProg[getStageIndex()][0] == 2)
+            uiStageImage[46].drawAtPointOption(503f, 163f, 18);
+        else if (Config.stageProg[getStageIndex()][0] == -1) {
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
             Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
-            fillBlackImage.fillRect(500.0f, 160.0f, 200.0f, 120.0f);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            uiStageImage[45].drawAtPointOption(600.0f, 220.0f, 9);
+            fillBlackImage.fillRect(500f, 160f, 200f, 120f);
+            Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+            uiStageImage[45].drawAtPointOption(600f, 220f, 9);
         }
 
-        uiStageImage[mapAttackType == 0 ? 36 : 35].drawAtPointOption(409.0f, 368.0f, 18);
+        uiStageImage[mapAttackType == 0 ? 36 : 35].drawAtPointOption(409f, 368f, 18);
+        if (Config.stageProg[getStageIndex()][1] == 0 && Config.highScores[getStageIndex()][0] == -1)
+            uiStageImage[43].drawAtPointOption(415f, 364f, 18);
 
-        if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][1] == 0 && Config.highScores[(stageSelectChapterNumber * 10) + stageSelectStageNumber][0] == -1)
-            uiStageImage[43].drawAtPointOption(415.0f, 364.0f, 18);
-
-        if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][1] == -1) {
-            uiStageImage[41].drawAtPointOption(535.0f, 368.0f, 18);
+        if (Config.stageProg[getStageIndex()][1] == -1) {
+            uiStageImage[41].drawAtPointOption(535f, 368f, 18);
         } else {
-            uiStageImage[mapAttackType == 1 ? 38 : 37].drawAtPointOption(535.0f, 368.0f, 18);
-
-            if (Config.highScores[(stageSelectChapterNumber * 10) + stageSelectStageNumber][1] == -1) //NEW Text
-                uiStageImage[43].drawAtPointOption(541.0f, 364.0f, 18);
+            uiStageImage[mapAttackType == 1 ? 38 : 37].drawAtPointOption(535f, 368f, 18);
+            if (Config.highScores[getStageIndex()][1] == -1) //NEW Text
+                uiStageImage[43].drawAtPointOption(541f, 364f, 18);
         }
-        if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][2] == -1) {
-            uiStageImage[42].drawAtPointOption(661.0f, 368.0f, 18);
+        if (Config.stageProg[getStageIndex()][2] == -1) {
+            uiStageImage[42].drawAtPointOption(661f, 368f, 18);
         } else {
-            uiStageImage[mapAttackType == 2 ? 40 : 39].drawAtPointOption(661.0f, 368.0f, 18);
-
-            if (Config.highScores[(stageSelectChapterNumber * 10) + stageSelectStageNumber][2] == -1)
-                uiStageImage[43].drawAtPointOption(667.0f, 364.0f, 18);
+            uiStageImage[mapAttackType == 2 ? 40 : 39].drawAtPointOption(661f, 368f, 18);
+            if (Config.highScores[getStageIndex()][2] == -1)
+                uiStageImage[43].drawAtPointOption(667f, 364f, 18);
         }
-        uiStageImage[30].drawAtPointOption(549.0f, 349.0f, 18);
+
+        uiStageImage[30].drawAtPointOption(549f, 349f, 18);
         int i2 = GameThread.gameTimeCount % 28;
-        if (i2 > 0 && i2 < 34) {
-            float f2 = 1.0f - ((i2 < 17 ? i2 + 0 : 34 - i2) * GAME_STAGE_SELECT_STAGE_FADE_DEGREE);
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+        if (i2 > 0) {
+            float f2 = 1f - ((i2 < 17 ? i2 : 34 - i2) * GAME_STAGE_SELECT_STAGE_FADE_DEGREE);
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
             Texture2D.gl.glColor4f(f2, f2, f2, f2);
         }
-        uiStageImage[31].drawAtPointOption((stageSelectStageNumber * 10) + 543, 343.0f, 18);
-        if (i2 > 0 && i2 < 34) {
-            float f3 = 1.0f - ((i2 < 17 ? i2 - 0 : 34 - i2) * GAME_STAGE_SELECT_VIEW_FADE_DEGREE);
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+        uiStageImage[31].drawAtPointOption((stageSelectStageNumber * 10) + 543, 343f, 18);
+        if (i2 > 0) {
+            float f3 = 1f - ((i2 < 17 ? i2 : 34 - i2) * GAME_STAGE_SELECT_VIEW_FADE_DEGREE);
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
             Texture2D.gl.glColor4f(f3, f3, f3, f3);
         }
-        if (stageSelectChapterNumber != 0) {
-            if (stageSelectChapterNumber == 1) {
-                uiStageImage[3].drawAtPointOption(169.0f, 252.0f, 18);
-            } else if (stageSelectChapterNumber == 2) {
-                uiStageImage[4].drawAtPointOption(0.0f, 49.0f, 18);
-            } else if (stageSelectChapterNumber == 3) {
-                uiStageImage[5].drawAtPointOption(189.0f, 0.0f, 18);
-            } else if (stageSelectChapterNumber == 4) {
-                uiStageImage[6].drawAtPointOption(0.0f, 0.0f, 18);
-            }
-            f = 286.0f;
-        } else {
-            f = 286.0f;
-            uiStageImage[2].drawAtPointOption(0.0f, 286.0f, 18);
-        }
-        Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        if (LTS == 5) {
-            uiStageImage[33].drawAtPointOption(519.0f, f, 18);
-        } else {
-            uiStageImage[32].drawAtPointOption(519.0f, f, 18);
-        }
-        if (Config.highScores[(stageSelectChapterNumber * 10) + stageSelectStageNumber][0] == -1) {
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+
+        float f = 286f;
+        uiStageImage[stageSelectChapterNumber + 2].drawAtPointOption(uiStageCoords[stageSelectChapterNumber][0], uiStageCoords[stageSelectChapterNumber][1], 18);
+
+        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+        uiStageImage[LTS == 5 ? 33 : 32].drawAtPointOption(519f, f, 18);
+
+        if (Config.stageProg[getStageIndex()][0] == -1) {
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
             Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
-            fillBlackImage.fillRect(527.0f, 294.0f, 145.0f, 37.0f);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            fillBlackImage.fillRect(527f, 294f, 145f, 37f);
+            Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
         }
         if (stageLoad > 0) {
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
             GL10 gl102 = Texture2D.gl;
             gl102.glColor4f(stageLoad * 0.066f, stageLoad * 0.066f, stageLoad * 0.066f, stageLoad * 0.066f);
-            fillBlackImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+            Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
         }
         TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_STAGE_START_LOADING(GL10 gl10) {
     }
 
     @Override
@@ -242,7 +208,7 @@ public class StageSelectPage extends TPage {
             GameThread.playSound(14);
             int ol = stageSelectStageNumber;
             stageSelectStageNumber = touch - MIN_CHAPTER;
-            map = DataMap.loadMap((stageSelectChapterNumber * 10) + stageSelectStageNumber, true);
+            map = DataMap.loadMap(getStageIndex(), true);
             mapAttackType = 0;
 
             if (ol != stageSelectStageNumber) {
@@ -261,9 +227,8 @@ public class StageSelectPage extends TPage {
                         GameThread.playSound(14);
                         stageSelectStageNumber--;
 
-                        map = DataMap.loadMap((stageSelectChapterNumber * 10) + stageSelectStageNumber, true);
+                        map = DataMap.loadMap(getStageIndex(), true);
                         mapAttackType = 0;
-                        break;
                     }
                     break;
                 case 2:
@@ -271,34 +236,32 @@ public class StageSelectPage extends TPage {
                         GameThread.playSound(14);
                         stageSelectStageNumber++;
 
-                        DataMap.loadMap((stageSelectChapterNumber * 10) + stageSelectStageNumber, true);
+                        DataMap.loadMap(getStageIndex(), true);
                         mapAttackType = 0;
-                        break;
                     }
                     break;
                 case 3:
                     GameThread.playSound(14);
-                    if (Config.stageProg[(stageSelectChapterNumber * 10) + stageSelectStageNumber][mapAttackType] >= 0) {
-                        mapNumber = (stageSelectChapterNumber * 10) + stageSelectStageNumber;
+                    if (Config.stageProg[getStageIndex()][mapAttackType] >= 0) {
+                        mapNumber = getStageIndex();
                         stageLoad++;
-                        break;
                     }
                     break;
             }
         }
         if (TouchManager.checkTouchListPressed(TouchManager.getFirstLastActionTouch()) == 9 && TouchManager.checkTouchMoveDegree(true)) {
             GameThread.playSound(14);
-            if (TouchManager.lastMoveCheckDistance.y > 0.0f) {
+            if (TouchManager.lastMoveCheckDistance.y > 0f) {
                 if (stageSelectStageNumber < 9) {
                     stageSelectStageNumber++;
 
-                    map = DataMap.loadMap((stageSelectChapterNumber * 10) + stageSelectStageNumber, true);
+                    map = DataMap.loadMap(getStageIndex(), true);
                     mapAttackType = 0;
                 }
-            } else if (TouchManager.lastMoveCheckDistance.y < 0.0f && stageSelectStageNumber > 0) {
+            } else if (TouchManager.lastMoveCheckDistance.y < 0f && stageSelectStageNumber > 0) {
                 stageSelectStageNumber--;
 
-                map = DataMap.loadMap((stageSelectChapterNumber * 10) + stageSelectStageNumber, true);
+                map = DataMap.loadMap(getStageIndex(), true);
                 mapAttackType = 0;
             }
         }
@@ -310,17 +273,6 @@ public class StageSelectPage extends TPage {
         drawMapTileSize(f, f2, f3);
     }
 
-    public void drawMapTile(GL10 gl10) {
-        for (int i = 0; i < 15; i++) {
-            for (int i2 = 0; i2 < 10; i2++) {
-                int i3 = map.mapTileData[i][i2];
-                if (i3 != -1) {
-                    map.backTileOldImage[i3].drawAtPointOption((i * 45) + 62, (i2 * 45) + 30, 18);
-                }
-            }
-        }
-    }
-
     /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
     /* JADX WARN: Failed to find 'out' block for switch in B:29:0x005a. Please report as an issue. */
     public void drawMapTileSize(float f, float f2, float f3) {
@@ -329,41 +281,39 @@ public class StageSelectPage extends TPage {
                 for (int j = 0; j < 10; j++) {
                     int tid = map.mapTileData[i][j];
                     if (tid != -1 && map.backTileOldImage[tid] != null)
-                        map.backTileOldImage[tid].drawAtPointOptionSize((f3 * 62.0f) + f + (i * 45 * f3), (f3 * 30.0f) + f2 + (j * 45 * f3), 18, f3);
+                        map.backTileOldImage[tid].drawAtPointOptionSize((f3 * 62f) + f + (i * 45 * f3), (f3 * 30f) + f2 + (j * 45 * f3), 18, f3);
                 }
-        if (map.backObjectImage != null) {
-            float f4 = 0.0f;
-            float f5 = 0.0f;
-            for (int i4 = 0; i4 < map.objectUnit.size(); i4++) {
-                int i5 = map.objectUnit.get(i4).objectType;
-                if (i5 != -1) {
-                    switch (i5) {
-                        case 28:
-                            f4 = 3.0f;
-                            break;
-                        case 29:
-                            f4 = 22.0f;
-                            f5 = 22.0f;
-                            break;
-                        case 30:
-                            f5 = -25.0f;
-                            f4 = 3.0f;
-                            break;
-                        case 31:
-                            f4 = 18.0f;
-                            f5 = 34.0f;
-                            break;
-                        case 32:
-                            f4 = -22.0f;
-                            f5 = 22.0f;
-                            break;
-                        case 33:
-                            f4 = -11.0f;
-                            f5 = 34.0f;
-                            break;
-                    }
-                    map.backObjectImage[i5].drawAtPointOptionSize((f3 * 62.0f) + f + (f4 * f3) + ((map.objectUnit.get(i4).posX / 50f) * f3), (f3 * 30.0f) + f2 + (f5 * f3) + (((map.objectUnit.get(i4).posY / 50f) + 22) * f3), 33, f3);
+        float f4 = 0f;
+        float f5 = 0f;
+        for (int i4 = 0; i4 < map.objectUnit.size(); i4++) {
+            int i5 = map.objectUnit.get(i4).objectType;
+            if (i5 != -1) {
+                switch (i5) {
+                    case 28:
+                        f4 = 3f;
+                        break;
+                    case 29:
+                        f4 = 22f;
+                        f5 = 22f;
+                        break;
+                    case 30:
+                        f5 = -25f;
+                        f4 = 3f;
+                        break;
+                    case 31:
+                        f4 = 18f;
+                        f5 = 34f;
+                        break;
+                    case 32:
+                        f4 = -22f;
+                        f5 = 22f;
+                        break;
+                    case 33:
+                        f4 = -11f;
+                        f5 = 34f;
+                        break;
                 }
+                map.backObjectImage[i5].drawAtPointOptionSize((f3 * 62f) + f + (f4 * f3) + ((map.objectUnit.get(i4).posX / 50f) * f3), (f3 * 30f) + f2 + (f5 * f3) + (((map.objectUnit.get(i4).posY / 50f) + 22) * f3), 33, f3);
             }
         }
     }
@@ -374,5 +324,9 @@ public class StageSelectPage extends TPage {
         for (Texture2D img : uiStageImage) img.dealloc();
         if (uiStageBossImage.name != -1)
             uiStageBossImage.dealloc();
+    }
+
+    private int getStageIndex() {
+        return (stageSelectChapterNumber * 10) + stageSelectStageNumber;
     }
 }

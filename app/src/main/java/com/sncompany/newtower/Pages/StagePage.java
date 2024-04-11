@@ -80,6 +80,14 @@ public class StagePage extends TPage {
         super(par);
         st = s;
         map = s.map;
+
+        for (int i5 = 0; i5 < 11; i5++) {
+            if (i5 < 8)
+                GameThread.myOscillator[i5].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
+            else
+                GameThread.myOscillator[i5].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
+            GameThread.myOscillator[i5].fastForward();
+        }
     }
 
     public void update_GAME_STAGE_START_VIEW() {
@@ -2337,6 +2345,13 @@ public class StagePage extends TPage {
             }
         }
         TouchManager.processTouchStatus();
+    }
+
+    public void drawMapTile(GL10 gl10) {
+        for (int x = 0; x < 15; x++)
+            for (int y = 0; y < 10; y++)
+                if (map.mapTileData[x][y] != -1)
+                    map.backTileOldImage[map.mapTileData[x][y]].drawAtPointOption((x * 45) + 62, (y * 45) + 30, 18);
     }
 
     public void drawAllUnit(GL10 gl10) {

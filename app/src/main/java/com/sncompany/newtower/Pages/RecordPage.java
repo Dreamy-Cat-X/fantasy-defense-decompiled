@@ -42,16 +42,8 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
     @Override
     public void load(Consumer<Float> prog) {
         int bartot = uiRecordImage.length + uiAwardImage.length;
-        for (int i = 0; i < uiRecordImage.length; i++) {
-            uiRecordImage[i] = new Texture2D(uiRecordResource[i]);
-            if (prog != null)
-                prog.accept((i + 1f) / (bartot));
-        }
-        for (int i = 0; i < uiAwardImage.length; i++) {
-            uiAwardImage[i] = new Texture2D(uiAwardResource[i]);
-            if (prog != null)
-                prog.accept((i + uiRecordImage.length + 1f) / (bartot));
-        }
+        loadP(uiRecordImage, uiRecordResource, prog, 1, bartot);
+        loadP(uiAwardImage, uiAwardResource, prog, uiRecordImage.length + 1, bartot);
         loaded = true;
     }
 

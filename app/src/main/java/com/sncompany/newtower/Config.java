@@ -21,7 +21,7 @@ public class Config {
     public static final int SAVEFILE_SIZE = 27392;
     static byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
     public static int musicVolume, effectVolume, musicMaxVolume;
-    public static byte lastPlayed;
+    public static byte lastPlayed, limitBreak; //limitBreak = GameThread.limitCashBuyCount
     public static int heroPoints, killCount, top_money;
     public static long curPlaytime = 0, totalPlaytime;
     public static boolean movie, tutorial, vibration;
@@ -127,6 +127,7 @@ public class Config {
         for (int j = 0; j < rewardValues.length; j += 5)
             saveTotalBuffer[cbit++] = BooleansToByte(rewardValues[j], rewardValues[j+1], rewardValues[j+2], rewardValues[j+3], rewardValues[j+4]);
         saveTotalBuffer[cbit++] = lastPlayed;
+        saveTotalBuffer[cbit++] = limitBreak;
         saveTotalBuffer[cbit] = BooleansToByte(movie, tutorial, vibration);
         try {
             openFileOutput = context.openFileOutput(file2 ? SAVEFILE_NAME2 : SAVEFILE_NAME, 0);

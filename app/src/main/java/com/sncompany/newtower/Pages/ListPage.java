@@ -25,11 +25,7 @@ public class ListPage extends TPage { //This class' parent will be a MenuPage al
 
     @Override
     public void load(Consumer<Float> prog) {
-        for (byte i = 0; i < images.length; i++) {
-            images[i] = new Texture2D(resources[i]);
-            if (prog != null)
-                prog.accept((i + 1f) / (images.length));
-        }
+        loadP(images, resources, prog, 1, images.length);
         loaded = true;
     }
 

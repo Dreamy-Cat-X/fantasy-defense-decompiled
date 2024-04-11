@@ -47,6 +47,7 @@ public class DataMap {
     public static final Texture2D[] backTileImage2 = new Texture2D[tileTileResource[2].length];
     public static final Texture2D[] backTileImage3 = new Texture2D[tileTileResource[3].length];
     public static final Texture2D[] backTileImage4 = new Texture2D[tileTileResource[4].length];
+    private static DataMap current = null;
 
     public final int mapEndPositionCount, mapBackgroundType, lastShowBackBase, SID;
     public int mapStartPositionLoop = 0, mapStartPositionCount, gatePattern;
@@ -61,7 +62,19 @@ public class DataMap {
     public final int[][] mapTileData = new int[15][10];
     public DataWave wav;
 
+    /**
+     * Loads a map based on its SID ((chapter * 10) + 10). Also the only way to make a DataMap.
+     * @param SID Stage Index
+     * @param play Loads the Wave data if true
+     * @return
+     */
     public static DataMap loadMap(int SID, boolean play) {
+        if (current != null) {
+            if (SID == current.SID)
+                return current;
+            current.unload();
+        } //Prevents unecessary overusage of resources by ridding of pointless loads
+
         byte[] mdata = null;
         try {
             InputStream openRawResource = GameThread.newTower.getResources().openRawResource(mapDataResource[SID]);
@@ -80,13 +93,14 @@ public class DataMap {
         } catch (Exception ignored) {
         }
         DataMap map = new DataMap(SID, mdata);
+        current = map;
 
         if (play)
             map.wav = DataWave.loadWave(map, SID);
         return map;
     }
 
-    public DataMap(int stage, byte[] mdata) {
+    private DataMap(int stage, byte[] mdata) {
         SID = stage;
         for (int j = 0; j < 10; j++)
             for (int k = 0; k < 15; k++)
@@ -183,11 +197,12 @@ public class DataMap {
             if (i != lastShowBackBase && backBaseImageArray[i].name != -1)
                 backBaseImageArray[i].dealloc();
         }
-        if (backBaseImageArray[lastShowBackBase].name == -1) {
-            Texture2D[] texture2DArr = backBaseImageArray;
-            int i2 = lastShowBackBase;
-            texture2DArr[i2].initWithImageName(tileBaseResource[i2]);
-        }
+        if (backBaseImageArray[lastShowBackBase].name == -1)
+            backBaseImageArray[lastShowBackBase].initWithImageName(tileBaseResource[lastShowBackBase]);
+    }
+
+    public void unload() {
+
     }
 
     public void addObjectUnit(int oType, int bX, int bY) {

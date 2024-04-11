@@ -141,8 +141,8 @@ public class DataStage {
     public void updateEffectUnit(boolean z) {
         effectUnit.removeIf(e -> e.effectCount >= e.effectCountMax);
         for (EffectUnit eff : effectUnit)
-            if ((!z || (eff.effectType == 14 && eff.lastGameUpdateCount != gameTimeCount)) && !(eff.lastGameUpdateCount == gameTimeCount && eff.effectType == 36)) {
-                eff.lastGameUpdateCount = gameTimeCount;
+            if ((!z || (eff.effectType == 14 && eff.lastGameUpdateCount != GameThread.gameTimeCount)) && !(eff.lastGameUpdateCount == GameThread.gameTimeCount && eff.effectType == 36)) {
+                eff.lastGameUpdateCount = GameThread.gameTimeCount;
                 eff.effectCount++;
             }
     }
@@ -179,38 +179,9 @@ public class DataStage {
     }
 
     /* JADX INFO: Access modifiers changed from: package-private */
-    public int addTowerUnit(int i, int i2, int i3, boolean z) {
-        int i4;
-        if (z) {
-            i4 = 0;
-            while (i4 < towerUnitCount) {
-                if (towerUnit[i4].towerType == -1) {
-                    break;
-                }
-                i4++;
-            }
-        }
-        i4 = -1;
-        if (i4 == -1 && towerUnitCount == 149) {
-            return -1;
-        }
-        if (i4 == -1) {
-            i4 = towerUnitCount;
-            towerUnit[i4].towerType = -1;
-            towerUnitCount++;
-        }
-        towerUnit[i4].heroFlag = false;
-        towerUnit[i4].towerType = i;
-        towerUnit[i4].unitStatus = 2;
-        towerUnit[i4].unitStatusCount = 0;
-        towerUnit[i4].lastViewDirection = 6;
-        towerUnit[i4].blockX = i2;
-        towerUnit[i4].blockY = i3;
-        towerUnit[i4].posX = ((i2 * 45) + 22) * 50;
-        towerUnit[i4].posY = ((i3 * 45) + 22) * 50;
-        towerUnit[i4].originalPosX = towerUnit[i4].posX;
-        towerUnit[i4].originalPosY = towerUnit[i4].posY;
-        towerUnit[i4].attackCount = 0;
+    public int addTowerUnit(int type, int bX, int bY) {
+        TowerUnit to = new TowerUnit(type, bX, bY);
+
         restatTowerUnit(towerUnit[i4]);
         towerUnit[i4].headRotateDegree = 0.0f;
         return i4;

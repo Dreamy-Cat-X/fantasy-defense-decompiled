@@ -36,6 +36,8 @@ public class DataWave {
 
     public DataStage st;
     public final DataMap map;
+
+    public final int waveCount;
     public boolean waveRunF = true, perfectWave = true, waveMonsterOutPos = false; //WaveRunF is myWaveRunFlag
     public int waveStartT = 90, current = 0, monsterOpenTime = 0;
     public int wavePattern, gatePattern;
@@ -51,34 +53,30 @@ public class DataWave {
             int dats = 0;
             do {
                 int read = openRawResource.read(bArr, dats, available - dats);
-                if (read <= 0) {
+                if (read <= 0)
                     break;
-                } else {
+                else
                     dats += read;
-                }
             } while (dats < available);
             openRawResource.close();
         } catch (Exception unused) {
         }
-        DataWave w = new DataWave(map);
-        int bar = Config.ByteArrayToInt(bArr, 0);
-        for (int i3 = 0; i3 < bar; i3++) {
-            for (int i4 = 0; i4 < 8; i4++) {
-                w.waveMobData[i3][i4] = Config.ByteArrayToInt(bArr, (i3 * 32) + 4 + (i4 * 4));
-            }
-        }
-        return w;
+        return new DataWave(map, bArr);
     }
 
-    public DataWave(DataMap m) {
+    public DataWave(DataMap m, byte[] data) {
         map = m;
+        waveCount = Config.ByteArrayToInt(data, 0);
+        for (int i3 = 0; i3 < waveCount; i3++)
+            for (int i4 = 0; i4 < 8; i4++)
+                waveMobData[i3][i4] = Config.ByteArrayToInt(data, (i3 * 32) + 4 + (i4 * 4));
     }
 
     public int setWave() {
         int wv = current;
         if (st.mapType != 0) {
             if (st.mapType == 1) {
-                if (wv >= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID])
+                if (wv >= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID]) //Replace with waveCount?
                     wv %= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID];
             } else if (st.mapType == 2 && wv >= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID])
                 return 3;

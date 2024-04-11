@@ -825,102 +825,15 @@ public class GameThread extends Thread {
     }
 
     public static int getLevelupHeroType(int i) {
-        switch (i) {
-            case 0:
-                return 1;
-            case 1:
-                return 2;
-            case 2:
-                return 3;
-            case 3:
-                return 4;
-            case 4:
-            case 9:
-            default:
-                return -1;
-            case 5:
-                return 6;
-            case 6:
-                return 7;
-            case 7:
-                return 8;
-            case 8:
-                return 9;
-            case 10:
-                return 11;
-            case 11:
-                return 12;
-            case 12:
-                return 13;
-            case 13:
-                return 14;
-        }
+        if (i < 0 || i % 5 == 4)
+            return -1;
+        return i + 1;
     }
 
     public static int getLevelupType(int i) {
-        switch (i) {
-            case 0:
-                return 1;
-            case 1:
-                return 2;
-            case 2:
-            case 5:
-            case 8:
-            case 11:
-            case 14:
-            case 17:
-            case 20:
-            case 23:
-            case 26:
-            case 29:
-            case 32:
-            default:
-                return -1;
-            case 3:
-                return 4;
-            case 4:
-                return 5;
-            case 6:
-                return 7;
-            case 7:
-                return 8;
-            case 9:
-                return 10;
-            case 10:
-                return 11;
-            case 12:
-                return 13;
-            case 13:
-                return 14;
-            case 15:
-                return 16;
-            case 16:
-                return 17;
-            case 18:
-                return 19;
-            case 19:
-                return 20;
-            case 21:
-                return 22;
-            case 22:
-                return 23;
-            case 24:
-                return 25;
-            case 25:
-                return 26;
-            case 27:
-                return 28;
-            case 28:
-                return 29;
-            case 30:
-                return 31;
-            case 31:
-                return 32;
-            case 33:
-                return 34;
-            case 34:
-                return 35;
-        }
+        if (i < 0 || i % 3 == 2)
+            return -1;
+        return i + 1;
     }
 
     public void moveGameStatusToStatus(int i, int i2) {
@@ -1234,9 +1147,9 @@ public class GameThread extends Thread {
 
     public static int getBuyPrice(int i) {
         int upgradeUnitRate;
-        if (i == -1) {
+        if (i == -1)
             return 0;
-        }
+
         int i2 = DataCharacter.charData[i][0];
         int i3 = DataCharacter.charData[i][11];
         if (i3 == 0) {
@@ -1262,24 +1175,23 @@ public class GameThread extends Thread {
     }
 
     public static int getSellPrice(int i) {
-        if (i == -1) {
+        if (i == -1)
             return 0;
-        }
-        return (DataCharacter.charData[i][13] * 50) / 100;
+        return DataCharacter.charData[i][13] / 2;
     }
 
     public static int getUpgradePrice(int i, int i2) {
-        if (i == -1 || i2 == 1) {
+        if (i == -1 || i2 == 1)
             return 0;
-        }
+
         return DataCharacter.charData[i][1] + ((DataCharacter.charData[i][1] * getUpgradeUnitRate(0, 5)) / 100);
     }
 
     public static int getLevelupPrice(int i) {
         int levelupType = getLevelupType(i);
-        if (levelupType == -1) {
+        if (levelupType == -1)
             return 0;
-        }
+
         return DataCharacter.charData[levelupType][0];
     }
 
@@ -1290,23 +1202,6 @@ public class GameThread extends Thread {
         }
         int i3 = DataHero.heroData[levelupHeroType][0];
         return i3 + ((getUpgradeItemRate(i2, 1) * i3) / 100);
-    }
-
-    public static int getUpgradeHeroHeroism(int i, int i2) {
-        if (heroUnitType[i] == -1) {
-            return -1;
-        }
-        if (heroUpgradeValue[i][i2] >= getUpgradeHeroMax(i, i2)) {
-            return -1;
-        }
-        return (DataUpgradeHero.upgradeHeroData[i2][1] * ((DataUpgradeHero.upgradeHeroData[i2][2] * heroUpgradeValue[i][i2]) + 100)) / 100;
-    }
-
-    public static int getUpgradeUnitHeroism(int i) {
-        if (upgradeUnitValue[i] >= getUpgradeUnitMax(i)) {
-            return -1;
-        }
-        return (DataUpgradeUnit.upgradeUnitData[i][1] * ((DataUpgradeUnit.upgradeUnitData[i][2] * upgradeUnitValue[i]) + 100)) / 100;
     }
 
     public static int getUpgradeUnitMax(int i) {

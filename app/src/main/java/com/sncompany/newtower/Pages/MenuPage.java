@@ -42,6 +42,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
 
     public static final int[] mainmenuResource = {R.drawable.ui_mainmenu_background2, R.drawable.ui_mainmenu_startonl, R.drawable.ui_mainmenu_helponl, R.drawable.ui_mainmenu_recordonl, R.drawable.ui_mainmenu_upgradeonl, R.drawable.ui_mainmenu_shoponl, R.drawable.ui_mainmenu_backonl};
     public static final float[][] onPos = {{514.0f, 0.0f}, {228.0f, 5.0f}, {29.0f, 0.0f}, {383.0f, 204.0f}, {87.0f, 254.0f}, {8.0f, 318.0f}};
+    public static final int[] numberHeroismResource = {R.drawable.num_heroism_0, R.drawable.num_heroism_1, R.drawable.num_heroism_2, R.drawable.num_heroism_3, R.drawable.num_heroism_4, R.drawable.num_heroism_5, R.drawable.num_heroism_6, R.drawable.num_heroism_7, R.drawable.num_heroism_8, R.drawable.num_heroism_9};
 
     public final Texture2D[] mainmenuImage = new Texture2D[mainmenuResource.length];
     private TPage child;
@@ -54,11 +55,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
 
     @Override
     public void load(Consumer<Float> prog) {
-        for (int i = 0; i < mainmenuImage.length; i++) {
-            mainmenuImage[i] = new Texture2D(mainmenuResource[i]);
-            if (prog != null)
-                prog.accept((i + 1f) / (mainmenuImage.length));
-        }
+        loadP(mainmenuImage, mainmenuResource, prog, 1, mainmenuImage.length);
         loaded = true;
     }
 

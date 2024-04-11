@@ -66,21 +66,9 @@ public class CinematicPage extends TPage {
     @Override
     public void load(Consumer<Float> prog) {
         int tot = logoImage.length + storyImage.length + story2Image.length;
-        for (int i = 0; i < logoImage.length; i++) {
-            logoImage[i] = new Texture2D(logoResource[i]);
-            if (prog != null)
-                prog.accept((i + 1f) / tot);
-        }
-        for (int i = 0; i < storyImage.length; i++) {
-            storyImage[i] = new Texture2D(storyDataResource[i]);
-            if (prog != null)
-                prog.accept((i + logoImage.length + 1f) / tot);
-        }
-        for (int i = 0; i < story2Image.length; i++) {
-            story2Image[i] = new Texture2D(story2DataResource[i]);
-            if (prog != null)
-                prog.accept((i + logoImage.length + storyImage.length + 1f) / tot);
-        }
+        loadP(logoImage, logoResource, prog, 1, tot);
+        loadP(storyImage, storyDataResource, prog, 1 + logoImage.length, tot);
+        loadP(story2Image, story2DataResource, prog, 1 + logoImage.length + storyImage.length, tot);
         loaded = true;
     }
 

@@ -33,6 +33,20 @@ public abstract class TPage {
         parent = par;
     }
 
+    public static void loadP(Texture2D[] T2Darr, int[] ress, Consumer<Float> prog, int pstart, int ptot) {
+        if (T2Darr == null || ress == null)
+            return;
+        for (int i = 0; i < T2Darr.length && i < ress.length; i++) {
+            if (T2Darr[i] == null)
+                T2Darr[i] = new Texture2D(ress[i]);
+            else
+                T2Darr[i].initWithImageName(ress[i]);
+
+            if (prog != null)
+                prog.accept((float)(pstart + i) / ptot);
+        }
+    }
+
     public static void loadImageResourceToTexture(Texture2D[] T2Darr, int[] ress) {
         if (T2Darr == null || ress == null)
             return;
