@@ -812,10 +812,6 @@ public class GameThread extends Thread {
             "You obtained a Hero item.", "You obtained a Zephyrus Amulet.", " ",
             "Hero Points obtained.", "You obtained 3,500 Hero Points.", " "
     };
-    public static final int[] storyDataResource = {R.drawable.story_1, R.drawable.story_2, R.drawable.story_3_1, R.drawable.story_3_2, R.drawable.story_3_3, R.drawable.story_4, R.drawable.story_5, R.drawable.story_5_b, R.drawable.story_5_k, R.drawable.story_a_1, R.drawable.story_a_2, R.drawable.story_a_3, R.drawable.story_b_1, R.drawable.story_b_2, R.drawable.story_b_3, R.drawable.story_b_4, R.drawable.story_b_5, R.drawable.story_b_6, R.drawable.story_b_7};
-    public static final int[] story2DataResource = {R.drawable.story2_1};
-    public static int[] storyDrawDataBlock = new int[28];
-    public static int[] story2DrawDataBlock = new int[10];
     static final String[] TIP_TEXT = {"Tip 1  : Equip the item on your Hero under the [Item] > [Equipment] menu.", "Tip 2  : Clear stages and acquire up to 3 Heroes.", "Tip 3  : Certain stages reward you with a Hero character.", "Tip 4  : Use Mana to increase the levels of your Heroes.", "Tip 5  : Heroes consume Mana to use their special skills.", "Tip 6  : Special skills have a downtime after each use.", "Tip 7  : Clear a stage to receive Hero Points.", "Tip 8  : Configure your game settings under the [Title Screen] > Settings.", "Tip 9  : Basic units can be upgraded up to Level 3.", "Tip 10 : Hero units can be upgraded up to Level 5.", "Tip 11 : Upgrade your units to give them stronger abilities.", "Tip 12 : Use gold to advance your units to higher classes or increase their levels.", "Tip 13 : Increase the level of your units to improve their combat capabilities.", "Tip 14 : Advance your units to higher classes for more versatile abilities. ", "Tip 15 : Reselling a unit returns to you a portion _ of the money that you spent to hire the unit.", "Tip 16 : You will fail a Boss stage if you fail to defeat the bosses.", "Tip 17 : Boss monsters have high HP, but they move slowly.", "Tip 18 : Monsters drop gold and mana upon death.", "Tip 19 : Use Hero Points to buy items under [Item] > [Shop].", "Tip 20 : Use Hero Points to upgrade your Hero and basic units under the [Skill] menu.", "Tip 21 : Knights, the 2nd advanced class of Warrior, _ have high Attack Speed.", "Tip 22 : Warlords, the 3rd advanced class of Warrior, _ inflict Splashed damage to multiple enemies.", "Tip 23 : Special Warrior Brandishers attack monsters with a chance of causing Stun.", "Tip 24 : Splatters, the 2nd advanced class of Archer, _ shoot multi arrows and attack up to 3 enemies at the same time.", "Tip 25 : Sky Arrows, the 3rd advanced class of Archer, _ strike enemies with their extremely Long Attack Range.", "Tip 26 : Special Archer Holy Eyes specialize in DoT (Damage over Time) attacks.", "Tip 27 : Sorceresses, the 2nd advanced class of Wizard, inflict Piercing damage.", "Tip 28 : Blasters, the 3rd advanced class of Wizard, _ inflict Splashed damage with their Fire magic.", "Tip 29 : Special Wizard Ice Mages attack monsters with a chance of causing Slow.", "Tip 30 : Clear all the normal stages to unlock two special modes: _ Destroy the Moon and Infinite.", "Tip 31 : A stage's Infinite Mode is only opened _ when you clear it with a perfect score.", "Tip 32 : The objective of Destroy the Moon is to destroy _ the monster gates where monsters spawn.", "Tip 33 : Destroy stage objects to obtain gold and mana.", "Tip 34 : When clearing a normal stage more than twice,_ you will receive only 70% of the Hero Point reward from the stage.", "Tip 35 : Touch a monster or object to manually attack it.", "Tip 36 : Blasters, the 3rd advanced class of Wizard, _ inflict Splashed damage with their Fire magic.", "Tip 37 : Special Wizard Ice Mages attack monsters with a chance of causing Slow.", "Tip 38 : You will receive a Hero unit or additional ability _each time you clear 5 stages.", "Tip 39 : Clear 25 stages to upgrade your units up to 10 levels.", "Tip 40 : Clear 5 stages to unlock the special skill of your Hero units.", "Tip 41 : Clear 30 stages to unlock the special attack ability _of your Hero units. (Splashed damage or Double Shot)", "Tip 42 : Never hesitate to upgrade your Heroes and basic units _ when facing a difficult stage.", "Tip 43 : Certain stages contain special items for you to discover.", "Tip 43 : Cash items endow special abilities."};
     public static boolean[] cheatData = new boolean[5];
 
@@ -1125,7 +1121,7 @@ public class GameThread extends Thread {
             iArr9[41] = iArr9[41] + 1;
             recheckAwardData();
         }
-        restatTowerUnit(towerUnit[i]);
+        towerUnit[i].restatTowerUnit();
         addEffectUnit(14, towerUnit[i].posX, towerUnit[i].posY, true);
         playSound(13);
         GameRenderer.levelUpCount = 10;
@@ -1138,7 +1134,7 @@ public class GameThread extends Thread {
         if (i >= 0 && (upgradeType = getUpgradeType(towerUnit[i].towerType)) != -1 && (i2 = myMoney) >= (upgradePrice = getUpgradePrice(towerUnit[i].towerType, towerUnit[i].heroFlag))) {
             myMoney = i2 - upgradePrice;
             towerUnit[i].towerType = upgradeType;
-            restatTowerUnit(towerUnit[i]);
+            towerUnit[i].restatTowerUnit();
             addEffectUnit(14, towerUnit[i].posX, towerUnit[i].posY, true);
             playSound(13);
             GameRenderer.upgradeCount = 10;
@@ -1172,12 +1168,6 @@ public class GameThread extends Thread {
         }
         int i3 = DataHero.heroData[i2][0];
         return i3 + ((getUpgradeHeroRate(i, 6) * i3) / 100);
-    }
-
-    public static int getSellPrice(int i) {
-        if (i == -1)
-            return 0;
-        return DataCharacter.charData[i][13] / 2;
     }
 
     public static int getUpgradePrice(int i, int i2) {
@@ -1273,86 +1263,6 @@ public class GameThread extends Thread {
                 return;
             default:
                 return;
-        }
-    }
-
-    public static void restatTowerUnit(TowerUnit towerUnit2) {
-        int i = towerUnit2.towerType;
-        if (!towerUnit2.heroFlag) {
-            towerUnit2.towerCoolTime = 0;
-            towerUnit2.towerCoolTimeMax = DataCharacter.charData[i][3];
-            int i3 = DataCharacter.charData[i][11];
-            if (i3 == 0) {
-                towerUnit2.towerCoolTimeMax -= (towerUnit2.towerCoolTimeMax * getUpgradeUnitRate(1, 8)) / 100;
-            } else if (i3 == 1) {
-                towerUnit2.towerCoolTimeMax -= (towerUnit2.towerCoolTimeMax * getUpgradeUnitRate(2, 8)) / 100;
-            } else if (i3 == 2) {
-                towerUnit2.towerCoolTimeMax -= (towerUnit2.towerCoolTimeMax * getUpgradeUnitRate(3, 8)) / 100;
-            }
-            if (towerUnit2.towerCoolTimeMax <= 0) {
-                towerUnit2.towerCoolTimeMax = 1;
-            }
-            towerUnit2.attackRange = DataCharacter.charData[i][4];
-            int i4 = DataCharacter.charData[i][11];
-            if (i4 == 0) {
-                towerUnit2.attackRange += (towerUnit2.attackRange * getUpgradeUnitRate(1, 9)) / 100;
-            } else if (i4 == 1) {
-                towerUnit2.attackRange += (towerUnit2.attackRange * getUpgradeUnitRate(2, 9)) / 100;
-            } else if (i4 == 2) {
-                towerUnit2.attackRange += (towerUnit2.attackRange * getUpgradeUnitRate(3, 9)) / 100;
-            }
-            towerUnit2.attackDistance = (((towerUnit2.attackRange * 45) / 100) + 22) * 50;
-            towerUnit2.targetMaxNum = DataCharacter.charData[i][5];
-            towerUnit2.attackDistanceSquare = towerUnit2.attackDistance * towerUnit2.attackDistance;
-            towerUnit2.unitPower = DataCharacter.charData[i][2];
-            towerUnit2.attackType = DataCharacter.charData[i][9];
-            towerUnit2.effectType = DataCharacter.charData[i][6];
-            towerUnit2.attackEffect = DataCharacter.charData[i][10];
-            towerUnit2.specialCooltime = 0;
-            if (towerUnit2.targetMaxNum <= 1 || towerUnit2.effectType != -1) {
-                return;
-            }
-            towerUnit2.effectType = 7;
-            return;
-        }
-        towerUnit2.towerCoolTime = 0;
-        towerUnit2.towerCoolTimeMax = DataHero.heroData[i][2];
-        towerUnit2.towerCoolTimeMax -= (towerUnit2.towerCoolTimeMax * (getUpgradeHeroRate(towerUnit2.heroOrder, 8) + getUpgradeItemRate(towerUnit2.heroOrder, 3))) / 100;
-        if (towerUnit2.towerCoolTimeMax <= 0) {
-            towerUnit2.towerCoolTimeMax = 1;
-        }
-        towerUnit2.attackRange = DataHero.heroData[i][3];
-        towerUnit2.attackRange += (towerUnit2.attackRange * getUpgradeItemRate(towerUnit2.heroOrder, 4)) / 100;
-        towerUnit2.attackDistance = (((towerUnit2.attackRange * 45) / 100) + 22) * 50;
-        towerUnit2.targetMaxNum = DataHero.heroData[i][4];
-        towerUnit2.attackDistanceSquare = towerUnit2.attackDistance * towerUnit2.attackDistance;
-        towerUnit2.unitPower = DataHero.heroData[i][1];
-        towerUnit2.attackType = DataHero.heroData[i][11];
-        towerUnit2.effectType = -1;
-        towerUnit2.attackEffect = DataHero.heroData[i][12];
-        towerUnit2.specialType = DataHero.heroData[i][5];
-        towerUnit2.specialMana = DataHero.heroData[i][6];
-        towerUnit2.specialMana += (towerUnit2.specialMana * (getUpgradeHeroRate(towerUnit2.heroOrder, 17) - getUpgradeItemRate(towerUnit2.heroOrder, 7))) / 100;
-        towerUnit2.specialAttPower = DataHero.heroData[i][7];
-        towerUnit2.specialAttPower += (towerUnit2.specialAttPower * (getUpgradeHeroRate(towerUnit2.heroOrder, 16) + getUpgradeItemRate(towerUnit2.heroOrder, 5))) / 100;
-        towerUnit2.specialAttCount = DataHero.heroData[i][8];
-        towerUnit2.specialMaxCooltime = DataHero.heroData[i][9] * 41;
-        towerUnit2.specialMaxCooltime += (towerUnit2.specialMaxCooltime * (getUpgradeHeroRate(towerUnit2.heroOrder, 18) - getUpgradeItemRate(towerUnit2.heroOrder, 6))) / 100;
-        if (rewardDataValue[6] == 1) {
-            int i5 = DataHero.heroData[i][13];
-            if (i5 == 0) {
-                towerUnit2.effectType = 1;
-                return;
-            }
-            if (i5 == 1) {
-                towerUnit2.targetMaxNum = 2;
-                towerUnit2.effectType = 8;
-            } else {
-                if (i5 != 2) {
-                    return;
-                }
-                towerUnit2.effectType = 1;
-            }
         }
     }
 
@@ -1744,37 +1654,6 @@ public class GameThread extends Thread {
         return i3;
     }
 
-    public float getRotateDegree(float f, float f2) {
-        double d;
-        double degrees;
-        double degrees2;
-        if (f == 0.0f) {
-            return f2 < 0.0f ? 0.0f : 180.0f;
-        }
-        if (f2 == 0.0f) {
-            return f < 0.0f ? 270.0f : 90.0f;
-        }
-        float abs = Math.abs(f2) / Math.abs(f);
-        if (f < 0.0f) {
-            d = 270.0d;
-            if (f2 < 0.0f) {
-                degrees = Math.toDegrees(Math.atan(abs));
-            } else {
-                degrees2 = Math.toDegrees(Math.atan(abs));
-                degrees = -degrees2;
-            }
-        } else {
-            d = 90.0d;
-            if (f2 < 0.0f) {
-                degrees2 = Math.toDegrees(Math.atan(abs));
-                degrees = -degrees2;
-            } else {
-                degrees = Math.toDegrees(Math.atan(abs));
-            }
-        }
-        return (float) (degrees + d);
-    }
-
     public static boolean checkEnableBuyUnit(int i) {
         return myMoney >= getBuyPrice(i);
     }
@@ -1994,80 +1873,19 @@ public class GameThread extends Thread {
         }
     }
 
-    public static int getSoundAttackType(int i) {
-        int i2 = towerUnit[i].towerType;
-        if (i2 == -1) {
-            return -1;
-        }
-        if (towerUnit[i].heroFlag != 0) {
-            int i3 = DataHero.heroData[i2][13];
-            if (i3 == 0) {
-                return 22;
-            }
-            if (i3 != 1) {
-                return i3 != 2 ? -1 : 29;
-            }
-            return 26;
-        }
-        switch (DataCharacter.charData[i2][12]) {
-            case 0:
-            case 2:
-                return 21;
-            case 1:
-                return 23;
-            case 3:
-                return 22;
-            case 4:
-            case 6:
-                return 24;
-            case 5:
-                return 26;
-            case 7:
-                return 25;
-            case 8:
-                return 27;
-            case 9:
-                return 29;
-            case 10:
-            case 11:
-                return 28;
-            default:
-                return -1;
-        }
-    }
-
     public static int getSoundHitType(TowerUnit tu) {
-        int i2 = tu.towerType;
-        if (i2 == -1) {
-            return -1;
-        }
-        if (tu instanceof HeroUnit) {
-            int i3 = DataHero.heroData[i2][13];
-            return i3 > 2 || i3 < 0 ? -1 : 1 + (i3 * 3);
-        }
-        switch (DataCharacter.charData[i2][12]) {
-            case 0://Warrior
-            case 2://Knight
-            case 3://Warlord
-                return 1;
-            case 1://Brandisher
-                return 2;
-            case 4://Archer
-            case 6://Sharpshooter
-            case 7://Sky Arrow
-                return 3;
-            case 5://Holy Eye
-                return 4;
-            case 8://Mage
-                return 5;
-            case 9://IceMage
-                return 7;
-            case 10://Sorceress
-            case 11://Blaster
-                return 6;
-            default:
-                return -1;
-        }
+        if (tu instanceof HeroUnit)
+            return 1 + (tu.type * 3);
+        return switch (tu.type) {
+            case 0, 2, 3 -> 1; //Warrior, Knight, Warlord
+            case 1 -> 2; //Brandisher
+            case 4, 6, 7 -> 3; //Archer, Sharpshooter, Sky Arrow
+            case 5 -> 4; //Holy Eye
+            case 8 -> 5; //Mage
+            case 9 -> 7; //IceMage
+            case 10, 11 -> 6; //Sorceress, Blaster
+            default -> -1;
+        };
     }
 
     public static int getUpgradeUnitRate(int i, int i2) {
@@ -2167,124 +1985,6 @@ public class GameThread extends Thread {
     }
 
     public static void recheckAwardData() {
-        boolean z9;
-        boolean z10;
-        boolean z11;
-        boolean z12;
-        if (awardDataValue[11] >= 3) {
-            awardDataFlag[11] = 1;
-        }
-        int i15 = 12;
-        if (awardDataValue[12] >= 1) {
-            awardDataFlag[12] = 1;
-        }
-        int i16 = 0;
-        while (true) {
-            if (i16 >= 6) {
-                z9 = true;
-                break;
-            } else {
-                if (upgradeUnitValue[i16] < getUpgradeUnitMax(i16)) {
-                    z9 = false;
-                    break;
-                }
-                i16++;
-            }
-        }
-        if (z9) {
-            awardDataFlag[13] = 1;
-        }
-        int i17 = 6;
-        while (true) {
-            if (i17 >= 12) {
-                z10 = true;
-                break;
-            } else {
-                if (upgradeUnitValue[i17] < getUpgradeUnitMax(i17)) {
-                    z10 = false;
-                    break;
-                }
-                i17++;
-            }
-        }
-        if (z10) {
-            awardDataFlag[14] = 1;
-        }
-        while (true) {
-            if (i15 >= 18) {
-                z11 = true;
-                break;
-            } else {
-                if (upgradeUnitValue[i15] < getUpgradeUnitMax(i15)) {
-                    z11 = false;
-                    break;
-                }
-                i15++;
-            }
-        }
-        if (z11) {
-            awardDataFlag[15] = 1;
-        }
-        for (int i18 = 0; i18 < 3; i18++) {
-            int i19 = 0;
-            while (true) {
-                if (i19 >= 6) {
-                    z11 = true;
-                    break;
-                } else {
-                    if (heroUpgradeValue[i18][i19] < getUpgradeHeroMax(i18, i19)) {
-                        z11 = false;
-                        break;
-                    }
-                    i19++;
-                }
-            }
-            if (z11) {
-                break;
-            }
-        }
-        if (z11) {
-            awardDataFlag[16] = 1;
-        }
-        int i20 = 0;
-        boolean z13 = true;
-        while (i20 < 3) {
-            int i21 = 0;
-            while (true) {
-                if (i21 >= i13) {
-                    break;
-                }
-                if (heroUpgradeValue[i20][i21] < getUpgradeHeroMax(i20, i21)) {
-                    z13 = false;
-                    break;
-                } else {
-                    i21++;
-                    i13 = 6;
-                }
-            }
-            i20++;
-            i13 = 6;
-        }
-        int i22 = 0;
-        while (true) {
-            if (i22 >= 18) {
-                break;
-            }
-            if (upgradeUnitValue[i22] < getUpgradeUnitMax(i22)) {
-                z13 = false;
-                break;
-            }
-            i22++;
-        }
-        if (z13) {
-            awardDataFlag[17] = 1;
-        }
-        if (myHeroism >= 1000) {
-            awardDataFlag[18] = 1;
-        }
-        if (myHeroism >= 10000) {
-            awardDataFlag[19] = 1;
-        }
         int i23 = 0;
         boolean z14 = true;
         for (int i24 = 3; i23 < i24; i24 = 3) {
@@ -2352,54 +2052,10 @@ public class GameThread extends Thread {
         if (awardDataValue[52] >= 1) {
             awardDataFlag[52] = 1;
         }
-        int i26 = 0;
-        while (true) {
-            if (i26 >= 15) {
-                z12 = true;
-                break;
-            } else {
-                if (gamePerfectFlag[i26][0] <= 0) {
-                    z12 = false;
-                    break;
-                }
-                i26++;
-            }
-        }
-        if (z12) {
-            awardDataFlag[53] = 1;
-        }
         long currentTimeMillis = System.currentTimeMillis();
         playTimeCurrentValue = currentTimeMillis;
-        int i27 = playTimeTotalValue + ((int) ((currentTimeMillis - playTimeStartValue) / 1000));
-        playTimeTotalValue = i27;
+        playTimeTotalValue = playTimeTotalValue + ((int) ((currentTimeMillis - playTimeStartValue) / 1000));
         playTimeStartValue = currentTimeMillis;
-        int i30 = 0;
-        for (int i31 = 0; i31 < 62; i31++) {
-            if (i31 != 30 && awardDataFlag[i31] == 1) {
-                i30++;
-            }
-        }
-        if (i30 >= 10) {
-            awardDataFlag[30] = 1;
-        }
-        int i32 = 0;
-        for (int i33 = 0; i33 < 62; i33++) {
-            if (i33 != 31 && awardDataFlag[i33] == 1) {
-                i32++;
-            }
-        }
-        if (i32 >= 20) {
-            awardDataFlag[31] = 1;
-        }
-        int i34 = 0;
-        for (int i35 = 0; i35 < 62; i35++) {
-            if (i35 != 32 && awardDataFlag[i35] == 1) {
-                i34++;
-            }
-        }
-        if (i34 >= 30) {
-            awardDataFlag[32] = 1;
-        }
     }
 
     public static void resetUpgrade() {
@@ -2426,14 +2082,5 @@ public class GameThread extends Thread {
                 }
             }
         }
-    }
-
-    public static void sendGiftStartNetwork() {
-        for (int i = 0; i < 4; i++) {
-            NetworkThread.networkRequestList[i] = 0;
-        }
-        NetworkThread.networkRequestList[1] = 1;
-        NetworkThread.networkFinishFlag = false;
-        NetworkThread.networkState = 0;
     }
 }

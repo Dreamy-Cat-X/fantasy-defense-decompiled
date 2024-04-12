@@ -9,772 +9,44 @@ import android.util.Log;
 import androidx.core.view.ViewCompat;
 import androidx.vectordrawable.graphics.drawable.PathInterpolatorCompat;
 
-import com.sncompany.newtower.Battle.MonsterUnit;
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataAnim;
 import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataHero;
-import com.sncompany.newtower.DataClasses.DataMonster;
 import com.sncompany.newtower.DataClasses.DataObject;
-import com.sncompany.newtower.DataClasses.DataStage;
-import com.sncompany.newtower.DataClasses.DataUpgradeHero;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
-import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
-import com.sncompany.newtower.DataClasses.DataWave;
 import com.sncompany.newtower.DataClasses.DataWaveMob;
-import com.sncompany.newtower.Battle.ObjectUnit;
-import com.sncompany.newtower.Battle.TowerUnit;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /* loaded from: D:\decomp\classes.dex */
 public class GameRenderer implements GLSurfaceView.Renderer {
-    public static final int ALWAYS_RESOURCE_BACKGROUND = 0;
-    public static final int ALWAYS_RESOURCE_HERO0 = 1;
-    public static final int ALWAYS_RESOURCE_HERO1 = 2;
-    public static final int ALWAYS_RESOURCE_HERO2 = 3;
-    public static final int BLOCK_DRAW_START_X = 62;
-    public static final int BLOCK_DRAW_START_Y = 30;
-    public static final int BLOCK_SIZE_X = 45;
-    public static final int BLOCK_SIZE_X_HALF = 22;
-    public static final int BLOCK_SIZE_Y = 45;
-    public static final int BLOCK_SIZE_Y_HALF = 22;
-    public static final int BOX_DRAW_BOTTOM = 7;
-    public static final int BOX_DRAW_CENTER = 8;
-    public static final int BOX_DRAW_LEFT = 5;
-    public static final int BOX_DRAW_LEFTBOTTOM = 2;
-    public static final int BOX_DRAW_LEFTTOP = 0;
-    public static final int BOX_DRAW_LEFT_WING = 0;
-    public static final int BOX_DRAW_MAIN_BODY = 2;
-    public static final int BOX_DRAW_RIGHT = 6;
-    public static final int BOX_DRAW_RIGHTBOTTOM = 3;
-    public static final int BOX_DRAW_RIGHTTOP = 1;
-    public static final int BOX_DRAW_RIGHT_WING = 1;
-    public static final int BOX_DRAW_SIDE_BODY = 3;
-    public static final int BOX_DRAW_TOP = 4;
-    public static final int BOX_DRAW_TYPE_ONLY_MAIN = 1;
-    public static final int BOX_DRAW_TYPE_WING_MAIN = 0;
-    public static final float CHAR_MENU_ADD_ALPHA_DEGREE = 0.15f;
-    public static final float CHAR_MENU_UPPER_ALPHA_DEGREE = 0.2f;
-    public static final int CLEAR_RESOURCE_1 = 29;
-    public static final int CLEAR_RESOURCE_BACKGROUND = 0;
-    public static final int CLEAR_RESOURCE_BONUS = 14;
-    public static final int CLEAR_RESOURCE_C = 27;
-    public static final int CLEAR_RESOURCE_CLEAR = 1;
-    public static final int CLEAR_RESOURCE_E = 24;
-    public static final int CLEAR_RESOURCE_F = 26;
-    public static final int CLEAR_RESOURCE_FAIL = 2;
-    public static final int CLEAR_RESOURCE_HEROISM = 4;
-    public static final int CLEAR_RESOURCE_ICONATTUP = 22;
-    public static final int CLEAR_RESOURCE_ICONHERO1 = 19;
-    public static final int CLEAR_RESOURCE_ICONHERO2 = 20;
-    public static final int CLEAR_RESOURCE_ICONHERO3 = 21;
-    public static final int CLEAR_RESOURCE_ICONHEROISM = 18;
-    public static final int CLEAR_RESOURCE_ICONITEM = 17;
-    public static final int CLEAR_RESOURCE_ICONSKILL = 15;
-    public static final int CLEAR_RESOURCE_ICONSPE = 16;
-    public static final int CLEAR_RESOURCE_NEXTSTAGE_OFF = 5;
-    public static final int CLEAR_RESOURCE_NEXTSTAGE_ON = 6;
-    public static final int CLEAR_RESOURCE_P = 23;
-    public static final int CLEAR_RESOURCE_PERFECT = 13;
-    public static final int CLEAR_RESOURCE_R = 25;
-    public static final int CLEAR_RESOURCE_RETRY_OFF = 11;
-    public static final int CLEAR_RESOURCE_RETRY_ON = 12;
-    public static final int CLEAR_RESOURCE_STAGESELECT_OFF = 9;
-    public static final int CLEAR_RESOURCE_STAGESELECT_ON = 10;
-    public static final int CLEAR_RESOURCE_T = 28;
-    public static final int CLEAR_RESOURCE_TOTALSCORE = 3;
-    public static final int CLEAR_RESOURCE_UPGRADE_OFF = 7;
-    public static final int CLEAR_RESOURCE_UPGRADE_ON = 8;
-    public static final int CONTINUE_EFFECT_FRAME_PER_SHOT = 1;
     public static int CX = 0;
     public static int CY = 0;
-    public static final int DATA_CHARACTER_EFFECT_TYPE_TOTAL_COUNT = 9;
-    static final float DISABLE_BUTTON_ALPHA_DEGREE = 0.5f;
-    public static final int DRAW_FRAME_DELAY_DEFAULT = 3;
-    public static final int DRAW_INVEN_BOTTOM_LINE_MARGIIN = 34;
-    public static final int DRAW_INVEN_BOTTOM_MARGIN = 28;
-    public static final int DRAW_INVEN_CENTER_MARGIN = 34;
-    public static final int DRAW_INVEN_DESCRIPTION_HEIGHT = -73;
-    public static final int DRAW_INVEN_HEROMARK_MARGIN = 40;
-    public static final int DRAW_INVEN_HERO_LINE_MARGIN = 12;
-    public static final int DRAW_INVEN_LEFT_MARGIN = 14;
-    public static final int DRAW_INVEN_RIGHT_LINE_MARGIN = 18;
-    public static final int DRAW_INVEN_RIGHT_MARGIN = 17;
-    public static final int DRAW_INVEN_TOP_LINE_MARGIN = 14;
-    public static final int DRAW_INVEN_WIDTH_MARGIN = 65;
     public static float DRAW_SCALE_SIZE = 1.0f;
     public static float DRAW_SCALE_SIZE_X = 1.0f;
     public static float DRAW_SCALE_SIZE_Y = 1.0f;
     public static float DRAW_SCALE_X_MOVE = 0.0f;
     static final float DRAW_SCALE_X_SMALL_DEGREE = 13.0f;
     public static float DRAW_SCALE_Y_MOVE = 0.0f;
-    static final float GAME_ENDING_BLACK_ALPHA_DEGREE = 0.5f;
-    static final float GAME_OVER_ANIM_BLACK_VIEW_ALPHA = 0.0125f;
-    public static final int GAME_OVER_ANIM_BLACK_VIEW_COUNT = 70;
-    public static final int GAME_OVER_ANIM_TOTAL_COUNT = 30;
-    static final float GAME_OVER_ANIM_WHITE_VIEW_ALPHA = 0.1f;
-    public static final int GAME_OVER_ANIM_WHITE_VIEW_COUNT = 10;
-    public static final int GAME_RECORD_AWARD_HEIGHT = 60;
-    public static final int GAME_RECORD_AWARD_INGYO_BLOCK = 3;
-    public static final int GAME_RECORD_SCORE_HEIGHT = 270;
-    static final float GAME_SHOP_EQUIP_MOVING_ALPHA = 0.8f;
-    public static final int GAME_SHOP_EQUIP_SKILL_GAP_PER_X = 255;
-    public static final int GAME_SHOP_EQUIP_SKILL_GAP_PER_Y = 69;
     public static final int GAME_SHOP_EQUIP_SKILL_START_X = 203;
     public static final int GAME_SHOP_EQUIP_SKILL_START_Y = 224;
-    public static final int GAME_SHOP_GIFT_SHOP_COUNT_PER_LINE = 3;
-    public static final int GAME_SHOP_GIFT_SHOP_GAP_PER_X = 70;
-    public static final int GAME_SHOP_GIFT_SHOP_GAP_PER_Y = 70;
-    public static final int GAME_SHOP_GIFT_SHOP_START_X = 50;
-    public static final int GAME_SHOP_GIFT_SHOP_START_Y = 140;
-    public static final int GAME_SHOP_SHOP_HEIGHT = 70;
-    public static final int GAME_SHOP_SHOP_INGYO_BLOCK = 3;
-    public static final int GAME_SHOP_SHOP_INVENTORY_GAP_PER_X = 70;
     public static final int GAME_SHOP_SHOP_INVENTORY_START_Y = 390;
-    public static final int GAME_SHOP_SHOP_SELECT_BOX_DEGREE = -5;
     public static final int GAME_SHOP_SHOP_SIDEBAR_END_Y = 330;
-    public static final int GAME_SHOP_SHOP_SIDEBAR_START_Y = 90;
-    public static final int GAME_SHOP_SHOP_SKILL_BASE_BOX_DEGREE = -2;
-    public static final int GAME_SHOP_SHOP_SKILL_GAP_PER_Y = 70;
-    public static final int GAME_SHOP_SHOP_SKILL_START_X = 30;
-    public static final int GAME_SHOP_SHOP_SKILL_START_Y = 70;
-    public static final int GAME_SHOP_SHOP_TOUCH_CHECK_BLOCK = 4;
-    public static final int GAME_SHOP_SHOP_TOUCH_CHECK_TYPE = 2;
-    public static final int GAME_STAGE_CLEAR_BOTTOM_BUTTON_COUNT = 270;
-    public static final int GAME_STAGE_CLEAR_DESTROY_BONUS_END_COUNT = 60;
-    public static final int GAME_STAGE_CLEAR_HEROISM_EARNED_COUNT = 210;
     public static final int GAME_STAGE_CLEAR_HIGH_SCORE_COUNT = 240;
-    public static final int GAME_STAGE_CLEAR_LIVES_END_COUNT = 90;
-    public static final int GAME_STAGE_CLEAR_REMAIN_GOLD_COUNT = 120;
-    public static final int GAME_STAGE_CLEAR_REMAIN_MANA_COUNT = 150;
-    public static final int GAME_STAGE_CLEAR_RESULT_START_END_COUNT = 30;
-    public static final int GAME_STAGE_CLEAR_RESULT_START_POS = 0;
-    public static final int GAME_STAGE_CLEAR_SOUND_TIME = 10;
-    static final float GAME_STAGE_CLEAR_START_BLACK_ALPHA = 0.016f;
-    public static final int GAME_STAGE_CLEAR_START_BLACK_COUNT = 30;
-    static final float GAME_STAGE_CLEAR_THEME_ALPHA_DEGREE = 0.033f;
     public static final int GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS = 168;
-    public static final int GAME_STAGE_CLEAR_THEME_BLACK_SHOT_END_POS = 64;
-    public static final int GAME_STAGE_CLEAR_THEME_BLINK_FRAME = 20;
-    public static final int GAME_STAGE_CLEAR_THEME_COLOR_SHOT_END_POS = 34;
-    public static final int GAME_STAGE_CLEAR_THEME_ICON_MOVE_DEGREE = 20;
-    public static final int GAME_STAGE_CLEAR_THEME_ICON_MOVE_END_POS = 88;
-    public static final int GAME_STAGE_CLEAR_THEME_MOVE_DEGREE = 20;
-    public static final int GAME_STAGE_CLEAR_THEME_STAGE_MOVE_DISTANCE = 150;
-    public static final int GAME_STAGE_CLEAR_THEME_START_POS = 10;
     public static final int GAME_STAGE_CLEAR_THEME_VIEW_END_POS = 198;
-    static final float GAME_STAGE_CLEAR_TOTAL_ALPHA = 0.033f;
-    public static final int GAME_STAGE_CLEAR_TOTAL_SCORE_COUNT = 180;
-    static final float GAME_STAGE_DARK_ALPHA_DEGREE = 0.033f;
-    public static final int GAME_STAGE_DARK_VIEW_TOTAL_COUNT = 45;
     public static int GAME_TITLE_BOSS_VIEW_POS = 0;
-    public static final int GAME_TITLE_MAIN_VIEW_BOSS_MOVE_POS = 54;
-    public static final int GAME_TITLE_MAIN_VIEW_UNIT_MOVE_POS = 108;
-    public static final int GAME_UPGRADE_HERO_COUNT_PER_BLOCK = 3;
-    public static final int GAME_UPGRADE_HERO_SELECT_BOX_DEGREE = -5;
-    public static final int GAME_UPGRADE_HERO_SKILL_BLOCK_PER_X = 255;
-    public static final int GAME_UPGRADE_HERO_SKILL_GAP_PER_X = 70;
-    public static final int GAME_UPGRADE_HERO_SKILL_GAP_PER_Y = 70;
-    public static final int GAME_UPGRADE_HERO_SKILL_START_X = 45;
     public static final int GAME_UPGRADE_HERO_SKILL_START_Y = 220;
-    public static final int GAME_UPGRADE_INVENTORY_BASE_BOX_DEGREE = -2;
-    public static final int GAME_UPGRADE_INVENTORY_GAP_PER_X = 70;
-    public static final int GAME_UPGRADE_INVENTORY_SELECT_BOX_DEGREE = -5;
-    public static final int GAME_UPGRADE_INVENTORY_START_X = 53;
-    public static final int GAME_UPGRADE_INVENTORY_START_Y = 28;
-    public static final int GAME_UPGRADE_UINT_SELECT_RED_BAR_START = -49;
-    public static final int GAME_UPGRADE_UNIT_SELECT_BOX_DEGREE = -5;
-    public static final int GAME_UPGRADE_UNIT_SELECT_RED_BAR_END = 60;
-    public static final int GAME_UPGRADE_UNIT_SELECT_RED_BAR_HEIGHT = 109;
-    public static final int GAME_UPGRADE_UNIT_SELECT_RED_DEGREE = -11;
-    public static final int GAME_UPGRADE_UNIT_SELECT_RED_START_X = -2;
-    public static final int GAME_UPGRADE_UNIT_SKILL_BASE_BOX_DEGREE = -2;
-    public static final int GAME_UPGRADE_UNIT_SKILL_GAP_PER_X = 80;
-    public static final int GAME_UPGRADE_UNIT_SKILL_GAP_PER_Y = 80;
-    public static final int GAME_UPGRADE_UNIT_SKILL_START_X = 280;
-    public static final int GAME_UPGRADE_UNIT_SKILL_START_Y = 70;
-    public static final int GATEFIRE_RESOURCE_EYEEAST1 = 6;
-    public static final int GATEFIRE_RESOURCE_EYEEAST2 = 7;
-    public static final int GATEFIRE_RESOURCE_EYESOUTH1 = 8;
-    public static final int GATEFIRE_RESOURCE_EYESOUTH2 = 9;
-    public static final int GATEFIRE_RESOURCE_EYEWEST1 = 4;
-    public static final int GATEFIRE_RESOURCE_EYEWEST2 = 5;
-    public static final int GATEFIRE_RESOURCE_FIRE1 = 0;
-    public static final int GATEFIRE_RESOURCE_FIRE2 = 1;
-    public static final int GATEFIRE_RESOURCE_FIRE3 = 2;
-    public static final int GATEFIRE_RESOURCE_FIRE4 = 3;
-    public static final int INGAME_RESOURCE_PAUSED = 0;
-    public static final int INGAME_RESOURCE_RESTART_OFF = 3;
-    public static final int INGAME_RESOURCE_RESTART_ON = 4;
-    public static final int INGAME_RESOURCE_RESUME_OFF = 1;
-    public static final int INGAME_RESOURCE_RESUME_ON = 2;
-    public static final int INGAME_RESOURCE_STAGESELECT_OFF = 5;
-    public static final int INGAME_RESOURCE_STAGESELECT_ON = 6;
-    public static final int INVENTORY_ARROW_PRESSED_LEFT_ARROW = 1;
-    public static final int INVENTORY_ARROW_PRESSED_NONE = 0;
-    public static final int INVENTORY_ARROW_PRESSED_RIGHT_ARROW = 2;
-    public static final int INVENTORY_ARROW_PRESSED_SELL = 3;
-    static final int INVENTORY_CIRCLE_ITEM_TOTAL_COUNT = 3;
-    public static final int LOADCOUNT_GAME_MENU_IMAGE_LOAD_MAX = 10;
-    public static final int LOADCOUNT_GAME_PLAY_IMAGE_LOAD_MAX = 17;
-    public static final int LOADCOUNT_GAME_PRE_IMAGE_LOAD_MAX = 4;
-    public static final int LOADCOUNT_GAME_PRE_TOTAL_IMAGE_LOAD_MAX = 15;
-    public static final int LOADCOUNT_GAME_RESUME_TO_MENU_MAX = 100;
-    public static final int LOADCOUNT_GAME_RESUME_TO_MENU_START = 10;
-    public static final int LOADCOUNT_GAME_RESUME_TO_PLAY_MAX = 100;
-    public static final int LOADCOUNT_GAME_RESUME_TO_PLAY_START = 10;
-    public static final int LOADING_VIEW_TYPE_ARCHER = 4;
-    public static final int LOADING_VIEW_TYPE_HERO0 = 0;
-    public static final int LOADING_VIEW_TYPE_HERO1 = 1;
-    public static final int LOADING_VIEW_TYPE_HERO2 = 2;
-    public static final int LOADING_VIEW_TYPE_TOTAL_COUNT = 6;
-    public static final int LOADING_VIEW_TYPE_WARRIOR = 3;
-    public static final int LOADING_VIEW_TYPE_WIZARD = 5;
-    public static final int LOGO_12USESULTRY = 17;
-    public static final int LOGO_PLAYBEAN = 16;
-    public static final int MAINMENU_RESOURCE_BACKGROUND2 = 0;
-    public static final int MAINMENU_RESOURCE_BACK_ON_L = 6;
-    public static final int MAINMENU_RESOURCE_HELP_ON_L = 2;
-    public static final int MAINMENU_RESOURCE_RECORD_ON_L = 3;
-    public static final int MAINMENU_RESOURCE_SHOP_ON_L = 5;
-    public static final int MAINMENU_RESOURCE_START_ON_L = 1;
-    public static final int MAINMENU_RESOURCE_UPGRADE_ON_L = 4;
-    public static final int MAP_TYPE_0_FOREST = 0;
-    public static final int MAP_TYPE_1_SWAMP = 1;
-    public static final int MAP_TYPE_2_WILDS = 2;
-    public static final int MAP_TYPE_3_VOLCANO = 3;
-    public static final int MAP_TYPE_4_DEVILDOM = 4;
-    public static final int MAP_TYPE_TOTAL_COUNT = 5;
-    public static final int MONSTER_DRAW_ALPHA_MAX = 1000;
-    public static final int MONSTER_DRAW_BLOCK_SIZE = 5;
-    public static final int MONSTER_DRAW_IMAGE_ALPHA = 3;
-    public static final int MONSTER_DRAW_IMAGE_FLIP = 4;
-    public static final int MONSTER_DRAW_IMAGE_NUM = 0;
-    public static final int MONSTER_DRAW_IMAGE_XPOS = 1;
-    public static final int MONSTER_DRAW_IMAGE_YPOS = 2;
-    static final float MONSTER_GOAL_BLINK_ALPHA_DEGREE = 0.33f;
-    static final int MONSTER_GOAL_BLINK_HALF_COUNT = 3;
-    static final int MONSTER_GOAL_BLINK_TOTAL_COUNT = 6;
-    public static final int OBJECT_SCALE_SIZE = 50;
-    public static final int OBJECT_VIEW_YPOS_MOVE_SIZE = 22;
-    public static final int PHONE_INPUT_0 = 11;
-    public static final int PHONE_INPUT_1 = 1;
-    public static final int PHONE_INPUT_2 = 2;
-    public static final int PHONE_INPUT_3 = 3;
-    public static final int PHONE_INPUT_4 = 4;
-    public static final int PHONE_INPUT_5 = 5;
-    public static final int PHONE_INPUT_6 = 6;
-    public static final int PHONE_INPUT_7 = 7;
-    public static final int PHONE_INPUT_8 = 8;
-    public static final int PHONE_INPUT_9 = 9;
-    public static final int PHONE_INPUT_BACK = 10;
-    public static final int PHONE_INPUT_CLOSE = 0;
-    public static final int PHONE_INPUT_HEIGHT_Y = 80;
-    public static final int PHONE_INPUT_OK = 12;
-    public static final int PHONE_INPUT_START_X = 26;
     public static final int PHONE_INPUT_START_Y = 137;
     public static final int PHONE_INPUT_WIDTH_X = 121;
-    public static final int PLAYING_OSCILLATOR_ARCHER = 2;
-    public static final int PLAYING_OSCILLATOR_COLD_DIVINER = 5;
-    public static final int PLAYING_OSCILLATOR_HERO = 7;
-    public static final int PLAYING_OSCILLATOR_HERO_IN_MOVE_POS = -10;
-    public static final int PLAYING_OSCILLATOR_HERO_IN_POS = 0;
     public static final int PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS = 310;
-    public static final int PLAYING_OSCILLATOR_HERO_OUT_POS = 300;
-    public static final int PLAYING_OSCILLATOR_HERO_SELECT_1 = 8;
-    public static final int PLAYING_OSCILLATOR_HERO_SELECT_2 = 9;
-    public static final int PLAYING_OSCILLATOR_HERO_SELECT_3 = 10;
-    public static final int PLAYING_OSCILLATOR_HOLY_EYE = 3;
-    public static final int PLAYING_OSCILLATOR_MAN_AT_ARMS = 1;
-    public static final int PLAYING_OSCILLATOR_NORMAL_COUNT = 7;
-    public static final int PLAYING_OSCILLATOR_SPECIAL_UNIT = 6;
-    public static final int PLAYING_OSCILLATOR_TOTAL_COUNT = 11;
-    public static final int PLAYING_OSCILLATOR_UNIT_IN_MOVE_POS = -10;
-    public static final int PLAYING_OSCILLATOR_UNIT_IN_POS = 0;
-    public static final int PLAYING_OSCILLATOR_UNIT_OUT_MOVE_POS = 210;
-    public static final int PLAYING_OSCILLATOR_UNIT_OUT_POS = 200;
-    public static final int PLAYING_OSCILLATOR_WARRIOR = 0;
-    public static final int PLAYING_OSCILLATOR_WIZARD = 4;
     public static int SCRHEIGHT = 0;
     public static int SCRHEIGHT_SMALL = 0;
     public static int SCRWIDTH = 0;
     public static int SCRWIDTH_SMALL = 0;
-    public static final int SPECIAL_ARROW_BACKGROUND = 15;
-    public static final int SPECIAL_ARROW_BODY = 13;
-    public static final int SPECIAL_ARROW_BODY2 = 14;
-    public static final int SPECIAL_ARROW_CENTER1 = 0;
-    public static final int SPECIAL_ARROW_CENTER2 = 1;
-    public static final int SPECIAL_ARROW_CENTER3 = 2;
-    public static final int SPECIAL_ARROW_CENTER4 = 3;
-    public static final int SPECIAL_ARROW_LAND = 12;
-    public static final int SPECIAL_ARROW_LEFT1 = 4;
-    public static final int SPECIAL_ARROW_LEFT2 = 5;
-    public static final int SPECIAL_ARROW_LEFT3 = 6;
-    public static final int SPECIAL_ARROW_LEFT4 = 7;
-    public static final int SPECIAL_ARROW_LINEB = 16;
-    public static final int SPECIAL_ARROW_LINEM = 17;
-    public static final int SPECIAL_ARROW_LINES = 18;
-    public static final int SPECIAL_ARROW_RIGHT1 = 8;
-    public static final int SPECIAL_ARROW_RIGHT2 = 9;
-    public static final int SPECIAL_ARROW_RIGHT3 = 10;
-    public static final int SPECIAL_ARROW_RIGHT4 = 11;
-    public static final int SPECIAL_ARROW_UNIT = 19;
-    static final float SPECIAL_BLINK_ALPHA_DEGREE = 0.2f;
-    static final int SPECIAL_BLINK_HALF_COUNT = 5;
-    static final int SPECIAL_BLINK_TOTAL_COUNT = 10;
-    public static final int SPECIAL_ICE_1 = 3;
-    public static final int SPECIAL_ICE_10 = 12;
-    public static final int SPECIAL_ICE_11 = 13;
-    public static final int SPECIAL_ICE_12 = 14;
-    public static final int SPECIAL_ICE_13 = 15;
-    public static final int SPECIAL_ICE_14 = 16;
-    public static final int SPECIAL_ICE_2 = 4;
-    public static final int SPECIAL_ICE_3 = 5;
-    public static final int SPECIAL_ICE_4 = 6;
-    public static final int SPECIAL_ICE_5 = 7;
-    public static final int SPECIAL_ICE_6 = 8;
-    public static final int SPECIAL_ICE_7 = 9;
-    public static final int SPECIAL_ICE_8 = 10;
-    public static final int SPECIAL_ICE_9 = 11;
-    public static final int SPECIAL_ICE_BACKGROUND = 1;
-    public static final int SPECIAL_ICE_BODY = 0;
-    public static final int SPECIAL_ICE_LINEB = 17;
-    public static final int SPECIAL_ICE_LINEM = 18;
-    public static final int SPECIAL_ICE_LINES = 19;
-    public static final int SPECIAL_ICE_UNIT = 2;
-    public static final int SPECIAL_SWORD_BACKGROUND = 5;
-    public static final int SPECIAL_SWORD_BLADE0 = 0;
-    public static final int SPECIAL_SWORD_BLADE1 = 1;
-    public static final int SPECIAL_SWORD_BLADE2 = 2;
-    public static final int SPECIAL_SWORD_BLADE3 = 3;
-    public static final int SPECIAL_SWORD_BODY = 4;
-    public static final int SPECIAL_SWORD_LINEB = 6;
-    public static final int SPECIAL_SWORD_LINEM = 7;
-    public static final int SPECIAL_SWORD_LINES = 8;
-    public static final int SPECIAL_SWORD_WIND0 = 9;
-    public static final int SPECIAL_SWORD_WIND1 = 10;
-    public static final int SPECIAL_SWORD_WIND2 = 11;
-    static final float START_VIEW_DARK_DEGREE = 0.066f;
-    public static final int START_VIEW_MOVE_COUNT = 35;
-    public static final int START_VIEW_WAIT_COUNT = 15;
-    public static final int TITLE_GLOW_MOVE_COUNT = 20;
-    public static final int TITLE_GLOW_MOVE_TOTAL_COUNT = 40;
-    public static final int TITLE_MOB_START_VIEW_POS = 9;
-    public static final int TITLE_RED_EYE_VIEW_XPOS = 64;
-    public static final int TITLE_RED_EYE_VIEW_YPOS = 38;
-    public static final int TITLE_RESOURCE_ABOUT = 13;
-    public static final int TITLE_RESOURCE_BACKGROUND = 0;
-    public static final int TITLE_RESOURCE_BACKGROUND2 = 1;
-    public static final int TITLE_RESOURCE_FACEBOOK = 15;
-    public static final int TITLE_RESOURCE_MOB0 = 2;
-    public static final int TITLE_RESOURCE_MOB1 = 3;
-    public static final int TITLE_RESOURCE_MOBEYE = 4;
-    public static final int TITLE_RESOURCE_OPTION_OFF = 10;
-    public static final int TITLE_RESOURCE_OPTION_ON = 11;
-    public static final int TITLE_RESOURCE_SNCOMPANY = 12;
-    public static final int TITLE_RESOURCE_START_OFF = 8;
-    public static final int TITLE_RESOURCE_START_ON = 9;
-    public static final int TITLE_RESOURCE_TITLE = 5;
-    public static final int TITLE_RESOURCE_TITLEGLOW = 6;
-    public static final int TITLE_RESOURCE_TITLEKOREAN = 7;
-    public static final int TITLE_RESOURCE_TWITTER = 14;
-    public static final int TUTORIAL_RESOURCE_ARROW1 = 0;
-    public static final int TUTORIAL_RESOURCE_ARROW2 = 1;
-    public static final int TUTORIAL_RESOURCE_ARROW3 = 2;
-    public static final int TUTORIAL_RESOURCE_ARROW4 = 3;
-    public static final int TUTORIAL_RESOURCE_ARROW5 = 4;
-    public static final int TUTORIAL_RESOURCE_ARROW6 = 5;
-    public static final int TUTORIAL_RESOURCE_ARROW7 = 6;
-    public static final int TUTORIAL_RESOURCE_BOX0 = 7;
-    public static final int TUTORIAL_RESOURCE_BOX1 = 8;
-    public static final int TUTORIAL_RESOURCE_BOX2 = 9;
-    public static final int TUTORIAL_RESOURCE_BOX3 = 10;
-    public static final int TUTORIAL_RESOURCE_BOX4 = 11;
-    public static final int TUTORIAL_RESOURCE_BOX5 = 12;
-    public static final int TUTORIAL_RESOURCE_BOX6 = 13;
-    public static final int TUTORIAL_RESOURCE_BOX7 = 14;
-    public static final int TUTORIAL_RESOURCE_BOX8 = 15;
-    public static final int TUTORIAL_RESOURCE_BUTTON = 16;
-    public static final int TUTORIAL_RESOURCE_FOLLOW = 17;
-    public static final int TUTORIAL_RESOURCE_HAND0 = 18;
-    public static final int TUTORIAL_RESOURCE_HAND1 = 19;
-    public static final int TUTORIAL_RESOURCE_MENT0 = 20;
-    public static final int TUTORIAL_RESOURCE_MENT1 = 21;
-    public static final int TUTORIAL_RESOURCE_MENT2 = 22;
-    public static final int TUTORIAL_RESOURCE_MENT3 = 23;
-    public static final int TUTORIAL_RESOURCE_MENT4 = 24;
-    public static final int TUTORIAL_RESOURCE_MENT5 = 25;
-    public static final int TUTORIAL_RESOURCE_MENT6 = 26;
-    public static final int TUTORIAL_RESOURCE_MENT7 = 27;
-    public static final int TUTORIAL_RESOURCE_TARGET = 28;
-    public static final int UI_BUTTON_ADDUNIT_ARCHER = 2;
-    public static final int UI_BUTTON_ADDUNIT_COLD_DIVINER = 5;
-    public static final int UI_BUTTON_ADDUNIT_DISABLE_NUM = 9;
-    public static final int UI_BUTTON_ADDUNIT_HERO = 18;
-    public static final int UI_BUTTON_ADDUNIT_HERO0 = 6;
-    public static final int UI_BUTTON_ADDUNIT_HERO1 = 7;
-    public static final int UI_BUTTON_ADDUNIT_HERO2 = 8;
-    public static final int UI_BUTTON_ADDUNIT_HOLY_EYE = 3;
-    public static final int UI_BUTTON_ADDUNIT_MAN_AT_ARMS = 1;
-    public static final int UI_BUTTON_ADDUNIT_WARRIOR = 0;
-    public static final int UI_BUTTON_ADDUNIT_WIZARD = 4;
-    public static final int UI_CHAR_BUTTON_1_OFF = 16;
-    public static final int UI_CHAR_BUTTON_1_ON = 17;
-    public static final int UI_CHAR_BUTTON_2_OFF = 18;
-    public static final int UI_CHAR_BUTTON_2_ON = 19;
-    public static final int UI_CHAR_BUTTON_3_OFF = 20;
-    public static final int UI_CHAR_BUTTON_3_ON = 21;
-    public static final int UI_CHAR_BUTTON_4_OFF = 22;
-    public static final int UI_CHAR_BUTTON_4_ON = 23;
-    public static final int UI_CHAR_BUTTON_5_OFF = 24;
-    public static final int UI_CHAR_BUTTON_5_ON = 25;
-    public static final int UI_CHAR_BUTTON_CLASS_OFF = 0;
-    public static final int UI_CHAR_BUTTON_CLASS_ON = 1;
-    public static final int UI_CHAR_BUTTON_LVLUPHERO_OFF = 14;
-    public static final int UI_CHAR_BUTTON_LVLUPHERO_ON = 15;
-    public static final int UI_CHAR_BUTTON_LVLUP_OFF = 2;
-    public static final int UI_CHAR_BUTTON_LVLUP_ON = 3;
-    public static final int UI_CHAR_BUTTON_OK_OFF = 4;
-    public static final int UI_CHAR_BUTTON_OK_ON = 5;
-    public static final int UI_CHAR_BUTTON_SELL_OFF = 6;
-    public static final int UI_CHAR_BUTTON_SELL_ON = 7;
-    public static final int UI_CHAR_BUTTON_SPE_DANCING_BLADE_OFF = 8;
-    public static final int UI_CHAR_BUTTON_SPE_DANCING_BLADE_ON = 9;
-    public static final int UI_CHAR_BUTTON_SPE_ICE_QUAKE_OFF = 12;
-    public static final int UI_CHAR_BUTTON_SPE_ICE_QUAKE_ON = 13;
-    public static final int UI_CHAR_BUTTON_SPE_MILLON_ARROW_OFF = 10;
-    public static final int UI_CHAR_BUTTON_SPE_MILLON_ARROW_ON = 11;
-    public static final int UI_CHAR_ETC_1 = 3;
-    public static final int UI_CHAR_ETC_2 = 4;
-    public static final int UI_CHAR_ETC_3 = 5;
-    public static final int UI_CHAR_ETC_4 = 6;
-    public static final int UI_CHAR_ETC_5 = 7;
-    public static final int UI_CHAR_ETC_BACKGROUND = 0;
-    public static final int UI_CHAR_ETC_BACKLINE = 12;
-    public static final int UI_CHAR_ETC_HERO = 8;
-    public static final int UI_CHAR_ETC_LV = 2;
-    public static final int UI_CHAR_ETC_SPECIALDANCINGBLADE = 9;
-    public static final int UI_CHAR_ETC_SPECIALICEQUAKE = 11;
-    public static final int UI_CHAR_ETC_SPECIALMILLIONARROW = 10;
-    public static final int UI_CHAR_ETC_STAT = 1;
-    public static final int UI_CHAR_FACE_ARCHER = 4;
-    public static final int UI_CHAR_FACE_COLDDIVINER = 9;
-    public static final int UI_CHAR_FACE_HERO_0 = 12;
-    public static final int UI_CHAR_FACE_HERO_1 = 13;
-    public static final int UI_CHAR_FACE_HERO_2 = 14;
-    public static final int UI_CHAR_FACE_HOLYEYE = 5;
-    public static final int UI_CHAR_FACE_KNIGHT = 2;
-    public static final int UI_CHAR_FACE_MAGMABLASTER = 11;
-    public static final int UI_CHAR_FACE_MANATARMS = 1;
-    public static final int UI_CHAR_FACE_SKYBEHOLDER = 7;
-    public static final int UI_CHAR_FACE_SPLATTER = 6;
-    public static final int UI_CHAR_FACE_WARLOCK = 10;
-    public static final int UI_CHAR_FACE_WARLORD = 3;
-    public static final int UI_CHAR_FACE_WARRIOR = 0;
-    public static final int UI_CHAR_FACE_WIZARD = 8;
-    public static final int UI_CHAR_NAME_ARCHER = 4;
-    public static final int UI_CHAR_NAME_COLDDIVINER = 9;
-    public static final int UI_CHAR_NAME_HERO0 = 12;
-    public static final int UI_CHAR_NAME_HERO1 = 13;
-    public static final int UI_CHAR_NAME_HERO2 = 14;
-    public static final int UI_CHAR_NAME_HOLYEYE = 5;
-    public static final int UI_CHAR_NAME_KNIGHT = 2;
-    public static final int UI_CHAR_NAME_MAGMABLASTER = 11;
-    public static final int UI_CHAR_NAME_MANATARMS = 1;
-    public static final int UI_CHAR_NAME_SKYBEHOLDER = 7;
-    public static final int UI_CHAR_NAME_SPLATTER = 6;
-    public static final int UI_CHAR_NAME_WARLOCK = 10;
-    public static final int UI_CHAR_NAME_WARLORD = 3;
-    public static final int UI_CHAR_NAME_WARRIOR = 0;
-    public static final int UI_CHAR_NAME_WIZARD = 8;
-    public static final int UI_CHAR_UP_FACE_KNIGHT = 0;
-    public static final int UI_CHAR_UP_FACE_MAGMABLASTER = 5;
-    public static final int UI_CHAR_UP_FACE_SKYBEHOLDER = 3;
-    public static final int UI_CHAR_UP_FACE_SPLATTER = 2;
-    public static final int UI_CHAR_UP_FACE_WARLOCK = 4;
-    public static final int UI_CHAR_UP_FACE_WARLORD = 1;
-    public static final int UI_ETC_ABOUT = 11;
-    public static final int UI_ETC_BACK_OFF = 1;
-    public static final int UI_ETC_BACK_ON = 2;
-    public static final int UI_ETC_DEVELOPER = 12;
-    public static final int UI_ETC_GAEDUNGWI = 13;
-    public static final int UI_ETC_MOVIE_BTN = 15;
-    public static final int UI_ETC_OFFOFF = 8;
-    public static final int UI_ETC_OFFON = 7;
-    public static final int UI_ETC_ONOFF = 6;
-    public static final int UI_ETC_ONON = 5;
-    public static final int UI_ETC_OPTION = 3;
-    public static final int UI_ETC_OPTIONBODY = 4;
-    public static final int UI_ETC_SCROLLBUTTON = 14;
-    public static final int UI_ETC_STAGEBOXONE = 9;
-    public static final int UI_ETC_STAGESELECT = 10;
-    public static final int UI_ETC_WINDOW = 0;
-    public static final int UI_GIFT_BTNCHECKOFF = 0;
-    public static final int UI_GIFT_BTNCHECKON = 1;
-    public static final int UI_GIFT_BTNCLOSEOFF = 2;
-    public static final int UI_GIFT_BTNCLOSEON = 3;
-    public static final int UI_GIFT_BTNDISCARDOFF = 4;
-    public static final int UI_GIFT_BTNDISCARDON = 5;
-    public static final int UI_GIFT_BTNSAVEOFF = 6;
-    public static final int UI_GIFT_BTNSAVEON = 7;
-    public static final int UI_GIFT_BTNSENDOFF = 8;
-    public static final int UI_GIFT_BTNSENDON = 9;
-    public static final int UI_HELP_01 = 0;
-    public static final int UI_HELP_02 = 1;
-    public static final int UI_HELP_03 = 2;
-    public static final int UI_HELP_04 = 3;
-    public static final int UI_HELP_05 = 4;
-    public static final int UI_HELP_06 = 5;
-    public static final int UI_HELP_07 = 6;
-    public static final int UI_HELP_08 = 7;
-    public static final int UI_HELP_09 = 8;
-    public static final int UI_HELP_10 = 9;
-    public static final int UI_HELP_11 = 10;
-    public static final int UI_HELP_12 = 11;
-    public static final int UI_HELP_13 = 12;
-    public static final int UI_HELP_14 = 13;
-    public static final int UI_HELP_15 = 14;
-    public static final int UI_HELP_CHAPTERLEFT_OFF = 3;
-    public static final int UI_HELP_CHAPTERLEFT_ON = 4;
-    public static final int UI_HELP_CHAPTERRIGHT_OFF = 5;
-    public static final int UI_HELP_CHAPTERRIGHT_ON = 6;
-    public static final int UI_HELP_SHOT_TOTAL_COUNT = 15;
-    public static final int UI_HELP_TITLE = 0;
-    public static final int UI_HELP_TUTORIAL_OFF = 1;
-    public static final int UI_HELP_TUTORIAL_ON = 2;
-    public static final int UI_LOADING_BLACKLINE = 1;
-    public static final int UI_LOADING_LOADINGLINE = 2;
-    public static final int UI_LOADING_OUTLINE = 0;
-    public static final int UI_LOADING_WHITELINE = 3;
-    public static final int UI_MONSTER_ETC_BACKGROUND = 0;
-    public static final int UI_MONSTER_ETC_NEXTWAVE = 2;
-    public static final int UI_MONSTER_ETC_STAT = 1;
-    public static final int UI_MONSTER_ETC_WARNING = 3;
-    public static final int UI_MONSTER_ETC_WARNINGGLOW = 4;
-    public static final int UI_MONSTER_FACE_A1OGREZOMBIE = 15;
-    public static final int UI_MONSTER_FACE_A2DEVILTIGER = 16;
-    public static final int UI_MONSTER_FACE_B1MUDMAN = 17;
-    public static final int UI_MONSTER_FACE_B2SWAMPWOMAN = 18;
-    public static final int UI_MONSTER_FACE_BOSS1SKULLGIANT = 25;
-    public static final int UI_MONSTER_FACE_BOSS2RICH = 26;
-    public static final int UI_MONSTER_FACE_BOSS3FALLENANGEL = 27;
-    public static final int UI_MONSTER_FACE_BOSS4LILIS = 28;
-    public static final int UI_MONSTER_FACE_BOSS5WRAITHKING = 29;
-    public static final int UI_MONSTER_FACE_C1SPINX = 19;
-    public static final int UI_MONSTER_FACE_C2MUMMY = 20;
-    public static final int UI_MONSTER_FACE_D1SALAMANDER = 21;
-    public static final int UI_MONSTER_FACE_D2MAGMAROCK = 22;
-    public static final int UI_MONSTER_FACE_E1DEMON = 23;
-    public static final int UI_MONSTER_FACE_E2GRIMDEVIL = 24;
-    public static final int UI_MONSTER_FACE_EX1ZOMBIEGIRL = 30;
-    public static final int UI_MONSTER_FACE__0SKULLDOG = 0;
-    public static final int UI_MONSTER_FACE__10BONEWORM = 10;
-    public static final int UI_MONSTER_FACE__11ZOMBIEKNIGHT = 11;
-    public static final int UI_MONSTER_FACE__12UKIONA = 12;
-    public static final int UI_MONSTER_FACE__13SUCCUBUS = 13;
-    public static final int UI_MONSTER_FACE__14WRAITHBISHOP = 14;
-    public static final int UI_MONSTER_FACE__1ZOMBIE = 1;
-    public static final int UI_MONSTER_FACE__2LAMIA = 2;
-    public static final int UI_MONSTER_FACE__3IMP = 3;
-    public static final int UI_MONSTER_FACE__4WRAITH = 4;
-    public static final int UI_MONSTER_FACE__5HOLLOWSKULL = 5;
-    public static final int UI_MONSTER_FACE__6ZOMBIETURTLE = 6;
-    public static final int UI_MONSTER_FACE__7NINETAIL = 7;
-    public static final int UI_MONSTER_FACE__8VAMPIRE = 8;
-    public static final int UI_MONSTER_FACE__9SWORDWRAITH = 9;
-    public static final int UI_POPUP_RESOURCE_BACKGROUND = 0;
-    public static final int UI_POPUP_RESOURCE_BACKGROUND2 = 7;
-    public static final int UI_POPUP_RESOURCE_LEVELUP = 1;
-    public static final int UI_POPUP_RESOURCE_NOOFF = 2;
-    public static final int UI_POPUP_RESOURCE_NOOFF2 = 8;
-    public static final int UI_POPUP_RESOURCE_NOON = 3;
-    public static final int UI_POPUP_RESOURCE_NOON2 = 9;
-    public static final int UI_POPUP_RESOURCE_OKOFF2 = 12;
-    public static final int UI_POPUP_RESOURCE_OKON2 = 13;
-    public static final int UI_POPUP_RESOURCE_STAT = 4;
-    public static final int UI_POPUP_RESOURCE_YESOFF = 5;
-    public static final int UI_POPUP_RESOURCE_YESOFF2 = 10;
-    public static final int UI_POPUP_RESOURCE_YESON = 6;
-    public static final int UI_POPUP_RESOURCE_YESON2 = 11;
-    public static final int UI_RECORD_AWARDBAR = 2;
-    public static final int UI_RECORD_AWARDBASE = 1;
-    public static final int UI_RECORD_CUP = 6;
-    public static final int UI_RECORD_LOCK = 5;
-    public static final int UI_RECORD_SCOREBACK = 4;
-    public static final int UI_RECORD_SCOREBASE = 3;
-    public static final int UI_RECORD_TITLE = 0;
-    public static final int UI_SHOP_ARCHERBODY = 7;
-    public static final int UI_SHOP_ARCHEROUTLINE = 8;
-    public static final int UI_SHOP_ARCHERSHADOW = 9;
-    public static final int UI_SHOP_BTNBACKOFF = 30;
-    public static final int UI_SHOP_BTNBACKON = 31;
-    public static final int UI_SHOP_BTNBUYOFF = 32;
-    public static final int UI_SHOP_BTNBUYON = 33;
-    public static final int UI_SHOP_BTNDROPOFF = 34;
-    public static final int UI_SHOP_BTNDROPON = 35;
-    public static final int UI_SHOP_BTNGIFTOFF = 36;
-    public static final int UI_SHOP_BTNGIFTON = 37;
-    public static final int UI_SHOP_BTNLEFTARROWOFF = 42;
-    public static final int UI_SHOP_BTNLEFTARROWON = 43;
-    public static final int UI_SHOP_BTNMEQUIPOFF = 26;
-    public static final int UI_SHOP_BTNMEQUIPON = 27;
-    public static final int UI_SHOP_BTNMPOSTBOXOFF = 28;
-    public static final int UI_SHOP_BTNMPOSTBOXON = 29;
-    public static final int UI_SHOP_BTNMSHOPOFF = 24;
-    public static final int UI_SHOP_BTNMSHOPON = 25;
-    public static final int UI_SHOP_BTNRIGHTARROWOFF = 44;
-    public static final int UI_SHOP_BTNRIGHTARROWON = 45;
-    public static final int UI_SHOP_BTNSAVEOFF = 38;
-    public static final int UI_SHOP_BTNSAVEON = 39;
-    public static final int UI_SHOP_BTNSELLOFF = 40;
-    public static final int UI_SHOP_BTNSELLON = 41;
-    public static final int UI_SHOP_GLOW = 48;
-    public static final int UI_SHOP_HEROBASE = 13;
-    public static final int UI_SHOP_HEROSLOT = 14;
-    public static final int UI_SHOP_ICONEMPTY = 46;
-    public static final int UI_SHOP_LOCK = 47;
-    public static final int UI_SHOP_POSTBOXBASE = 15;
-    public static final int UI_SHOP_SHOPBASE = 16;
-    public static final int UI_SHOP_SHOPITEMBAR = 17;
-    public static final int UI_SHOP_SHOPSELECTBAR = 18;
-    public static final int UI_SHOP_TABEQUIPOFF = 19;
-    public static final int UI_SHOP_TABEQUIPON = 20;
-    public static final int UI_SHOP_TABSHOPOFF = 21;
-    public static final int UI_SHOP_TABSHOPON = 22;
-    public static final int UI_SHOP_TEL0 = 50;
-    public static final int UI_SHOP_TEL1 = 51;
-    public static final int UI_SHOP_TEL2 = 52;
-    public static final int UI_SHOP_TEL3 = 53;
-    public static final int UI_SHOP_TEL4 = 54;
-    public static final int UI_SHOP_TEL5 = 55;
-    public static final int UI_SHOP_TEL6 = 56;
-    public static final int UI_SHOP_TEL7 = 57;
-    public static final int UI_SHOP_TEL8 = 58;
-    public static final int UI_SHOP_TEL9 = 59;
-    public static final int UI_SHOP_TELBACK = 60;
-    public static final int UI_SHOP_TELBODY = 49;
-    public static final int UI_SHOP_TELCLSOFF = 62;
-    public static final int UI_SHOP_TELCLSON = 63;
-    public static final int UI_SHOP_TELOK = 61;
-    public static final int UI_SHOP_TITLEEQUIP = 0;
-    public static final int UI_SHOP_TITLEINVENTORY = 3;
-    public static final int UI_SHOP_TITLEPOSTBOX = 1;
-    public static final int UI_SHOP_TITLESHOP = 2;
-    public static final int UI_SHOP_UNDERBAR = 23;
-    public static final int UI_SHOP_WARRIORBODY = 4;
-    public static final int UI_SHOP_WARRIOROUTLINE = 5;
-    public static final int UI_SHOP_WARRIORSHADOW = 6;
-    public static final int UI_SHOP_WIZARDBODY = 10;
-    public static final int UI_SHOP_WIZARDOUTLINE = 11;
-    public static final int UI_SHOP_WIZARDSHADOW = 12;
-    public static final int UI_STAGE_1 = 18;
-    public static final int UI_STAGE_2 = 19;
-    public static final int UI_STAGE_3 = 20;
-    public static final int UI_STAGE_4 = 21;
-    public static final int UI_STAGE_5 = 22;
-    public static final int UI_STAGE_BACK_OFF = 7;
-    public static final int UI_STAGE_BACK_ON = 8;
-    public static final int UI_STAGE_BOSS_BOSS1 = 0;
-    public static final int UI_STAGE_BOSS_BOSS2 = 1;
-    public static final int UI_STAGE_BOSS_BOSS3 = 2;
-    public static final int UI_STAGE_BOSS_BOSS4 = 3;
-    public static final int UI_STAGE_BOSS_BOSS5 = 4;
-    public static final int UI_STAGE_CHAPTER = 17;
-    public static final int UI_STAGE_CHAPTERLEFT_OFF = 9;
-    public static final int UI_STAGE_CHAPTERLEFT_ON = 10;
-    public static final int UI_STAGE_CHAPTERRIGHT_OFF = 11;
-    public static final int UI_STAGE_CHAPTERRIGHT_ON = 12;
-    public static final int UI_STAGE_EFFECT1 = 2;
-    public static final int UI_STAGE_EFFECT2 = 3;
-    public static final int UI_STAGE_EFFECT3 = 4;
-    public static final int UI_STAGE_EFFECT4 = 5;
-    public static final int UI_STAGE_EFFECT5 = 6;
-    public static final int UI_STAGE_ENGAGE_OFF = 32;
-    public static final int UI_STAGE_ENGAGE_ON = 33;
-    public static final int UI_STAGE_GATEBREAKER_NOSELECT = 42;
-    public static final int UI_STAGE_GATEBREAKER_OFF = 39;
-    public static final int UI_STAGE_GATEBREAKER_ON = 40;
-    public static final int UI_STAGE_HIGHSCORE = 29;
-    public static final int UI_STAGE_INFINITY_NOSELECT = 41;
-    public static final int UI_STAGE_INFINITY_OFF = 37;
-    public static final int UI_STAGE_INFINITY_ON = 38;
-    public static final int UI_STAGE_LEFTWINDOW = 0;
-    public static final int UI_STAGE_LOCK = 45;
-    public static final int UI_STAGE_MAPLINE = 34;
-    public static final int UI_STAGE_NAME1 = 23;
-    public static final int UI_STAGE_NAME2 = 24;
-    public static final int UI_STAGE_NAME3 = 25;
-    public static final int UI_STAGE_NAME4 = 26;
-    public static final int UI_STAGE_NAME5 = 27;
-    public static final int UI_STAGE_NEW = 43;
-    public static final int UI_STAGE_NORMAL_OFF = 35;
-    public static final int UI_STAGE_NORMAL_ON = 36;
-    public static final int UI_STAGE_PERFECT = 46;
-    public static final int UI_STAGE_RIGHTWINDOW = 1;
-    public static final int UI_STAGE_STAGE = 44;
-    public static final int UI_STAGE_STAGEBOX = 30;
-    public static final int UI_STAGE_STAGELEFT_OFF = 13;
-    public static final int UI_STAGE_STAGELEFT_ON = 14;
-    public static final int UI_STAGE_STAGERIGHT_OFF = 15;
-    public static final int UI_STAGE_STAGERIGHT_ON = 16;
-    public static final int UI_STAGE_STAGESELECT = 31;
-    public static final int UI_STAGE_WAVE = 28;
-    public static final int UI_THEMECLEAR_RESOURCE_ARROW = 5;
-    public static final int UI_THEMECLEAR_RESOURCE_BACKGROUND = 0;
-    public static final int UI_THEMECLEAR_RESOURCE_GLOW = 4;
-    public static final int UI_THEMECLEAR_RESOURCE_ICON = 3;
-    public static final int UI_THEMECLEAR_RESOURCE_ICONBLACK = 6;
-    public static final int UI_THEMECLEAR_RESOURCE_MAP1 = 1;
-    public static final int UI_THEMECLEAR_RESOURCE_MAP2 = 2;
-    public static final int UI_UPGRADE_BASEBLACK = 12;
-    public static final int UI_UPGRADE_BASEHERO = 6;
-    public static final int UI_UPGRADE_BASEUNIT = 7;
-    public static final int UI_UPGRADE_BTNHEROOFF = 0;
-    public static final int UI_UPGRADE_BTNHEROON = 1;
-    public static final int UI_UPGRADE_BTNUNITOFF = 2;
-    public static final int UI_UPGRADE_BTNUNITON = 3;
-    public static final int UI_UPGRADE_BTNUPGRADEOFF = 13;
-    public static final int UI_UPGRADE_BTNUPGRADEON = 14;
-    public static final int UI_UPGRADE_ICONSELECTA = 17;
-    public static final int UI_UPGRADE_ICONSELECTN = 16;
-    public static final int UI_UPGRADE_MAX = 15;
-    public static final int UI_UPGRADE_TABHEROOFF = 8;
-    public static final int UI_UPGRADE_TABHEROON = 9;
-    public static final int UI_UPGRADE_TABUNITOFF = 10;
-    public static final int UI_UPGRADE_TABUNITON = 11;
-    public static final int UI_UPGRADE_TITLEHERO = 4;
-    public static final int UI_UPGRADE_TITLEUNIT = 5;
-    public static final int UI_UPGRADE_UPRIGHTBAR = 18;
-    static final int UI_UPITEM_HEROISM_POS = 0;
-    public static final int UNIT_VIEW_YPOS_MOVE_SIZE = 10;
-    public static final int UPGRADE_FILL_COUNT = 10;
-    public static final float UPGRADE_FILL_DEGREE = 0.1f;
-    public static final int UPGRADE_FILL_HALF_COUNT = 5;
-    public static final float UPGRADE_FLIP_HEIGHT_HALF_DEGREE = 0.2f;
-    public static final int UPPER_RESOURCE_BOSSSTAGE = 17;
-    public static final int UPPER_RESOURCE_HEART = 10;
-    public static final int UPPER_RESOURCE_HERO = 13;
-    public static final int UPPER_RESOURCE_HP_BAR = 11;
-    public static final int UPPER_RESOURCE_HP_BAR_HEIGHT = 6;
-    public static final int UPPER_RESOURCE_HP_BAR_WIDTH = 30;
-    public static final int UPPER_RESOURCE_HP_BAR_WIDTH_HALF = 15;
-    public static final int UPPER_RESOURCE_INGAMEOFF = 2;
-    public static final int UPPER_RESOURCE_INGAMEON = 3;
-    public static final int UPPER_RESOURCE_MANA = 0;
-    public static final int UPPER_RESOURCE_MONEY = 1;
-    public static final int UPPER_RESOURCE_PAUSE_OFF = 15;
-    public static final int UPPER_RESOURCE_PAUSE_ON = 16;
-    public static final int UPPER_RESOURCE_SLASH = 9;
-    public static final int UPPER_RESOURCE_SPEED0 = 4;
-    public static final int UPPER_RESOURCE_SPEED1 = 5;
-    public static final int UPPER_RESOURCE_SPEED2 = 6;
-    public static final int UPPER_RESOURCE_SPEED_EMPTY = 14;
-    public static final int UPPER_RESOURCE_STAR = 12;
-    public static final int UPPER_RESOURCE_UPBAR = 7;
-    public static final int UPPER_RESOURCE_WAVE = 8;
     public static final int VOLUMEBAR_EFFECT_POS_Y = 244;
     public static final int VOLUMEBAR_MUSIC_POS_Y = 159;
     public static final int VOLUMEBAR_START_POS_X = 331;
@@ -797,11 +69,9 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] backTileImage2 = null;
     public static Texture2D[] backTileImage3 = null;
     public static Texture2D[] backTileImage4 = null;
-    public static Texture2D[] backTileOldImage = null;
     public static Texture2D[] continueImage_600 = null;
     public static Texture2D[] continueImage_601 = null;
     public static Texture2D[] continueImage_604 = null;
-    public static long currentCheckTime = 0;
     public static int darkViewCount = 0;
     public static Texture2D dollarImage = null;
     public static Paint drawFont = null;
@@ -830,12 +100,9 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] heroImage_302 = null;
     public static Texture2D heroismImage = null;
     public static CircleItemDraw inventoryItemListDraw = null;
-    public static final boolean isFullScreen = false;
     public static boolean isPaused = false;
-    public static String itemOnly = "%s only";
     public static long lastCheckTime;
     public static String lastFontName;
-    public static int lastShowBackBase;
     public static int levelUpCount;
     public static int loadCount_GAME_MENU_IMAGE_LOAD;
     public static int loadCount_GAME_PLAY_IMAGE_LOAD;
@@ -845,7 +112,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static int loadCount_GAME_RESUME_TO_PLAY;
     public static int loadingViewType;
     public static Texture2D[] logoImage;
-    public static boolean logoSoundPlayFlag;
     public static Texture2D[] mainmenuImage;
     public static int monsterGoalBlinkCount;
     public static Texture2D[] monsterImage_0;
@@ -892,7 +158,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] numberUpgradeImage;
     public static Texture2D[] numberWaveImage;
     public static Texture2D[] outBorderImage;
-    public static CircleItemDraw rankListDraw;
     public static Texture2D[] redCircleImage;
     public static Texture2D[] shadowImage;
     public static Texture2D[] specialArrowImage;
@@ -901,18 +166,13 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] specialSwordImage;
     public static Texture2D[] stageClearImage;
     public static int startViewCount;
-    public static Texture2D[] story2Image;
-    public static Texture2D[] storyImage;
     public static int strokeColor;
     public static Texture2D targetImage;
     public static Texture2D testboxImage;
     public static Texture2D testboxImage2;
-    public static float textSize_height;
-    public static float textSize_width;
     public static Tombstone textTombstone;
     public static Texture2D[] titleBossImage;
     public static int titleCount;
-    public static Texture2D[] titleImage;
     public static int titlePressed;
     public static Texture2D[] towerImage_200;
     public static Texture2D[] towerImage_201;
@@ -935,7 +195,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] uiCharNameImage;
     public static Texture2D[] uiCharUpFaceImage;
     public static Texture2D[] uiEtcImage;
-    public static Texture2D[] uiGiftImage;
     public static Texture2D[] uiHelpImage;
     public static Texture2D[] uiHelpShotImage;
     public static Texture2D[] uiIngameImage;
@@ -957,7 +216,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static int upgradeCount;
     public static CircleItemDraw upgradeItemListDraw;
     public static Texture2D[] whiteCircleImage;
-    public static final int[] loadingUnitAdjustPos = {-57, -31, -54, -50, -45, -46, -36, -41, -30, -49, -43, -45};
     public static boolean loadViewFlag = false;
     public static int TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT = 20;
     public static int TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT = 30;
@@ -1008,7 +266,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int[] uiRecordResource = {R.drawable.ui_record_title, R.drawable.ui_record_awardbase, R.drawable.ui_record_awardbar, R.drawable.ui_record_scorebase, R.drawable.ui_record_scoreback, R.drawable.ui_record_lock, R.drawable.ui_record_cup};
     public static final int[] uiEtcResource = {R.drawable.ui_etc_window, R.drawable.ui_etc_back_off, R.drawable.ui_etc_back_on, R.drawable.ui_etc_option, R.drawable.ui_etc_optionbody, R.drawable.ui_etc_onon, R.drawable.ui_etc_onoff, R.drawable.ui_etc_offon, R.drawable.ui_etc_offoff, R.drawable.ui_etc_stageboxone, R.drawable.ui_etc_stageselect, R.drawable.ui_etc_about, R.drawable.ui_etc_developer, R.drawable.ui_etc_gaedungwi, R.drawable.ui_etc_scrollbutton, R.drawable.ui_ect_movie_btn};
     public static final int[] tileBaseResource = {R.drawable.map_b0, R.drawable.map_b1, R.drawable.map_b2, R.drawable.map_b3, R.drawable.map_b4};
-    public static final int[][] tileTileResource = {new int[]{R.drawable.map_t0_0, R.drawable.map_t0_1, R.drawable.map_t0_2, R.drawable.map_t0_3, R.drawable.map_t0_4, R.drawable.map_t0_5, R.drawable.map_t0_6, R.drawable.map_t0_7, R.drawable.map_t0_8, R.drawable.map_t0_9}, new int[]{R.drawable.map_t1_0, R.drawable.map_t1_1, R.drawable.map_t1_2, R.drawable.map_t1_3, R.drawable.map_t1_4, R.drawable.map_t1_5, R.drawable.map_t1_6, R.drawable.map_t1_7, R.drawable.map_t1_8, R.drawable.map_t1_9}, new int[]{R.drawable.map_t2_0, R.drawable.map_t2_1, R.drawable.map_t2_2, R.drawable.map_t2_3, R.drawable.map_t2_4, R.drawable.map_t2_5, R.drawable.map_t2_6, R.drawable.map_t2_7, R.drawable.map_t2_8, R.drawable.map_t2_9}, new int[]{R.drawable.map_t3_0, R.drawable.map_t3_1, R.drawable.map_t3_2, R.drawable.map_t3_3, R.drawable.map_t3_4, R.drawable.map_t3_5, R.drawable.map_t3_6, R.drawable.map_t3_7, R.drawable.map_t3_8, R.drawable.map_t3_9}, new int[]{R.drawable.map_t4_0, R.drawable.map_t4_1, R.drawable.map_t4_2, R.drawable.map_t4_3, R.drawable.map_t4_4, R.drawable.map_t4_5, R.drawable.map_t4_6, R.drawable.map_t4_7, R.drawable.map_t4_8, R.drawable.map_t4_9}};
     public static final int[] tutorialResource = {R.drawable.tutorial_arrow1, R.drawable.tutorial_arrow2, R.drawable.tutorial_arrow3, R.drawable.tutorial_arrow4, R.drawable.tutorial_arrow5, R.drawable.tutorial_arrow6, R.drawable.tutorial_arrow7, R.drawable.tutorial_box0, R.drawable.tutorial_box1, R.drawable.tutorial_box2, R.drawable.tutorial_box3, R.drawable.tutorial_box4, R.drawable.tutorial_box5, R.drawable.tutorial_box6, R.drawable.tutorial_box7, R.drawable.tutorial_box8, R.drawable.tutorial_button, R.drawable.tutorial_follow, R.drawable.tutorial_hand0, R.drawable.tutorial_hand1, R.drawable.tutorial_ment0, R.drawable.tutorial_ment1, R.drawable.tutorial_ment2, R.drawable.tutorial_ment3, R.drawable.tutorial_ment4, R.drawable.tutorial_ment5, R.drawable.tutorial_ment6, R.drawable.tutorial_ment7, R.drawable.tutorial_target};
     public static final int[] uiButtonResource = {R.drawable.ui_addunit_warrior, R.drawable.ui_addunit_manatarms, R.drawable.ui_addunit_archer, R.drawable.ui_addunit_holyeye, R.drawable.ui_addunit_wizard, R.drawable.ui_addunit_colddiviner, R.drawable.ui_addunit_hero0, R.drawable.ui_addunit_hero1, R.drawable.ui_addunit_hero2, R.drawable.ui_addunit_warrior_f, R.drawable.ui_addunit_manatarms_f, R.drawable.ui_addunit_archer_f, R.drawable.ui_addunit_holyeye_f, R.drawable.ui_addunit_wizard_f, R.drawable.ui_addunit_colddiviner_f, R.drawable.ui_addunit_hero0_f, R.drawable.ui_addunit_hero1_f, R.drawable.ui_addunit_hero2_f, R.drawable.ui_addunit_hero};
     public static final int[] uiLoadingResource = {R.drawable.ui_loading_outline, R.drawable.ui_loading_blackline, R.drawable.ui_loading_loadingline, R.drawable.ui_loading_whiteline};
@@ -1029,179 +286,15 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int[] titleBoss4Resource = {R.drawable.ui_title4_0, R.drawable.ui_title4_1, R.drawable.ui_title4_2, R.drawable.ui_title4_3};
 
     public static int getMonsterImageOrder(int i) {
-        switch (i) {
-            case DataMonster.DATA_MONSTER_M_2:
-            case DataMonster.DATA_MONSTER_M2_2:
-            case DataMonster.DATA_MONSTER_M5_2:
-            case DataMonster.DATA_MONSTER_M10_2:
-                return 1;
-            case DataMonster.DATA_MONSTER_M_3:
-            case DataMonster.DATA_MONSTER_M2_3:
-            case DataMonster.DATA_MONSTER_M5_3:
-            case DataMonster.DATA_MONSTER_M10_3:
-                return 2;
-            case DataMonster.DATA_MONSTER_M_4:
-            case 28:
-            case 53:
-            case 78:
-                return 3;
-            case DataMonster.DATA_MONSTER_M_5:
-            case 29:
-            case 54:
-            case 79:
-                return 4;
-            case DataMonster.DATA_MONSTER_M_6:
-            case 30:
-            case 55:
-            case 80:
-                return 5;
-            case DataMonster.DATA_MONSTER_M_7:
-            case 31:
-            case 56:
-            case 81:
-                return 6;
-            case DataMonster.DATA_MONSTER_M_8:
-            case 32:
-            case 57:
-            case 82:
-                return 7;
-            case DataMonster.DATA_MONSTER_M_9:
-            case 33:
-            case 58:
-            case 83:
-                return 8;
-            case DataMonster.DATA_MONSTER_M_10:
-            case 34:
-            case 59:
-            case 84:
-                return 9;
-            case DataMonster.DATA_MONSTER_M_11:
-            case 35:
-            case 60:
-            case 85:
-                return 10;
-            case DataMonster.DATA_MONSTER_M_12:
-            case 36:
-            case 61:
-            case 86:
-                return 11;
-            case DataMonster.DATA_MONSTER_M_13:
-            case 37:
-            case 62:
-            case 87:
-                return 12;
-            case DataMonster.DATA_MONSTER_M_14:
-            case 38:
-            case 63:
-            case 88:
-                return 13;
-            case DataMonster.DATA_MONSTER_M_15:
-            case 39:
-            case 64:
-            case 89:
-                return 14;
-            case 15:
-            case 40:
-            case 65:
-            case 90:
-                return 15;
-            case 16:
-            case 41:
-            case 66:
-            case 91:
-                return 16;
-            case 17:
-            case 42:
-            case 67:
-            case 92:
-                return 17;
-            case 18:
-            case 43:
-            case 68:
-            case 93:
-                return 18;
-            case 19:
-            case 44:
-            case 69:
-            case 94:
-                return 19;
-            case 20:
-            case 45:
-            case 70:
-            case 95:
-                return 20;
-            case 21:
-            case 46:
-            case 71:
-            case 96:
-                return 21;
-            case 22:
-            case 47:
-            case 72:
-            case 97:
-                return 22;
-            case 23:
-            case 48:
-            case 73:
-            case 98:
-                return 23;
-            case 24:
-            case 49:
-            case 74:
-            case 99:
-                return 24;
-            case 25:
-            case 50:
-            case 75:
-            default:
-                return 0;
-            case 100:
-            case 105:
-                return 25;
-            case 101:
-            case 106:
-                return 26;
-            case 102:
-            case 107:
-                return 27;
-            case 103:
-            case 108:
-                return 28;
-            case 104:
-            case 109:
-                return 29;
-        }
+        if (i < 100)
+            return i % 25;
+        return 25 + i % 5;
     }
 
     public static int getTowerBoxImageOrder(int i) {
-        switch (i) {
-            case 6:
-            case 7:
-            case 8:
-                return 0;
-            case 9:
-            case 10:
-            case 11:
-                return 1;
-            case 18://j
-            case 19:
-            case 20:
-                return 2;
-            case 21:
-            case 22:
-            case 23:
-                return 3;
-            case 30://jj
-            case 31:
-            case 32:
-                return 4;
-            case 33:
-            case 34:
-            case 35:
-                return 5;
-            default:
-                return -1;
-        }
+        if (i < 6 || (i >= 12 && i < 18) || (i >= 24 && i < 30) || i >= 36)
+            return -1;
+        return (i / 3) - (2 * (i / 12) + 2);
     }
 
     public GameRenderer(NewTower newTower2) {
@@ -1392,177 +485,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    //TODO - Delete
-    public void drawLoadingViewShot(GL10 gl10, int i, int i2) {
-        int i3;
-        if (!loadViewFlag || alwaysImage[0].name == -1 || uiLoadingImage[0].name == -1 || uiLoadingImage[1].name == -1 || uiLoadingImage[2].name == -1) {
-            return;
-        }
-        int i4 = loadingViewType;
-        if (i4 == 0) {
-            i3 = 12;
-        } else if (i4 == 1) {
-            i3 = 13;
-        } else if (i4 != 2) {
-            if (i4 != 3) {
-                if (i4 == 4) {
-                    i3 = 4;
-                } else if (i4 == 5) {
-                    i3 = 8;
-                }
-            }
-            i3 = 0;
-        } else {
-            i3 = 14;
-        }
-        int i5 = loadingViewType;
-        if (i5 == 0 || i5 == 1 || i5 == 2) {
-            int i6 = loadingViewType;
-            if (i6 != 0) {
-                if (i6 == 1) {
-                    if (alwaysImage[2].name == -1) {
-                        alwaysImage[2].initWithImageName(alwaysResource[2]);
-                    }
-                } else if (i6 == 2 && alwaysImage[3].name == -1) {
-                    alwaysImage[3].initWithImageName(alwaysResource[3]);
-                }
-            } else if (alwaysImage[1].name == -1) {
-                alwaysImage[1].initWithImageName(alwaysResource[1]);
-            }
-            if (uiCharNameImage[i3].name == -1) {
-                uiCharNameImage[i3].initWithImageName(uiCharNameResource[i3]);
-            }
-        } else if (i5 == 3 || i5 == 4 || i5 == 5) {
-            for (int i7 = 0; i7 < 4; i7++) {
-                int i8 = i3 + i7;
-                if (uiCharFaceImage[i8].name == -1) {
-                    uiCharFaceImage[i8].initWithImageName(uiCharFaceResource[i8]);
-                }
-                if (uiCharNameImage[i8].name == -1) {
-                    uiCharNameImage[i8].initWithImageName(uiCharNameResource[i8]);
-                }
-            }
-        }
-        alwaysImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-        int i9 = loadingViewType;
-        if (i9 == 0 || i9 == 1 || i9 == 2) {
-            int i10 = loadingViewType;
-            if (i10 == 0) {
-                alwaysImage[1].drawAtPointOption(CX, SCRHEIGHT_SMALL, 33);
-            } else if (i10 == 1) {
-                alwaysImage[2].drawAtPointOption(CX, SCRHEIGHT_SMALL, 33);
-            } else if (i10 == 2) {
-                alwaysImage[3].drawAtPointOption(CX, SCRHEIGHT_SMALL, 33);
-            }
-            uiCharNameImage[i3].drawAtPointOption(9.0f, 10.0f, 18);
-        } else if (i9 == 3 || i9 == 4 || i9 == 5) {
-            uiLoadingImage[3].drawAtPointOption(0.0f, 329.0f, 18);
-            int i11 = 0;
-            for (int i12 = 4; i11 < i12; i12 = 4) {
-                int i13 = i3 + i11;
-                uiCharFaceImage[i13].drawAtPointOptionGuide(loadingUnitAdjustPos[i13] + r14, 328.0f, 34, CGRectMake(i11 * 200, 0.0f, 200.0f, 328.0f));
-                uiCharNameImage[i13].drawAtPointOption(r14 + 100, 335.0f, 17);
-                i11++;
-            }
-        }
-        uiLoadingImage[0].drawAtPointOption(7.0f, 428.0f, 18);
-        uiLoadingImage[1].drawAtPointOption(10.0f, 460.0f, 18);
-        uiLoadingImage[2].drawAtPointOptionGuide(10.0f, 460.0f, 18, CGRectMake(10.0f, 460.0f, (i * 780) / i2, 10.0f));
-        setFontColor(-1);
-        setFontSize(17);
-        String[] split = GameThread.TIP_TEXT[GameThread.loadTipNumber].split("_");
-        drawFont.getTextBounds(GameThread.TIP_TEXT[GameThread.loadTipNumber], 0, GameThread.TIP_TEXT[GameThread.loadTipNumber].length(), Texture2D.bounds_);
-        int i14 = Texture2D.bounds_.right - Texture2D.bounds_.left;
-        Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-        Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
-        fillBlackImage.fillRect((CX - (i14 / 2)) - 5, 380.0f, i14 + 10, split.length * 27);
-        Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        for (int i15 = 0; i15 < split.length; i15++) {
-            drawStringDoubleM(split[i15], 385.0f, (i15 * 21) + 387, 17);
-        }
-    }
-
-    public void paint_GAME_PRE_LOAD(GL10 gl10) {
-        TouchManager.clearTouchMap();
-    }
-
-    public void paint_GAME_PRE_IMAGE_LOAD(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        int i = loadCount_GAME_PRE_IMAGE_LOAD + 1;
-        loadCount_GAME_PRE_IMAGE_LOAD = i;
-        if (i != 0) {
-            load_GAME_PRE_IMAGE_LOAD(i);
-            if (loadCount_GAME_PRE_IMAGE_LOAD >= 4) {
-                GameThread.gameLoadFlag = 1;
-                GameThread.gameStatus = 0;
-            }
-        }
-        drawLoadingViewShot(gl10, loadCount_GAME_PRE_IMAGE_LOAD, 4);
-        if (GameThread.gameStatus != 1001) {
-            removeLoadingImage();
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_PRE_TOTAL_IMAGE_LOAD(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        int i = loadCount_GAME_PRE_TOTAL_IMAGE_LOAD + 1;
-        loadCount_GAME_PRE_TOTAL_IMAGE_LOAD = i;
-        if (i != 0) {
-            load_GAME_PRE_TOTAL_IMAGE_LOAD(i, true);
-            if (loadCount_GAME_PRE_TOTAL_IMAGE_LOAD >= 15) {
-                GameThread.gameLoadFlag = 0;
-                GameThread.loadingStatus = 1003;
-                loadCount_GAME_MENU_IMAGE_LOAD = 0;
-            }
-        }
-        drawLoadingViewShot(gl10, loadCount_GAME_PRE_TOTAL_IMAGE_LOAD, 25);
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_NEW_MENU_IMAGE_LOAD(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        int i = loadCount_GAME_MENU_IMAGE_LOAD + 1;
-        loadCount_GAME_MENU_IMAGE_LOAD = i;
-        if (i != 0) {
-            load_GAME_MENU_IMAGE_LOAD(i);
-            if (loadCount_GAME_MENU_IMAGE_LOAD >= 10) {
-                GameThread.gameLoadFlag = 1;
-                GameThread.gameStatus = 3;
-                GameThread.gameSubStatus = 0;
-                GameThread.gameTitleViewCount = 0;
-            }
-        }
-        drawLoadingViewShot(gl10, loadCount_GAME_MENU_IMAGE_LOAD + 15, 25);
-        if (GameThread.gameStatus != 1003) {
-            removeLoadingImage();
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_PLAY_IMAGE_LOAD(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        int i = loadCount_GAME_PLAY_IMAGE_LOAD + 1;
-        loadCount_GAME_PLAY_IMAGE_LOAD = i;
-        if (i != 0) {
-            load_GAME_PLAY_IMAGE_LOAD(i);
-            if (loadCount_GAME_PLAY_IMAGE_LOAD >= 17) {
-                GameThread.gameLoadFlag = 1;
-                GameThread.gameStatus = 10;
-                GameThread.gameSubStatus = 0;
-                startViewCount = 0;
-                GameThread.mapAttackType = 0;
-                GameThread.loadMap((GameThread.stageSelectChapterNumber * 10) + GameThread.stageSelectStageNumber, true);
-                GameThread.playLoopSound(1);
-            }
-        }
-        drawLoadingViewShot(gl10, loadCount_GAME_PLAY_IMAGE_LOAD, 17);
-        if (GameThread.gameStatus != 1004) {
-            removeLoadingImage();
-        }
-        TouchManager.swapTouchMap();
-    }
-
     public void paint_GAME_PLAY2_IMAGE_LOAD(GL10 gl10) {
         TouchManager.clearTouchMap();
         int i = loadCount_GAME_PLAY_IMAGE_LOAD + 1;
@@ -1601,91 +523,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 GameThread.stopLoopSound(1);
             }
         }
-        drawLoadingViewShot(gl10, loadCount_GAME_PLAY_IMAGE_LOAD, 17);
-        if (GameThread.gameStatus != 1005) {
-            removeLoadingImage();
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_MENU_IMAGE_LOAD(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        int i = loadCount_GAME_MENU_IMAGE_LOAD + 1;
-        loadCount_GAME_MENU_IMAGE_LOAD = i;
-        if (i != 0) {
-            load_GAME_MENU_IMAGE_LOAD(i);
-            if (loadCount_GAME_MENU_IMAGE_LOAD >= 10) {
-                GameThread.gameLoadFlag = 1;
-                GameThread.playLoopSound(1);
-                GameThread.myOscillator[11].initWithTwoWayStartPosition(-150, 0, 15, 30, 10);
-            }
-        }
-        drawLoadingViewShot(gl10, loadCount_GAME_MENU_IMAGE_LOAD, 10);
-        if (GameThread.gameStatus != 1006) {
-            removeLoadingImage();
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_RESUME_TO_MENU(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        int i = loadCount_GAME_RESUME_TO_MENU + 1;
-        loadCount_GAME_RESUME_TO_MENU = i;
-        if (i >= 10) {
-            if (i < 25) {
-                load_GAME_PRE_TOTAL_IMAGE_LOAD(i - 10, false);
-            } else if (i < 35) {
-                load_GAME_MENU_IMAGE_LOAD((i - 10) - 15);
-            } else {
-                GameThread.gameLoadFlag = 1;
-                int i2 = GameThread.gameStatus;
-                if (i2 == 3) {
-                    GameThread.playLoopSound(0);
-                    GameThread.gameSubStatus = 12;
-                } else if (i2 == 5) {
-                    GameThread.playLoopSound(1);
-                } else if (i2 == 8 || i2 == 9) {
-                    GameThread.playLoopSound(0);
-                }
-            }
-        }
-        drawLoadingViewShot(gl10, loadCount_GAME_RESUME_TO_MENU, 35);
-        if (GameThread.gameStatus != 1007) {
-            removeLoadingImage();
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public void paint_GAME_RESUME_TO_PLAY(GL10 gl10) {
-        TouchManager.clearTouchMap();
-        int i = loadCount_GAME_RESUME_TO_PLAY + 1;
-        loadCount_GAME_RESUME_TO_PLAY = i;
-        if (i >= 10) {
-            if (i < 25) {
-                load_GAME_PRE_TOTAL_IMAGE_LOAD(i - 10, false);
-            } else if (i < 42) {
-                load_GAME_PLAY_IMAGE_LOAD((i - 10) - 15);
-            } else {
-                GameThread.gameLoadFlag = 1;
-                int i2 = GameThread.gameStatus;
-                if (i2 == 20 || i2 == 25) {
-                    GameThread.playLoopSound(2);
-                }
-            }
-        }
-        drawLoadingViewShot(gl10, loadCount_GAME_RESUME_TO_PLAY, 42);
-        if (GameThread.gameStatus != 1008) {
-            removeLoadingImage();
-        }
-        TouchManager.swapTouchMap();
-    }
-
-    public static void removeLoadingImage() {
-        alwaysImage[1].dealloc();
-        alwaysImage[2].dealloc();
-        alwaysImage[3].dealloc();
-        removeImageResourceArray(uiCharFaceImage);
-        removeImageResourceArray(uiCharNameImage);
     }
 
     public void drawInventoryWindow(int i, int i2, int i3, int i4, int i5, boolean z) {
@@ -1740,41 +577,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     }
 
     public static boolean makeBaseStruct() {
-        rankListDraw = new CircleItemDraw(2, 5);
-        for (int i = 0; i < rankListDraw.totalHalfBlockSize; i++) {
-            rankListDraw.blockLengthArray[i] = i * 270;
-            rankListDraw.blockSizeArray[i] = 1.0f;
-            rankListDraw.blockAlphaArray[i] = 1.0f;
-        }
-        rankListDraw.blockLengthArray[0] = 0;
-        rankListDraw.FIRST_BLOCK_SIZE = 270;
-        rankListDraw.moveSpeed = 30;
-        rankListDraw.nextMoveCheckDegree = 30;
-        rankListDraw.moveCloseFlag = true;
-        awardListDraw = new CircleItemDraw(5, 62);
-        for (int i2 = 0; i2 < awardListDraw.totalHalfBlockSize; i2++) {
-            awardListDraw.blockLengthArray[i2] = i2 * 60;
-            awardListDraw.blockSizeArray[i2] = 1.0f;
-            awardListDraw.blockAlphaArray[i2] = 1.0f;
-        }
-        awardListDraw.blockLengthArray[0] = 0;
-        awardListDraw.FIRST_BLOCK_SIZE = 60;
-        awardListDraw.moveSpeed = 20;
-        awardListDraw.nextMoveCheckDegree = 10;
-        awardListDraw.moveCloseFlag = true;
-        awardListDraw.blockLastViewCount = 3;
-        upgradeItemListDraw = new CircleItemDraw(5, 30);
-        for (int i3 = 0; i3 < upgradeItemListDraw.totalHalfBlockSize; i3++) {
-            upgradeItemListDraw.blockLengthArray[i3] = i3 * 70;
-            upgradeItemListDraw.blockSizeArray[i3] = 1.0f;
-            upgradeItemListDraw.blockAlphaArray[i3] = 1.0f;
-        }
-        upgradeItemListDraw.blockLengthArray[0] = 0;
-        upgradeItemListDraw.FIRST_BLOCK_SIZE = 70;
-        upgradeItemListDraw.moveSpeed = 20;
-        upgradeItemListDraw.nextMoveCheckDegree = 10;
-        upgradeItemListDraw.moveCloseFlag = true;
-        upgradeItemListDraw.blockLastViewCount = 3;
         inventoryItemListDraw = new CircleItemDraw(3, 3);
         for (int i4 = 0; i4 < inventoryItemListDraw.totalHalfBlockSize; i4++) {
             inventoryItemListDraw.blockLengthArray[i4] = i4 * 500;
@@ -1788,11 +590,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         inventoryItemListDraw.moveCloseFlag = true;
         inventoryItemListDraw.blockLastViewCount = 1;
         backBaseImageArray = makeTextureArray(tileBaseResource.length);
-        backTileImage0 = makeTextureArray(tileTileResource[0].length);
-        backTileImage1 = makeTextureArray(tileTileResource[1].length);
-        backTileImage2 = makeTextureArray(tileTileResource[2].length);
-        backTileImage3 = makeTextureArray(tileTileResource[3].length);
-        backTileImage4 = makeTextureArray(tileTileResource[4].length);
         backObjectImage = makeTextureArray(DataObject.objectImageResource.length);
         fillBlackImage = new Texture2D();
         fillWhiteImage = new Texture2D();
@@ -1820,7 +617,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         uiPopupImage = makeTextureArray(uiPopupResource.length);
         uiLoadingImage = makeTextureArray(uiLoadingResource.length);
         alwaysImage = makeTextureArray(alwaysResource.length);
-        titleImage = makeTextureArray(titleResource.length);
         titleBossImage = makeTextureArray(titleBoss0Resource.length);
         mainmenuImage = makeTextureArray(mainmenuResource.length);
         stageClearImage = makeTextureArray(stageClearResource.length);
@@ -1921,162 +717,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         arrowImage9 = makeTextureArray(arrowResource9.length);
         shadowImage = makeTextureArray(2);
         logoImage = makeTextureArray(logoResource.length);
-        storyImage = makeTextureArray(GameThread.storyDataResource.length);
-        story2Image = makeTextureArray(GameThread.story2DataResource.length);
         testboxImage = new Texture2D();
         testboxImage2 = new Texture2D();
-        return true;
-    }
-
-    public static boolean load_GAME_PRE_IMAGE_LOAD(int i) {
-        if (i == 1) {
-            textTombstone.dealloc();
-            removeImageResourceArray(logoImage);
-            removeImageResourceArray(storyImage);
-            fillBlackImage.dealloc();
-            fillWhiteImage.dealloc();
-            removeImageResourceArray(uiLoadingImage);
-            removeImageResourceArray(alwaysImage);
-            removeImageResourceArray(backBaseImageArray);
-            removeImageResourceArray(backTileImage0);
-            removeImageResourceArray(backTileImage1);
-            removeImageResourceArray(backTileImage2);
-            removeImageResourceArray(backTileImage3);
-            removeImageResourceArray(backTileImage4);
-            removeImageResourceArray(uiCharButtonImage);
-            removeImageResourceArray(uiCharEtcImage);
-            removeImageResourceArray(uiCharFaceImage);
-            removeImageResourceArray(uiCharNameImage);
-            removeImageResourceArray(backObjectImage);
-            removeImageResourceArray(uiPopupImage);
-            removeImageResourceArray(arrowImage0);
-            removeImageResourceArray(arrowImage1);
-            removeImageResourceArray(arrowImage2);
-            removeImageResourceArray(arrowImage3);
-            removeImageResourceArray(arrowImage4);
-            removeImageResourceArray(arrowImage9);
-            removeImageResourceArray(story2Image);
-            backShadowImage.dealloc();
-            removeImageResourceArray(whiteCircleImage);
-            removeImageResourceArray(redCircleImage);
-            removeImageResourceArray(outBorderImage);
-            removeImageResourceArray(shadowImage);
-            targetImage.dealloc();
-            removeImageResourceArray(monsterImage_0);
-            removeImageResourceArray(monsterImage_1);
-            removeImageResourceArray(monsterImage_2);
-            removeImageResourceArray(monsterImage_3);
-            removeImageResourceArray(monsterImage_4);
-            removeImageResourceArray(monsterImage_5);
-            removeImageResourceArray(monsterImage_6);
-            removeImageResourceArray(monsterImage_7);
-            removeImageResourceArray(monsterImage_8);
-            removeImageResourceArray(monsterImage_9);
-            removeImageResourceArray(monsterImage_10);
-            removeImageResourceArray(monsterImage_11);
-            removeImageResourceArray(monsterImage_12);
-            removeImageResourceArray(monsterImage_13);
-            removeImageResourceArray(monsterImage_14);
-            removeImageResourceArray(monsterImage_15);
-            removeImageResourceArray(monsterImage_16);
-            removeImageResourceArray(monsterImage_17);
-            removeImageResourceArray(monsterImage_18);
-            removeImageResourceArray(monsterImage_19);
-            removeImageResourceArray(monsterImage_20);
-            removeImageResourceArray(monsterImage_21);
-            removeImageResourceArray(monsterImage_22);
-            removeImageResourceArray(monsterImage_23);
-            removeImageResourceArray(monsterImage_24);
-            removeImageResourceArray(monsterImage_25);
-            removeImageResourceArray(monsterImage_100);
-            removeImageResourceArray(monsterImage_101);
-            removeImageResourceArray(monsterImage_102);
-            removeImageResourceArray(monsterImage_103);
-            removeImageResourceArray(monsterImage_104);
-            removeImageResourceArray(towerImage_200);
-            removeImageResourceArray(towerImage_201);
-            removeImageResourceArray(towerImage_202);
-            removeImageResourceArray(towerImage_203);
-            removeImageResourceArray(towerImage_204);
-            removeImageResourceArray(towerImage_205);
-            removeImageResourceArray(towerImage_206);
-            removeImageResourceArray(towerImage_207);
-            removeImageResourceArray(towerImage_208);
-            removeImageResourceArray(towerImage_209);
-            removeImageResourceArray(towerImage_210);
-            removeImageResourceArray(towerImage_211);
-            removeImageResourceArray(heroImage_300);
-            removeImageResourceArray(heroImage_301);
-            removeImageResourceArray(heroImage_302);
-            removeImageResourceArray(effectImage_500);
-            removeImageResourceArray(effectImage_502);
-            removeImageResourceArray(effectImage_503);
-            removeImageResourceArray(effectImage_504);
-            removeImageResourceArray(effectImage_505);
-            removeImageResourceArray(effectImage_509);
-            removeImageResourceArray(effectImage_510);
-            removeImageResourceArray(effectImage_533);
-            removeImageResourceArray(effectImage_534);
-            removeImageResourceArray(effectImage_512);
-            removeImageResourceArray(effectImage_513);
-            removeImageResourceArray(effectImage_514);
-            removeImageResourceArray(effectImage_532);
-            removeImageResourceArray(effectImage_535);
-            removeImageResourceArray(continueImage_600);
-            removeImageResourceArray(continueImage_601);
-            removeImageResourceArray(continueImage_604);
-            removeImageResourceArray(numberClearImage);
-            removeImageResourceArray(numberHeroBuyImage);
-            removeImageResourceArray(numberLifeImage);
-            removeImageResourceArray(numberManaImage);
-            removeImageResourceArray(numberMoneyImage);
-            removeImageResourceArray(numberUnitBuyImage);
-            removeImageResourceArray(numberUpgradeImage);
-            removeImageResourceArray(numberWaveImage);
-            removeImageResourceArray(numberTotalImage);
-            removeImageResourceArray(specialSwordImage);
-            removeImageResourceArray(specialArrowImage);
-            removeImageResourceArray(specialIceImage);
-            removeImageResourceArray(tutorialImage);
-            removeImageResourceArray(uiButtonImage);
-            removeImageResourceArray(gatefireImage);
-            removeImageResourceArray(stageClearImage);
-            removeImageResourceArray(uiIngameImage);
-            removeImageResourceArray(uiUpperImage);
-            removeImageResourceArray(uiCharUpFaceImage);
-            removeImageResourceArray(uiMonsterEtcImage);
-            removeImageResourceArray(uiMonsterFaceImage);
-            removeImageResourceArray(uiMonsterNameImage);
-            removeImageResourceArray(uiThemeclearImage);
-            dollarImage.dealloc();
-            heroismImage.dealloc();
-            removeImageResourceArray(titleImage);
-            removeImageResourceArray(titleBossImage);
-            removeImageResourceArray(mainmenuImage);
-            removeImageResourceArray(uiEtcImage);
-            removeImageResourceArray(uiHelpImage);
-            removeImageResourceArray(uiHelpShotImage);
-            removeImageResourceArray(uiRecordImage);
-            removeImageResourceArray(uiShopImage);
-            removeImageResourceArray(uiGiftImage);
-            removeImageResourceArray(uiStageImage);
-            removeImageResourceArray(uiStageBossImage);
-            removeImageResourceArray(uiUpgradeImage);
-            removeImageResourceArray(uiUpheroImage);
-            removeImageResourceArray(uiUpitemImage);
-            removeImageResourceArray(uiUpunitImage);
-            removeImageResourceArray(uiAwardImage);
-            removeImageResourceArray(numberHeroismImage);
-            removeImageResourceArray(numberStagePointImage);
-            testboxImage.dealloc();
-            testboxImage2.dealloc();
-        } else if (i == 2) {
-            fillBlackImage.initWithImageColor(ViewCompat.MEASURED_STATE_MASK);
-            fillWhiteImage.initWithImageColor(-1);
-            loadImageResourceToTexture(logoImage, logoResource);
-        } else if (i == 3) {
-            loadImageResourceToTexture(storyImage, GameThread.storyDataResource);
-        }
         return true;
     }
 
@@ -2099,13 +741,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 }
             } else {
                 switch (i) {
-                    case 5:
-                        loadImageResourceToTexture(backTileImage0, tileTileResource[0]);
-                        loadImageResourceToTexture(backTileImage1, tileTileResource[1]);
-                        loadImageResourceToTexture(backTileImage2, tileTileResource[2]);
-                        loadImageResourceToTexture(backTileImage3, tileTileResource[3]);
-                        loadImageResourceToTexture(backTileImage4, tileTileResource[4]);
-                        break;
                     case 6:
                         loadImageResourceToTexture(uiCharButtonImage, uiCharButtonResource);
                         loadImageResourceToTexture(uiCharEtcImage, uiCharEtcResource);
@@ -2208,7 +843,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                         loadImageResourceToTexture(arrowImage3, arrowResource3);
                         loadImageResourceToTexture(arrowImage4, arrowResource4);
                         loadImageResourceToTexture(arrowImage9, arrowResource9);
-                        loadImageResourceToTexture(story2Image, GameThread.story2DataResource);
                         backShadowImage.initWithImageName(R.drawable.etc_shadow);
                         whiteCircleImage[0].initWithImageName(R.drawable.etc_whitecircle1);
                         whiteCircleImage[1].initWithImageName(R.drawable.etc_whitecircle2);
@@ -2237,7 +871,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         } else {
             textTombstone.dealloc();
             removeImageResourceArray(logoImage);
-            removeImageResourceArray(storyImage);
             fillBlackImage.dealloc();
             fillWhiteImage.dealloc();
             removeImageResourceArray(uiLoadingImage);
@@ -2260,7 +893,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             removeImageResourceArray(arrowImage3);
             removeImageResourceArray(arrowImage4);
             removeImageResourceArray(arrowImage9);
-            removeImageResourceArray(story2Image);
             backShadowImage.dealloc();
             removeImageResourceArray(whiteCircleImage);
             removeImageResourceArray(redCircleImage);
@@ -2355,8 +987,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             removeImageResourceArray(uiThemeclearImage);
             dollarImage.dealloc();
             heroismImage.dealloc();
-            removeImageResourceArray(titleImage);
-            removeImageResourceArray(titleBossImage);
             removeImageResourceArray(mainmenuImage);
             removeImageResourceArray(uiEtcImage);
             removeImageResourceArray(uiHelpImage);
@@ -2376,102 +1006,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             testboxImage2.dealloc();
             for (int i2 = 0; i2 < 6; i2++) {
                 GameThread.GAME_LOADING_PART_STATUS[i2] = 0;
-            }
-        }
-        return true;
-    }
-
-    public static boolean load_GAME_MENU_IMAGE_LOAD(int i) {
-        if (i == 1) {
-            removeImageResourceArray(specialSwordImage);
-            removeImageResourceArray(specialArrowImage);
-            removeImageResourceArray(specialIceImage);
-            removeImageResourceArray(tutorialImage);
-            removeImageResourceArray(uiButtonImage);
-            removeImageResourceArray(gatefireImage);
-            removeImageResourceArray(stageClearImage);
-            removeImageResourceArray(uiStageImage);
-            removeImageResourceArray(uiStageBossImage);
-            removeImageResourceArray(uiThemeclearImage);
-        } else if (i == 2) {
-            dollarImage.initWithImageName(R.drawable.etc_dollar);
-            heroismImage.initWithImageName(R.drawable.etc_heroism);
-            loadImageResourceToTexture(titleImage, titleResource);
-        } else if (i == 3) {
-            int random = GameThread.getRandom(5);
-            if (random == 0) {
-                GAME_TITLE_BOSS_VIEW_POS = GAME_TITLE_BOSS_VIEW_POS_LIST[0];
-                loadImageResourceToTexture(titleBossImage, titleBoss0Resource);
-            } else if (random == 1) {
-                GAME_TITLE_BOSS_VIEW_POS = GAME_TITLE_BOSS_VIEW_POS_LIST[1];
-                loadImageResourceToTexture(titleBossImage, titleBoss1Resource);
-            } else if (random == 2) {
-                GAME_TITLE_BOSS_VIEW_POS = GAME_TITLE_BOSS_VIEW_POS_LIST[2];
-                loadImageResourceToTexture(titleBossImage, titleBoss2Resource);
-            } else if (random == 3) {
-                GAME_TITLE_BOSS_VIEW_POS = GAME_TITLE_BOSS_VIEW_POS_LIST[3];
-                loadImageResourceToTexture(titleBossImage, titleBoss3Resource);
-            } else if (random == 4) {
-                GAME_TITLE_BOSS_VIEW_POS = GAME_TITLE_BOSS_VIEW_POS_LIST[4];
-                loadImageResourceToTexture(titleBossImage, titleBoss4Resource);
-            }
-            GameThread.GAME_LOADING_PART_STATUS[3] = 1;
-        } else if (i == 4) {
-            loadImageResourceToTexture(mainmenuImage, mainmenuResource);
-        } else if (i == 6) {
-            loadImageResourceToTexture(uiEtcImage, uiEtcResource);
-            loadImageResourceToTexture(uiHelpImage, uiHelpResource);
-        } else if (i == 9) {
-            loadImageResourceToTexture(numberHeroismImage, numberHeroismResource);
-            loadImageResourceToTexture(numberUpgradeImage, numberUpgradeResource);
-        }
-        return true;
-    }
-
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    public static boolean load_GAME_PLAY_IMAGE_LOAD(int i) {
-        Log.d("LOAD IMAGE", "CHECK COUNT " + i);
-        if (i == 1) {
-            dollarImage.dealloc();
-            heroismImage.dealloc();
-            removeImageResourceArray(titleImage);
-            removeImageResourceArray(titleBossImage);
-            removeImageResourceArray(mainmenuImage);
-            removeImageResourceArray(uiEtcImage);
-            removeImageResourceArray(uiHelpImage);
-            removeImageResourceArray(uiHelpShotImage);
-            removeImageResourceArray(uiRecordImage);
-            removeImageResourceArray(uiShopImage);
-            removeImageResourceArray(uiStageBossImage);
-            removeImageResourceArray(uiUpgradeImage);
-            removeImageResourceArray(uiUpheroImage);
-            removeImageResourceArray(uiUpitemImage);
-            removeImageResourceArray(uiUpunitImage);
-            removeImageResourceArray(uiAwardImage);
-            removeImageResourceArray(numberHeroismImage);
-            removeImageResourceArray(numberUpgradeImage);
-            GameThread.GAME_LOADING_PART_STATUS[0] = 0;
-            GameThread.GAME_LOADING_PART_STATUS[1] = 0;
-            GameThread.GAME_LOADING_PART_STATUS[2] = 0;
-            GameThread.GAME_LOADING_PART_STATUS[3] = 0;
-            GameThread.GAME_LOADING_PART_STATUS[4] = 0;
-            GameThread.GAME_LOADING_PART_STATUS[5] = 0;
-        } else {
-            switch (i) {
-                case 13:
-                    loadImageResourceToTexture(tutorialImage, tutorialResource);
-                    loadImageResourceToTexture(uiButtonImage, uiButtonResource);
-                    loadImageResourceToTexture(gatefireImage, gatefireResource);
-                    break;
-                case 14:
-                    loadImageResourceToTexture(stageClearImage, stageClearResource);
-                    break;
-                case 15:
-                    loadImageResourceToTexture(uiStageImage, uiStageResource);
-                    break;
-                case 16:
-                    loadImageResourceToTexture(uiThemeclearImage, uiThemeclearResource);
-                    break;
             }
         }
         return true;
@@ -2623,7 +1157,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 drawStringDoubleM(getEffectTypeString(GameThread.towerUnit[GameThread.characterSelectNumber].effectType), 540.0f, 243.0f, 20);
                 GameThread.compareTowerUnit.towerType = upgradeType;
                 GameThread.compareTowerUnit.heroFlag = false;
-                GameThread.restatTowerUnit(GameThread.compareTowerUnit);
+                GameThread.compareTowerUnit.restatTowerUnit();
                 drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.getHitPower()), 625.0f, 162.0f, 20);
                 if (GameThread.compareTowerUnit.towerCoolTimeMax == 1) {
                     drawStringDoubleM("MAX", 625.0f, 189.0f, 20);
@@ -2671,7 +1205,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 drawStringDoubleM(getEffectTypeString(GameThread.towerUnit[GameThread.characterSelectNumber].effectType), 430.0f, 243.0f, 20);
                 GameThread.compareTowerUnit.towerType = i15 + 1;
                 GameThread.compareTowerUnit.heroFlag = GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag;
-                GameThread.restatTowerUnit(GameThread.compareTowerUnit);
+                GameThread.compareTowerUnit.restatTowerUnit();
                 drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.getHitPower()), 526.0f, 162.0f, 20);
                 if (GameThread.compareTowerUnit.towerCoolTimeMax == 1) {
                     drawStringDoubleM("MAX", 526.0f, 189.0f, 20);
@@ -3463,8 +1997,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             return;
         }
         if (i == 3) {
-            removeImageResourceArray(titleImage);
-            removeImageResourceArray(titleBossImage);
         } else if (i == 4) {
             removeImageResourceArray(stageClearImage);
         } else {
@@ -3505,7 +2037,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 return;
             }
         }
-        loadImageResourceToTexture(titleImage, titleResource);
         int random = GameThread.getRandom(5);
         if (random == 0) {
             GAME_TITLE_BOSS_VIEW_POS = GAME_TITLE_BOSS_VIEW_POS_LIST[0];

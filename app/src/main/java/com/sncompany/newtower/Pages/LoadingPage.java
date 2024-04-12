@@ -74,7 +74,7 @@ public class LoadingPage extends TPage {
         loadingViewType = NewTower.getRandom(6);
 
         //Due to how loading page works, it loads pre-emptively
-        alwaysImage[0].initWithImageName(alwaysResource[0]);
+        alwaysImage[ALWAYS_R_BG].initWithImageName(alwaysResource[ALWAYS_R_BG]);
         for (int i = 0; i < uiLoadingImage.length; i++)
             uiLoadingImage[i] = new Texture2D(uiLoadingResource[i]);
 
@@ -99,7 +99,7 @@ public class LoadingPage extends TPage {
 
     @Override
     public void unload() {
-        alwaysImage[0].dealloc();
+        alwaysImage[ALWAYS_R_BG].dealloc();
         for (Texture2D t2d : uiLoadingImage)
             t2d.dealloc();
 
@@ -113,7 +113,7 @@ public class LoadingPage extends TPage {
                 uiCharNameImage[cat].dealloc();
             }
         }
-        loaded = true;
+        loaded = false;
     }
 
     @Override

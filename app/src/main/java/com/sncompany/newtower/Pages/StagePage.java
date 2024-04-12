@@ -2,13 +2,14 @@ package com.sncompany.newtower.Pages;
 
 import androidx.core.view.ViewCompat;
 
+import com.sncompany.newtower.Battle.ArrowUnit;
+import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.MonsterUnit;
 import com.sncompany.newtower.Battle.ObjectUnit;
+import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataAnim;
 import com.sncompany.newtower.DataClasses.DataAward;
-import com.sncompany.newtower.Battle.HeroUnit;
-import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataHero;
 import com.sncompany.newtower.DataClasses.DataMap;
@@ -18,7 +19,6 @@ import com.sncompany.newtower.DataClasses.DataWave;
 import com.sncompany.newtower.DataClasses.DataWaveMob;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
-import com.sncompany.newtower.NetworkThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -233,8 +233,8 @@ public class StagePage extends TPage {
         if (GameRenderer.monsterGoalBlinkCount > 0)
             GameRenderer.monsterGoalBlinkCount--;
 
-        if (waveManager.monsterOpenTime > 0)
-            waveManager.monsterOpenTime--;
+        if (st.waveManager.monsterOpenTime > 0)
+            st.waveManager.monsterOpenTime--;
 
         switch (characterMenuSelectFlag) {
             case 2:
@@ -243,9 +243,8 @@ public class StagePage extends TPage {
             case 12:
             case 13:
                 int spd = Math.max(turbo, 1);
-                for (int i = 0; i < spd; i++) {
+                for (int i = 0; i < spd; i++)
                     updateEffectUnit(true);
-                }
                 break;
             case 3:
             case 4:
@@ -253,9 +252,9 @@ public class StagePage extends TPage {
             case 11:
             default:
                 if (st.waveManager.waveRunF) {
-                    if (waveManager.waveStartT > 0) {
-                        for (int i6 = 0; i6 < turbo; i6++) {
-                            if (--waveManager.waveStartT == 0) {
+                    if (st.waveManager.waveStartT > 0) {
+                        for (int i6 = 0; i6 < st.turbo; i6++) {
+                            if (--st.waveManager.waveStartT == 0) {
                                 if (waveManager.wavePattern == 3) {
                                     characterMenuMonsterViewCount = 100;
                                     characterMenuMonsterStartViewCount = 0;
@@ -286,27 +285,26 @@ public class StagePage extends TPage {
                                 waveManager.monsterWaveUpdate();
                                 updateEffectUnit(false);
                                 updateArrowUnit();
-                                if (updateMonsterUnit()) {
+                                if (updateMonsterUnit()) { //Gayme over
                                     sortTowerEnemyUnit();
                                     gameStatus = 23;
                                     GameRenderer.startViewCount = 0;
                                     gameSubStatus = 0;
-                                    stopLoopSound(2);
-                                    playSound(11);
-                                    if (mapType == 0) {
-                                        victoryH = (myWave * 8) + (myLife * 10);
-                                    } else if (mapType == 1) {
+                                    GameThread.stopLoopSound(2);
+                                    GameThread.playSound(11);
+                                    /*if (st.mapType == 0) {
+                                        st.victoryH = (st.waveManager.current * 8) + (st.Life * 10); //This is actually just 0 every time keeeek
+                                    } else if (st.mapType == 1) {
                                         getTotalScore();
-                                        victoryH = waveManager.current * 15;
-                                    } else if (mapType == 2) {
-                                        victoryH = (float)(((DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[SID] - waveManager.current) * 8) * (SID + 15)) / 15;
-                                    }
-                                    if (gameClearedFlag[mapNumber][0] >= 0) {
-                                        victoryH = (victoryH * 7) / 10;
-                                    }
-                                    victoryH = 50;
-                                    Config.heroPoints += (int)victoryH;
-                                    Config.saveAll(newTower);
+                                        st.victoryH = waveManager.current * 15;
+                                    } else
+                                        st.victoryH = (float)(((DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[SID] - waveManager.current) * 8) * (SID + 15)) / 15;
+                                    if (Config.stageProg[st.SID][0] >= 0)
+                                        st.victoryH = (st.victoryH * 7) / 10;*/
+                                    //I didn't add this here, but commented it for performance purposes. I think it's better than making it 50 for all instances, but eh gotta stay true to game
+                                    st.victoryH = 50;
+                                    Config.heroPoints += (int)st.victoryH;
+                                    Config.saveAll();
                                     myOscillator[11].initWithTwoWayStartPosition(-350, 0, 15, 30, 10);
                                     return;
                                 }
@@ -322,7 +320,7 @@ public class StagePage extends TPage {
             case 8:
                 break;
             case 9:
-                if (waveManager.waveRunF) {
+                if (st.waveManager.waveRunF) {
                     while (true) {
                         int i13 = specialAttackFrameCount + 1;
                         specialAttackFrameCount = i13;
@@ -352,9 +350,9 @@ public class StagePage extends TPage {
         sortTowerEnemyUnit();
         int checkWaveAndFinishCheck = waveManager.checkWaveAndFinishCheck();
         if (checkWaveAndFinishCheck != 1) {
-            if (checkWaveAndFinishCheck != 3) {
+            if (checkWaveAndFinishCheck != 3)
                 return;
-            }
+
             sortTowerEnemyUnit();
             gameStatus = 23;
             GameRenderer.startViewCount = 0;
@@ -368,10 +366,12 @@ public class StagePage extends TPage {
                 victoryH = waveManager.current * 15;
             else if (mapType == 2)
                 victoryH = waveManager.current * 5;
-            if (perfectClear())
-                victoryH *= 2;
+            if (st.perfectClear())
+                st.victoryH *= 2;
 
-            Config.heroPoints += victoryH;
+            Config.heroPoints += st.victoryH;
+            DataAward.check_heroPoint();
+
             Config.saveAll(newTower);
             myOscillator[11].initWithTwoWayStartPosition(-350, 0, 15, 30, 10);
             return;
@@ -430,9 +430,9 @@ public class StagePage extends TPage {
                     case 9:
                         Config.heroPoints += 1500;
                     case 7:
-                        Config.heroPoints += 500;
+                        Config.heroPoints += 500; //2000
                     case 1:
-                        Config.heroPoints += 1500;
+                        Config.heroPoints += 1500; //3500
                         break;
                     case 0:
                     case 2:
@@ -444,9 +444,9 @@ public class StagePage extends TPage {
                         break;
                 }
             }
-        DataAward.clear_award(SID);
+        DataAward.clear_award(st.SID);
+        Config.saveAll();
 
-        Config.saveAll(newTower);
         gameStatus = 22;
         gameSubStatus = 0;
         myOscillator[11].initWithTwoWayStartPosition(-150, 0, 15, 30, 10);
@@ -1082,7 +1082,7 @@ public class StagePage extends TPage {
             } else {
                 f = 1.0f;
             }
-            uiMonsterEtcImage[3].drawAtPointOption(CX + NetworkThread.NETWORK_ERROR_CLOSE_ERROR, 164.0f, 18);
+            uiMonsterEtcImage[3].drawAtPointOption(CX - 102, 164.0f, 18);
             if (GameThread.characterMenuMonsterViewCount % 16 < 8) {
                 f2 = (GameThread.characterMenuMonsterViewCount % 16) * 0.125f;
             } else {
@@ -1856,6 +1856,21 @@ public class StagePage extends TPage {
         TouchManager.swapTouchMap();
     }
 
+    public void sellTowerUnit(TowerUnit u) {
+        if (u instanceof HeroUnit) {
+            return;
+        }
+        st.Money += getSellPrice(u.oldType());
+        st.towerUnit.remove(u);
+        st.arrowUnit.removeIf(arr -> arr.shooter == u);
+    }
+
+    public static int getSellPrice(int i) {
+        if (i == -1)
+            return 0;
+        return DataCharacter.charData[i][13] / 2;
+    }
+
     public void touchCheck_GAME_STAGE_START_VIEW() {
         if (TouchManager.lastActionStatus != 2) {
             return;
@@ -2065,7 +2080,7 @@ public class StagePage extends TPage {
                             if (NewTower.gameThread.enableAddUnit()) {
                                 GameThread.playSound(14);
                                 GameThread.getAddSettingPosition();
-                                NewTower.gameThread.addTowerUnit(GameThread.characterAddNumber, (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f), (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f), true);
+                                NewTower.gameThread.addTowerUnit(GameThread.characterAddNumber, (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f), (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f));
                                 GameThread.myMoney -= GameThread.getBuyPrice(GameThread.characterAddNumber);
                                 GameThread.characterMenuSelectFlag = 0;
                             }
@@ -2363,7 +2378,7 @@ public class StagePage extends TPage {
             }
             if (nextDrawObject == 0) {
                 drawMonsterUnit(GameThread.monsterSortUnit[GameThread.monsterSortDrawCount], (GameThread.monsterSortUnit[GameThread.monsterSortDrawCount].posX / 50) + 62, (GameThread.monsterSortUnit[GameThread.monsterSortDrawCount].posY / 50) + 30);
-                if (GameThread.monsterSortUnit[GameThread.monsterSortDrawCount].dotHolyFlag) {
+                if (GameThread.monsterSortUnit[GameThread.monsterSortDrawCount].dotHolyCount > 0) {
                     drawMonsterContinueEffect((GameThread.monsterSortUnit[GameThread.monsterSortDrawCount].posX / 50) + 62, (GameThread.monsterSortUnit[GameThread.monsterSortDrawCount].posY / 50) + 30, 0);
                 }
                 if (GameThread.monsterSortUnit[GameThread.monsterSortDrawCount].slowIceFlag) {
@@ -3503,13 +3518,14 @@ public class StagePage extends TPage {
         float f;
         int i2;
         Texture2D[] texture2DArr;
-        int i3 = GameThread.arrowUnit[i].arrowType;
-        if (GameThread.arrowUnit[i].targetType == 3) {
-            f = GameThread.objectUnit[GameThread.arrowUnit[i].targetNumber].posX;
-            i2 = GameThread.objectUnit[GameThread.arrowUnit[i].targetNumber].posY;
+        ArrowUnit aru = st.arrowUnit.get(i);
+        int i3 = aru.arrowType;
+        if (aru.targetType == 3) {
+            f = GameThread.objectUnit[aru.targetNumber].posX;
+            i2 = GameThread.objectUnit[aru.targetNumber].posY;
         } else {
-            f = GameThread.monsterUnit[GameThread.arrowUnit[i].targetNumber].posX;
-            i2 = GameThread.monsterUnit[GameThread.arrowUnit[i].targetNumber].posY;
+            f = GameThread.monsterUnit[aru.targetNumber].posX;
+            i2 = GameThread.monsterUnit[aru.targetNumber].posY;
         }
         float f2 = i2;
         if (i3 == 0) {
@@ -3566,19 +3582,19 @@ public class StagePage extends TPage {
         if (i3 != 0) {
             if (i3 != 5) {
                 if (i3 == 10) {
-                    texture2DArr[0].drawLineWithImage((GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posX) / 50.0f, (f2 - GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posY) / 50.0f, (GameThread.arrowUnit[i].moveCount * 1.0f) / GameThread.arrowUnit[i].moveMaxCount);
+                    texture2DArr[0].drawLineWithImage((GameThread.towerUnit[aru.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[aru.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[aru.shootNumber].posX) / 50.0f, (f2 - GameThread.towerUnit[aru.shootNumber].posY) / 50.0f, (aru.moveCount * 1.0f) / aru.moveMaxCount);
                     return;
                 }
                 if (i3 != 12 && i3 != 2 && i3 != 3) {
                     switch (i3) {
                         case 15:
-                            texture2DArr[0].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (float) (((GameThread.arrowUnit[i].startY / 50) + 30) - 15), 9);
+                            texture2DArr[0].drawAtPointOption((aru.startX / 50) + 62, (float) (((aru.startY / 50) + 30) - 15), 9);
                             return;
                         case 16:
-                            texture2DArr[1].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (float) (((GameThread.arrowUnit[i].startY / 50) + 30) - 15), 9);
+                            texture2DArr[1].drawAtPointOption((aru.startX / 50) + 62, (float) (((aru.startY / 50) + 30) - 15), 9);
                             return;
                         case 17:
-                            texture2DArr[2].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (float) (((GameThread.arrowUnit[i].startY / 50) + 30) - 15), 9);
+                            texture2DArr[2].drawAtPointOption((aru.startX / 50) + 62, (float) (((aru.startY / 50) + 30) - 15), 9);
                             break;
                         case 18:
                             break;
@@ -3596,14 +3612,14 @@ public class StagePage extends TPage {
                         case 30:
                         case 31:
                         case 32:
-                            if (GameThread.arrowUnit[i].moveCount >= 0) {
-                                texture2DArr[(i3 + 3) - 19].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 9);
+                            if (aru.moveCount >= 0) {
+                                texture2DArr[(i3 + 3) - 19].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 9);
                                 return;
                             } else {
-                                if (GameThread.arrowUnit[i].moveCount > -10) {
+                                if (aru.moveCount > -10) {
                                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                                    Texture2D.gl.glColor4f((GameThread.arrowUnit[i].moveCount * (-0.05f)) + 0.5f, (GameThread.arrowUnit[i].moveCount * (-0.05f)) + 0.5f, (GameThread.arrowUnit[i].moveCount * (-0.05f)) + 0.5f, (GameThread.arrowUnit[i].moveCount * (-0.05f)) + 0.5f);
-                                    texture2DArr[(i3 + 3) - 19].drawAtPointOptionSize((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 9, 1.0f - (GameThread.arrowUnit[i].moveCount * 0.5f));
+                                    Texture2D.gl.glColor4f((aru.moveCount * (-0.05f)) + 0.5f, (aru.moveCount * (-0.05f)) + 0.5f, (aru.moveCount * (-0.05f)) + 0.5f, (aru.moveCount * (-0.05f)) + 0.5f);
+                                    texture2DArr[(i3 + 3) - 19].drawAtPointOptionSize((aru.startX / 50) + 62, (aru.startY / 50) + 30, 9, 1.0f - (aru.moveCount * 0.5f));
                                     Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
                                     return;
                                 }
@@ -3613,89 +3629,88 @@ public class StagePage extends TPage {
                             if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
                                 int i4 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
                                 if (i4 == 0) {
-                                    texture2DArr[6].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 57, (GameThread.arrowUnit[i].startY / 50) + 54, 33);
+                                    texture2DArr[6].drawAtPointOption((aru.startX / 50) + 57, (aru.startY / 50) + 54, 33);
                                     return;
                                 } else {
                                     if (i4 != 1) {
                                         return;
                                     }
-                                    texture2DArr[7].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 57, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                                    texture2DArr[7].drawAtPointOption((aru.startX / 50) + 57, (aru.startY / 50) + 30, 33);
                                     return;
                                 }
                             }
-                            if (GameThread.arrowUnit[i].moveCount >= 0) {
-                                texture2DArr[5].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 57, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
-                                texture2DArr[12].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                            if (aru.moveCount >= 0) {
+                                texture2DArr[5].drawAtPointOption((aru.startX / 50) + 57, (aru.startY / 50) + 30, 33);
+                                texture2DArr[12].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 33);
                                 return;
                             } else {
-                                texture2DArr[4].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                                texture2DArr[4].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 33);
                                 return;
                             }
                         case 34:
                             if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
                                 int i5 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
                                 if (i5 == 0) {
-                                    texture2DArr[2].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 54, 33);
+                                    texture2DArr[2].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 54, 33);
                                     return;
                                 } else {
                                     if (i5 != 1) {
                                         return;
                                     }
-                                    texture2DArr[3].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                                    texture2DArr[3].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 33);
                                     return;
                                 }
                             }
-                            if (GameThread.arrowUnit[i].moveCount >= 0) {
-                                texture2DArr[1].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
-                                texture2DArr[12].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                            if (aru.moveCount >= 0) {
+                                texture2DArr[1].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 33);
+                                texture2DArr[12].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 33);
                                 return;
                             } else {
-                                texture2DArr[0].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                                texture2DArr[0].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 33);
                                 return;
                             }
                         case 35:
                             if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
                                 int i6 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
                                 if (i6 == 0) {
-                                    texture2DArr[10].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 66, (GameThread.arrowUnit[i].startY / 50) + 54, 33);
+                                    texture2DArr[10].drawAtPointOption((aru.startX / 50) + 66, (aru.startY / 50) + 54, 33);
                                     return;
                                 } else {
                                     if (i6 != 1) {
                                         return;
                                     }
-                                    texture2DArr[11].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 67, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                                    texture2DArr[11].drawAtPointOption((aru.startX / 50) + 67, (aru.startY / 50) + 30, 33);
                                     return;
                                 }
                             }
-                            if (GameThread.arrowUnit[i].moveCount >= 0) {
-                                texture2DArr[9].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 67, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
-                                texture2DArr[12].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                            if (aru.moveCount >= 0) {
+                                texture2DArr[9].drawAtPointOption((aru.startX / 50) + 67, (aru.startY / 50) + 30, 33);
+                                texture2DArr[12].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 33);
                                 return;
                             } else {
-                                texture2DArr[8].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (GameThread.arrowUnit[i].startY / 50) + 30, 33);
+                                texture2DArr[8].drawAtPointOption((aru.startX / 50) + 62, (aru.startY / 50) + 30, 33);
                                 return;
                             }
                         case 36:
                             break;
                         default:
-                            texture2DArr[0].drawLineWithImage((GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posX) / 50.0f, (f2 - GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posY) / 50.0f, (GameThread.arrowUnit[i].moveCount * 1.0f) / GameThread.arrowUnit[i].moveMaxCount);
+                            texture2DArr[0].drawLineWithImage((GameThread.towerUnit[aru.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[aru.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[aru.shootNumber].posX) / 50.0f, (f2 - GameThread.towerUnit[aru.shootNumber].posY) / 50.0f, (aru.moveCount * 1.0f) / aru.moveMaxCount);
                             return;
                     }
-                    texture2DArr[3].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (float) (((GameThread.arrowUnit[i].startY / 50) + 30) - 15), 9);
+                    texture2DArr[3].drawAtPointOption((aru.startX / 50) + 62, (float) (((aru.startY / 50) + 30) - 15), 9);
                     return;
                 }
             }
-            texture2DArr[0].drawLineWithImage((GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posX) / 50.0f, (f2 - GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posY) / 50.0f, (GameThread.arrowUnit[i].moveCount * 1.0f) / GameThread.arrowUnit[i].moveMaxCount);
-            texture2DArr[1].drawArrowWithImage((GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posX) / 50.0f, (f2 - GameThread.towerUnit[GameThread.arrowUnit[i].shootNumber].posY) / 50.0f, (GameThread.arrowUnit[i].moveCount * 1.0f) / GameThread.arrowUnit[i].moveMaxCount);
+            texture2DArr[0].drawLineWithImage((GameThread.towerUnit[aru.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[aru.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[aru.shootNumber].posX) / 50.0f, (f2 - GameThread.towerUnit[aru.shootNumber].posY) / 50.0f, (aru.moveCount * 1.0f) / aru.moveMaxCount);
+            texture2DArr[1].drawArrowWithImage((GameThread.towerUnit[aru.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[aru.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[aru.shootNumber].posX) / 50.0f, (f2 - GameThread.towerUnit[aru.shootNumber].posY) / 50.0f, (aru.moveCount * 1.0f) / aru.moveMaxCount);
             return;
         }
         for (int i7 = 4; i7 >= 0; i7--) {
             int i8 = i7 + 1;
-            if (i8 < texture2DArr.length) {
-                texture2DArr[i8].drawAtPointOption((GameThread.arrowUnit[i].moveHistory[i7][0] / 50) + 62, (float) (((GameThread.arrowUnit[i].moveHistory[i7][1] / 50) + 30) - 15), 9);
-            }
+            if (i8 < texture2DArr.length)
+                texture2DArr[i8].drawAtPointOption((aru.moveHistory[i7][0] / 50) + 62, (float) (((aru.moveHistory[i7][1] / 50) + 30) - 15), 9);
         }
-        texture2DArr[0].drawAtPointOption((GameThread.arrowUnit[i].startX / 50) + 62, (float) (((GameThread.arrowUnit[i].startY / 50) + 30) - 15), 9);
+        texture2DArr[0].drawAtPointOption((aru.startX / 50) + 62, (float) (((aru.startY / 50) + 30) - 15), 9);
     }
 
     public void drawMonsterContinueEffect(float f, float f2, int i) {

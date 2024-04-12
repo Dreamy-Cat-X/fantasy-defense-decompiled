@@ -5,6 +5,7 @@ import androidx.core.view.PointerIconCompat;
 
 import com.sncompany.newtower.Battle.ArrowUnit;
 import com.sncompany.newtower.Battle.EnemyUnit;
+import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
@@ -28,7 +29,7 @@ public class DataStage {
     static final int DATA_STAGE_TOTAL_COUNT = 50;
     static final int DATA_STAGE_TYPE_COUNT = 4;
     static final float PERFECT_MULTIPLIER = 1.5f;
-    public static final int[][] stageData = {new int[]{700, 150, 150, 155}, new int[]{700, 150, 170, 181}, new int[]{700, 150, 180, 196}, new int[]{700, 150, 200, 222}, new int[]{1000, 200, 225, 252}, new int[]{1000, 200, 245, 278}, new int[]{1000, 200, 260, 298}, new int[]{1000, 200, GameRenderer.GAME_UPGRADE_UNIT_SKILL_START_X, 324}, new int[]{1000, 200, 300, 349}, new int[]{1000, 200, 350, 405}, new int[]{750, 150, 362, 422}, new int[]{750, 150, 383, 449}, new int[]{750, 150, 404, 475}, new int[]{1000, 200, 410, 487}, new int[]{1000, 200, 400, 482}, new int[]{1000, 200, 415, 503}, new int[]{1000, 200, 420, InputDeviceCompat.SOURCE_DPAD}, new int[]{1000, 200, 405, 504}, new int[]{1000, 200, 400, 504}, new int[]{1000, 200, 460, 570}, new int[]{Texture2D.SCRWIDTH_800, 150, 475, 590}, new int[]{1000, 200, Texture2D.SCRHEIGHT_480, 601}, new int[]{1000, 200, 490, 616}, new int[]{Texture2D.SCRWIDTH_800, 150, 500, 632}, new int[]{1000, 200, 500, 637}, new int[]{1000, 200, 510, 653}, new int[]{1000, 200, 520, 668}, new int[]{Texture2D.SCRWIDTH_800, 150, 530, 684}, new int[]{1000, 200, 570, 729}, new int[]{1200, 200, 620, 785}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 670, 840}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 665, 841}, new int[]{1050, 350, 685, 866}, new int[]{1050, 350, 690, 877}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 720, 912}, new int[]{1050, 350, 745, 943}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 770, 973}, new int[]{1250, 350, 810, PointerIconCompat.TYPE_ZOOM_OUT}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 840, 1054}, new int[]{1250, 350, 950, 1170}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 970, 1195}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 990, 1221}, new int[]{1050, 350, PointerIconCompat.TYPE_ALIAS, 1246}, new int[]{1050, 350, 1030, 1272}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 1050, 1297}, new int[]{1050, 350, 1070, 1323}, new int[]{1050, 350, 1090, 1348}, new int[]{1250, 350, 1110, 1374}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 1140, 1409}, new int[]{1250, 350, 1200, 1475}};
+    public static final int[][] stageData = {new int[]{700, 150, 150, 155}, new int[]{700, 150, 170, 181}, new int[]{700, 150, 180, 196}, new int[]{700, 150, 200, 222}, new int[]{1000, 200, 225, 252}, new int[]{1000, 200, 245, 278}, new int[]{1000, 200, 260, 298}, new int[]{1000, 200, 280, 324}, new int[]{1000, 200, 300, 349}, new int[]{1000, 200, 350, 405}, new int[]{750, 150, 362, 422}, new int[]{750, 150, 383, 449}, new int[]{750, 150, 404, 475}, new int[]{1000, 200, 410, 487}, new int[]{1000, 200, 400, 482}, new int[]{1000, 200, 415, 503}, new int[]{1000, 200, 420, InputDeviceCompat.SOURCE_DPAD}, new int[]{1000, 200, 405, 504}, new int[]{1000, 200, 400, 504}, new int[]{1000, 200, 460, 570}, new int[]{Texture2D.SCRWIDTH_800, 150, 475, 590}, new int[]{1000, 200, Texture2D.SCRHEIGHT_480, 601}, new int[]{1000, 200, 490, 616}, new int[]{Texture2D.SCRWIDTH_800, 150, 500, 632}, new int[]{1000, 200, 500, 637}, new int[]{1000, 200, 510, 653}, new int[]{1000, 200, 520, 668}, new int[]{Texture2D.SCRWIDTH_800, 150, 530, 684}, new int[]{1000, 200, 570, 729}, new int[]{1200, 200, 620, 785}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 670, 840}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 665, 841}, new int[]{1050, 350, 685, 866}, new int[]{1050, 350, 690, 877}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 720, 912}, new int[]{1050, 350, 745, 943}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 770, 973}, new int[]{1250, 350, 810, PointerIconCompat.TYPE_ZOOM_OUT}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 840, 1054}, new int[]{1250, 350, 950, 1170}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 970, 1195}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 990, 1221}, new int[]{1050, 350, PointerIconCompat.TYPE_ALIAS, 1246}, new int[]{1050, 350, 1030, 1272}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 1050, 1297}, new int[]{1050, 350, 1070, 1323}, new int[]{1050, 350, 1090, 1348}, new int[]{1250, 350, 1110, 1374}, new int[]{GameThread.FREE_REWARD_MOVIE_TIME, 300, 1140, 1409}, new int[]{1250, 350, 1200, 1475}};
 
     public static final int maxLife = 20;
 
@@ -55,8 +56,8 @@ public class DataStage {
     public DataStage(DataMap m, int type) {
         SID = m.SID;
         mapType = type;
-        Money = (DataStage.stageData[SID][DATA_STAGE_START_MONEY] * (getUpgradeUnitRate(0, 0) + 100)) / 100;
-        Mana = (DataStage.stageData[SID][DATA_STAGE_START_MANA] * (getUpgradeUnitRate(0, 1) + 100)) / 100;
+        Money = DataStage.stageData[SID][DATA_STAGE_START_MONEY];
+        Mana = DataStage.stageData[SID][DATA_STAGE_START_MANA];
 
         GameRenderer.upgradeCount = 0;
         GameRenderer.levelUpCount = 0;
@@ -83,15 +84,6 @@ public class DataStage {
         return 2;
     }
 
-    public boolean checkTowerPos(int i, int i2, int i3) {
-        int i4 = ((i2 * 45) + 22) * 50;
-        int i5 = ((i3 * 45) + 22) * 50;
-        for (TowerUnit tow : towerUnit)
-            if (tow.towerType == i && i4 == tow.posX && i5 == tow.posY)
-                return true;
-        return false;
-    }
-
     public void addMonsterUnit(int type, boolean bossFlag) {
         map.mapStartPositionLoop = map.gatePattern;
         MonsterUnit nm = new MonsterUnit(this, type, bossFlag);
@@ -106,9 +98,8 @@ public class DataStage {
     }
 
     public void updateTowerUnit() {
-        towerUnit.removeIf(u -> u.towerType == -1);
         for (TowerUnit au : towerUnit)
-            au.updateTowerUnit();
+            au.update();
     }
 
     public void updateArrowUnit() {
@@ -179,54 +170,34 @@ public class DataStage {
     }
 
     /* JADX INFO: Access modifiers changed from: package-private */
-    public int addTowerUnit(int type, int bX, int bY) {
-        TowerUnit to = new TowerUnit(type, bX, bY);
-
-        restatTowerUnit(towerUnit[i4]);
-        towerUnit[i4].headRotateDegree = 0.0f;
-        return i4;
+    public void addTowerUnit(int type, int bX, int bY) {
+        TowerUnit twu = new TowerUnit(this, type, bX, bY);
+        twu.restatTowerUnit();
+        towerUnit.add(twu);
     }
 
-    public static int addHeroTowerUnit(int i, int i2, int i3, int i4, boolean z, boolean z2) {
-        int i5;
-        if (z) {
-            i5 = 0;
-            while (i5 < towerUnitCount) {
-                if (towerUnit[i5].towerType == -1) {
-                    break;
-                }
-                i5++;
-            }
-        }
-        i5 = -1;
-        if (i5 == -1 && towerUnitCount == 149) {
-            return -1;
-        }
-        if (i5 == -1) {
-            i5 = towerUnitCount;
-            towerUnitCount = i5 + 1;
-        }
+    public void addHeroTowerUnit(int type, int bX, int bY, boolean restat) {
+        HeroUnit twu = new HeroUnit(this, type, bX, bY);
+        if (restat)
+            twu.restatTowerUnit();
+        towerUnit.add(twu);
+    }
+
+    //TODO - delete after all usages have been removed
+    public void addHeroTowerUnit(int type, int order, int bX, int bY, boolean z, boolean z2) {
+        TowerUnit twu = new TowerUnit(this, order, bX, bY);
+        twu.restatTowerUnit();
+        towerUnit.add(twu);
         towerUnit[i5].heroFlag = true;
-        towerUnit[i5].heroOrder = i2;
-        towerUnit[i5].towerType = i;
-        towerUnit[i5].unitStatus = 2;
-        towerUnit[i5].unitStatusCount = 0;
-        towerUnit[i5].lastViewDirection = 6;
-        towerUnit[i5].blockX = i3;
-        towerUnit[i5].blockY = i4;
-        towerUnit[i5].posX = ((i3 * 45) + 22) * 50;
-        towerUnit[i5].posY = ((i4 * 45) + 22) * 50;
-        TowerUnit[] towerUnitArr = towerUnit;
-        towerUnitArr[i5].originalPosX = towerUnitArr[i5].posX;
-        TowerUnit[] towerUnitArr2 = towerUnit;
-        towerUnitArr2[i5].originalPosY = towerUnitArr2[i5].posY;
-        towerUnit[i5].specialCooltime = 0;
-        towerUnit[i5].specialShowCount = 0;
-        towerUnit[i5].attackCount = 0;
-        if (z2) {
-            restatTowerUnit(towerUnit[i5]);
-        }
-        towerUnit[i5].headRotateDegree = 0.0f;
-        return i5;
+        towerUnit[i5].heroOrder = order;
+        towerUnit[i5].towerType = type;
+        towerUnit[i5].blockX = bX;
+        towerUnit[i5].blockY = bY;
+        towerUnit[i5].posX = ((bX * 45) + 22) * 50;
+        towerUnit[i5].posY = ((bY * 45) + 22) * 50;
+        towerUnit[i5].originalPosX = towerUnit[i5].posX;
+        towerUnit[i5].originalPosY = towerUnit[i5].posY;
+        if (z2)
+            twu.restatTowerUnit();
     }
 }

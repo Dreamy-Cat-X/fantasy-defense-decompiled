@@ -36,12 +36,17 @@ ListPage - 0 errors
 LoadingPage - 0 errors
 MenuPage - 0 errors
 RecordPage - 0 errors
-ShopPage - 175 errors
-StagePage - 992 errors
+ShopPage - 88 errors
+StagePage - 967 errors
 StageSelectPage - 0 errors
 TitlePage - 0 errors
 TPage - 0 errors
 TutorialPage - 209 errors
-UpgradePage - 4 errors
+UpgradePage - 0 errors
 
-Items and Inventory are the 2 things that don't save atm
+Other TODO:
+- Fix Special skills on Hero Unit
+- Fix up DataStage
+- Static variables for resource array locations for more mod-ability
+- Removing ID-Style resource gathering for a decompiled one
+- PC Port

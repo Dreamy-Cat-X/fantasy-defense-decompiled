@@ -1,14 +1,19 @@
 package com.sncompany.newtower.Pages;
 
+import androidx.core.util.Consumer;
 import androidx.core.view.ViewCompat;
 
+import com.sncompany.newtower.CircleItemDraw;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
+
+import javax.microedition.khronos.opengles.GL10;
 
 public class ShopPage extends TPage {
 
@@ -54,17 +59,44 @@ public class ShopPage extends TPage {
     public static final int GAME_SHOP_TOUCH_LIST_LOCK_HERO_0 = 75;
     public static final int GAME_SHOP_TOUCH_LIST_LOCK_HERO_1 = 76;
     public static final int GAME_SHOP_TOUCH_LIST_LOCK_HERO_2 = 77;
+    static final float DRAW_SCALE_X_SMALL_DEGREE = 13.0f;
     public static final int MIN_U = 24;
     public static final int[] uiShopResource = {R.drawable.ui_shop_titleequip, R.drawable.ui_shop_titlepostbox, R.drawable.ui_shop_titleshop, R.drawable.ui_shop_titleinventory, R.drawable.ui_shop_warriorbody, R.drawable.ui_shop_warrioroutline, R.drawable.ui_shop_warriorshadow, R.drawable.ui_shop_archerbody, R.drawable.ui_shop_archeroutline, R.drawable.ui_shop_archershadow, R.drawable.ui_shop_wizardbody, R.drawable.ui_shop_wizardoutline, R.drawable.ui_shop_wizardshadow, R.drawable.ui_shop_herobase, R.drawable.ui_shop_heroslot, R.drawable.ui_shop_postboxbase, R.drawable.ui_shop_shopbase, R.drawable.ui_shop_shopitembar, R.drawable.ui_shop_shopselectbar, R.drawable.ui_shop_tabequipoff, R.drawable.ui_shop_tabequipon, R.drawable.ui_shop_tabshopoff, R.drawable.ui_shop_tabshopon, R.drawable.ui_shop_underbar, R.drawable.ui_shop_btnmshopoff, R.drawable.ui_shop_btnmshopon, R.drawable.ui_shop_btnmequipoff, R.drawable.ui_shop_btnmequipon, R.drawable.ui_shop_btnmpostboxoff, R.drawable.ui_shop_btnmpostboxon, R.drawable.ui_shop_btnbackoff, R.drawable.ui_shop_btnbackon, R.drawable.ui_shop_btnbuyoff, R.drawable.ui_shop_btnbuyon, R.drawable.ui_shop_btndropoff, R.drawable.ui_shop_btndropon, R.drawable.ui_shop_btngiftoff, R.drawable.ui_shop_btngifton, R.drawable.ui_shop_btnsaveoff, R.drawable.ui_shop_btnsaveon, R.drawable.ui_shop_btnselloff, R.drawable.ui_shop_btnsellon, R.drawable.ui_shop_btnleftarrowoff, R.drawable.ui_shop_btnleftarrowon, R.drawable.ui_shop_btnrightarrowoff, R.drawable.ui_shop_btnrightarrowon, R.drawable.ui_shop_iconempty, R.drawable.ui_shop_lock, R.drawable.ui_shop_glow, R.drawable.ui_shop_telbody, R.drawable.ui_shop_tel0, R.drawable.ui_shop_tel1, R.drawable.ui_shop_tel2, R.drawable.ui_shop_tel3, R.drawable.ui_shop_tel4, R.drawable.ui_shop_tel5, R.drawable.ui_shop_tel6, R.drawable.ui_shop_tel7, R.drawable.ui_shop_tel8, R.drawable.ui_shop_tel9, R.drawable.ui_shop_telback, R.drawable.ui_shop_telok, R.drawable.ui_shop_telclsoff, R.drawable.ui_shop_telclson};
+    public static final int shop_titleequip = 0, shop_titlepostbox = 1, shop_titleshop = 2, shop_titleinventory = 3;
     public final Texture2D[] uiShopImage = new Texture2D[uiShopResource.length];
+    public final CircleItemDraw upgradeItemListDraw = new CircleItemDraw(5, 30);
 
     public ShopPage(TPage par) {
         super(par);
     }
 
-    public void update_GAME_SHOP_SHOP() {
-        GameRenderer.upgradeItemListDraw.correctDistance();
-        GameRenderer.inventoryItemListDraw.correctDistance();
+    @Override
+    public void load(Consumer<Float> prog) {
+        loadP(uiShopImage, uiShopResource, prog, 1, uiShopResource.length);
+        for (int i3 = 0; i3 < upgradeItemListDraw.totalHalfBlockSize; i3++) {
+            upgradeItemListDraw.blockLengthArray[i3] = i3 * 70;
+            upgradeItemListDraw.blockSizeArray[i3] = 1.0f;
+            upgradeItemListDraw.blockAlphaArray[i3] = 1.0f;
+        }
+        upgradeItemListDraw.blockLengthArray[0] = 0;
+        upgradeItemListDraw.FIRST_BLOCK_SIZE = 70;
+        upgradeItemListDraw.moveSpeed = 20;
+        upgradeItemListDraw.nextMoveCheckDegree = 10;
+        upgradeItemListDraw.moveCloseFlag = true;
+        upgradeItemListDraw.blockLastViewCount = 3;
+        loaded = true;
+    }
+
+    @Override
+    public void update() {
+        upgradeItemListDraw.correctDistance();
+        inventoryItemListDraw.correctDistance();
+    }
+
+    @Override
+    public void paint(GL10 gl10, boolean init) {
+        upgradeItemListDraw.getArrayAndCorrection();
+        inventoryItemListDraw.getArrayAndCorrection();
     }
 
     public void paint_GAME_SHOP_SHOP(GL10 gl10, boolean z) {
@@ -80,52 +112,41 @@ public class ShopPage extends TPage {
         if (z) {
             TouchManager.clearTouchMap();
             int i5 = GameThread.gameSubStatus;
-            if (i5 == 0 || i5 == 1) {
-                TouchManager.addTouchRectListData(30, CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
-                TouchManager.addTouchRectListData(31, CGRectMake(19.0f, DRAW_SCALE_X_SMALL_DEGREE, 42.0f, 48.0f));
-                TouchManager.addTouchRectListData(32, CGRectMake(81.0f, 397.0f, 47.0f, 48.0f));
-                TouchManager.addTouchRectListData(33, CGRectMake(672.0f, 397.0f, 47.0f, 48.0f));
-                TouchManager.addTouchRectListData(34, CGRectMake(30.0f, 70.0f, 690.0f, 280.0f));
-                TouchManager.addTouchRectListData(35, CGRectMake(722.0f, 70.0f, 52.0f, 280.0f));
-                TouchManager.addTouchRectListData(36, CGRectMake(711.0f, 381.0f, 68.0f, 78.0f));
-                TouchManager.addTouchRectListData(38, CGRectMake(636.0f, 71.0f, 78.0f, 68.0f));
+            if (i5 == 0 || i5 == 1) { //Default StoremFront
+                TouchManager.addTouchRectListData(30, GameRenderer.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
+                TouchManager.addTouchRectListData(31, GameRenderer.CGRectMake(19.0f, 13f, 42.0f, 48.0f));
+                TouchManager.addTouchRectListData(32, GameRenderer.CGRectMake(81.0f, 397.0f, 47.0f, 48.0f));
+                TouchManager.addTouchRectListData(33, GameRenderer.CGRectMake(672.0f, 397.0f, 47.0f, 48.0f));
+                TouchManager.addTouchRectListData(34, GameRenderer.CGRectMake(30.0f, 70.0f, 690.0f, 280.0f));
+                TouchManager.addTouchRectListData(35, GameRenderer.CGRectMake(722.0f, 70.0f, 52.0f, 280.0f));
+                TouchManager.addTouchRectListData(36, GameRenderer.CGRectMake(711.0f, 381.0f, 68.0f, 78.0f));
+                TouchManager.addTouchRectListData(38, GameRenderer.CGRectMake(636.0f, 71.0f, 78.0f, 68.0f));
                 for (int i6 = 0; i6 < 4; i6++) {
                     int i7 = (i6 * 2) + 10;
                     int i8 = i6 * 70;
-                    TouchManager.addTouchRectListData(i7, CGRectMake(565.0f, i8 + 75, 70.0f, 60.0f));
-                    TouchManager.addTouchRectListData(i7 + 1, CGRectMake(636.0f, i8 + 71, 78.0f, 68.0f));
+                    TouchManager.addTouchRectListData(i7, GameRenderer.CGRectMake(565.0f, i8 + 75, 70.0f, 60.0f));
+                    TouchManager.addTouchRectListData(i7 + 1, GameRenderer.CGRectMake(636.0f, i8 + 71, 78.0f, 68.0f));
                 }
                 for (int i9 = 0; i9 < 8; i9++) {
-                    TouchManager.addTouchRectListData(i9 + 0, CGRectMake(((i9 % 8) * 70) + GAME_SHOP_SHOP_INVENTORY_START_X, 390.0f, 60.0f, 60.0f));
+                    TouchManager.addTouchRectListData(i9, GameRenderer.CGRectMake(((i9 % 8) * 70) + 125, 390.0f, 60.0f, 60.0f));
                 }
-            } else if (i5 == 3) {
-                TouchManager.addTouchRectListData(54, CGRectMake(162.0f, 290.0f, 236.0f, 43.0f));
-                TouchManager.addTouchRectListData(55, CGRectMake(402.0f, 290.0f, 236.0f, 43.0f));
-            } else if (i5 == 5) {
-                TouchManager.addTouchRectListData(53, CGRectMake(213.0f, 259.0f, 381.0f, 65.0f));
-            } else if (i5 == 6) {
-                TouchManager.addTouchRectListData(53, CGRectMake(213.0f, 259.0f, 381.0f, 65.0f));
-            } else if (i5 == 7) {
-                TouchManager.addTouchRectListData(53, CGRectMake(213.0f, 259.0f, 381.0f, 65.0f));
-            } else if (i5 == 8) {
-                TouchManager.addTouchRectListData(53, CGRectMake(213.0f, 259.0f, 381.0f, 65.0f));
-            }
+            } else if (i5 == 7) //Insufficient Hero Points
+                TouchManager.addTouchRectListData(53, GameRenderer.CGRectMake(213.0f, 259.0f, 381.0f, 65.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 56;
             i = TouchManager.checkTouchListStatus();
         } else {
             i = -1;
         }
-        if (z) {
-            mainmenuImage[0].drawAtPointOption(0.0f, 0.0f, 18);
-            mainmenuImage[5].drawAtPointOption(87.0f, 254.0f, 18);
-        }
+        if (z)
+            parent.paint(gl10, false);
+
         char c2 = 2;
-        uiShopImage[2].drawAtPointOption(66.0f, 5.0f, 18);
+        uiShopImage[shop_titleshop].drawAtPointOption(66.0f, 5.0f, 18);
         char c3 = 17;
         if (i == 31) {
-            uiShopImage[20].drawAtPointOption(40.0f, DRAW_SCALE_X_SMALL_DEGREE, 17);
+            uiShopImage[20].drawAtPointOption(40f, 13f, 17);
         } else {
-            uiShopImage[19].drawAtPointOption(40.0f, DRAW_SCALE_X_SMALL_DEGREE, 17);
+            uiShopImage[19].drawAtPointOption(40f, 13f, 17);
         }
         if (i == 30) {
             uiShopImage[31].drawAtPointOption(11.0f, 356.0f, 18);
@@ -205,87 +226,12 @@ public class ShopPage extends TPage {
         } else {
             drawInventoryWindow(72, 362, GameThread.shopShopInventorySelectPos, i17, -1, false);
         }
-        switch (GameThread.gameSubStatus) {
-            case 3:
-                uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
-                setFontSize(16);
-                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("Do you want to send this gift?", CX, 260.0f, 17);
-                for (int i18 = 0; i18 < GameThread.shopSendPhoneNumberCount; i18++) {
-                    drawStringDoubleM(String.format("%d", Integer.valueOf(GameThread.shopSendPhoneNumber[i18])), (i18 * 11) + 370, 210.0f, 18);
-                }
-                if (GameThread.shopSendItemNumber > 0) {
-                    uiUpitemImage[GameThread.shopSendItemNumber].drawAtPointOption(300.0f, 180.0f, 18);
-                    drawStringDoubleM(DataUpgradeItem.upgradeItemName[GameThread.shopSendItemNumber], 370.0f, 180.0f, 18);
-                }
-                if (i == 54) {
-                    f = 290.0f;
-                    uiPopupImage[6].drawAtPointOption(162.0f, 290.0f, 18);
-                } else {
-                    f = 290.0f;
-                    uiPopupImage[5].drawAtPointOption(162.0f, 290.0f, 18);
-                }
-                if (i == 55) {
-                    uiPopupImage[3].drawAtPointOption(402.0f, f, 18);
-                    break;
-                } else {
-                    uiPopupImage[2].drawAtPointOption(402.0f, f, 18);
-                    break;
-                }
-            case 4:
-                setFontColor(-1);
-                setFontSize(20);
-                drawStringM("Sending...", CX, CY, 9);
-                break;
-            case 5:
-                uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
-                setFontSize(32);
-                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("Sent.", CX, 180.0f, 17);
-                if (i == 53) {
-                    uiPopupImage[13].drawAtPointOption(213.0f, 259.0f, 18);
-                    break;
-                } else {
-                    uiPopupImage[12].drawAtPointOption(213.0f, 259.0f, 18);
-                    break;
-                }
-            case 6:
-                uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
-                setFontSize(32);
-                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("Failed to send the gift.", CX, 180.0f, 17);
-                if (i == 53) {
-                    uiPopupImage[13].drawAtPointOption(213.0f, 259.0f, 18);
-                    break;
-                } else {
-                    uiPopupImage[12].drawAtPointOption(213.0f, 259.0f, 18);
-                    break;
-                }
-            case 7:
-                uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
-                setFontSize(32);
-                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("Insufficient Hero Points.", CX, 180.0f, 17);
-                if (i == 53) {
-                    uiPopupImage[13].drawAtPointOption(213.0f, 259.0f, 18);
-                    break;
-                } else {
-                    uiPopupImage[12].drawAtPointOption(213.0f, 259.0f, 18);
-                    break;
-                }
-            case 8:
-                uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
-                setFontSize(30);
-                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("You cannot sell", CX, 170.0f, 17);
-                drawStringDoubleM("Cash items.", CX, 210.0f, 17);
-                if (i == 53) {
-                    uiPopupImage[13].drawAtPointOption(213.0f, 259.0f, 18);
-                    break;
-                } else {
-                    uiPopupImage[12].drawAtPointOption(213.0f, 259.0f, 18);
-                    break;
-                }
+        if (GameThread.gameSubStatus == 7) {
+            uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
+            setFontSize(32);
+            setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+            drawStringDoubleM("Insufficient Hero Points.", CX, 180.0f, 17);
+            uiPopupImage[i == 53 ? 13 : 12].drawAtPointOption(213.0f, 259.0f, 18);
         }
         if (z) {
             TouchManager.swapTouchMap();
@@ -346,8 +292,8 @@ public class ShopPage extends TPage {
                     if (checkTouchListStatus2 != 36) {
                         switch (checkTouchListStatus2) {
                             case 30:
-                                GameThread.gameStatus = 14;
                                 GameThread.playSound(15);
+                                NewTower.switchPage(parent, false);
                                 break;
                             case 31:
                                 GameThread.gameStatus = 16;
@@ -381,19 +327,11 @@ public class ShopPage extends TPage {
                                         int i6 = GameRenderer.upgradeItemListDraw.blockCurrentArray[GameRenderer.upgradeItemListDraw.totalHalfBlockSize + (i5 / 2)];
                                         if (i6 != -1 && (i = GameThread.shopUnitValue[i6]) != -1) {
                                             int i7 = i5 % 2;
-                                            if (i7 == 0) {
-                                                if (DataUpgradeItem.upgradeItemData[i][3] != 0 && GameThread.myHeroism >= DataUpgradeItem.upgradeItemData[i][4]) {
-                                                    GameThread.shopSendItemNumber = i;
-                                                    GameThread.shopSendPhoneNumberCount = 0;
-                                                    GameThread.gameSubStatus = 2;
-                                                    break;
-                                                }
-                                            } else {
-                                                if (GameThread.buyShopItem(GameThread.shopUnitValue[i6]) == 2) {
+                                            if (i7 != 0) {
+                                                if (buyShopItem(GameThread.shopUnitValue[i6]) == 2)
                                                     GameThread.gameSubStatus = 7;
-                                                }
                                                 GameThread.playSound(14);
-                                                Config.saveAll(newTower);
+                                                Config.saveAll();
                                                 break;
                                             }
                                         }
@@ -402,121 +340,19 @@ public class ShopPage extends TPage {
                                     GameThread.playSound(14);
                                     GameThread.gameSubStatus = 1;
                                     GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (checkTouchListStatus2);
-                                    break;
                                 }
                                 break;
                         }
                     } else if (GameThread.gameSubStatus == 1) {
-                        int sellShopItem = GameThread.sellShopItem();
+                        int sellShopItem = sellShopItem();
                         GameThread.playSound(14);
                         if (sellShopItem == 0) {
-                            Config.saveAll(newTower);
-                            break;
-                        } else if (sellShopItem == 2) {
-                            GameThread.gameSubStatus = 8;
+                            Config.saveAll();
                             break;
                         }
                     }
                     break;
-                case 2:
-                    switch (checkTouchListStatus2) {
-                        case 40:
-                            GameThread.gameSubStatus = 0;
-                            break;
-                        case 41:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 1;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 42:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 2;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 43:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 3;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 44:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 4;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 45:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 5;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 46:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 6;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 47:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 7;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 48:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 8;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 49:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 9;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 50:
-                            if (GameThread.shopSendPhoneNumberCount > 0) {
-                                GameThread.shopSendPhoneNumberCount--;
-                                break;
-                            }
-                            break;
-                        case 51:
-                            if (GameThread.shopSendPhoneNumberCount < 11) {
-                                GameThread.shopSendPhoneNumber[GameThread.shopSendPhoneNumberCount] = 0;
-                                GameThread.shopSendPhoneNumberCount++;
-                                break;
-                            }
-                            break;
-                        case 52:
-                            if (GameThread.shopSendPhoneNumberCount >= 10) {
-                                GameThread.gameSubStatus = 3;
-                                break;
-                            }
-                            break;
-                    }
-                case 3:
-                    if (checkTouchListStatus2 == 54) {
-                        GameThread.sendGiftStartNetwork();
-                        GameThread.gameSubStatus = 4;
-                        break;
-                    } else if (checkTouchListStatus2 == 55) {
-                        GameThread.gameSubStatus = 0;
-                        break;
-                    }
-                    break;
-                case 5, 6, 7, 8:
+                case 7:
                     if (checkTouchListStatus2 == 53) {
                         GameThread.gameSubStatus = 0;
                         break;
@@ -524,7 +360,6 @@ public class ShopPage extends TPage {
                     break;
             }
         }
-        TouchManager.processTouchStatus();
     }
 
     public static void getShopList() {
@@ -636,60 +471,6 @@ public class ShopPage extends TPage {
             }
         }
         return 0;
-    }
-
-    public static void buyPurchaseItem(int i) {
-        int i2;
-        switch (i) {
-            case 5:
-                i2 = 29;
-                break;
-            case 6:
-            default:
-                i2 = 0;
-                break;
-            case 7:
-                i2 = 4;
-                break;
-            case 8:
-                i2 = 8;
-                break;
-            case 9:
-                i2 = 12;
-                break;
-            case 10:
-                i2 = 16;
-                break;
-            case 11:
-                i2 = 20;
-                break;
-            case 12:
-                i2 = 24;
-                break;
-            case 13:
-                i2 = 25;
-                break;
-            case 14:
-                i2 = 26;
-                break;
-            case 15:
-                i2 = 27;
-                break;
-            case 16:
-                i2 = 28;
-                break;
-        }
-        int i3 = DataUpgradeItem.upgradeItemData[i2][5];
-        if (i3 == 0) {
-            myHeroism += DataUpgradeItem.upgradeItemData[i2][2];
-        } else if (i3 == 9) {
-            resetUpgrade();
-        } else if (i3 == 14) {
-            limitCashBuyCount++;
-        } else {
-            getItem(i2);
-        }
-        Config.saveAll(newTower);
     }
 
     public static int sellShopItem() {

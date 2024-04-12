@@ -3,11 +3,13 @@ package com.sncompany.newtower.Pages;
 import androidx.core.util.Consumer;
 
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeHero;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -50,6 +52,7 @@ public class UpgradePage extends TPage {
     public final Texture2D[] uiUpgradeImage = new Texture2D[uiUpgradeResource.length], numberUpgradeImage = new Texture2D[numberUpgradeResource.length];
     public final Texture2D[] shopImages = new Texture2D[3], numberHeroismImage = new Texture2D[MenuPage.numberHeroismResource.length];
     public final Texture2D[] uiUpunitImage = new Texture2D[uiUpunitResource.length], uiUpheroImage = new Texture2D[uiUpheroResource.length];
+    private final Texture2D testboxImage = new Texture2D(R.drawable.etc_testbox), heroismImage = new Texture2D(R.drawable.etc_heroism);
 
     public boolean hero;
     public int lastUpdateItemViewDelay = 0, lastUpdateItemPos = 0, upgradeUnitSelectPos = 0;
@@ -90,7 +93,9 @@ public class UpgradePage extends TPage {
         shopImages[0].dealloc();
         shopImages[1].dealloc();
         shopImages[2].dealloc();
-        loaded = true;
+        testboxImage.dealloc();
+        heroismImage.dealloc();
+        loaded = false;
     }
 
     @Override
@@ -116,7 +121,7 @@ public class UpgradePage extends TPage {
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 32;
             cTLS = TouchManager.checkTouchListStatus();
         }
-        parent.paint(gl10, false);
+        parent.parent.paint(gl10, false);
 
         shopImages[cTLS == 24 ? 2 : 1].drawAtPointOption(11.0f, 356.0f, 18);
         uiUpgradeImage[cTLS == 27 ? 9 : 8].drawAtPointOption(21.0f, 8.0f, 18);
@@ -215,7 +220,7 @@ public class UpgradePage extends TPage {
         String name = hero ? DataUpgradeHero.upgradeHeroName[upgI] : DataUpgradeUnit.upgradeUnitName[(unI * 6) + upgI];
         GameRenderer.drawFont.getTextBounds(name, 0, name.length(), Texture2D.bounds_);
         int bound = Texture2D.bounds_.right - Texture2D.bounds_.left;
-        int upgradeUnitHeroism = getUpgrade(unI, upgI);
+        int upgradeUnitHeroism = getUpgradeCost(unI, upgI);
         int bound2 = 0;
         if (upgradeUnitHeroism > -1) {
             GameRenderer.setFontSize(12);
@@ -246,7 +251,7 @@ public class UpgradePage extends TPage {
         GameRenderer.drawStringM(String.format(desc, eff), xbound + (rbound / 2), ry + 34.0f, 17);
     }
 
-    public int getUpgrade(int i, int j) {
+    public int getUpgradeCost(int i, int j) {
         if (hero) {
             if (!DataStage.heroAvail[i] || (Config.heroUpgrades[i][j] >= getUpgradeMax()))
                 return -1;
@@ -261,45 +266,36 @@ public class UpgradePage extends TPage {
     public void touchCheck() {
         if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
             return;
-    }
 
-    public void touchCheck_GAME_UPGRADE_UNIT() {
-        int i;
-        if (TouchManager.lastActionStatus != 2) {
-            return;
-        }
         int checkTouchListStatus = TouchManager.checkTouchListStatus();
-        if (checkTouchListStatus != -1) {
+        if (checkTouchListStatus < 0)
+            return;
+        if (checkTouchListStatus <= 18) {
+            upgradeUnitSelectPos = checkTouchListStatus;
+        } else {
             switch (checkTouchListStatus) {
                 case 24:
-                    GameThread.gameStatus = 11;
                     GameThread.playSound(15);
+                    NewTower.switchPage(parent, true);
                     break;
                 case 25:
-                    if (GameThread.upgradeUnitValue[GameThread.upgradeUnitSelectPos] < GameThread.getUpgradeUnitMax(GameThread.upgradeUnitSelectPos) && GameThread.myHeroism >= (i = (DataUpgradeUnit.upgradeUnitData[GameThread.upgradeUnitSelectPos][1] * ((GameThread.upgradeUnitValue[GameThread.upgradeUnitSelectPos] * DataUpgradeUnit.upgradeUnitData[GameThread.upgradeUnitSelectPos][2]) + 100)) / 100)) {
-                        GameThread.myHeroism -= i;
-                        int[] iArr = GameThread.upgradeUnitValue;
-                        int i2 = GameThread.upgradeUnitSelectPos;
-                        iArr[i2] = iArr[i2] + 1;
+                    byte[] upgrades = hero ? Config.heroUpgrades[upgradeUnitSelectPos / 6] : Config.unitUpgrades[upgradeUnitSelectPos / 6];
+                    int pos = upgradeUnitSelectPos % 6;
+                    int price = getUpgradeCost(upgradeUnitSelectPos / 6, pos);
+                    if (Config.heroPoints > price) {
+                        Config.heroPoints -= price;
+                        upgrades[pos]++;
                         GameThread.playSound(13);
-                        int[] iArr2 = GameThread.awardDataValue;
-                        iArr2[11] = iArr2[11] + 1;
-                        if (GameThread.upgradeUnitValue[GameThread.upgradeUnitSelectPos] >= DataUpgradeUnit.upgradeUnitData[GameThread.upgradeUnitSelectPos][3]) {
-                            int[] iArr3 = GameThread.awardDataValue;
-                            iArr3[12] = iArr3[12] + 1;
-                        }
-                        GameThread.recheckAwardData();
+                        DataAward.check_upgrade();
                         Config.saveAll();
                         GameThread.lastUpdateItemPos = GameThread.upgradeUnitSelectPos;
                         lastUpdateItemViewDelay = 15;
                         break;
                     }
                     break;
-                case 26:
-                default:
-                    GameThread.upgradeUnitSelectPos = checkTouchListStatus;
-                    break;
                 case 27:
+                    hero = !hero;
+                    upgradeUnitSelectPos = 0;
                     GameThread.gameStatus = 13;
                     GameThread.gameSubStatus = 0;
                     GameThread.upgradeHeroUpgradeSelectPos = 0;
@@ -307,79 +303,7 @@ public class UpgradePage extends TPage {
                     GameThread.playSound(14);
                     lastUpdateItemViewDelay = 0;
                     break;
-                case 28:
-                    GameThread.upgradeUnitSelectPos %= 6;
-                    break;
-                case 29:
-                    GameThread.upgradeUnitSelectPos = (GameThread.upgradeUnitSelectPos % 6) + 6;
-                    break;
-                case 30:
-                    GameThread.upgradeUnitSelectPos = (GameThread.upgradeUnitSelectPos % 6) + 12;
-                    break;
-                case 31:
-                    GameThread.upgradeUnitSelectPos = (GameThread.upgradeUnitSelectPos % 6) + 18;
-                    break;
             }
         }
-        TouchManager.processTouchStatus();
-    }
-
-    public void touchCheck_GAME_UPGRADE_HERO() {
-        if (TouchManager.lastActionStatus != 2) {
-            return;
-        }
-        int checkTouchListStatus = TouchManager.checkTouchListStatus();
-        if (checkTouchListStatus != -1) {
-            switch (checkTouchListStatus) {
-                case 60:
-                    GameThread.gameStatus = 11;
-                    GameThread.playSound(15);
-                    break;
-                case 61:
-                    if (GameThread.heroUnitType[GameThread.upgradeHeroUnitSelectPos] != -1 && GameThread.heroUpgradeValue[GameThread.upgradeHeroUnitSelectPos][GameThread.upgradeHeroUpgradeSelectPos] < GameThread.getUpgradeHeroMax(GameThread.upgradeHeroUnitSelectPos, GameThread.upgradeHeroUpgradeSelectPos) && GameThread.myHeroism >= GameThread.getUpgradeHeroHeroism(GameThread.upgradeHeroUnitSelectPos, GameThread.upgradeHeroUpgradeSelectPos)) {
-                        GameThread.myHeroism -= getUpgrade(GameThread.upgradeHeroUnitSelectPos, GameThread.upgradeHeroUpgradeSelectPos);
-                        int[] iArr = GameThread.heroUpgradeValue[GameThread.upgradeHeroUnitSelectPos];
-                        int i = GameThread.upgradeHeroUpgradeSelectPos;
-                        iArr[i] = iArr[i] + 1;
-                        int[] iArr2 = GameThread.awardDataValue;
-                        iArr2[11] = iArr2[11] + 1;
-                        if (GameThread.heroUpgradeValue[GameThread.upgradeHeroUnitSelectPos][GameThread.upgradeHeroUpgradeSelectPos] >= DataUpgradeHero.upgradeHeroData[GameThread.upgradeHeroUpgradeSelectPos][3]) {
-                            int[] iArr3 = GameThread.awardDataValue;
-                            iArr3[12] = iArr3[12] + 1;
-                        }
-                        GameThread.recheckAwardData();
-                        Config.saveAll(newTower);
-                        GameThread.playSound(13);
-                        GameThread.lastUpdateItemPos = (GameThread.upgradeHeroUnitSelectPos * 6) + GameThread.upgradeHeroUpgradeSelectPos;
-                        lastUpdateItemViewDelay = 15;
-                        break;
-                    }
-                    break;
-                case 62:
-                    GameThread.gameStatus = 12;
-                    GameThread.upgradeUnitSelectPos = 0;
-                    GameThread.playSound(14);
-                    lastUpdateItemViewDelay = 0;
-                    break;
-                case 63:
-                case 64:
-                default:
-                    GameThread.playSound(14);
-                    int i2 = checkTouchListStatus - 40;
-                    GameThread.upgradeHeroUnitSelectPos = i2 / 6;
-                    GameThread.upgradeHeroUpgradeSelectPos = i2 % 6;
-                    break;
-                case 65:
-                    GameThread.upgradeHeroUnitSelectPos = 0;
-                    break;
-                case 66:
-                    GameThread.upgradeHeroUnitSelectPos = 1;
-                    break;
-                case 67:
-                    GameThread.upgradeHeroUnitSelectPos = 2;
-                    break;
-            }
-        }
-        TouchManager.processTouchStatus();
     }
 }

@@ -1,7 +1,9 @@
 package com.sncompany.newtower.Pages;
 
+import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataMap;
+import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
@@ -43,17 +45,18 @@ public class TutorialPage extends TPage {
     public static final int GAME_TUTORIAL_TOUCH_LIST_TOTAL_COUNT = 31;
     public final int[] tutorialBoxTouchFlag = new int[22];
     public final DataMap tmap = DataMap.loadMap(50, false);
+    public final DataStage st = new DataStage(tmap, -1);
 
     public TutorialPage(TPage par) {
         super(par);
+
     }
 
     public void update_GAME_TUTORIAL() {
-        int i;
         for (int i2 = 0; i2 < 11; i2++)
             myOscillator[i2].updatePosition();
 
-        sortTowerEnemyUnit();
+        st.sortTowerEnemyUnit();
         for (int i3 = 0; i3 < 22; i3++) {
             int[] iArr = tutorialBoxTouchFlag;
             if (iArr[i3] > 0 && iArr[i3] < 10) {
@@ -81,62 +84,46 @@ public class TutorialPage extends TPage {
             return;
         }
         if (i4 == 3 || i4 == 5 || i4 == 7 || i4 == 9 || i4 == 11 || i4 == 13 || i4 == 15) {
-            int i5 = gameSubStatus;
-            if (i5 == 3) {
-                i = 0;
+            int type;
+            if (gameSubStatus == 3) {
+                type = 0;
                 c = 0;
-            } else if (i5 == 5) {
-                i = 3;
+            } else if (gameSubStatus == 5) {
+                type = 1;
                 c = 1;
-            } else if (i5 == 7) {
-                i = 12;
-            } else if (i5 == 9) {
-                i = 15;
+            } else if (gameSubStatus == 7) {
+                type = 4;
+            } else if (gameSubStatus == 9) {
+                type = 5;
                 c = 3;
-            } else if (i5 == 11) {
-                i = 24;
+            } else if (gameSubStatus == 11) {
+                type = 8;
                 c = 4;
-            } else if (i5 != 13) {
-                i = 0;
+            } else if (gameSubStatus != 13) {
+                type = 0;
                 c = 6;
             } else {
-                i = 27;
+                type = 9;
                 c = 5;
             }
-            if (TouchManager.getPressedCount() == 0) {
+            if (TouchManager.getPressedCount() == 0)
                 tutorialViewCount++;
-            }
+
             int[][] iArr4 = tutorialUnitPos;
-            if (checkTowerPos(i, iArr4[c][0], iArr4[c][1])) {
-                int i6 = gameSubStatus;
-                if (i6 == 3) {
-                    gameSubStatus = 4;
-                    return;
-                }
-                if (i6 == 5) {
-                    gameSubStatus = 6;
-                    return;
-                }
-                if (i6 == 7) {
-                    gameSubStatus = 8;
-                    return;
-                }
-                if (i6 == 9) {
-                    gameSubStatus = 10;
-                    return;
-                }
-                if (i6 == 11) {
-                    gameSubStatus = 12;
-                } else if (i6 == 13) {
-                    gameSubStatus = 14;
-                } else {
-                    if (i6 != 15) {
-                        return;
-                    }
-                    gameSubStatus = 16;
-                }
+            if (checkTowerPos(type, iArr4[c][0], iArr4[c][1])) {
+                if (gameSubStatus % 2 == 1)
+                    gameSubStatus++;
             }
         }
+    }
+
+    public boolean checkTowerPos(int tp, int x, int y) {
+        int tX = ((x * 45) + 22) * 50;
+        int tY = ((y * 45) + 22) * 50;
+        for (TowerUnit tow : st.towerUnit)
+            if (tow.type == tp && tX == tow.posX && tY == tow.posY)
+                return true;
+        return false;
     }
 
     /* JADX WARN: Removed duplicated region for block: B:104:0x09ed  */
@@ -728,12 +715,12 @@ public class TutorialPage extends TPage {
                     } else if (i5 != 7) {
                         c = i5 != 9 ? i5 != 11 ? (char) 5 : (char) 4 : (char) 3;
                     }
-                    int i6 = (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f);
-                    int i7 = (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f);
-                    if (i6 == GameThread.tutorialUnitPos[c][0] && i7 == GameThread.tutorialUnitPos[c][1]) {
+                    int pX = (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f);
+                    int pY = (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f);
+                    if (pX == GameThread.tutorialUnitPos[c][0] && pY == GameThread.tutorialUnitPos[c][1]) {
                         GameThread.playSound(14);
                         GameThread.getAddSettingPosition();
-                        NewTower.gameThread.addTowerUnit(GameThread.characterAddNumber, i6, i7, true);
+                        st.addTowerUnit(GameThread.characterAddNumber, pX, pY);
                         GameThread.myMoney -= GameThread.getBuyPrice(GameThread.characterAddNumber);
                         GameThread.characterMenuSelectFlag = 0;
                     }

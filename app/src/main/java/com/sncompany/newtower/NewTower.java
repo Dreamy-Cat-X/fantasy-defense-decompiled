@@ -51,16 +51,8 @@ public class NewTower extends AppCompatActivity {
     public static GameThread gameThread = null;
     public static GLGameSurfaceView glGameSurfaceView = null;
     public static boolean initActivityFirstFlag = false;
-    public static String myImei;
-    public static String myImsi;
-    public static String myPhoneNumber; //TODO - Delete
-    public static NetworkThread networkThread; //TODO - Delete
-    public static TelephonyManager telephonyManager; //TODO - Delete
     public static Vibrator vibe;
     public static PowerManager.WakeLock wl;
-    boolean isLoading;
-    LinearLayout layout;
-    LinearLayout mainLayout;
     public static String[] PID_DATA = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"};
     public static String[] CID_DATA = {"51200006591694", "51200006591695", "51200006591703", "51200006591704", "51200006591705", "51200006591706", "51200006591707", "51200006591708", "51200006591709", "51200006591710", "51200006591696", "51200006591697", "51200006591698", "51200006591699", "51200006591700", "51200006591701", "51200006591702"};
     private String ErrorTitle = "";
@@ -129,35 +121,26 @@ public class NewTower extends AppCompatActivity {
         builder.show();
     }
 
-    public void shopPopPurchaseDlg(int i) {
-        LAST_PURCHASE_POS = i;
-        GameThread.buyPurchaseItem(i);
-    }
-
     public void initActivity() {
         if (!initActivityFirstFlag) {
             GameThread.playTimeStartValue = System.currentTimeMillis();
             gameRenderer = new GameRenderer(this);
-        } else {
+        } else
             GameRenderer.newTower = this;
-        }
+
         GLGameSurfaceView gLGameSurfaceView = new GLGameSurfaceView(this, gameRenderer);
         glGameSurfaceView = gLGameSurfaceView;
         setContentView(gLGameSurfaceView);
         if (!initActivityFirstFlag) {
             gameThread = new GameThread(this);
-            networkThread = new NetworkThread(this);
             GameRenderer.drawFont = new Paint(1);
             GameRenderer.setDefaultFont();
             GameRenderer.textTombstone = new Tombstone(this);
             GameRenderer.isPaused = false;
             gameThread.start();
-            networkThread.start();
             PowerManager powerManager = (PowerManager) getSystemService("power");
-            telephonyManager = (TelephonyManager) getSystemService("phone");
-            PowerManager.WakeLock newWakeLock = powerManager.newWakeLock(536870922, "My Tag");
-            wl = newWakeLock;
-            newWakeLock.acquire();
+            wl = powerManager.newWakeLock(536870922, "My Tag");
+            wl.acquire();
             vibe = (Vibrator) getSystemService("vibrator");
             GameThread.gameLoadFlag = 0;
             GameThread.loadingStatus = 1000;
@@ -165,11 +148,6 @@ public class NewTower extends AppCompatActivity {
             return;
         }
         GameThread.newTower = this;
-    }
-
-    @Override // android.app.Activity
-    protected void onPrepareDialog(int i, Dialog dialog) {
-        super.onPrepareDialog(i, dialog);
     }
 
     @Override // androidx.fragment.app.FragmentActivity, android.app.Activity

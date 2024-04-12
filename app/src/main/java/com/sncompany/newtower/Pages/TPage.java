@@ -12,6 +12,10 @@ public abstract class TPage {
 
     public static final Texture2D fillBlackImage = new Texture2D();
     public static final Texture2D fillWhiteImage = new Texture2D();
+    public static final int ALWAYS_R_BG = 0;
+    public static final int ALWAYS_R_HERO0 = 1;
+    public static final int ALWAYS_R_HERO1 = 2;
+    public static final int ALWAYS_R_HERO2 = 3;
     public static final int[] alwaysResource = {R.drawable.always_background, R.drawable.always_hero0, R.drawable.always_hero1, R.drawable.always_hero2};
     public static final int[] uiEtcResource = {R.drawable.ui_etc_window, R.drawable.ui_etc_back_off, R.drawable.ui_etc_back_on, R.drawable.ui_etc_option, R.drawable.ui_etc_optionbody, R.drawable.ui_etc_onon, R.drawable.ui_etc_onoff, R.drawable.ui_etc_offon, R.drawable.ui_etc_offoff, R.drawable.ui_etc_stageboxone, R.drawable.ui_etc_stageselect, R.drawable.ui_etc_about, R.drawable.ui_etc_developer, R.drawable.ui_etc_gaedungwi, R.drawable.ui_etc_scrollbutton, R.drawable.ui_ect_movie_btn};
     public static final Texture2D[] alwaysImage = new Texture2D[alwaysResource.length];

@@ -265,7 +265,6 @@ public class StageSelectPage extends TPage {
                 mapAttackType = 0;
             }
         }
-        TouchManager.processTouchStatus();
     }
 
     public void drawSmallMap(float f, float f2, float f3) {

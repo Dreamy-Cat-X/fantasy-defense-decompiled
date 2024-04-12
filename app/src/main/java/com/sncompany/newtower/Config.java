@@ -40,12 +40,21 @@ public class Config {
     public static final byte[][] stageProg = new byte[50][3]; //-1 = locked, 0 = uncleared, 1 = clear, 2 = perfect
     public static final byte[][] unitUpgrades = new byte[3][6];
     public static final byte[][] heroUpgrades = new byte[3][6];
+    public static final byte[][][] heroEquips = new byte[3][2][2]; //[i][0] stores type, [i][1] effect degree
+    public static final byte[][] inventory = new byte[24][2]; //same as heroEquips
+
 
     public static int getAwardCount() {
         int t = 0;
         for (boolean b : awardValues)
             if (b)
                 t++;
+
+        for (int i = 10; i <= 30 && t >= i; i += 10) {
+            if (!awardValues[DataAward.AWARD_10_Title + (i / 10)])
+                t++;
+            awardValues[DataAward.AWARD_10_Title + (i / 10)] = true;
+        }
         return t;
     }
 
@@ -111,24 +120,32 @@ public class Config {
             for (byte hup : hups)
                 saveTotalBuffer[cbit++] = hup;
         //cbit = 814
-
-        for (int j = 0; j < 3; j++)
-            for (int i19 = 0; i19 < 2; i19++) {
-                IntToByteArray(saveTotalBuffer, cbit, heroItemType[j][i19]);
-                cbit += 4;
-            }
-
-        for (int j = 0; j < 24; j++) {
-            IntToByteArray(saveTotalBuffer, cbit, itemUnitValue[j]);
-            cbit += 4;
+        for (byte[][] equips : heroEquips) {
+            for (byte[] equip : equips)
+                if (equip == null)
+                    saveTotalBuffer[cbit++] = -1;
+                else
+                    saveTotalBuffer[cbit++] = (byte) ((equip[0] * 10) + equip[1]); //Equip[0] never exceeds EQ_Misc and equip[1] never exceeds 4;
         }
+        //cbit = 820
+        for (byte[] item : inventory) {
+            if (item == null)
+                saveTotalBuffer[cbit++] = -1;
+            else
+                saveTotalBuffer[cbit++] = (byte) ((item[0] * 10) + item[1]); //Equip[0] never exceeds EQ_Misc and equip[1] never exceeds 4;
+        }
+        //cbit = 844
+
         for (int j = 0; j < awardValues.length; j += 2)
             saveTotalBuffer[cbit++] = BooleansToByte(awardValues[j], awardValues[j+1]);
+        //cbit = 875
         for (int j = 0; j < rewardValues.length; j += 5)
             saveTotalBuffer[cbit++] = BooleansToByte(rewardValues[j], rewardValues[j+1], rewardValues[j+2], rewardValues[j+3], rewardValues[j+4]);
+        //cbit = 877
         saveTotalBuffer[cbit++] = lastPlayed;
         saveTotalBuffer[cbit++] = limitBreak;
         saveTotalBuffer[cbit] = BooleansToByte(movie, tutorial, vibration);
+        //cbit = 880
         try {
             openFileOutput = context.openFileOutput(file2 ? SAVEFILE_NAME2 : SAVEFILE_NAME, 0);
             openFileOutput.write(saveTotalBuffer);
@@ -189,29 +206,33 @@ public class Config {
                 for (int k = 0; k < heroUpgrades[j].length; k++)
                     heroUpgrades[j][k] = saveTotalBuffer[cbit++];
             //cbit = 814
-            for (int j = 0; j < 3; j++) {
-                    for (int i19 = 0; i19 < 2; i19++) {
-                        IntToByteArray(saveTotalBuffer, cbit, heroItemType[j][i19]);
-                        cbit += 4;
-                    }
+            for (int j = 0; j < heroEquips.length; j++)
+                for (int k = 0; k < 2; k++) {
+                    int eq = saveTotalBuffer[cbit++];
+                    heroEquips[j][k] = eq == -1 ? null : new byte[]{(byte) (eq / 10), (byte) (eq % 10)};
                 }
-                for (int j = 0; j < 24; j++) {
-                    IntToByteArray(saveTotalBuffer, cbit, itemUnitValue[j]);
-                    cbit += 4;
-                }
-
+            //cbit = 820
+            for (int j = 0; j < inventory.length; j++) {
+                int itm = saveTotalBuffer[cbit++];
+                inventory[j] = itm == -1 ? null : new byte[]{(byte)(itm / 10), (byte)(itm % 10)};
+            }
+            //cbit = 844
             for (int j = 0; j < awardValues.length; j += 2) {
                 boolean[] bs = ByteToBooleans(saveTotalBuffer[cbit++]);
                 awardValues[j] = bs[0];
                 awardValues[j + 1] = bs[1];
             }
+            //cbit = 875
             for (int j = 0; j < rewardValues.length; j += 5) {
                 boolean[] bs = ByteToBooleans(saveTotalBuffer[cbit++]);
                 for (int k = 0; k < 5; k++)
                     rewardValues[j + k] = bs[k];
             }
+            //cbit = 877
             lastPlayed = saveTotalBuffer[cbit++];
+            limitBreak = saveTotalBuffer[cbit++];
             boolean[] lbs = ByteToBooleans(saveTotalBuffer[cbit]);
+            //cbit = 880
             movie = lbs[0];
             tutorial = lbs[1];
             vibration = lbs[2];
@@ -278,7 +299,7 @@ public class Config {
 
         musicVolume = vol;
         for (int i = 0; i < 3; i++) {
-            MediaManager[] mediaManagerArr = bgmMedia;
+            MediaManager[] mediaManagerArr = GameThread.bgmMedia;
             if (mediaManagerArr[i] != null) {
                 try {
                     mediaManagerArr[i].setVolume(musicVolume, musicMaxVolume);

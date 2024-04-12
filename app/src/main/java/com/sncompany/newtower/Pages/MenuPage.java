@@ -14,10 +14,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MenuPage extends TPage { //Note: This one's parent will always be TitlePage
 
-    public static final int TITLE_MAINMENU_COUNT_FADE_AWAY_REMOVE_COUNT = 10;
     public static final int TITLE_MAINMENU_COUNT_FADE_IN_START_POS = 20;
     public static final int TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_POS = 0;
-    public static final float TITLE_MAINMENU_COUNT_FADE_AWAY_RATE = 0.1f;
     public static final float TITLE_MAINMENU_COUNT_FADE_IN_RATE = 0.1f;
     static final float TITLE_GLOW_MOVE_DEGREE = 0.05f;
     public static final float TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_RATE = TITLE_GLOW_MOVE_DEGREE;
@@ -26,9 +24,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
     public static int TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT = 30;
 
     public static int TITLE_MAINMENU_REV_COUNT_FADE_AWAY_REMOVE_COUNT = 10;
-    public static int TITLE_MAINMENU_REV_COUNT_FADE_IN_START_POS = 20;
     public static int TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_POS = 10;
-    public static float TITLE_MAINMENU_REV_COUNT_FADE_AWAY_RATE = 0.1f;
     public static float TITLE_MAINMENU_REV_COUNT_FADE_OUT_RATE = 0.1f;
     public static float TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_RATE = TITLE_GLOW_MOVE_DEGREE;
     public static int TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT = 30;
@@ -40,12 +36,13 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
     public static final int GAME_MAINMENU_TOUCH_LIST_5_BACK = 5;
     public static final int GAME_MAINMENU_TOUCH_LIST_TOTAL_COUNT = 6;
 
+
     public static final int[] mainmenuResource = {R.drawable.ui_mainmenu_background2, R.drawable.ui_mainmenu_startonl, R.drawable.ui_mainmenu_helponl, R.drawable.ui_mainmenu_recordonl, R.drawable.ui_mainmenu_upgradeonl, R.drawable.ui_mainmenu_shoponl, R.drawable.ui_mainmenu_backonl};
     public static final float[][] onPos = {{514.0f, 0.0f}, {228.0f, 5.0f}, {29.0f, 0.0f}, {383.0f, 204.0f}, {87.0f, 254.0f}, {8.0f, 318.0f}};
     public static final int[] numberHeroismResource = {R.drawable.num_heroism_0, R.drawable.num_heroism_1, R.drawable.num_heroism_2, R.drawable.num_heroism_3, R.drawable.num_heroism_4, R.drawable.num_heroism_5, R.drawable.num_heroism_6, R.drawable.num_heroism_7, R.drawable.num_heroism_8, R.drawable.num_heroism_9};
 
     public final Texture2D[] mainmenuImage = new Texture2D[mainmenuResource.length];
-    private TPage child;
+    protected TPage child;
     public int titlePressed = -1, titleCount = 0;
     public boolean cancel = false;
 
@@ -71,8 +68,6 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
 
     @Override
     public void update() {
-        GameThread.myOscillator[11].updatePosition();
-
         if (child == null)
             return;
 
@@ -87,7 +82,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                 }
                 GameThread.stopLoopSound(0);
                 NewTower.switchPage(child, true);
-            } else if (GameRenderer.titleCount >= GameRenderer.TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT)
+            } else if (titleCount >= TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT)
                 NewTower.switchPage(child, true);
             else
                 child.update();
@@ -207,15 +202,15 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                     titleCount = 0;
                     break;
                 case GAME_MAINMENU_TOUCH_LIST_3_UPGRADE: {
-                    Consumer<Integer> c = (in -> NewTower.switchPage(new UpgradePage(this, in), true));
+                    Consumer<Integer> c = (in -> NewTower.switchPage(new UpgradePage(child, in), true));
                     child = new ListPage(this, new Consumer[]{c, c}, new int[]{UpgradePage.uiUpgradeResource[0], ShopPage.uiShopResource[1], ShopPage.uiShopResource[2], ShopPage.uiShopResource[3]});
                     GameThread.upgradeUnitSelectPos = 0;
                     GameThread.playSound(14);
                     titleCount = 0;
                     break;
                 } case GAME_MAINMENU_TOUCH_LIST_4_SHOP: {
-                    Consumer<Integer> c1 = (in -> NewTower.switchPage(new ShopPage(this), true));
-                    Consumer<Integer> c2 = (in -> NewTower.switchPage(new EquipPage(this), true));
+                    Consumer<Integer> c1 = (in -> NewTower.switchPage(new ShopPage(child), true));
+                    Consumer<Integer> c2 = (in -> NewTower.switchPage(new EquipPage(child), true));
                     int imi = ShopPage.MIN_U;
                     child = new ListPage(this, new Consumer[]{c1, c2}, new int[]{ShopPage.uiShopResource[imi], ShopPage.uiShopResource[imi + 1], ShopPage.uiShopResource[imi + 2], ShopPage.uiShopResource[imi + 3]});
                     GameThread.playSound(14);
