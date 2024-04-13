@@ -1,7 +1,6 @@
 package com.sncompany.newtower.DataClasses;
 
 import com.sncompany.newtower.Battle.ObjectUnit;
-import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
@@ -157,7 +156,7 @@ public class DataMap {
             int i19 = iArr5[i17][0] - 1;
             int i20 = iArr5[i17][1];
             if (i19 >= 0 && (mapMoveData[i19][i20] & 4) != 0) {
-                addObjectUnit(GameRenderer.GAME_SHOP_EQUIP_SKILL_START_X, iArr5[i17][0], iArr5[i17][1]);
+                addObjectUnit(203, iArr5[i17][0], iArr5[i17][1]);
                 mapEndDirection[i17] = 203;
             } else {
                 int[][] iArr6 = mapEndPosition;

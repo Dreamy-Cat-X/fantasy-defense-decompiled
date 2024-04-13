@@ -16,11 +16,17 @@ public class HeroUnit extends TowerUnit {
     public int specialMaxCooltime;
     public int specialShowCount = 0;
     public int specialType;
-    private final byte[][] equip;
+
+    public static String getUnlock(int h) {
+        return "Clear Stage " + (h == 0 ? 1 : h == 1 ? 10 : 25);
+    }
 
     public HeroUnit(DataStage s, int tType, int bX, int bY) {
         super(s, tType, bX, bY);
-        equip = Config.heroEquips[tType];
+    }
+
+    private byte[][] getEquipment() {
+        return Config.heroEquips[type];
     }
 
     @Override
@@ -69,12 +75,12 @@ public class HeroUnit extends TowerUnit {
     public int getEquipEffect(int type, int pos) {
         int eff = 0;
         if (type == DataUpgradeItem.EQ_MISC) {
-            for (byte[] e : equip)
+            for (byte[] e : getEquipment())
                 if (e != null && e[0] == type && e[1] == pos)
                     eff += DataUpgradeItem.equipData[type][pos];
             return eff;
         }
-        for (byte[] e : equip)
+        for (byte[] e : getEquipment())
             if (e != null && e[0] == type)
                 eff += DataUpgradeItem.equipData[type][e[1]];
         return -1;

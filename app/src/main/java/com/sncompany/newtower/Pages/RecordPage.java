@@ -1,6 +1,6 @@
 package com.sncompany.newtower.Pages;
 
-import androidx.core.util.Consumer;
+import java.util.function.Consumer;
 
 import com.sncompany.newtower.CircleItemDraw;
 import com.sncompany.newtower.Config;

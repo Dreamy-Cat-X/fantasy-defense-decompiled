@@ -1,6 +1,6 @@
 package com.sncompany.newtower.util;
 
-import androidx.core.util.Consumer;
+import java.util.function.Consumer;
 
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.Texture2D;

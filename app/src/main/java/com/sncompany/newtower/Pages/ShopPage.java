@@ -1,10 +1,11 @@
 package com.sncompany.newtower.Pages;
 
-import androidx.core.util.Consumer;
+import java.util.function.Consumer;
 import androidx.core.view.ViewCompat;
 
 import com.sncompany.newtower.CircleItemDraw;
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
@@ -62,17 +63,40 @@ public class ShopPage extends TPage {
     static final float DRAW_SCALE_X_SMALL_DEGREE = 13.0f;
     public static final int MIN_U = 24;
     public static final int[] uiShopResource = {R.drawable.ui_shop_titleequip, R.drawable.ui_shop_titlepostbox, R.drawable.ui_shop_titleshop, R.drawable.ui_shop_titleinventory, R.drawable.ui_shop_warriorbody, R.drawable.ui_shop_warrioroutline, R.drawable.ui_shop_warriorshadow, R.drawable.ui_shop_archerbody, R.drawable.ui_shop_archeroutline, R.drawable.ui_shop_archershadow, R.drawable.ui_shop_wizardbody, R.drawable.ui_shop_wizardoutline, R.drawable.ui_shop_wizardshadow, R.drawable.ui_shop_herobase, R.drawable.ui_shop_heroslot, R.drawable.ui_shop_postboxbase, R.drawable.ui_shop_shopbase, R.drawable.ui_shop_shopitembar, R.drawable.ui_shop_shopselectbar, R.drawable.ui_shop_tabequipoff, R.drawable.ui_shop_tabequipon, R.drawable.ui_shop_tabshopoff, R.drawable.ui_shop_tabshopon, R.drawable.ui_shop_underbar, R.drawable.ui_shop_btnmshopoff, R.drawable.ui_shop_btnmshopon, R.drawable.ui_shop_btnmequipoff, R.drawable.ui_shop_btnmequipon, R.drawable.ui_shop_btnmpostboxoff, R.drawable.ui_shop_btnmpostboxon, R.drawable.ui_shop_btnbackoff, R.drawable.ui_shop_btnbackon, R.drawable.ui_shop_btnbuyoff, R.drawable.ui_shop_btnbuyon, R.drawable.ui_shop_btndropoff, R.drawable.ui_shop_btndropon, R.drawable.ui_shop_btngiftoff, R.drawable.ui_shop_btngifton, R.drawable.ui_shop_btnsaveoff, R.drawable.ui_shop_btnsaveon, R.drawable.ui_shop_btnselloff, R.drawable.ui_shop_btnsellon, R.drawable.ui_shop_btnleftarrowoff, R.drawable.ui_shop_btnleftarrowon, R.drawable.ui_shop_btnrightarrowoff, R.drawable.ui_shop_btnrightarrowon, R.drawable.ui_shop_iconempty, R.drawable.ui_shop_lock, R.drawable.ui_shop_glow, R.drawable.ui_shop_telbody, R.drawable.ui_shop_tel0, R.drawable.ui_shop_tel1, R.drawable.ui_shop_tel2, R.drawable.ui_shop_tel3, R.drawable.ui_shop_tel4, R.drawable.ui_shop_tel5, R.drawable.ui_shop_tel6, R.drawable.ui_shop_tel7, R.drawable.ui_shop_tel8, R.drawable.ui_shop_tel9, R.drawable.ui_shop_telback, R.drawable.ui_shop_telok, R.drawable.ui_shop_telclsoff, R.drawable.ui_shop_telclson};
-    public static final int shop_titleequip = 0, shop_titlepostbox = 1, shop_titleshop = 2, shop_titleinventory = 3;
-    public final Texture2D[] uiShopImage = new Texture2D[uiShopResource.length];
+    public static final int shop_titleequip = 0, shop_titlepostbox = 1, shop_titleshop = 2, shop_titleinventory = 3, shop_warriorbody = 4,
+            shop_warrioroutline = 5, shop_warriorshadow = 6, shop_archerbody = 7, shop_archeroutline = 8, shop_archershadow = 9, shop_wizardbody = 10,
+            shop_wizardoutline = 11, shop_wizardshadow = 12, shop_herobase = 13, shop_heroslot = 14, shop_postboxbase = 15, shop_shopbase = 16, shop_shopitembar = 17,
+            shop_shopselectbar = 18, shop_tabequipoff = 19, shop_tabequipon = 20, shop_tabshopoff = 21, shop_tabshopon = 22, shop_underbar = 23, shop_btnmshopoff = 24,
+            shop_btnmshopon = 25, shop_btnmequipoff = 26, shop_btnmequipon = 27, shop_btnmpostboxoff = 28, shop_btnmpostboxon = 29, shop_btnbackoff = 30,
+            shop_btnbackon = 31, shop_btnbuyoff = 32, shop_btnbuyon = 33, shop_btndropoff = 34, shop_btndropon = 35, shop_btngiftoff = 36, shop_btngifton = 37,
+            shop_btnsaveoff = 38, shop_btnsaveon = 39, shop_btnselloff = 40, shop_btnsellon = 41, shop_btnleftarrowoff = 42, shop_btnleftarrowon = 43,
+            shop_btnrightarrowoff = 44, shop_btnrightarrowon = 45, shop_iconempty = 46, shop_lock = 47, shop_glow = 48, shop_telbody = 49, shop_tel0 = 50, shop_tel1 = 51,
+            shop_tel2 = 52, shop_tel3 = 53, shop_tel4 = 54, shop_tel5 = 55, shop_tel6 = 56, shop_tel7 = 57, shop_tel8 = 58, shop_tel9 = 59, shop_telback = 50, shop_telok = 61,
+            shop_telclsoff = 62, shop_telclson = 63;
+    public final Texture2D[] uiShopImage = new Texture2D[uiShopResource.length], numberHeroismImage = new Texture2D[MenuPage.numberHeroismResource.length];;
+    public final Texture2D upImg = new Texture2D(), heroismImage = new Texture2D(R.drawable.etc_heroism);
     public final CircleItemDraw upgradeItemListDraw = new CircleItemDraw(5, 30);
+    protected final InventoryTable inventory;
+    private final EquipPage equipP;
 
     public ShopPage(TPage par) {
+        this(par, null);
+    }
+
+    public ShopPage(TPage par, EquipPage equipPage) {
         super(par);
+        equipP = equipPage == null ? new EquipPage(par, this) : equipPage;
+        inventory = equipPage == null ? new InventoryTable(this, equipP) : equipPage.inventory;
+        getShopList();
     }
 
     @Override
     public void load(Consumer<Float> prog) {
-        loadP(uiShopImage, uiShopResource, prog, 1, uiShopResource.length);
+        upImg.initWithImageName(UpgradePage.uiUpgradeResource[UpgradePage.upgrade_uprightbar]);
+        int tot = uiShopResource.length + numberHeroismImage.length + 1;
+        loadP(uiShopImage, uiShopResource, prog, 1, tot);
+        loadP(numberHeroismImage, MenuPage.numberHeroismResource, prog, uiShopImage.length + 1, tot);
+        inventory.load(prog);
         for (int i3 = 0; i3 < upgradeItemListDraw.totalHalfBlockSize; i3++) {
             upgradeItemListDraw.blockLengthArray[i3] = i3 * 70;
             upgradeItemListDraw.blockSizeArray[i3] = 1.0f;
@@ -85,77 +109,63 @@ public class ShopPage extends TPage {
         upgradeItemListDraw.moveCloseFlag = true;
         upgradeItemListDraw.blockLastViewCount = 3;
         loaded = true;
+        if (!equipP.loaded)
+            equipP.load(prog);
     }
 
     @Override
     public void update() {
         upgradeItemListDraw.correctDistance();
-        inventoryItemListDraw.correctDistance();
     }
 
     @Override
     public void paint(GL10 gl10, boolean init) {
         upgradeItemListDraw.getArrayAndCorrection();
-        inventoryItemListDraw.getArrayAndCorrection();
     }
 
-    public void paint_GAME_SHOP_SHOP(GL10 gl10, boolean z) {
-        int i;
+    public void paint_GAME_SHOP_SHOP(GL10 gl10, boolean init) {
         float f;
         int i2;
         int i3;
         upgradeItemListDraw.getArrayAndCorrection();
-        inventoryItemListDraw.getArrayAndCorrection();
+        inventory.correct();
         float f2 = 70.0f;
         int i4 = -1;
         char c = 0;
-        if (z) {
+        int i = init ? TouchManager.checkTouchListStatus() : -1;
+        if (init) {
             TouchManager.clearTouchMap();
             int i5 = GameThread.gameSubStatus;
             if (i5 == 0 || i5 == 1) { //Default StoremFront
-                TouchManager.addTouchRectListData(30, GameRenderer.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
-                TouchManager.addTouchRectListData(31, GameRenderer.CGRectMake(19.0f, 13f, 42.0f, 48.0f));
-                TouchManager.addTouchRectListData(32, GameRenderer.CGRectMake(81.0f, 397.0f, 47.0f, 48.0f));
-                TouchManager.addTouchRectListData(33, GameRenderer.CGRectMake(672.0f, 397.0f, 47.0f, 48.0f));
-                TouchManager.addTouchRectListData(34, GameRenderer.CGRectMake(30.0f, 70.0f, 690.0f, 280.0f));
-                TouchManager.addTouchRectListData(35, GameRenderer.CGRectMake(722.0f, 70.0f, 52.0f, 280.0f));
-                TouchManager.addTouchRectListData(36, GameRenderer.CGRectMake(711.0f, 381.0f, 68.0f, 78.0f));
-                TouchManager.addTouchRectListData(38, GameRenderer.CGRectMake(636.0f, 71.0f, 78.0f, 68.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_TOUCH_LIST_0_BACK, GameRenderer.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_TOUCH_LIST_3_EQUIP, GameRenderer.CGRectMake(19.0f, 13f, 42.0f, 48.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_TOUCH_LIST_11_INVEN_LEFT, GameRenderer.CGRectMake(81.0f, 397.0f, 47.0f, 48.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_TOUCH_LIST_12_INVEN_RIGHT, GameRenderer.CGRectMake(672.0f, 397.0f, 47.0f, 48.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_TOUCH_LIST_13_BODY, GameRenderer.CGRectMake(30.0f, 70.0f, 690.0f, 280.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_TOUCH_LIST_14_SIDEBAR, GameRenderer.CGRectMake(722.0f, 70.0f, 52.0f, 280.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_TOUCH_LIST_15_SELL, GameRenderer.CGRectMake(711.0f, 381.0f, 68.0f, 78.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_TOUCH_LIST_17_BUY, GameRenderer.CGRectMake(636.0f, 71.0f, 78.0f, 68.0f));
                 for (int i6 = 0; i6 < 4; i6++) {
                     int i7 = (i6 * 2) + 10;
                     int i8 = i6 * 70;
                     TouchManager.addTouchRectListData(i7, GameRenderer.CGRectMake(565.0f, i8 + 75, 70.0f, 60.0f));
                     TouchManager.addTouchRectListData(i7 + 1, GameRenderer.CGRectMake(636.0f, i8 + 71, 78.0f, 68.0f));
                 }
-                for (int i9 = 0; i9 < 8; i9++) {
-                    TouchManager.addTouchRectListData(i9, GameRenderer.CGRectMake(((i9 % 8) * 70) + 125, 390.0f, 60.0f, 60.0f));
-                }
+                inventory.addTouch();
             } else if (i5 == 7) //Insufficient Hero Points
-                TouchManager.addTouchRectListData(53, GameRenderer.CGRectMake(213.0f, 259.0f, 381.0f, 65.0f));
+                TouchManager.addTouchRectListData(GAME_SHOP_SHOP_ALERT_OK, GameRenderer.CGRectMake(213.0f, 259.0f, 381.0f, 65.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 56;
-            i = TouchManager.checkTouchListStatus();
-        } else {
-            i = -1;
+            parent.parent.paint(gl10, false);
         }
-        if (z)
-            parent.paint(gl10, false);
 
         char c2 = 2;
         uiShopImage[shop_titleshop].drawAtPointOption(66.0f, 5.0f, 18);
-        char c3 = 17;
-        if (i == 31) {
-            uiShopImage[20].drawAtPointOption(40f, 13f, 17);
-        } else {
-            uiShopImage[19].drawAtPointOption(40f, 13f, 17);
-        }
-        if (i == 30) {
-            uiShopImage[31].drawAtPointOption(11.0f, 356.0f, 18);
-        } else {
-            uiShopImage[30].drawAtPointOption(11.0f, 356.0f, 18);
-        }
-        uiUpgradeImage[18].drawAtPointOption(572.0f, 8.0f, 18);
-        drawNumberBlock(GameThread.myHeroism, numberHeroismImage, 779.0f, 24.0f, 1, 20, 1);
-        uiShopImage[16].drawAtPointOption(14.0f, 54.0f, 18);
+        uiShopImage[i == 31 ? shop_tabequipon : shop_tabequipoff].drawAtPointOption(40f, 13f, 17);
+        uiShopImage[i == 30 ? shop_btnbackon : shop_btnbackoff].drawAtPointOption(40f, 13f, 17);
+
+        upImg.drawAtPointOption(572.0f, 8.0f, 18);
+        GameRenderer.drawNumberBlock(GameThread.myHeroism, numberHeroismImage, 779.0f, 24.0f, 1, 20, 1);
+        uiShopImage[shop_shopbase].drawAtPointOption(14.0f, 54.0f, 18);
         int i10 = upgradeItemListDraw.totalHalfBlockSize - 1;
         int i11 = -1;
         while (i10 <= upgradeItemListDraw.totalHalfBlockSize + 3 + 1) {
@@ -166,66 +176,49 @@ public class ShopPage extends TPage {
                     int abs = Math.abs(i10 - upgradeItemListDraw.totalHalfBlockSize);
                     if (i10 < upgradeItemListDraw.totalHalfBlockSize) {
                         i2 = -upgradeItemListDraw.blockLengthArray[abs];
-                        i3 = upgradeItemListDraw.blockCorrectionPixel;
                     } else {
                         i2 = upgradeItemListDraw.blockLengthArray[abs];
-                        i3 = upgradeItemListDraw.blockCorrectionPixel;
                     }
-                    CGRectMake(30.0f, f2, 690.0f, 280.0f);
-                    uiShopImage[c3].drawAtPointOptionGuide(30.0f, r2 + 70, 18, _CGRect);
+                    i3 = upgradeItemListDraw.blockCorrectionPixel;
+                    GameRenderer.CGRectMake(30.0f, f2, 690.0f, 280.0f);
+                    int r2 = (i10 * 70) + i3;
+                    uiShopImage[shop_shopitembar].drawAtPointOptionGuide(30.0f, r2 + 70, 18, GameRenderer._CGRect);
                     float f3 = i2 + i3 + 75;
-                    drawUpItemImageGuide(i13, 40.0f, f3, 18, _CGRect);
-                    setFontDoubleColor(-2560, -2560);
-                    setFontSize(20);
-                    drawStringDoubleGuideM(DataUpgradeItem.upgradeItemName[i13], 118.0f, r2 + 81, 18, _CGRect);
-                    setFontDoubleColor(i4, i4);
-                    setFontSize(12);
+                    drawUpItemImageGuide(i13, 40.0f, f3, 18, GameRenderer._CGRect);
+                    GameRenderer.setFontDoubleColor(-2560, -2560);
+                    GameRenderer.setFontSize(20);
+                    GameRenderer.drawStringDoubleGuideM(DataUpgradeItem.upgradeItemName[i13], 118.0f, r2 + 81, 18, GameRenderer._CGRect);
+                    GameRenderer.setFontDoubleColor(i4, i4);
+                    GameRenderer.setFontSize(12);
                     int i14 = DataUpgradeItem.upgradeItemData[i13][c2];
                     String[] split = DataUpgradeItem.upgradeItemDescription[i13].split("_");
                     int i15 = 0;
                     while (i15 < split.length) {
                         String str = split[i15];
                         Object[] objArr = new Object[1];
-                        objArr[c] = Integer.valueOf(i14);
-                        drawStringDoubleGuideM(String.format(str, objArr), 117.0f, r2 + 108 + (i15 * 15), 18, _CGRect);
+                        objArr[c] = i14;
+                        GameRenderer.drawStringDoubleGuideM(String.format(str, objArr), 117.0f, r2 + 108 + (i15 * 15), 18, GameRenderer._CGRect);
                         i15++;
-                        c = 0;
                     }
-                    if (DataUpgradeItem.upgradeItemData[i13][3] == 0) {
-                        dollarImage.drawAtPointOptionGuide(485.0f, f3, 18, _CGRect);
-                    }
-                    setFontSize(16);
-                    drawStringDoubleGuideM(String.valueOf(DataUpgradeItem.upgradeItemData[i13][4]), 547.0f, r2 + 78, 20, _CGRect);
+
+                    GameRenderer.setFontSize(16);
+                    GameRenderer.drawStringDoubleGuideM(String.valueOf(DataUpgradeItem.upgradeItemData[i13][4]), 547.0f, r2 + 78, 20, GameRenderer._CGRect);
                     int i16 = DataUpgradeItem.upgradeItemData[i13][3];
                     if (i11 >= 0 && i == (i11 * 2) + 10 + 1) {
-                        uiShopImage[33].drawAtPointOptionGuide(636.0f, r2 + 71, 18, _CGRect);
+                        uiShopImage[shop_btnbuyon].drawAtPointOptionGuide(636.0f, r2 + 71, 18, _CGRect);
                     } else {
-                        uiShopImage[32].drawAtPointOptionGuide(636.0f, r2 + 71, 18, _CGRect);
+                        uiShopImage[shop_btnbuyoff].drawAtPointOptionGuide(636.0f, r2 + 71, 18, _CGRect);
                     }
                     i10++;
                     i11++;
-                    f2 = 70.0f;
-                    i4 = -1;
-                    c = 0;
-                    c2 = 2;
-                    c3 = 17;
                 }
             }
             i10++;
             i11++;
-            f2 = 70.0f;
-            i4 = -1;
-            c = 0;
-            c2 = 2;
-            c3 = 17;
         }
         uiEtcImage[14].drawAtPointOption(747.0f, GameThread.myScrollbar[4].BarLastPosition, 9);
         int i17 = i != 32 ? i != 33 ? i != 36 ? 0 : 3 : 2 : 1;
-        if (GameThread.gameSubStatus == 1) {
-            drawInventoryWindow(72, 362, GameThread.shopShopInventorySelectPos, i17, -1, true);
-        } else {
-            drawInventoryWindow(72, 362, GameThread.shopShopInventorySelectPos, i17, -1, false);
-        }
+        inventory.drawInventoryWindow(72, 362, equipP.shopShopInventorySelectPos, i17, -1, GameThread.gameSubStatus == 1);
         if (GameThread.gameSubStatus == 7) {
             uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
             setFontSize(32);
@@ -233,9 +226,26 @@ public class ShopPage extends TPage {
             drawStringDoubleM("Insufficient Hero Points.", CX, 180.0f, 17);
             uiPopupImage[i == 53 ? 13 : 12].drawAtPointOption(213.0f, 259.0f, 18);
         }
-        if (z) {
+        if (init) {
             TouchManager.swapTouchMap();
         }
+    }
+
+    public static void drawUpItemImageGuide(int i, float f, float f2, int i2, CGRect cGRect) {
+        if (i < 0) {
+            return;
+        }
+        if (i2 == 9) {
+            f -= 30.0f;
+            f2 -= 30.0f;
+        }
+        uiUpitemImage[i].drawAtPointOptionGuide(f, f2, 18, cGRect);
+        if (DataUpgradeItem.upgradeItemData[i][0] != 0) {
+            return;
+        }
+        setFontSize(11);
+        setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+        drawStringDoubleGuideM(String.format("%dP", Integer.valueOf(DataUpgradeItem.upgradeItemData[i][2])), f + 30.0f, f2 + 43.0f, 17, cGRect);
     }
 
     public void touchCheck_GAME_SHOP_SHOP() {
@@ -296,29 +306,16 @@ public class ShopPage extends TPage {
                                 NewTower.switchPage(parent, false);
                                 break;
                             case 31:
-                                GameThread.gameStatus = 16;
-                                GameThread.gameSubStatus = 2;
-                                GameThread.upgradeHeroUnitSelectPos = 0;
-                                GameThread.shopShopInventorySelectPos = 0;
-                                GameThread.upgradeHeroEquipSelectPos = 0;
-                                GameThread.setEquipHeroSetting();
+                                NewTower.switchPage(equipP, false);
                                 GameThread.playSound(14);
                                 break;
                             case 32:
                                 GameThread.playSound(14);
-                                GameThread.shopShopInventorySelectPos -= 8;
-                                if (GameThread.shopShopInventorySelectPos < 0) {
-                                    GameThread.shopShopInventorySelectPos += 24;
-                                    break;
-                                }
+                                equipP.shopShopInventorySelectPos = (equipP.shopShopInventorySelectPos - 8) % 24;
                                 break;
                             case 33:
                                 GameThread.playSound(14);
-                                GameThread.shopShopInventorySelectPos += 8;
-                                if (GameThread.shopShopInventorySelectPos >= 24) {
-                                    GameThread.shopShopInventorySelectPos -= 24;
-                                    break;
-                                }
+                                equipP.shopShopInventorySelectPos = (equipP.shopShopInventorySelectPos + 8) % 24;
                                 break;
                             default:
                                 if (checkTouchListStatus2 >= 10) {
@@ -339,7 +336,7 @@ public class ShopPage extends TPage {
                                 } else {
                                     GameThread.playSound(14);
                                     GameThread.gameSubStatus = 1;
-                                    GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (checkTouchListStatus2);
+                                    equipP.shopShopInventorySelectPos = (equipP.shopShopInventorySelectPos - (equipP.shopShopInventorySelectPos % 8)) + (checkTouchListStatus2);
                                 }
                                 break;
                         }
@@ -362,7 +359,7 @@ public class ShopPage extends TPage {
         }
     }
 
-    public static void getShopList() {
+    public void getShopList() {
         shopUnitCount = 0;
         for (int i = 0; i < 30; i++) {
             int[] iArr = shopUnitValue;
@@ -473,36 +470,17 @@ public class ShopPage extends TPage {
         return 0;
     }
 
-    public static int sellShopItem() {
-        int[] iArr;
-        int i;
-        int i2 = shopShopInventorySelectPos;
-        if (i2 == -1 || (i = (iArr = itemUnitValue)[i2]) == -1) {
-            return 1;
-        }
-        if (i >= 30) {
-            iArr[i2] = -1;
-        } else {
-            if (DataUpgradeItem.upgradeItemData[i][3] == 0) {
-                return 2;
-            }
-            myHeroism += (DataUpgradeItem.upgradeItemData[i][4] * 50) / 100;
-            itemUnitValue[shopShopInventorySelectPos] = -1;
-        }
-        int i3 = shopShopInventorySelectPos;
-        while (i3 < 23) {
-            int i4 = i3 + 1;
-            for (int i5 = i4; i5 < 24; i5++) {
-                int[] iArr2 = itemUnitValue;
-                if (iArr2[i3] == -1 || (iArr2[i5] != -1 && iArr2[i3] > iArr2[i5])) {
-                    int[] iArr3 = itemUnitValue;
-                    int i6 = iArr3[i5];
-                    iArr3[i5] = iArr3[i3];
-                    iArr3[i3] = i6;
-                }
-            }
-            i3 = i4;
-        }
-        return 0;
+    public boolean sellShopItem() {
+        int sel = inventory.shopShopInventorySelectPos;
+        if (inventory.shopShopInventorySelectPos == -1 || Config.inventory[sel] == null)
+            return false;
+
+        int id = (Config.inventory[sel][0] * 4) + Config.inventory[sel][1] + 1;
+        Config.heroPoints += DataUpgradeItem.upgradeItemData[id][4] / 2;
+
+        for (int i = sel; i < Config.inventory.length - 1; i++)
+            Config.inventory[i] = Config.inventory[i + 1];
+        Config.inventory[Config.inventory.length - 1] = null;
+        return true;
     }
 }

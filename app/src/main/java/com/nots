@@ -30,18 +30,18 @@ total += initialDeployCost
 
 PROGRESS:
 CinematicPage - 0 errors
-EquipPage - 186 errors
+EquipPage - 0 errors
 HelpPage - 0 errors
 ListPage - 0 errors
 LoadingPage - 0 errors
 MenuPage - 0 errors
 RecordPage - 0 errors
-ShopPage - 88 errors
-StagePage - 967 errors
+ShopPage - 57 errors
+StagePage - 1199 errors
 StageSelectPage - 0 errors
 TitlePage - 0 errors
 TPage - 0 errors
-TutorialPage - 209 errors
+TutorialPage - 205 errors
 UpgradePage - 0 errors
 
 Other TODO:

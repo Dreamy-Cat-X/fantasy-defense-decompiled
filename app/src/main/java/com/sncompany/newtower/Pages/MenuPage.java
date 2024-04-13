@@ -1,6 +1,6 @@
 package com.sncompany.newtower.Pages;
 
-import androidx.core.util.Consumer;
+import java.util.function.Consumer;
 
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.GameRenderer;
@@ -203,8 +203,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                     break;
                 case GAME_MAINMENU_TOUCH_LIST_3_UPGRADE: {
                     Consumer<Integer> c = (in -> NewTower.switchPage(new UpgradePage(child, in), true));
-                    child = new ListPage(this, new Consumer[]{c, c}, new int[]{UpgradePage.uiUpgradeResource[0], ShopPage.uiShopResource[1], ShopPage.uiShopResource[2], ShopPage.uiShopResource[3]});
-                    GameThread.upgradeUnitSelectPos = 0;
+                    child = new ListPage(this, new Consumer[]{c, c}, new int[]{UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnherooff], ShopPage.uiShopResource[UpgradePage.upgrade_btnheroon], ShopPage.uiShopResource[UpgradePage.upgrade_btnunitoff], ShopPage.uiShopResource[UpgradePage.upgrade_btnuniton]});
                     GameThread.playSound(14);
                     titleCount = 0;
                     break;

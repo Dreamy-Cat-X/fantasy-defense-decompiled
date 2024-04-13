@@ -86,6 +86,7 @@ public class Config {
      * @param file2 If this data will be saved in file 2
      */
     public static void saveData(Context context, boolean file2) {
+        //TODO - Saving/Loading ArrayLists
         FileOutputStream openFileOutput;
         Arrays.fill(saveTotalBuffer, (byte) 0);
 

@@ -58,6 +58,13 @@ public class TowerUnit implements Comparable<TowerUnit> {
     public ArrayList<EnemyUnit> lockedEnemies = new ArrayList<>(3);
     private final DataStage st;
 
+    public static final String[] effectTypeString = {"Stun", "Splash", "DoT", "Slow", "Pierce", "Slow Mud", "Dot Fire", "Multi Shot", "Double Shot", "None"};
+    public static String getEffectTypeString(int i) {
+        if (i == -1 || i > 9)
+            return effectTypeString[9];
+        return effectTypeString[i];
+    }
+
     public TowerUnit(DataStage s, int tType, int bX, int bY) {
         st = s;
         type = tType;

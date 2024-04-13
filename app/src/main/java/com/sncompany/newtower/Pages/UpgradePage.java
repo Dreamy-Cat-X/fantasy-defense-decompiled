@@ -1,7 +1,8 @@
 package com.sncompany.newtower.Pages;
 
-import androidx.core.util.Consumer;
+import java.util.function.Consumer;
 
+import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataStage;
@@ -49,6 +50,9 @@ public class UpgradePage extends TPage {
     public static final int[] uiUpheroResource = {R.drawable.ui_uphero_up0, R.drawable.ui_uphero_up1, R.drawable.ui_uphero_up2, R.drawable.ui_uphero_up3, R.drawable.ui_uphero_up4, R.drawable.ui_uphero_up5};
     public static final int[] numberUpgradeResource = {R.drawable.num_upgrade_0, R.drawable.num_upgrade_1, R.drawable.num_upgrade_2, R.drawable.num_upgrade_3, R.drawable.num_upgrade_4, R.drawable.num_upgrade_5, R.drawable.num_upgrade_6, R.drawable.num_upgrade_7, R.drawable.num_upgrade_8, R.drawable.num_upgrade_9, R.drawable.num_upgrade_slash};
     public static final int[] uiUpgradeResource = {R.drawable.ui_upgrade_btnherooff, R.drawable.ui_upgrade_btnheroon, R.drawable.ui_upgrade_btnunitoff, R.drawable.ui_upgrade_btnuniton, R.drawable.ui_upgrade_titlehero, R.drawable.ui_upgrade_titleunit, R.drawable.ui_upgrade_basehero, R.drawable.ui_upgrade_baseunit, R.drawable.ui_upgrade_tabherooff, R.drawable.ui_upgrade_tabheroon, R.drawable.ui_upgrade_tabunitoff, R.drawable.ui_upgrade_tabuniton, R.drawable.ui_upgrade_baseblack, R.drawable.ui_upgrade_btnupgradeoff, R.drawable.ui_upgrade_btnupgradeon, R.drawable.ui_upgrade_max, R.drawable.ui_upgrade_iconselectn, R.drawable.ui_upgrade_iconselecta, R.drawable.ui_upgrade_uprightbar};
+    public static final int upgrade_btnherooff = 0, upgrade_btnheroon = 1, upgrade_btnunitoff = 2, upgrade_btnuniton = 3, upgrade_titlehero = 4, upgrade_titleunit = 5, upgrade_basehero = 6,
+            upgrade_baseunit = 7, upgrade_tabherooff = 8, upgrade_tabheroon = 9, upgrade_tabunitoff = 10, upgrade_tabuniton = 11, upgrade_baseblack = 12, upgrade_btnupgradeoff = 13,
+            upgrade_btnupgradeon = 14, upgrade_max = 15, upgrade_iconselectn = 16, upgrade_iconselecta = 17, upgrade_uprightbar = 18;
     public final Texture2D[] uiUpgradeImage = new Texture2D[uiUpgradeResource.length], numberUpgradeImage = new Texture2D[numberUpgradeResource.length];
     public final Texture2D[] shopImages = new Texture2D[3], numberHeroismImage = new Texture2D[MenuPage.numberHeroismResource.length];
     public final Texture2D[] uiUpunitImage = new Texture2D[uiUpunitResource.length], uiUpheroImage = new Texture2D[uiUpheroResource.length];
@@ -70,9 +74,9 @@ public class UpgradePage extends TPage {
         loadP(numberHeroismImage, MenuPage.numberHeroismResource, prog, uiUpgradeImage.length + numberUpgradeImage.length + 1, tot);
         loadP(uiUpunitImage, uiUpunitResource, prog, uiUpgradeImage.length + numberUpgradeImage.length + numberHeroismImage.length + 1, tot);
         loadP(uiUpheroImage, uiUpheroResource, prog, uiUpgradeImage.length + numberUpgradeImage.length + numberHeroismImage.length + uiUpunitImage.length + 1, tot);
-        shopImages[0] = new Texture2D(ShopPage.uiShopResource[23]);
-        shopImages[1] = new Texture2D(ShopPage.uiShopResource[30]);
-        shopImages[2] = new Texture2D(ShopPage.uiShopResource[31]);
+        shopImages[0] = new Texture2D(ShopPage.uiShopResource[ShopPage.shop_underbar]); //Inventory img
+        shopImages[1] = new Texture2D(ShopPage.uiShopResource[ShopPage.shop_btnbackoff]);
+        shopImages[2] = new Texture2D(ShopPage.uiShopResource[ShopPage.shop_btnbackon]);
         if (prog != null)
             prog.accept(1f);
         loaded = true;
@@ -124,9 +128,10 @@ public class UpgradePage extends TPage {
         parent.parent.paint(gl10, false);
 
         shopImages[cTLS == 24 ? 2 : 1].drawAtPointOption(11.0f, 356.0f, 18);
-        uiUpgradeImage[cTLS == 27 ? 9 : 8].drawAtPointOption(21.0f, 8.0f, 18);
-        uiUpgradeImage[hero ? 5 : 4].drawAtPointOption(66.0f, 5.0f, 18);
-        uiUpgradeImage[hero ? 7 : 6].drawAtPointOption(20.0f, 60.0f, 18);
+        uiUpgradeImage[hero ? cTLS == 27 ? upgrade_tabuniton : upgrade_tabunitoff :
+                cTLS == 27 ? upgrade_tabheroon : upgrade_tabherooff].drawAtPointOption(21.0f, 8.0f, 18);
+        uiUpgradeImage[hero ? upgrade_titlehero : upgrade_titleunit].drawAtPointOption(66.0f, 5.0f, 18);
+        uiUpgradeImage[hero ? upgrade_basehero : upgrade_baseunit].drawAtPointOption(20.0f, 60.0f, 18);
 
         byte[][] sUpgrades = hero ? Config.heroUpgrades : Config.unitUpgrades;
         for (int I = 0; I < 3; I++)
@@ -135,7 +140,7 @@ public class UpgradePage extends TPage {
                     float tx = (I * 255f) + 45 + ((j % 3) * 70);
                     float ty = (j < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y + 43.0f;
                     if (sUpgrades[I][j] == getUpgradeMax()) { //DataUpgradeUnit.upgradeUnitData[k][3] = 10 in every single instance. Least useless variable
-                        uiUpgradeImage[15].drawAtPointOption(tx + 30.0f, ty, 17);
+                        uiUpgradeImage[upgrade_max].drawAtPointOption(tx + 30.0f, ty, 17);
                     } else {
                         numberUpgradeImage[10].drawAtPointOption(30.0f + tx, ty, 17);
                         GameRenderer.drawNumberBlock(sUpgrades[I][j], numberUpgradeImage, tx + 15.0f, ty, -2, 17, 1);
@@ -148,19 +153,14 @@ public class UpgradePage extends TPage {
                 fillBlackImage.fillRect((I * 255) + 21, 61.0f, 248.0f, 298.0f);
                 Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
                 GameRenderer.setFontColor(-1);
-                if (I == 0) {
-                    GameRenderer.drawStringDoubleM("Clear Stage 1", 149.0f, 284.0f, 17);
-                } else if (I == 1) {
-                    GameRenderer.drawStringDoubleM("Clear Stage 10", 404.0f, 284.0f, 17);
-                } else
-                    GameRenderer.drawStringDoubleM("Clear Stage 25", 659.0f, 284.0f, 17);
+                GameRenderer.drawStringDoubleM(HeroUnit.getUnlock(I), 149.0f + (I * 255), 284.0f, 17);
             }
-        uiUpgradeImage[18].drawAtPointOption(572.0f, 8.0f, 18);
+        uiUpgradeImage[upgrade_uprightbar].drawAtPointOption(572.0f, 8.0f, 18);
         GameRenderer.drawNumberBlock(Config.heroPoints, numberHeroismImage, 779.0f, 24.0f, 1, 20, 1);
         shopImages[0].drawAtPointOption(72.0f, 362.0f, 18);
-        uiUpgradeImage[cTLS == 61 ? 14 : 13].drawAtPointOption(680.0f, 367.0f, 18);
+        uiUpgradeImage[cTLS == 61 ? upgrade_btnupgradeon : upgrade_btnupgradeoff].drawAtPointOption(680.0f, 367.0f, 18);
 
-        uiUpgradeImage[12].drawAtPointOption(96.0f, 386.0f, 18);
+        uiUpgradeImage[upgrade_baseblack].drawAtPointOption(96.0f, 386.0f, 18);
         if (lastUpdateItemViewDelay > 0) {
             float rX = ((lastUpdateItemPos / 6) * 255) + 45 + ((lastUpdateItemPos % 3) * 70);
             float rY = (lastUpdateItemPos % 6 < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y;
@@ -173,37 +173,38 @@ public class UpgradePage extends TPage {
         int sPos = hero ? upgradeUnitSelectPos % 6 : upgradeUnitSelectPos;
         float boxX = ((upgradeUnitSelectPos / 6) * 255) + 45 + ((sPos % 3) * 70);
         float boxY = (sPos % 6 < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y;
-        GameRenderer.drawSelectRedBox(boxX, boxY);
+        drawSelectRedBox(boxX, boxY);
         drawUpgradeDescription(boxX + 30.0f, boxY, upgradeUnitSelectPos / 6, sPos);
 
         if (hero)
-            uiUpheroImage[GameThread.upgradeUnitSelectPos % 6].drawAtPointOption(97.0f, 387.0f, 18);
+            uiUpheroImage[upgradeUnitSelectPos % 6].drawAtPointOption(97.0f, 387.0f, 18);
         else
-            uiUpunitImage[GameThread.upgradeUnitSelectPos].drawAtPointOption(97.0f, 387.0f, 18);
+            uiUpunitImage[upgradeUnitSelectPos].drawAtPointOption(97.0f, 387.0f, 18);
         GameRenderer.setFontSize(20);
         GameRenderer.setFontColor(-2560);
         if (hero)
-            GameRenderer.drawStringM(DataUpgradeHero.upgradeHeroName[GameThread.upgradeUnitSelectPos % 6], 183.0f, 384.0f, 18);
+            GameRenderer.drawStringM(DataUpgradeHero.upgradeHeroName[upgradeUnitSelectPos % 6], 183.0f, 384.0f, 18);
         else
-            GameRenderer.drawStringM(DataUpgradeUnit.upgradeUnitName[GameThread.upgradeUnitSelectPos], 183.0f, 384.0f, 18);
+            GameRenderer.drawStringM(DataUpgradeUnit.upgradeUnitName[upgradeUnitSelectPos], 183.0f, 384.0f, 18);
         GameRenderer.setFontSize(18);
         GameRenderer.setFontColor(-1);
         int lvE;
+        int nexE;
 
         if (hero) {
             GameRenderer.drawStringM(String.format(DataUpgradeHero.upgradeHeroDescription[sPos], DataUpgradeHero.upgradeHeroData[sPos][0]), 183.0f, 410.0f, 18);
-            lvE = DataUpgradeHero.upgradeHeroData[sPos][0] * GameThread.upgradeUnitValue[GameThread.upgradeUnitSelectPos];
+            lvE = DataUpgradeHero.upgradeHeroData[sPos][0] * sUpgrades[upgradeUnitSelectPos / 6][sPos];
+            nexE = lvE + DataUpgradeHero.upgradeHeroData[sPos][0];
         } else {
             GameRenderer.drawStringM(String.format(DataUpgradeUnit.upgradeUnitDescription[sPos], DataUpgradeUnit.upgradeUnitData[sPos][0]), 183.0f, 410.0f, 18);
-            lvE = DataUpgradeUnit.upgradeUnitData[sPos][0] * GameThread.upgradeUnitValue[GameThread.upgradeUnitSelectPos];
+            lvE = DataUpgradeUnit.upgradeUnitData[sPos][0] * sUpgrades[upgradeUnitSelectPos / 6][sPos];
+            nexE = lvE + DataUpgradeUnit.upgradeUnitData[sPos][0];
         }
         GameRenderer.setFontSize(14);
-        if (sUpgrades[upgradeUnitSelectPos / 6][sPos] >= getUpgradeMax()) {
+        if (sUpgrades[upgradeUnitSelectPos / 6][sPos] >= getUpgradeMax())
             GameRenderer.drawStringM(String.format("( MAX : %d )", lvE), 183.0f, 435.0f, 18);
-        } else {
-            int nexE = DataUpgradeUnit.upgradeUnitData[GameThread.upgradeUnitSelectPos][0] * (GameThread.upgradeUnitValue[GameThread.upgradeUnitSelectPos] + 1);
+        else
             GameRenderer.drawStringM(String.format("( %d > %d )", lvE, nexE), 183.0f, 435.0f, 18);
-        }
         if (init)
             TouchManager.swapTouchMap();
     }
@@ -213,6 +214,16 @@ public class UpgradePage extends TPage {
         if (Config.rewardValues[5])
             return 10 + lbreak;
         return 5 + lbreak;
+    }
+
+    public void drawSelectRedBox(float x, float y) {
+        uiUpgradeImage[upgrade_iconselectn].drawAtPointOption(x - 11.0f, (-11.0f) + y, 18);
+        float xw = x - 2f;
+        float ty = (GameThread.gameTimeCount % 109) + y - 49f;
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y - 2f, 64f, 2f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y + 60f, 64f, 2f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y, 2f, 60f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(x + 60f, y, 2f, 60f));
     }
 
     public void drawUpgradeDescription(float x, float y, int unI, int upgI) {
@@ -288,7 +299,7 @@ public class UpgradePage extends TPage {
                         GameThread.playSound(13);
                         DataAward.check_upgrade();
                         Config.saveAll();
-                        GameThread.lastUpdateItemPos = GameThread.upgradeUnitSelectPos;
+                        lastUpdateItemPos = upgradeUnitSelectPos;
                         lastUpdateItemViewDelay = 15;
                         break;
                     }
@@ -296,10 +307,6 @@ public class UpgradePage extends TPage {
                 case 27:
                     hero = !hero;
                     upgradeUnitSelectPos = 0;
-                    GameThread.gameStatus = 13;
-                    GameThread.gameSubStatus = 0;
-                    GameThread.upgradeHeroUpgradeSelectPos = 0;
-                    GameThread.upgradeHeroUnitSelectPos = 0;
                     GameThread.playSound(14);
                     lastUpdateItemViewDelay = 0;
                     break;

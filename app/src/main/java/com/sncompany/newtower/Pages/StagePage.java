@@ -3713,6 +3713,358 @@ public class StagePage extends TPage {
         texture2DArr[0].drawAtPointOption((aru.startX / 50) + 62, (float) (((aru.startY / 50) + 30) - 15), 9);
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:193:0x00aa, code lost:
+
+        r15 = true;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:199:0x00a8, code lost:
+
+        if (com.sncompany.newtower.GameThread.myMana < r13) goto L33;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:19:0x009c, code lost:
+
+        if (com.sncompany.newtower.GameThread.myMoney < r13) goto L33;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:20:0x00ac, code lost:
+
+        r15 = false;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:144:0x0584  */
+    /* JADX WARN: Removed duplicated region for block: B:147:0x05d7  */
+    /* JADX WARN: Removed duplicated region for block: B:150:0x05fa  */
+    /* JADX WARN: Removed duplicated region for block: B:151:0x05a5  */
+    /* JADX WARN: Removed duplicated region for block: B:76:0x031e  */
+    /* JADX WARN: Removed duplicated region for block: B:82:0x035c  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public void drawCharMenu() {
+        int i;
+        int i2;
+        int i3;
+        int i4;
+        int i5;
+        int i6;
+        int i7;
+        int i8;
+        int i9;
+        boolean z;
+        boolean z2;
+        int i10;
+        int i11;
+        int i12;
+        int i13;
+        int i14;
+        int i15;
+        int i16;
+        int i17 = GameThread.characterSelectNumber;
+        int i18 = GameThread.towerUnit[i17].towerType;
+        if (i17 < 0 || i18 < 0) {
+            return;
+        }
+        int towerImageOrder = getTowerImageOrder(i18, GameThread.towerUnit[i17].heroFlag);
+        if (GameThread.towerUnit[i17].heroFlag == 0) {
+            i4 = GameThread.getUpgradeType(i18);
+            if (i4 != -1) {
+                i15 = getTowerImageOrder(i4, 0);
+                i16 = getTowerBoxImageOrder(i4);
+            } else {
+                i15 = -1;
+                i16 = -1;
+            }
+            int downgradeType = GameThread.getDowngradeType(i18);
+            int towerImageOrder2 = downgradeType != -1 ? getTowerImageOrder(downgradeType, 0) : -1;
+            int buyPrice = GameThread.getBuyPrice(i18);
+            int sellPrice = GameThread.getSellPrice(i18);
+            int upgradePrice = GameThread.getUpgradePrice(i18, GameThread.towerUnit[i17].heroFlag);
+            i3 = GameThread.getLevelupPrice(i18);
+            i9 = upgradePrice;
+            i8 = sellPrice;
+            i2 = buyPrice;
+            i7 = towerImageOrder2;
+            i6 = i16;
+            i5 = i15;
+            i = 0;
+        } else {
+            int heroBuyPrice = GameThread.getHeroBuyPrice(GameThread.towerUnit[i17].heroOrder);
+            int levelupHeroPrice = GameThread.getLevelupHeroPrice(i18, GameThread.towerUnit[i17].heroOrder);
+            i = GameThread.towerUnit[i17].specialType;
+            i2 = heroBuyPrice;
+            i3 = levelupHeroPrice;
+            i4 = -1;
+            i5 = -1;
+            i6 = -1;
+            i7 = -1;
+            i8 = 0;
+            i9 = 0;
+        }
+        int towerLevelOrder = getTowerLevelOrder(i18, GameThread.towerUnit[i17].heroFlag);
+        if (GameThread.towerUnit[i17].heroFlag == 0) {
+            z = GameThread.myMoney < i9;
+        } else {
+            z = GameThread.myMana < i9;
+        }
+        if (towerImageOrder != -1) {
+            if (uiCharFaceImage[towerImageOrder].name == -1) {
+                uiCharFaceImage[towerImageOrder].initWithImageName(uiCharFaceResource[towerImageOrder]);
+            }
+            if (uiCharNameImage[towerImageOrder].name == -1) {
+                uiCharNameImage[towerImageOrder].initWithImageName(uiCharNameResource[towerImageOrder]);
+            }
+        }
+        int i19 = -1;
+        if (i7 != -1) {
+            if (uiCharFaceImage[i7].name == -1) {
+                uiCharFaceImage[i7].initWithImageName(uiCharFaceResource[i7]);
+            }
+            if (uiCharNameImage[i7].name == -1) {
+                uiCharNameImage[i7].initWithImageName(uiCharNameResource[i7]);
+            }
+            i19 = -1;
+        }
+        if (i6 != i19 && uiCharUpFaceImage[i6].name == i19) {
+            uiCharUpFaceImage[i6].initWithImageName(uiCharUpFaceResource[i6]);
+            i19 = -1;
+        }
+        if (i5 != i19 && uiCharNameImage[i5].name == i19) {
+            uiCharNameImage[i5].initWithImageName(uiCharNameResource[i5]);
+        }
+        TouchManager.clearTouchMap();
+        int i20 = i3;
+        int i21 = i9;
+        Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+        Texture2D.gl.glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
+        fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH, 343.0f);
+        Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        uiCharEtcImage[0].drawAtPointOption(0.0f, 343.0f, 18);
+        int i22 = upgradeCount;
+        if (i22 > 0) {
+            if (i22 > 5) {
+                if (i7 != -1) {
+                    uiCharFaceImage[i7].drawAtPointOption(0 - ((10 - i22) * 80), SCRHEIGHT_SMALL, 34);
+                    uiCharNameImage[i7].drawAtPointOptionHorizonSize(287.0f, 321.0f, 10, (upgradeCount - 5) * 0.2f);
+                }
+            } else if (towerImageOrder != -1) {
+                uiCharFaceImage[towerImageOrder].drawAtPointOption((-i22) * 80, SCRHEIGHT_SMALL, 34);
+                uiCharNameImage[towerImageOrder].drawAtPointOptionHorizonSize(287.0f, 321.0f, 10, (5 - upgradeCount) * 0.2f);
+            }
+            i10 = 18;
+        } else {
+            uiCharFaceImage[towerImageOrder].drawAtPointOption(0.0f, SCRHEIGHT_SMALL, 34);
+            i10 = 18;
+            uiCharNameImage[towerImageOrder].drawAtPointOption(287.0f, 305.0f, 18);
+        }
+        if (GameThread.towerUnit[i17].heroFlag == 1) {
+            uiCharEtcImage[8].drawAtPointOption(287.0f, 288.0f, i10);
+        }
+        uiCharEtcImage[12].drawAtPointOption(278.0f, 356.0f, i10);
+        uiCharEtcImage[1].drawAtPointOption(288.0f, 359.0f, i10);
+        uiCharEtcImage[2].drawAtPointOption(486.0f, 314.0f, i10);
+        uiCharEtcImage[towerLevelOrder + 3].drawAtPointOption(519.0f, 314.0f, i10);
+        setFontSize(14);
+        setFontColor(-8128317);
+        drawStringM(String.valueOf(GameThread.towerUnit[i17].getHitPower()), 420.0f, 360.0f, 20);
+        if (GameThread.towerUnit[i17].towerCoolTimeMax == 1) {
+            drawStringM("MAX", 420.0f, 388.0f, 20);
+        } else {
+            drawStringM(String.valueOf(GameThread.getAttackSpeed(GameThread.towerUnit[i17].towerCoolTimeMax)), 420.0f, 388.0f, 20);
+        }
+        drawStringM(String.valueOf(GameThread.towerUnit[i17].attackRange), 420.0f, 416.0f, 20);
+        drawStringM(getEffectTypeString(GameThread.towerUnit[i17].effectType), 420.0f, 442.0f, 20);
+        int i23 = GameThread.characterMenuSelectFlag;
+        if (i23 != 2) {
+            if (i23 == 5 || i23 == 6) {
+                TouchManager.addTouchRectListData(17, CGRectMake(670.0f, 350.0f, 115.0f, 115.0f));
+                TouchManager.addTouchRectListData(19, CGRectMake(0.0f, 343.0f, SCRWIDTH, 137.0f));
+                TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 20;
+                int checkTouchListStatus = TouchManager.checkTouchListStatus();
+                if (GameThread.towerUnit[i17].heroFlag != 1) {
+                    i13 = 18;
+                } else if (i == 0) {
+                    i13 = 18;
+                    uiCharEtcImage[9].drawAtPointOption(440.0f, 400.0f, 18);
+                } else if (i == 1) {
+                    i13 = 18;
+                    uiCharEtcImage[10].drawAtPointOption(440.0f, 400.0f, 18);
+                } else {
+                    if (i != 2) {
+                        i14 = 17;
+                        i13 = 18;
+                        if (checkTouchListStatus != i14) {
+                            setFontColor(-1);
+                            uiCharButtonImage[5].drawAtPointOption(670.0f, 350.0f, i13);
+                            if (GameThread.towerUnit[i17].heroFlag == 1) {
+                                uiUpperImage[0].drawAtPointOption(696.0f, 428.0f, i13);
+                            } else {
+                                uiUpperImage[1].drawAtPointOption(696.0f, 427.0f, i13);
+                            }
+                            drawStringM(String.valueOf(i2), 755.0f, 430.0f, 20);
+                            return;
+                        }
+                        setFontColor(-1);
+                        uiCharButtonImage[4].drawAtPointOption(670.0f, 350.0f, i13);
+                        if (GameThread.towerUnit[i17].heroFlag == 1) {
+                            uiUpperImage[0].drawAtPointOption(696.0f, 428.0f, i13);
+                        } else {
+                            uiUpperImage[1].drawAtPointOption(696.0f, 427.0f, i13);
+                        }
+                        drawStringM(String.valueOf(i2), 755.0f, 430.0f, 20);
+                        return;
+                    }
+                    i13 = 18;
+                    uiCharEtcImage[11].drawAtPointOption(440.0f, 400.0f, 18);
+                }
+                i14 = 17;
+                if (checkTouchListStatus != i14) {
+                }
+            } else if (i23 != 12 && i23 != 13) {
+                return;
+            }
+        }
+        if (GameThread.towerUnit[i17].heroFlag == 0) {
+            TouchManager.addTouchRectListData(14, CGRectMake(15.0f, 390.0f, 75.0f, 75.0f));
+        }
+        if (i4 != -1 && !z) {
+            TouchManager.addTouchRectListData(15, CGRectMake(435.0f, 350.0f, 235.0f, 115.0f));
+        }
+        if (towerLevelOrder < getTowerMaxLevel(GameThread.towerUnit[i17].heroFlag) - 1 && !z2) {
+            TouchManager.addTouchRectListData(16, CGRectMake(670.0f, 350.0f, 115.0f, 115.0f));
+        }
+        if (GameThread.towerUnit[i17].heroFlag == 1 && GameThread.rewardDataValue[3] == 1 && GameThread.towerUnit[i17].specialCooltime <= 0 && GameThread.myMana >= GameThread.towerUnit[i17].specialMana) {
+            TouchManager.addTouchRectListData(18, CGRectMake(625.0f, 272.0f, 160.0f, 69.0f));
+        }
+        if (GameThread.cheatData[4]) {
+            TouchManager.addTouchRectListData(18, CGRectMake(625.0f, 272.0f, 160.0f, 69.0f));
+        }
+        TouchManager.addTouchRectListData(19, CGRectMake(0.0f, 343.0f, SCRWIDTH, 137.0f));
+        TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 20;
+        int checkTouchListStatus2 = TouchManager.checkTouchListStatus();
+        if (GameThread.towerUnit[i17].heroFlag == 0) {
+            if (checkTouchListStatus2 == 14) {
+                uiCharButtonImage[7].drawAtPointOption(15.0f, 390.0f, 18);
+            } else {
+                uiCharButtonImage[6].drawAtPointOption(15.0f, 390.0f, 18);
+            }
+            i11 = -1;
+            setFontColor(-1);
+            drawStringM(String.valueOf(i8), 80.0f, 430.0f, 20);
+        } else {
+            i11 = -1;
+        }
+        if (i4 != i11) {
+            if (checkTouchListStatus2 == 15) {
+                i12 = 18;
+                uiCharButtonImage[1].drawAtPointOption(435.0f, 350.0f, 18);
+            } else {
+                i12 = 18;
+                uiCharButtonImage[0].drawAtPointOption(435.0f, 350.0f, 18);
+            }
+            uiCharUpFaceImage[i6].drawAtPointOption(514.0f, 364.0f, i12);
+            uiCharNameImage[i5].drawAtPointOptionSize(653.0f, 449.0f, 36, 0.4f);
+            drawStringM(String.valueOf(i21), 503.0f, 421.0f, 20);
+            if (z) {
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                fillBlackImage.fillRect(435.0f, 350.0f, 235.0f, 115.0f);
+                Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            if (upgradeCount > 0) {
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                GL10 gl10 = Texture2D.gl;
+                int i24 = upgradeCount;
+                gl10.glColor4f(i24 * 0.1f, i24 * 0.1f, i24 * 0.1f, i24 * 0.1f);
+                fillWhiteImage.fillRect(435.0f, 350.0f, 235.0f, 115.0f);
+                Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+        }
+        if (towerLevelOrder < getTowerMaxLevel(GameThread.towerUnit[i17].heroFlag) - 1) {
+            if (GameThread.towerUnit[i17].heroFlag == 1) {
+                if (checkTouchListStatus2 == 16) {
+                    uiCharButtonImage[15].drawAtPointOption(670.0f, 350.0f, 18);
+                } else {
+                    uiCharButtonImage[14].drawAtPointOption(670.0f, 350.0f, 18);
+                }
+            } else if (checkTouchListStatus2 == 16) {
+                uiCharButtonImage[3].drawAtPointOption(670.0f, 350.0f, 18);
+            } else {
+                uiCharButtonImage[2].drawAtPointOption(670.0f, 350.0f, 18);
+                if (checkTouchListStatus2 != 16) {
+                    int i25 = towerLevelOrder * 2;
+                    uiCharButtonImage[i25 + 17].drawAtPointOption(708.0f, 401.0f, 17);
+                    uiCharButtonImage[i25 + 19].drawAtPointOption(764.0f, 401.0f, 17);
+                } else {
+                    int i26 = towerLevelOrder * 2;
+                    uiCharButtonImage[i26 + 16].drawAtPointOption(708.0f, 401.0f, 17);
+                    uiCharButtonImage[i26 + 18].drawAtPointOption(764.0f, 401.0f, 17);
+                }
+                drawStringM(String.valueOf(i20), 756.0f, 423.0f, 20);
+                if (z2) {
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                    Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                    fillBlackImage.fillRect(670.0f, 350.0f, 115.0f, 115.0f);
+                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                }
+                if (levelUpCount > 0) {
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                    GL10 gl102 = Texture2D.gl;
+                    int i27 = levelUpCount;
+                    gl102.glColor4f(i27 * 0.1f, i27 * 0.1f, i27 * 0.1f, i27 * 0.1f);
+                    fillWhiteImage.fillRect(670.0f, 350.0f, 115.0f, 115.0f);
+                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                }
+            }
+            if (checkTouchListStatus2 != 16) {
+            }
+            drawStringM(String.valueOf(i20), 756.0f, 423.0f, 20);
+            if (z2) {
+            }
+            if (levelUpCount > 0) {
+            }
+        }
+        if (GameThread.towerUnit[i17].heroFlag == 1 && GameThread.rewardDataValue[3] == 1) {
+            if (i != 0) {
+                if (i != 1) {
+                    if (i == 2) {
+                        if (checkTouchListStatus2 == 18) {
+                            uiCharButtonImage[13].drawAtPointOption(625.0f, 272.0f, 18);
+                        } else {
+                            uiCharButtonImage[12].drawAtPointOption(625.0f, 272.0f, 18);
+                        }
+                    }
+                } else if (checkTouchListStatus2 == 18) {
+                    uiCharButtonImage[11].drawAtPointOption(625.0f, 272.0f, 18);
+                } else {
+                    uiCharButtonImage[10].drawAtPointOption(625.0f, 272.0f, 18);
+                }
+            } else if (checkTouchListStatus2 == 18) {
+                uiCharButtonImage[9].drawAtPointOption(625.0f, 272.0f, 18);
+            } else {
+                uiCharButtonImage[8].drawAtPointOption(625.0f, 272.0f, 18);
+            }
+            if (GameThread.towerUnit[i17].specialCooltime > 0 || GameThread.myMana < GameThread.towerUnit[i17].specialMana) {
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                fillBlackImage.fillRect(631.0f, 278.0f, (GameThread.towerUnit[i17].specialCooltime * 148) / GameThread.towerUnit[i17].specialMaxCooltime, 57.0f);
+                Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            drawStringM(String.valueOf(GameThread.towerUnit[i17].specialMana), 730.0f, 318.0f, 20);
+        }
+    }
+
+    public static int getTowerLevelOrder(int i, int i2) {
+        if (i2 == 1) {
+            return i % GameThread.TOWER_MAX_LEVEL_HERO;
+        }
+        return i % GameThread.TOWER_MAX_LEVEL_NORMAL;
+    }
+
+    public static int getTowerMaxLevel(int i) {
+        if (i == 1) {
+            return GameThread.TOWER_MAX_LEVEL_HERO;
+        }
+        return GameThread.TOWER_MAX_LEVEL_NORMAL;
+    }
+
     public void drawMonsterContinueEffect(float f, float f2, int i) {
         int[] iArr;
         Texture2D[] texture2DArr;
@@ -3742,6 +4094,267 @@ public class StagePage extends TPage {
             } else {
                 texture2DArr[iArr[i8]].drawAtPointOptionFlip(iArr[i8 + 1] + f, iArr[i8 + 2] + f2 + i2, 18);
             }
+        }
+    }
+
+    public void drawPlayingUi(boolean z, boolean z2) {
+        TouchManager.clearTouchMap();
+        TouchManager.addTouchRectListData(11, CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
+        TouchManager.addTouchRectListData(12, CGRectMake(0.0f, 344.0f, 43.0f, 39.0f));
+        TouchManager.addTouchRectListData(13, CGRectMake(0.0f, 393.0f, 43.0f, 39.0f));
+        int i = GameThread.characterMenuSelectFlag;
+        if (i == 0) {
+            TouchManager.addTouchRectListData(7, CGRectMake(742.0f, 12.0f, 56.0f, 56.0f));
+        } else if (i == 3) {
+            int i2 = GameThread.SPECIAL_ATTACK_ARROW_LEG_POS_Y;
+            for (int i3 = 0; i3 < 3; i3++) {
+                if (GameThread.heroUnitType[i3] == -1) {
+                    i2 += 60;
+                }
+            }
+            for (int i4 = 0; i4 < 3; i4++) {
+                if (GameThread.heroUnitType[i4] != -1) {
+                    if (GameThread.checkEnableHeroBuyUnit(i4)) {
+                        TouchManager.addTouchRectListData(i4 + 8, CGRectMake(i2, 12.0f, 56.0f, 56.0f));
+                    }
+                    i2 += 60;
+                }
+            }
+        }
+        TouchManager.addTouchRectListData(0, CGRectMake(742.0f, 77.0f, 56.0f, 56.0f));
+        TouchManager.addTouchRectListData(1, CGRectMake(742.0f, 142.0f, 56.0f, 56.0f));
+        TouchManager.addTouchRectListData(2, CGRectMake(742.0f, 207.0f, 56.0f, 56.0f));
+        TouchManager.addTouchRectListData(3, CGRectMake(742.0f, 272.0f, 56.0f, 56.0f));
+        TouchManager.addTouchRectListData(4, CGRectMake(742.0f, 337.0f, 56.0f, 56.0f));
+        TouchManager.addTouchRectListData(5, CGRectMake(742.0f, 402.0f, 56.0f, 56.0f));
+        TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 14;
+        uiUpperImage[7].drawAtPointOption(0.0f, 0.0f, 18);
+        uiUpperImage[1].drawAtPointOption(9.0f, 4.0f, 18);
+        uiUpperImage[0].drawAtPointOption(126.0f, 5.0f, 18);
+        uiUpperImage[8].drawAtPointOption(298.0f, 6.0f, 18);
+        int i5 = GameThread.turboFlag;
+        if (i5 == 1) {
+            uiUpperImage[14].drawAtPointOption(22.0f, 398.0f, 18);
+            uiUpperImage[14].drawAtPointOption(16.0f, 398.0f, 18);
+            uiUpperImage[4].drawAtPointOption(1.0f, 391.0f, 18);
+        } else if (i5 == 3) {
+            uiUpperImage[6].drawAtPointOption(DRAW_SCALE_X_SMALL_DEGREE, 391.0f, 18);
+            uiUpperImage[5].drawAtPointOption(7.0f, 391.0f, 18);
+            uiUpperImage[4].drawAtPointOption(1.0f, 391.0f, 18);
+        }
+        if (GameThread.gameStatus == 21) {
+            uiUpperImage[3].drawAtPointOption(5.0f, 437.0f, 18);
+        } else {
+            uiUpperImage[2].drawAtPointOption(5.0f, 437.0f, 18);
+        }
+        if (GameThread.myWaveRunFlag) {
+            uiUpperImage[15].drawAtPointOption(6.0f, 344.0f, 18);
+        } else {
+            uiUpperImage[16].drawAtPointOption(6.0f, 344.0f, 18);
+        }
+        drawNumberBlock(GameThread.myMoney, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
+        drawNumberBlock(GameThread.myMana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
+        int i6 = GameThread.myWave;
+        int i7 = GameThread.mapAttackType;
+        if ((i7 == 0 || i7 == 2) && i6 >= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[GameThread.mapNumber]) {
+            i6 = DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[GameThread.mapNumber] - 1;
+        }
+        float drawNumberBlock = drawNumberBlock(i6 + 1, numberWaveImage, 366.0f, 8.0f, 1, 18, 2);
+        numberWaveImage[10].drawAtPointOption(2.0f + drawNumberBlock, 6.0f, 18);
+        if (GameThread.mapAttackType == 1) {
+            numberWaveImage[11].drawAtPointOption(drawNumberBlock + 10.0f, 6.0f, 18);
+        } else {
+            drawNumberBlock(DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[GameThread.mapNumber], numberWaveImage, drawNumberBlock + 10.0f, 8.0f, 1, 18, 2);
+        }
+        drawMyLife();
+        uiButtonImage[((GameThread.characterMenuSelectFlag == 3 || GameThread.characterMenuSelectFlag == 4 || GameThread.characterMenuSelectFlag == 6 || !GameThread.checkEnableBuyUnit(0)) ? 9 : 0) + 0].drawAtPointOption(GameThread.myOscillator[0].getCurrentPosition() + 770, 77.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(0), numberUnitBuyImage, GameThread.myOscillator[0].getCurrentPosition() + 770, 114.0f, -2, 17, 1);
+        uiButtonImage[((GameThread.characterMenuSelectFlag == 3 || GameThread.characterMenuSelectFlag == 4 || GameThread.characterMenuSelectFlag == 6 || !GameThread.checkEnableBuyUnit(3)) ? 9 : 0) + 1].drawAtPointOption(GameThread.myOscillator[1].getCurrentPosition() + 770, 142.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(3), numberUnitBuyImage, GameThread.myOscillator[1].getCurrentPosition() + 770, 179.0f, -2, 17, 1);
+        uiButtonImage[((GameThread.characterMenuSelectFlag == 3 || GameThread.characterMenuSelectFlag == 4 || GameThread.characterMenuSelectFlag == 6 || !GameThread.checkEnableBuyUnit(12)) ? 9 : 0) + 2].drawAtPointOption(GameThread.myOscillator[2].getCurrentPosition() + 770, 207.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(12), numberUnitBuyImage, GameThread.myOscillator[2].getCurrentPosition() + 770, 244.0f, -2, 17, 1);
+        uiButtonImage[((GameThread.characterMenuSelectFlag == 3 || GameThread.characterMenuSelectFlag == 4 || GameThread.characterMenuSelectFlag == 6 || !GameThread.checkEnableBuyUnit(15)) ? 9 : 0) + 3].drawAtPointOption(GameThread.myOscillator[3].getCurrentPosition() + 770, 272.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(15), numberUnitBuyImage, GameThread.myOscillator[3].getCurrentPosition() + 770, 309.0f, -2, 17, 1);
+        uiButtonImage[((GameThread.characterMenuSelectFlag == 3 || GameThread.characterMenuSelectFlag == 4 || GameThread.characterMenuSelectFlag == 6 || !GameThread.checkEnableBuyUnit(24)) ? 9 : 0) + 4].drawAtPointOption(GameThread.myOscillator[4].getCurrentPosition() + 770, 337.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(24), numberUnitBuyImage, GameThread.myOscillator[4].getCurrentPosition() + 770, 374.0f, -2, 17, 1);
+        uiButtonImage[((GameThread.characterMenuSelectFlag == 3 || GameThread.characterMenuSelectFlag == 4 || GameThread.characterMenuSelectFlag == 6 || !GameThread.checkEnableBuyUnit(27)) ? 9 : 0) + 5].drawAtPointOption(GameThread.myOscillator[5].getCurrentPosition() + 770, 402.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(27), numberUnitBuyImage, GameThread.myOscillator[5].getCurrentPosition() + 770, 439.0f, -2, 17, 1);
+        if (GameThread.characterMenuSelectFlag == 3 && GameThread.myOscillator[8].OscCurrentCount < 10) {
+            float f = GameThread.myOscillator[8].OscCurrentCount * 0.1f;
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+            Texture2D.gl.glColor4f(f, f, f, f);
+        }
+        int i8 = 586;
+        for (int i9 = 0; i9 < 3; i9++) {
+            if (GameThread.heroUnitType[i9] == -1) {
+                i8 += 60;
+            }
+        }
+        for (int i10 = 0; i10 < 3; i10++) {
+            if (GameThread.heroUnitType[i10] != -1) {
+                int heroBuyPrice = GameThread.getHeroBuyPrice(i10);
+                int i11 = GameThread.heroUnitType[i10];
+                int i12 = i10 + 8;
+                uiButtonImage[(i11 != 0 ? i11 != 5 ? i11 != 10 ? 0 : 8 : 7 : 6) + (GameThread.checkEnableHeroBuyUnit(i10) ? 0 : 9)].drawAtPointOption(GameThread.myOscillator[i12].getCurrentPosition() + i8, 12.0f, 17);
+                drawNumberBlock(heroBuyPrice, numberHeroBuyImage, i8 + 5 + GameThread.myOscillator[i12].getCurrentPosition(), 49.0f, -2, 17, 1);
+                uiUpperImage[13].drawAtPointOption((i8 - 17) + GameThread.myOscillator[i12].getCurrentPosition(), 49.0f, 17);
+                i8 += 60;
+            }
+        }
+        if (GameThread.characterMenuSelectFlag == 3 && GameThread.myOscillator[8].OscCurrentCount < 10) {
+            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+        uiButtonImage[18].drawAtPointOption(770.0f, 12.0f, 17);
+        int i13 = GameThread.characterMenuSelectFlag;
+        if (i13 == 2 || i13 == 5 || i13 == 6) {
+            drawCharMenu();
+        } else if (i13 == 12) {
+            drawCharMenu();
+            TouchManager.clearTouchMap();
+            TouchManager.addTouchRectListData(20, CGRectMake(162.0f, 290.0f, 236.0f, 43.0f));
+            TouchManager.addTouchRectListData(21, CGRectMake(402.0f, 290.0f, 236.0f, 43.0f));
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 22;
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+            Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+            fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
+            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
+            uiPopupImage[4].drawAtPointOption(392.0f, 160.0f, 18);
+            int i14 = GameThread.towerUnit[GameThread.characterSelectNumber].towerType;
+            int upgradeType = GameThread.getUpgradeType(i14);
+            if (upgradeType != -1) {
+                int upgradePrice = GameThread.getUpgradePrice(i14, GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag);
+                int towerImageOrder = getTowerImageOrder(upgradeType, 0);
+                int towerBoxImageOrder = getTowerBoxImageOrder(upgradeType);
+                uiCharButtonImage[0].drawAtPointOption(161.0f, 154.0f, 18);
+                uiCharUpFaceImage[towerBoxImageOrder].drawAtPointOption(240.0f, 168.0f, 18);
+                uiCharNameImage[towerImageOrder].drawAtPointOptionSize(379.0f, 253.0f, 36, 0.4f);
+                drawStringM(String.valueOf(upgradePrice), 229.0f, 225.0f, 20);
+                setFontSize(16);
+                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+                drawStringDoubleM("Do you want to change this unit's class?", CX, 270.0f, 17);
+                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].getHitPower()), 540.0f, 162.0f, 20); //temp
+                if (GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax == 1) {
+                    drawStringDoubleM("MAX", 540.0f, 189.0f, 20);
+                } else {
+                    drawStringDoubleM(String.valueOf(GameThread.getAttackSpeed(GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax)), 540.0f, 189.0f, 20);
+                }
+                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].attackRange), 540.0f, 217.0f, 20);
+                drawStringDoubleM(getEffectTypeString(GameThread.towerUnit[GameThread.characterSelectNumber].effectType), 540.0f, 243.0f, 20);
+                GameThread.compareTowerUnit.towerType = upgradeType;
+                GameThread.compareTowerUnit.heroFlag = false;
+                GameThread.compareTowerUnit.restatTowerUnit();
+                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.getHitPower()), 625.0f, 162.0f, 20);
+                if (GameThread.compareTowerUnit.towerCoolTimeMax == 1) {
+                    drawStringDoubleM("MAX", 625.0f, 189.0f, 20);
+                } else {
+                    drawStringDoubleM(String.valueOf(GameThread.getAttackSpeed(GameThread.compareTowerUnit.towerCoolTimeMax)), 625.0f, 189.0f, 20);
+                }
+                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.attackRange), 625.0f, 217.0f, 20);
+                drawStringDoubleM(getEffectTypeString(GameThread.compareTowerUnit.effectType), 625.0f, 243.0f, 20);
+                int checkTouchListStatus = TouchManager.checkTouchListStatus();
+                if (checkTouchListStatus == 20) {
+                    uiPopupImage[6].drawAtPointOption(162.0f, 290.0f, 18);
+                } else {
+                    uiPopupImage[5].drawAtPointOption(162.0f, 290.0f, 18);
+                }
+                if (checkTouchListStatus == 21) {
+                    uiPopupImage[3].drawAtPointOption(402.0f, 290.0f, 18);
+                } else {
+                    uiPopupImage[2].drawAtPointOption(402.0f, 290.0f, 18);
+                }
+            }
+        } else if (i13 == 13) {
+            drawCharMenu();
+            int i15 = GameThread.towerUnit[GameThread.characterSelectNumber].towerType;
+            TouchManager.clearTouchMap();
+            TouchManager.addTouchRectListData(20, CGRectMake(162.0f, 290.0f, 236.0f, 43.0f));
+            TouchManager.addTouchRectListData(21, CGRectMake(402.0f, 290.0f, 236.0f, 43.0f));
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 22;
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+            Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+            fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
+            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
+            uiPopupImage[1].drawAtPointOption(170.0f, 160.0f, 18);
+            if (getTowerLevelOrder(i15, GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag) < getTowerMaxLevel(GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag) - 1) {
+                setFontSize(16);
+                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+                drawStringDoubleM("Do you want to Level Up?", CX, 270.0f, 17);
+                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].getHitPower()), 430.0f, 162.0f, 20);
+                if (GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax == 1) {
+                    drawStringDoubleM("MAX", 430.0f, 189.0f, 20);
+                } else {
+                    drawStringDoubleM(String.valueOf(GameThread.getAttackSpeed(GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax)), 430.0f, 189.0f, 20);
+                }
+                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].attackRange), 430.0f, 217.0f, 20);
+                drawStringDoubleM(getEffectTypeString(GameThread.towerUnit[GameThread.characterSelectNumber].effectType), 430.0f, 243.0f, 20);
+                GameThread.compareTowerUnit.towerType = i15 + 1;
+                GameThread.compareTowerUnit.heroFlag = GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag;
+                GameThread.compareTowerUnit.restatTowerUnit();
+                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.getHitPower()), 526.0f, 162.0f, 20);
+                if (GameThread.compareTowerUnit.towerCoolTimeMax == 1) {
+                    drawStringDoubleM("MAX", 526.0f, 189.0f, 20);
+                } else {
+                    drawStringDoubleM(String.valueOf(GameThread.getAttackSpeed(GameThread.compareTowerUnit.towerCoolTimeMax)), 526.0f, 189.0f, 20);
+                }
+                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.attackRange), 526.0f, 217.0f, 20);
+                drawStringDoubleM(getEffectTypeString(GameThread.compareTowerUnit.effectType), 526.0f, 243.0f, 20);
+                int checkTouchListStatus2 = TouchManager.checkTouchListStatus();
+                if (checkTouchListStatus2 == 20) {
+                    uiPopupImage[6].drawAtPointOption(162.0f, 290.0f, 18);
+                } else {
+                    uiPopupImage[5].drawAtPointOption(162.0f, 290.0f, 18);
+                }
+                if (checkTouchListStatus2 == 21) {
+                    uiPopupImage[3].drawAtPointOption(402.0f, 290.0f, 18);
+                } else {
+                    uiPopupImage[2].drawAtPointOption(402.0f, 290.0f, 18);
+                }
+            }
+        }
+        if (z2) {
+            TouchManager.swapTouchMap();
+        }
+    }
+
+    public static int getTowerImageOrder(int i, int i2) {
+        if (i == -1) {
+            return 0;
+        }
+        if (i2 == 1) {
+            int i3 = DataHero.heroData[i][13];
+            if (i3 != 1) {
+                return i3 != 2 ? 12 : 14;
+            }
+            return 13;
+        }
+        //TODO - Bruh
+        switch (DataCharacter.charData[i][12]) {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return 3;
+            case 4:
+                return 4;
+            case 5:
+                return 5;
+            case 6:
+                return 6;
+            case 7:
+                return 7;
+            case 8:
+                return 8;
+            case 9:
+                return 9;
+            case 10:
+                return 10;
+            case 11:
+                return 11;
+            default:
+                return 0;
         }
     }
 }

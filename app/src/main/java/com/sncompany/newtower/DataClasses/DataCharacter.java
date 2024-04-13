@@ -1,9 +1,5 @@
 package com.sncompany.newtower.DataClasses;
 
-import com.sncompany.newtower.GameRenderer;
-import com.sncompany.newtower.GameThread;
-import com.sncompany.newtower.Texture2D;
-
 /* loaded from: D:\decomp\classes.dex */
 public class DataCharacter {
     static final int CHARACTER_NAME_TOTAL_COUNT = 12;

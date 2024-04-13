@@ -26,12 +26,10 @@ public class Tombstone {
         gl = gl10;
     }
 
-    public int searchTombstone(String str, int i, int i2, int i3) {
-        for (int i4 = 0; i4 < 200; i4++) {
-            if (this.tombstoneSetFlag[i4] && this.tombstoneString[i4].equals(str) && this.tombstoneFontColor[i4] == i && this.tombstoneStrokeColor[i4] == i2 && this.tombstoneFontSize[i4] == i3) {
+    public int searchTombstone(String str, int fontColor, int strokeColor, int fontSize) {
+        for (int i4 = 0; i4 < 200; i4++)
+            if (this.tombstoneSetFlag[i4] && this.tombstoneString[i4].equals(str) && this.tombstoneFontColor[i4] == fontColor && this.tombstoneStrokeColor[i4] == strokeColor && this.tombstoneFontSize[i4] == fontSize)
                 return i4;
-            }
-        }
         return -1;
     }
 

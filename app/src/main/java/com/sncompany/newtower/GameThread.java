@@ -27,619 +27,11 @@ import java.util.HashMap;
 
 /* loaded from: D:\decomp\classes.dex */
 public class GameThread extends Thread {
-    public static final int ADD_SETTING_TOUCH_MINUS_POS = -25;
-    public static final int ARROW_UNIT_MAX_COUNT = 200;
-    public static final int BGM_SOUND_GAMEPLAYING = 2;
-    public static final int BGM_SOUND_MAINMENU = 1;
-    public static final int BGM_SOUND_TITLE = 0;
-    public static final int BGM_SOUND_TOTAL_COUNT = 3;
-    static final int BUY_SHOP_ITEM_GOOD_PROCESS = 0;
-    static final int BUY_SHOP_ITEM_NO_BUY_ITEM = 1;
-    static final int BUY_SHOP_ITEM_NO_HEROISM = 2;
-    static final int BUY_SHOP_ITEM_NO_SLOT = 3;
-    public static final int CHAPTER_TOTAL_COUNT = 5;
-    public static final int CHAPTER_TYPE_DESERT = 2;
-    public static final int CHAPTER_TYPE_DEVIL = 4;
-    public static final int CHAPTER_TYPE_FOREST = 0;
-    public static final int CHAPTER_TYPE_MAGMA = 3;
-    public static final int CHAPTER_TYPE_SWAMP = 1;
-    public static final int CHARACTER_MENU_CHAR_ADD = 1;
-    public static final int CHARACTER_MENU_CHAR_SELECT = 2;
-    public static final int CHARACTER_MENU_CLASS_CHANGE_ASK = 12;
-    public static final int CHARACTER_MENU_HERO_ADD = 4;
-    public static final int CHARACTER_MENU_HERO_BUY_ASK = 6;
-    public static final int CHARACTER_MENU_HERO_MENU_VIEW = 3;
-    public static final int CHARACTER_MENU_LEVELUP_ASK = 13;
-    public static final int CHARACTER_MENU_MONSTER_VIEW = 11;
-    public static final int CHARACTER_MENU_MONSTER_VIEW_BOSS_FULL_COUNT = 100;
-    static final float CHARACTER_MENU_MONSTER_VIEW_FADE_OUT_RATE = 0.1f;
-    public static final int CHARACTER_MENU_MONSTER_VIEW_FADE_OUT_START_POS = 10;
-    public static final int CHARACTER_MENU_MONSTER_VIEW_FULL_COUNT = 60;
-    public static final int CHARACTER_MENU_MONSTER_VIEW_START_HEIGHT_COUNT = 10;
-    public static final int CHARACTER_MENU_MONSTER_VIEW_START_HEIGHT_DEGREE = 9;
-    public static final int CHARACTER_MENU_MON_SELECT = 7;
-    public static final int CHARACTER_MENU_SELECT_NONE = 0;
-    public static final int CHARACTER_MENU_SPECIAL_ARROW = 9;
-    public static final int CHARACTER_MENU_SPECIAL_BLADE = 8;
-    public static final int CHARACTER_MENU_SPECIAL_ICE = 10;
-    public static final int CHARACTER_MENU_UNIT_BUY_ASK = 5;
-    public static final int CHEAT_VIEW_GRID_LINE = 1;
-    public static final int CHEAT_VIEW_MONEY_CHEAT = 2;
-    public static final int CHEAT_VIEW_SPECIAL_OK = 4;
-    public static final int CHEAT_VIEW_STAGE_GO = 3;
-    public static final int CHEAT_VIEW_TOTAL_COUNT = 5;
-    public static final int CHEAT_VIEW_TOUCH_RECT = 0;
-    public static final int COMMON_TARGET_TYPE_MONSTER = 0;
-    public static final int COMMON_TARGET_TYPE_NONE = -1;
-    public static final int COMMON_TARGET_TYPE_OBJECT = 1;
-    public static final int CONTINUE_TYPE_HOLY = 0;
-    public static final int CONTINUE_TYPE_ICE = 1;
-    public static final int CONTINUE_TYPE_STUN = 4;
-    public static final int DIR_EAST = 2;
-    public static final int DIR_MOVE_TOTAL_COUNT = 8;
-    public static final int DIR_MOVE_XY_COUNT = 2;
-    public static final int DIR_MOVE_X_POSITION = 0;
-    public static final int DIR_MOVE_Y_POSITION = 1;
-    public static final int DIR_NORTH = 0;
-    public static final int DIR_NORTH_EAST = 1;
-    public static final int DIR_NORTH_WEST = 7;
-    public static final int DIR_SOUTH = 4;
-    public static final int DIR_SOUTH_EAST = 3;
-    public static final int DIR_SOUTH_WEST = 5;
-    public static final int DIR_WEST = 6;
-    public static final int ENEMY_TOUCH_CHECK_HEIGHT = 40;
-    public static final int ENEMY_TOUCH_CHECK_START_POS_X = -20;
-    public static final int ENEMY_TOUCH_CHECK_START_POS_Y = -30;
-    public static final int ENEMY_TOUCH_CHECK_WIDTH = 40;
-    public static final int FRAME_PER_SECOND = 41;
-    public static final int FREE_MOVIE_TOTAL_COUNT = 3;
-    public static final int FREE_REWARD_MOVIE_TIME = 900;
-    public static final int GAMELOAD_STATUS_LOAD = 0;
-    public static final int GAMELOAD_STATUS_PLAY = 1;
-    public static final int GAME_ABOUT = 8;
-    public static final int GAME_ABOUT_DEVELOPER = 1;
-    public static final int GAME_ABOUT_PUBLISH = 0;
-    public static final int GAME_ENDING = 27;
-    public static final int GAME_ENDING_1_IMAGE_1 = 0;
-    public static final int GAME_ENDING_2_IMAGE_RED = 1;
-    public static final int GAME_ENDING_3_FINISH = 2;
-    public static final int GAME_ENDING_4_TO_TITLE = 3;
-    public static final int GAME_HELP = 18;
-    public static final int GAME_HELP_VIEW_TOTAL_COUNT = 15;
-    public static final int GAME_INGAME_MENU = 21;
-    public static final int GAME_INGAME_MENU_MAIN = 0;
-    public static final int GAME_INGAME_MENU_MOVING = 1;
-    public static final int GAME_LOADING_PART_AWARD = 1;
-    public static final int GAME_LOADING_PART_HELP = 0;
-    public static final int GAME_LOADING_PART_STAGE_CLEAR = 4;
-    public static final int[] GAME_LOADING_PART_STATUS = new int[6];
-    public static final int GAME_LOADING_PART_STATUS_EMPTY = 0;
-    public static final int GAME_LOADING_PART_STATUS_LOADED = 1;
-    public static final int GAME_LOADING_PART_TITLE = 3;
-    public static final int GAME_LOADING_PART_TOTAL_COUNT = 6;
-    public static final int GAME_LOADING_PART_TUTORIAL = 5;
-    public static final int GAME_LOADING_PART_UPGRADE_SHOP = 2;
-    public static final int GAME_LOGO = 0;
-    public static final int GAME_MAINMENU = 5;
-    public static final int GAME_MAINMENU_MOVING = 6;
-    public static final int GAME_MAINMENU_REV_MOVING = 7;
-    public static final int GAME_MENU_IMAGE_LOAD = 1006;
-    public static final int GAME_NEW_MENU_IMAGE_LOAD = 1003;
-    public static final int GAME_OPENING = 2;
-    public static final int GAME_OPENING_0_BLACK_WINDOW = 0;
-    public static final int GAME_OPENING_10_IMAGE_3_2 = 11;
-    public static final int GAME_OPENING_11_IMAGE_4 = 12;
-    public static final int GAME_OPENING_12_IMAGE_B_1 = 13;
-    public static final int GAME_OPENING_13_IMAGE_B_2 = 14;
-    public static final int GAME_OPENING_14_IMAGE_B_3 = 15;
-    public static final int GAME_OPENING_15_IMAGE_A_2 = 16;
-    public static final int GAME_OPENING_16_IMAGE_4 = 17;
-    public static final int GAME_OPENING_17_IMAGE_B_4 = 18;
-    public static final int GAME_OPENING_18_IMAGE_B_5 = 19;
-    public static final int GAME_OPENING_19_IMAGE_B_6 = 20;
-    public static final int GAME_OPENING_1_IMAGE_1 = 1;
-    public static final int GAME_OPENING_20_IMAGE_B_7 = 21;
-    public static final int GAME_OPENING_21_IMAGE_A_3 = 22;
-    public static final int GAME_OPENING_22_IMAGE_5 = 23;
-    public static final int GAME_OPENING_23_REMOVE_5_B = 24;
-    public static final int GAME_OPENING_24_TO_TITLE = 25;
-    public static final int GAME_OPENING_2_IMAGE_2 = 2;
-    public static final int GAME_OPENING_3_IMAGE_A_1 = 3;
-    public static final int GAME_OPENING_3_IMAGE_TO_BLACK = 4;
-    public static final int GAME_OPENING_4_BLACK_TO_WHITE = 5;
-    public static final int GAME_OPENING_5_IMAGE_3_1 = 6;
-    public static final int GAME_OPENING_6_BLACK_WINDOW = 7;
-    public static final int GAME_OPENING_7_IMAGE_A_1 = 8;
-    public static final int GAME_OPENING_8_IMAGE_3_2 = 9;
-    public static final int GAME_OPENING_9_IMAGE_3_3 = 10;
-    public static final int GAME_OPTION = 9;
-    public static final int GAME_OVER = 23;
-    public static final int GAME_OVER_MOVING = 2;
-    public static final int GAME_OVER_RESULT = 1;
-    public static final int GAME_OVER_TITLE = 0;
     public static final int GAME_PLAY2_IMAGE_LOAD = 1005;
-    public static final int GAME_PLAYING = 25;
-    public static final int GAME_PLAY_IMAGE_LOAD = 1004;
-    public static final int GAME_PRE_IMAGE_LOAD = 1001;
-    public static final int GAME_PRE_LOAD = 1000;
-    public static final int GAME_PRE_TOTAL_IMAGE_LOAD = 1002;
-    public static final int GAME_RECORD = 19;
-    public static final int GAME_RECORD_AWARD = 1;
-    public static final int GAME_RECORD_SCORE = 0;
-    public static final int GAME_RESUME_TO_MENU = 1007;
-    public static final int GAME_RESUME_TO_PLAY = 1008;
-    public static final int GAME_SHOP_EQUIP = 16;
-    public static final int GAME_SHOP_EQUIP_DONT_SELL_CASHITEM = 8;
-    public static final int GAME_SHOP_EQUIP_INVEN_MOVING = 7;
-    public static final int GAME_SHOP_EQUIP_INVEN_SELECTION = 4;
-    public static final int GAME_SHOP_EQUIP_ITEM_MOVING = 6;
-    public static final int GAME_SHOP_EQUIP_ITEM_SELECTION = 3;
-    public static final int GAME_SHOP_EQUIP_NO_SELECTION = 2;
-    public static final int GAME_SHOP_GIFT = 17;
-    public static final int GAME_SHOP_GIFT_COUNT_GET = 1;
-    public static final int GAME_SHOP_GIFT_DONT_SELL_CASHITEM = 5;
-    public static final int GAME_SHOP_GIFT_GET_SENDING = 2;
-    public static final int GAME_SHOP_GIFT_INVENTORY = 3;
-    public static final int GAME_SHOP_GIFT_NOPHONE_WARNING = 4;
-    public static final int GAME_SHOP_GIFT_NO_CHECK = 0;
-    public static final int GAME_SHOP_LIST = 14;
-    public static final int GAME_SHOP_SHOP = 15;
-    public static final int GAME_SHOP_SHOP_DONT_SELL_CASHITEM = 8;
-    public static final int GAME_SHOP_SHOP_GIFT_INPUT = 2;
-    public static final int GAME_SHOP_SHOP_GIFT_INPUT_ASK = 3;
-    public static final int GAME_SHOP_SHOP_GIFT_SENDING = 4;
-    public static final int GAME_SHOP_SHOP_GIFT_SEND_FAIL = 6;
-    public static final int GAME_SHOP_SHOP_GIFT_SEND_SUCCESS = 5;
-    public static final int GAME_SHOP_SHOP_INVENTORY = 1;
-    public static final int GAME_SHOP_SHOP_ITEM = 0;
-    public static final int GAME_SHOP_SHOP_NO_HEROISM = 7;
-    public static final int GAME_STAGE_CLEAR = 22;
-    public static final int GAME_STAGE_CLEAR_MOVING = 2;
-    public static final int GAME_STAGE_CLEAR_PERFECT = 5;
-    public static final int GAME_STAGE_CLEAR_RESULT = 1;
-    public static final int GAME_STAGE_CLEAR_REWARD_BONUS = 4;
-    public static final int GAME_STAGE_CLEAR_SKILL_OPEN_ALERT1 = 6;
-    public static final int GAME_STAGE_CLEAR_SKILL_OPEN_ALERT2 = 7;
-    public static final int GAME_STAGE_CLEAR_SKILL_OPEN_ALERT3 = 8;
-    public static final int GAME_STAGE_CLEAR_THEME_CLEAR = 3;
-    public static final int GAME_STAGE_CLEAR_TITLE = 0;
-    public static final int GAME_STAGE_SELECT = 10;
-    public static final int GAME_STAGE_SELECT_MOVING = 1;
-    public static final int GAME_STAGE_SELECT_NORMAL = 0;
-    public static final int GAME_STAGE_START_LOADING = 24;
-    public static final int GAME_STAGE_START_VIEW = 20;
-    public static final int GAME_TITLE = 3;
-    public static final int GAME_TITLE_DARK_VIEW_0 = 0;
-    public static final int GAME_TITLE_DARK_VIEW_1 = 2;
-    public static final int GAME_TITLE_DARK_VIEW_2 = 4;
-    public static final int GAME_TITLE_DARK_VIEW_3 = 6;
-    public static final int GAME_TITLE_DARK_VIEW_LONG_COUNT = 17;
-    public static final int GAME_TITLE_DARK_VIEW_SHORT_COUNT = 7;
-    public static final int GAME_TITLE_MAIN_BUTTON_VIEW = 11;
-    public static final int GAME_TITLE_MAIN_BUTTON_VIEW_COUNT = 10;
-    static final float GAME_TITLE_MAIN_BUTTON_VIEW_DEGREE = 0.1f;
-    public static final int GAME_TITLE_MAIN_INPUT_WAIT = 12;
-    public static final int GAME_TITLE_MAIN_TITLE_VIEW = 10;
-    public static final int GAME_TITLE_MAIN_TITLE_VIEW_COUNT = 30;
-    static final float GAME_TITLE_MAIN_TITLE_VIEW_DEGREE = 0.05f;
-    public static final int GAME_TITLE_MAIN_VIEW_ALPHA = 8;
-    public static final int GAME_TITLE_MAIN_VIEW_ALPHA_COUNT = 15;
-    static final float GAME_TITLE_MAIN_VIEW_ALPHA_DEGREE = 0.066f;
-    public static final int GAME_TITLE_MAIN_VIEW_SCROLL = 9;
-    public static final int GAME_TITLE_MAIN_VIEW_SCROLL_COUNT = 30;
-    public static final int GAME_TITLE_UNIT_VIEW_0 = 1;
-    public static final int GAME_TITLE_UNIT_VIEW_1 = 3;
-    public static final int GAME_TITLE_UNIT_VIEW_2 = 5;
-    public static final int GAME_TITLE_UNIT_VIEW_3 = 7;
-    public static final int GAME_TITLE_UNIT_VIEW_COUNT = 2;
-    public static final int GAME_TUTORIAL = 26;
-    public static final int GAME_TUTORIAL_ARCHER_EXPLAIN = 8;
-    public static final int GAME_TUTORIAL_ARCHER_FOLLOW = 7;
-    public static final int GAME_TUTORIAL_COLDDIVINER_EXPLAIN = 14;
-    public static final int GAME_TUTORIAL_COLDDIVINER_FOLLOW = 13;
-    public static final int GAME_TUTORIAL_GATELIFE_VIEW = 2;
-    public static final int GAME_TUTORIAL_GOLD_EXPLAIN = 17;
-    public static final int GAME_TUTORIAL_HERO_EXPLAIN = 16;
-    public static final int GAME_TUTORIAL_HERO_FOLLOW = 15;
-    public static final int GAME_TUTORIAL_HOLYEYE_EXPLAIN = 10;
-    public static final int GAME_TUTORIAL_HOLYEYE_FOLLOW = 9;
-    public static final int GAME_TUTORIAL_MANASTONE_EXPLAIN = 18;
-    public static final int GAME_TUTORIAL_MANATARMS_EXPLAIN = 6;
-    public static final int GAME_TUTORIAL_MANATARMS_FOLLOW = 5;
-    public static final int GAME_TUTORIAL_STAGE_CLEAR1 = 21;
-    public static final int GAME_TUTORIAL_STAGE_CLEAR2 = 22;
-    public static final int GAME_TUTORIAL_TUTORIAL_CLEAR1 = 19;
-    public static final int GAME_TUTORIAL_TUTORIAL_CLEAR2 = 20;
-    public static final int GAME_TUTORIAL_WARRIOR_EXPLAIN = 4;
-    public static final int GAME_TUTORIAL_WARRIOR_FOLLOW = 3;
-    public static final int GAME_TUTORIAL_WAVEMANA_VIEW = 1;
-    public static final int GAME_TUTORIAL_WIZARD_EXPLAIN = 12;
-    public static final int GAME_TUTORIAL_WIZARD_FOLLOW = 11;
-    public static final int GAME_UPGRADE_HERO = 13;
-    public static final int GAME_UPGRADE_HERO_NONE = 0;
-    public static final int GAME_UPGRADE_LIST = 11;
-    public static final int GAME_UPGRADE_UNIT = 12;
-    public static final int GAME_USE12 = 1;
-    static final int GAME_USE12_VIEW_TIME = 2000;
-    public static final int HERO_ITEM_TOTAL_COUNT = 2;
-    public static final int HERO_UNIT_TOTAL_COUNT = 3;
-    public static final int HERO_UPGRADE_MAX_HALF_VALUE = 5;
-    public static final int HIT_TYPE_ARROW_ATTACK = 3;
-    public static final int HIT_TYPE_DIRECT_HIT = 0;
-    public static final int HIT_TYPE_DOT_FIRE = 2;
-    public static final int HIT_TYPE_DOT_HOLY = 1;
-    public static final int INVENTORY_SKILL_TOTAL_COUNT = 24;
-    public static final int INVENTORY_SKILL_TOTAL_PAGE_COUNT = 3;
-    public static final int ITEM_TYPE_MANAGER_GIFT_GOLD = -100;
-    public static final int Integer_SIZE = 4;
-    static final float LAST_UPDATE_ITEM_ALPHA_DEGREE = 0.066f;
-    public static final int LAST_UPDATE_ITEM_VIEW_COUNT = 15;
-    static final int LIMIT_CASH_BUY_MAX_COUNT = 2;
-    static final int LIMIT_CASH_BUY_UP_DEGREE = 5;
-    public static final int LOAD_MAP_START_COUNT = 450;
-    public static final int MAX_STREAMS = 64;
-    public static final int MONSTER_OPEN_TIME = 12;
-    public static final int MONSTER_TYPE_NONE = -1;
-    public static final int MONSTER_UNIT_MAX_COUNT = 100;
-    public static final int MYSCORE_BOSS_MULTI_REWARD = 5;
-    public static final int MYSCORE_MONSTER_REWARD = 120;
-    public static final int MYSCORE_REMAIN_GOLD = 10;
-    public static final int MYSCORE_REMAIN_LIVE = 1000;
-    public static final int MYSCORE_REMAIN_MANA = 30;
-    static final float MYSCORE_WAVE_ADD_VALUE = 0.1f;
-    static final float MYSCORE_WAVE_BASE_VALUE = 1.0f;
-    public static final int MYSCORE_WAVE_PERFECT = 600;
-    public static final int MY_OSCILLATOR_COMMON_MOVE = 11;
-    public static final int MY_OSCILLATOR_MAX_COUNT = 20;
-    public static final int MY_OSCILLATOR_PERFECT_1 = 19;
-    public static final int MY_OSCILLATOR_PERFECT_C = 17;
-    public static final int MY_OSCILLATOR_PERFECT_E1 = 13;
-    public static final int MY_OSCILLATOR_PERFECT_E2 = 16;
-    public static final int MY_OSCILLATOR_PERFECT_F = 15;
-    public static final int MY_OSCILLATOR_PERFECT_P = 12;
-    public static final int MY_OSCILLATOR_PERFECT_R = 14;
-    public static final int MY_OSCILLATOR_PERFECT_T = 18;
-    public static final int MY_SCROLLBAR_AWARD = 3;
-    public static final int MY_SCROLLBAR_EFFECT = 1;
-    public static final int MY_SCROLLBAR_MAX_COUNT = 5;
-    public static final int MY_SCROLLBAR_MUSIC = 0;
-    public static final int MY_SCROLLBAR_SCORE = 2;
-    public static final int MY_SCROLLBAR_SHOP = 4;
-    public static final int OBJECT_TOUCH_CHECK_BIG_HEIGHT = 90;
-    public static final int OBJECT_TOUCH_CHECK_BIG_START_POS_X = -45;
-    public static final int OBJECT_TOUCH_CHECK_BIG_START_POS_Y = -67;
-    public static final int OBJECT_TOUCH_CHECK_BIG_WIDTH = 90;
-    public static final int OBJECT_TOUCH_CHECK_HEIGHT = 45;
-    public static final int OBJECT_TOUCH_CHECK_START_POS_X = -22;
-    public static final int OBJECT_TOUCH_CHECK_START_POS_Y = -22;
-    public static final int OBJECT_TOUCH_CHECK_WIDTH = 45;
-    public static final int OBJECT_TYPE_GATE = 0;
-    public static final int OBJECT_TYPE_GOAL = 1;
-    public static final int OBJECT_TYPE_NONE = -1;
-    public static final int OBJECT_TYPE_OBJECT_1 = 2;
-    public static final int OBJECT_TYPE_OBJECT_2 = 3;
-    public static final int OBJECT_TYPE_VANISHING = -2;
-    public static final int OBJECT_UNIT_MAX_COUNT = 100;
-    public static final int PLAY_TIME_INTEGER_POS = 8;
-    public static final int READ_ARRAY_COUNT_POS = 0;
-    public static final int READ_ARRAY_INT_SIZE = 4;
-    public static final int READ_ARRAY_LINE_SIZE = 32;
-    public static final int READ_ARRAY_START_POS = 4;
-    public static final int REWARD_0_HERO_CHAMPION_OPEN = 0;
-    public static final int REWARD_10_HERO_ARCHER_OPEN = 2;
-    public static final int REWARD_15_HERO_SPECIAL_OPEN = 3;
-    public static final int REWARD_20_HERO_WIZARD_OPEN = 4;
-    public static final int REWARD_25_UPGRADE_LIMIT = 5;
-    public static final int REWARD_30_HERO_ATTACK_SKILL_OPEN = 6;
-    public static final int REWARD_35_HEROISM_1000_GET = 7;
-    public static final int REWARD_40_ITEM_GET_11 = 8;
-    public static final int REWARD_45_HEROISM_2500_GET = 9;
-    public static final int REWARD_5_HEROISM_1500_GET = 1;
-    public static final int REWARD_STRING_PER_DATA = 3;
-    public static final int REWARD_TOTAL_COUNT = 10;
-    static final String SAVEFILE_NAME = "SAVEDATA";
-    static final String SAVEFILE_NAME2 = "SAVEDATA2";
     public static final int SAVEFILE_SIZE = 27392;
-    public static final int SAVE_ETC_DATA_SIZE = 50;
-    public static final int SAVE_PREV_VERSION = 10000;
-    public static final int SAVE_VERSION = 10002;
-    static final int SELL_SHOP_ITEM_RETURN_CASHITEM = 2;
-    static final int SELL_SHOP_ITEM_RETURN_NONE = 1;
-    static final int SELL_SHOP_ITEM_RETURN_OK = 0;
-    public static final int SELL_UNIT_RATE = 50;
-    public static final int SET_CURRENT_WAVE_SPAWN_DEGREE = 3;
-    public static final int SHOP_GIFT_PHONE_NUM_MAX = 3;
-    public static final int SHOP_SEND_PHONE_NUMBER_MAX_COUNT = 11;
-    public static final int SHOP_SEND_PHONE_NUMBER_MINIMUM = 10;
-    public static final int SHOP_UNIT_TOTAL_COUNT = 30;
-    public static final int SLEEP_FULL_TIME = 1000;
-    public static final int SLEEP_SHORT_TIME = 12;
-    public static final int SLEEP_TIME = 24;
-    public static final int SMALL_BOSS_LIFE_MINUS = 3;
-    public static final int SORT_ORDER_MONSTER = 0;
-    public static final int SORT_ORDER_NONE_FINISHED = -1;
-    public static final int SORT_ORDER_OBJECT = 2;
-    public static final int SORT_ORDER_TOTAL_COUNT = 3;
-    public static final int SORT_ORDER_TOWER = 1;
-    public static final int SOUND_ATT_1 = 1;
-    public static final int SOUND_ATT_2 = 2;
-    public static final int SOUND_ATT_3 = 3;
-    public static final int SOUND_ATT_4 = 4;
-    public static final int SOUND_ATT_5 = 5;
-    public static final int SOUND_ATT_6 = 6;
-    public static final int SOUND_ATT_7 = 7;
-    public static final int SOUND_ATT_8 = 8;
-    public static final int SOUND_ATT_9 = 9;
-    public static final int SOUND_COUNT_PER_FRAME = 5;
-    public static final int SOUND_EFFECT_TOTAL_COUNT = 31;
-    public static final int SOUND_ETC_1 = 10;
-    public static final int SOUND_ETC_10 = 19;
-    public static final int SOUND_ETC_11 = 20;
-    public static final int SOUND_ETC_2 = 11;
-    public static final int SOUND_ETC_3 = 12;
-    public static final int SOUND_ETC_4 = 13;
-    public static final int SOUND_ETC_5 = 14;
-    public static final int SOUND_ETC_6 = 15;
-    public static final int SOUND_ETC_7 = 16;
-    public static final int SOUND_ETC_8 = 17;
-    public static final int SOUND_ETC_9 = 18;
-    public static final int SOUND_IGNORE_DELAY = 12;
-    public static final int SOUND_SN_LOGO = 0;
-    public static final int SOUND_SPECIAL_BLADE_HIT = 30;
-    public static final int SOUND_TOTAL_COUNT = 31;
-    public static final int SOUND_VOICE_1 = 21;
-    public static final int SOUND_VOICE_2 = 22;
-    public static final int SOUND_VOICE_3 = 23;
-    public static final int SOUND_VOICE_4 = 24;
-    public static final int SOUND_VOICE_5 = 25;
-    public static final int SOUND_VOICE_6 = 26;
-    public static final int SOUND_VOICE_7 = 27;
-    public static final int SOUND_VOICE_8 = 28;
-    public static final int SOUND_VOICE_9 = 29;
-    public static final int SPECIAL_ATTACK_ARROW_ANIM_START_FRAME = 135;
-    public static final int SPECIAL_ATTACK_ARROW_ANIM_VIEW_COUNT = 60;
-    public static final int SPECIAL_ATTACK_ARROW_DRAW_PER_FRAME = 5;
-    public static final int SPECIAL_ATTACK_ARROW_DROP_START_FRAME = 60;
-    public static final int SPECIAL_ATTACK_ARROW_FRAME_TOTAL_COUNT = 195;
-    public static final int SPECIAL_ATTACK_ARROW_ITEM_COUNT = 75;
     public static final int SPECIAL_ATTACK_ARROW_LEG_POS_X = 403;
     public static final int SPECIAL_ATTACK_ARROW_LEG_POS_Y = 558;
-    public static final int SPECIAL_ATTACK_ARROW_MOVE_VALUE = 100;
-    public static final int SPECIAL_ATTACK_ARROW_STAY_POS_X = 200;
-    public static final int SPECIAL_ATTACK_ARROW_STAY_POS_Y = 10;
-    static final float SPECIAL_ATTACK_ARROW_UNIT_SIZE_DEGREE = 0.025f;
-    static final float SPECIAL_ATTACK_ARROW_UNIT_SIZE_START = 0.5f;
     public static final int SPECIAL_ATTACK_ARROW_UNIT_START_FRAME = 165;
-    public static final int SPECIAL_ATTACK_ARROW_UNIT_VIEW_START_COUNT = 30;
-    static final float SPECIAL_ATTACK_BACKGROUND_ALPHA_DEGREE = 0.1f;
-    public static final int SPECIAL_ATTACK_BACKGROUND_ENTER_START_POS = 0;
-    public static final int SPECIAL_ATTACK_BACKGROUND_LINE_COUNT = 30;
-    public static final int SPECIAL_ATTACK_BACKGROUND_OUT_START_POS = 50;
-    public static final int SPECIAL_ATTACK_BLADE_DROP_START_FRAME = 65;
-    public static final int SPECIAL_ATTACK_BLADE_FRAME_TOTAL_COUNT = 150;
-    public static final int SPECIAL_ATTACK_BLADE_MOVE_VALUE = 100;
-    public static final int SPECIAL_ATTACK_BLADE_STAY_POS = 100;
-    public static final int SPECIAL_ATTACK_HERO_MOVE_ENTER_START_POS = 10;
-    public static final int SPECIAL_ATTACK_HERO_MOVE_OUT_END_POS = 50;
-    public static final int SPECIAL_ATTACK_HERO_MOVE_OUT_START_POS = 45;
-    public static final int SPECIAL_ATTACK_HERO_MOVE_STAY_POS = 15;
-    public static final int SPECIAL_ATTACK_HERO_VIEW_COUNT = 60;
-    public static final int SPECIAL_ATTACK_ICE_ANIM_ICE_REVERSE_GO = 15;
-    public static final int SPECIAL_ATTACK_ICE_ANIM_UNIT_VIEW_POS = 15;
-    public static final int SPECIAL_ATTACK_ICE_ANIM_VIEW_COUNT = 50;
-    public static final int SPECIAL_ATTACK_ICE_ANIM_WHITE_VIEW_POS = 30;
-    public static final int SPECIAL_ATTACK_ICE_DROP_START_FRAME = 60;
-    public static final int SPECIAL_ATTACK_ICE_FRAME_TOTAL_COUNT = 170;
-    public static final int SPECIAL_ATTACK_ICE_ITEM_COUNT = 60;
-    public static final int SPECIAL_ATTACK_ICE_MOVE_VALUE = 200;
-    public static final int SPECIAL_ATTACK_ICE_OUT_START_NUM = 1000;
-    public static final int SPECIAL_ATTACK_ICE_REVERSE_START_FRAME = 135;
-    public static final int SPECIAL_ATTACK_ICE_STAY_POS_Y = 40;
-    static final float SPECIAL_ATTACK_ICE_UNIT_SIZE_START = 0.3f;
-    static final float SPECIAL_ATTACK_ICE_UNIT_SIZE_ZOOM_DEGREE = 0.1f;
-    public static final int SPECIAL_ATTACK_ICE_UNIT_START_FRAME = 135;
-    static final float SPECIAL_ATTACK_ICE_WHITE_ALPHA_DEGREE = 0.1f;
-    static final float SPECIAL_ATTACK_ICE_WHITE_ALPHA_START = 2.0f;
-    public static final int SPECIAL_ATTACK_ICE_WHITE_END_FRAME = 170;
-    public static final int SPECIAL_ATTACK_ICE_WHITE_START_FRAME = 150;
-    public static final int SPECIAL_ATTACK_ITEM_COUNT = 60;
-    public static final int SPECIAL_DATA_TOTAL_COUNT = 20;
-    public static final int SPECIAL_DATA_TYPE_TOTAL_COUNT = 4;
-    public static final int SPECIAL_DATA_TYPE_TYPE = 0;
-    public static final int SPECIAL_DATA_TYPE_VALUE = 3;
-    public static final int SPECIAL_DATA_TYPE_WIND_L = 0;
-    public static final int SPECIAL_DATA_TYPE_WIND_M = 1;
-    public static final int SPECIAL_DATA_TYPE_WIND_S = 2;
-    public static final int SPECIAL_DATA_TYPE_WIND_TOTAL_COUNT = 3;
-    public static final int SPECIAL_DATA_TYPE_XPOS = 1;
-    public static final int SPECIAL_DATA_TYPE_YPOS = 2;
-    public static final int STAGE_ATTACK_MODE_GATE_BREAKER = 2;
-    public static final int STAGE_ATTACK_MODE_INFINITY = 1;
-    public static final int STAGE_ATTACK_MODE_NORMAL = 0;
-    public static final int STAGE_ATTACK_MODE_TOTAL_COUNT = 3;
-    static final int STAGE_CLEAR_PERFECT_WORD_DELAY_FRAME = 5;
-    static final int STAGE_CLEAR_PERFECT_WORD_DOWN_FRAME = 10;
-    static final int STAGE_CLEAR_PERFECT_WORD_FINISH_FRAME = 60;
-    static final int STAGE_CLEAR_PERFECT_WORD_TOTAL_FRAME = 40;
-    static final int STAGE_CLEAR_PERFECT_WORD_UP_FRAME = 30;
-    public static final int STAGE_NEXT_WAVE_DELAY_FRAME = 60;
-    public static final int STAGE_PER_CHAPTER = 10;
-    public static final int STAGE_STARTUP_DELAY_FRAME = 90;
-    public static final int STAGE_STARTUP_LIFE = 20;
-    public static final int STAGE_STARTUP_MANA = 10150;
-    public static final int STAGE_STARTUP_MONEY = 10700;
-    public static final int STAGE_TOTAL_COUNT = 50;
-    public static final int STORY2_DATA_CHANGE_MAX_TIME = 0;
-    public static final int STORY2_DATA_CHANGE_TIME = 9;
-    public static final int STORY2_DATA_COPY_TOTAL_COUNT = 7;
-    public static final int STORY2_DATA_FRONT_ALPHA_FINISH = 6;
-    public static final int STORY2_DATA_FRONT_ALPHA_START = 5;
-    public static final int STORY2_DATA_TEXT_BEGIN_NUM = 2;
-    public static final int STORY2_DATA_TEXT_CENTER_DRAW_FLAG = 4;
-    public static final int STORY2_DATA_TEXT_CURRENT_NUM = 8;
-    public static final int STORY2_DATA_TEXT_DRAW_FAIDIN_COUNT = 60;
-    public static final int STORY2_DATA_TEXT_DRAW_FAIDOUT_COUNT = 10;
-    public static final int STORY2_DATA_TEXT_DRAW_MAX_COUNT = 70;
-    public static final int STORY2_DATA_TEXT_DRAW_REMAIN_TIME = 7;
-    public static final int STORY2_DATA_TEXT_END_NUM = 3;
-    public static final int STORY2_DATA_TOTAL_COUNT = 10;
-    public static final int STORY2_DATA_WAIT_TIME = 1;
-    public static final int STORY2_IMAGE_1 = 0;
-    public static final int STORY_ADD_BADMOON = 0;
-    public static final int STORY_ADD_IMAGE = 1;
-    public static final int STORY_CHANGE_TO_IMAGE = 3;
-    public static final int STORY_CHANGE_TO_WHITE = 2;
-    public static final int STORY_DATA_BACK_DRAW_5_B = 10;
-    public static final int STORY_DATA_BACK_DRAW_5_K = 11;
-    public static final int STORY_DATA_BACK_DRAW_A_1 = 8;
-    public static final int STORY_DATA_BACK_DRAW_A_2 = 9;
-    public static final int STORY_DATA_BACK_DRAW_B_1 = 1;
-    public static final int STORY_DATA_BACK_DRAW_B_2 = 2;
-    public static final int STORY_DATA_BACK_DRAW_B_3 = 3;
-    public static final int STORY_DATA_BACK_DRAW_B_4 = 4;
-    public static final int STORY_DATA_BACK_DRAW_B_5 = 5;
-    public static final int STORY_DATA_BACK_DRAW_B_6 = 6;
-    public static final int STORY_DATA_BACK_DRAW_B_7 = 7;
-    public static final int STORY_DATA_BACK_DRAW_NUM = 0;
-    public static final int STORY_DATA_CHANGE_MAX_TIME = 18;
-    public static final int STORY_DATA_CHANGE_TIME = 27;
-    public static final int STORY_DATA_COPY_TOTAL_COUNT = 25;
-    public static final int STORY_DATA_FRONT_ALPHA_FINISH = 24;
-    public static final int STORY_DATA_FRONT_ALPHA_START = 23;
-    public static final int STORY_DATA_FRONT_DRAW_5_B = 16;
-    public static final int STORY_DATA_FRONT_DRAW_5_K = 17;
-    public static final int STORY_DATA_FRONT_DRAW_B_1 = 13;
-    public static final int STORY_DATA_FRONT_DRAW_B_2 = 14;
-    public static final int STORY_DATA_FRONT_DRAW_B_3 = 15;
-    public static final int STORY_DATA_FRONT_DRAW_NUM = 12;
-    public static final int STORY_DATA_TEXT_BEGIN_NUM = 20;
-    public static final int STORY_DATA_TEXT_CENTER_DRAW_FLAG = 22;
-    public static final int STORY_DATA_TEXT_CURRENT_NUM = 26;
-    public static final int STORY_DATA_TEXT_DRAW_FAIDIN_COUNT = 60;
-    public static final int STORY_DATA_TEXT_DRAW_FAIDOUT_COUNT = 10;
-    public static final int STORY_DATA_TEXT_DRAW_MAX_COUNT = 70;
-    public static final int STORY_DATA_TEXT_DRAW_REMAIN_TIME = 25;
-    public static final int STORY_DATA_TEXT_END_NUM = 21;
-    public static final int STORY_DATA_TOTAL_COUNT = 28;
-    public static final int STORY_DATA_WAIT_TIME = 19;
-    public static final int STORY_IMAGE_1 = 0;
-    public static final int STORY_IMAGE_2 = 1;
-    public static final int STORY_IMAGE_3_1 = 2;
-    public static final int STORY_IMAGE_3_2 = 3;
-    public static final int STORY_IMAGE_3_3 = 4;
-    public static final int STORY_IMAGE_4 = 5;
-    public static final int STORY_IMAGE_5 = 6;
-    public static final int STORY_IMAGE_5_B = 7;
-    public static final int STORY_IMAGE_5_K = 8;
-    public static final int STORY_IMAGE_A_1 = 9;
-    public static final int STORY_IMAGE_A_2 = 10;
-    public static final int STORY_IMAGE_A_3 = 11;
-    public static final int STORY_IMAGE_BLACK = 100;
-    public static final int STORY_IMAGE_B_1 = 12;
-    public static final int STORY_IMAGE_B_2 = 13;
-    public static final int STORY_IMAGE_B_3 = 14;
-    public static final int STORY_IMAGE_B_4 = 15;
-    public static final int STORY_IMAGE_B_5 = 16;
-    public static final int STORY_IMAGE_B_6 = 17;
-    public static final int STORY_IMAGE_B_7 = 18;
-    public static final int STORY_IMAGE_LOGO = 103;
-    public static final int STORY_IMAGE_PROGRAM = 100;
-    public static final int STORY_IMAGE_WHITE = 102;
-    public static final int STORY_REMOVE_IMAGE = 4;
-    public static final int STORY_SHOW_DIALOG = 5;
-    public static final int STORY_TO_BLK_WIN = 6;
-    public static final int TOWER_TYPE_NONE = -1;
-    public static final int TOWER_UNIT_MAX_COUNT = 150;
-    public static final int TURBO_FLAG_3_SIZE = 3;
-    public static final int TURBO_FLAG_MAX_COUNT = 6;
-    public static final int TURBO_FLAG_MAX_SIZE = 8;
-    public static final int TUTORIAL_ARROW_NUM = 2;
-    public static final int TUTORIAL_ARROW_POS_X = 3;
-    public static final int TUTORIAL_ARROW_POS_Y = 4;
-    public static final int TUTORIAL_BOXLINE_BOX_HEIGHT = 7;
-    public static final int TUTORIAL_BOXLINE_BOX_START_X = 4;
-    public static final int TUTORIAL_BOXLINE_BOX_START_Y = 5;
-    public static final int TUTORIAL_BOXLINE_BOX_WIDTH = 6;
-    public static final int TUTORIAL_BOXLINE_LINE_HEIGHT = 3;
-    public static final int TUTORIAL_BOXLINE_LINE_START_X = 0;
-    public static final int TUTORIAL_BOXLINE_LINE_START_Y = 1;
-    public static final int TUTORIAL_BOXLINE_LINE_WIDTH = 2;
-    public static final int TUTORIAL_BOX_3CHARSELECT = 20;
-    static final float TUTORIAL_BOX_ALPHA_DEGREE = 0.1f;
-    public static final int TUTORIAL_BOX_ARCHER = 10;
-    public static final int TUTORIAL_BOX_BUYBUTTON = 21;
-    public static final int TUTORIAL_BOX_BUYHERO = 19;
-    public static final int TUTORIAL_BOX_COLDDIVINER = 13;
-    public static final int TUTORIAL_BOX_ENEMYGATE = 5;
-    public static final int TUTORIAL_BOX_EQUIP = 18;
-    public static final int TUTORIAL_BOX_GATELIFE = 7;
-    public static final int TUTORIAL_BOX_GOLD = 0;
-    public static final int TUTORIAL_BOX_GOLDBOX = 15;
-    public static final int TUTORIAL_BOX_HERO = 14;
-    public static final int TUTORIAL_BOX_HOLYEYE = 11;
-    public static final int TUTORIAL_BOX_MANA = 1;
-    public static final int TUTORIAL_BOX_MANASTONE = 16;
-    public static final int TUTORIAL_BOX_MANATARMS = 9;
-    public static final int TUTORIAL_BOX_MOVE_COUNT = 10;
-    public static final int TUTORIAL_BOX_OURGATE = 6;
-    public static final int TUTORIAL_BOX_PAUSESWITCHMENU = 3;
-    public static final int TUTORIAL_BOX_SHOP = 17;
-    public static final int TUTORIAL_BOX_TOTAL_COUNT = 22;
-    public static final int TUTORIAL_BOX_UNITS = 4;
-    public static final int TUTORIAL_BOX_WARRIOR = 8;
-    public static final int TUTORIAL_BOX_WAVE = 2;
-    public static final int TUTORIAL_BOX_WIZARD = 12;
-    public static final int TUTORIAL_MOVE_END_X = 7;
-    public static final int TUTORIAL_MOVE_END_Y = 8;
-    public static final int TUTORIAL_MOVE_START_X = 5;
-    public static final int TUTORIAL_MOVE_START_Y = 6;
-    public static final int TUTORIAL_POS_ARCHER = 2;
-    public static final int TUTORIAL_POS_COLDDIVINER = 5;
-    public static final int TUTORIAL_POS_HERO = 6;
-    public static final int TUTORIAL_POS_HOLYEYE = 3;
-    public static final int TUTORIAL_POS_MANATARMS = 1;
-    public static final int TUTORIAL_POS_TOTAL_COUNT = 7;
-    public static final int TUTORIAL_POS_WARRIOR = 0;
-    public static final int TUTORIAL_POS_WIZARD = 4;
-    public static final int TUTORIAL_RECT_GOLD = 2;
-    public static final int TUTORIAL_RECT_MANASTONE = 3;
-    public static final int TUTORIAL_RECT_MENUKEY = 1;
-    public static final int TUTORIAL_RECT_UNIT = 0;
-    public static final int TUTORIAL_TARGET_POS_X = 0;
-    public static final int TUTORIAL_TARGET_POS_Y = 1;
-    static final float TUTORIAL_VIEW_ALPHA_VIEW_DEGREE = 0.1f;
-    public static final int TUTORIAL_VIEW_ARROW_SHOW = 2;
-    public static final int TUTORIAL_VIEW_ARROW_SHOW_START_TIME = 60;
-    public static final int TUTORIAL_VIEW_BLINK_FRAME = 5;
-    public static final int TUTORIAL_VIEW_DRAG_ACTION = 5;
-    public static final int TUTORIAL_VIEW_DRAG_ACTION_START_TIME = 150;
-    public static final int TUTORIAL_VIEW_DRAG_ACTION_TOTAL_COUNT = 30;
-    public static final int TUTORIAL_VIEW_EMPTY_START_TIME = 0;
-    public static final int TUTORIAL_VIEW_EMPTY_TIME = 0;
-    public static final int TUTORIAL_VIEW_HAND_VIEW = 3;
-    public static final int TUTORIAL_VIEW_HAND_VIEW_START_TIME = 90;
-    public static final int TUTORIAL_VIEW_TARGET_BLINK = 1;
-    public static final int TUTORIAL_VIEW_TARGET_BLINK_START_TIME = 30;
-    public static final int TUTORIAL_VIEW_TOTAL_TIME_COUNT = 210;
-    public static final int TUTORIAL_VIEW_TOUCH_ACTION = 4;
-    public static final int TUTORIAL_VIEW_TOUCH_ACTION_START_TIME = 120;
-    public static final int TUTORIAL_VIEW_TOUCH_HAND_START = 3;
-    public static final int TUTORIAL_VIEW_UNIT_REMAIN = 6;
-    public static final int TUTORIAL_VIEW_UNIT_REMAIN_START_TIME = 180;
-    public static final int UPGRADE_BASIC_SKILL_COUNT_PER_BLOCK = 6;
-    public static final int UPGRADE_BASIC_SKILL_COUNT_PER_LINE = 3;
-    public static final int UPGRADE_HERO_ITEM_COUNT_PER_LINE = 2;
-    public static final int UPGRADE_HERO_SKILL_COUNT_PER_LINE = 6;
-    public static final int UPGRADE_HERO_SKILL_TOTAL_COUNT = 18;
-    public static final int UPGRADE_INVENTORY_SKILL_COUNT_PER_PAGE = 8;
-    public static final int UPGRADE_SHOP_SKILL_COUNT_PER_LINE = 4;
-    public static final int UPGRADE_SHOP_SKILL_COUNT_PER_PAGE = 12;
-    public static final int VIEWCOUNT_GAME_SHOP_EQUIP_MAX = 30;
-    public static final int WAVE_FINISH_CHECK_ALL_FINISHED = 1;
-    public static final int WAVE_FINISH_CHECK_GAME_OVER = 3;
-    public static final int WAVE_FINISH_CHECK_NEXT_MOVE = 2;
-    public static final int WAVE_FINISH_CHECK_NOT_YET = 0;
-    public static final int WAVE_MONSTER_TYPE_COUNT = 2;
     public static ArrowUnit[] arrowUnit;
     public static int arrowUnitCount;
     public static int[] awardDataFlag;
@@ -668,17 +60,12 @@ public class GameThread extends Thread {
     public static EffectUnit[] effectUnit;
     public static int effectUnitCount;
 
-    public static int freeAdViewCount;
-    public static long freeAdViewTime;
-    public static int[][] gameClearedFlag;
     public static int gameHelpViewNum;
     public static int gameLoadFlag;
-    public static int[][] gamePerfectFlag;
     public static int[][] gamePlayedCount;
     public static int gameStatus;
     public static int gameSubStatus;
     public static int gameTitleViewCount;
-    public static int gatePattern;
     public static int[][] heroItemType;
     public static int[] heroUnitType;
     public static int[][] heroUpgradeValue;
@@ -686,11 +73,9 @@ public class GameThread extends Thread {
     public static int[] itemUnitValue;
     public static int lastDrawCount;
     public static int lastFrameCount;
-    public static int lastPlayedMapNumber;
     public static int limitCashBuyCount;
     public static int loadTipNumber;
     public static int loadingStatus;
-    public static SoundPool mSoundPool;
     public static boolean m_bStop;
     public static int mapAttackType;
     public static final int[] mapEndDirection = new int[10];
@@ -710,14 +95,10 @@ public class GameThread extends Thread {
     public static int myMana;
     public static int myMoney;
     public static final MyOscillator[] myOscillator = new MyOscillator[20];
-    public static int myPhoneAlertFlag;
     public static int myScore;
     public static MyScrollbar[] myScrollbar;
     public static int myWave;
-    public static int myWaveCount;
-    public static boolean myWavePerfectFlag;
     public static boolean myWaveRunFlag;
-    public static int myWaveStartCount;
     public static NewTower newTower;
     public static boolean objectSortCheckFlag;
     public static int objectSortDrawCount;
@@ -730,21 +111,10 @@ public class GameThread extends Thread {
     public static int playTimeTotalValue;
     public static int randomNumber;
     public static int realDrawCount;
-    public static int returnGameStatus;
     public static int[] rewardDataValue;
     public static boolean rewardShowFlag;
     public static int rewardShowOrder;
     static byte[] saveTotalBuffer;
-    public static int[] shopGiftItemCount;
-    public static int shopGiftItemGetDecision;
-    public static int[] shopGiftItemSerial;
-    public static int shopGiftItemTotalCount;
-    public static int[] shopGiftItemType;
-    public static String[] shopGiftPhoneNumber;
-    public static byte[][] shopGiftPhoneNumberByte;
-    public static int shopSendItemNumber;
-    public static int[] shopSendPhoneNumber;
-    public static int shopSendPhoneNumberCount;
     public static int[] shopUnitValue;
     public static final boolean soundFlag = true;
     public static final boolean[] soundPlayCheckFlag = new boolean[31];
@@ -769,32 +139,22 @@ public class GameThread extends Thread {
     public static int tutorialFlag;
     public static int tutorialViewCount;
     public static final int[] upgradeUnitValue = new int[18];
-    public static int viewCount_GAME_SHOP_EQUIP;
     public static int[][] waveMobData;
     public static int[] waveMonsterRemainCount;
     public static int[] waveMonsterShowCurrent;
     public static int[] waveMonsterShowTime;
     public static int[] waveMonsterType;
     public static int wavePattern;
-    public static final int[][] GAME_LOADING_PART_DATA = {new int[]{0, 0, 0, 0, 0, 0}, new int[]{0, 0, 0, 0, 0, 0}, new int[]{0, 0, 0, 0, 0, 0}, new int[]{0, 0, 0, 1, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 0, 1, 0, 0}, new int[]{0, 0, 0, 1, 0, 0}, new int[]{0, 0, 0, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{0, 0, 1, 0, 0, 0}, new int[]{1, 0, 1, 0, 0, 0}, new int[]{0, 1, 1, 0, 0, 0}, new int[]{0, 0, 0, 0, 0, 0}, new int[]{0, 0, 0, 0, 0, 0}, new int[]{0, 0, 0, 0, 1, 0}, new int[]{0, 0, 0, 0, 1, 0}, new int[]{0, 0, 0, 0, 0, 0}, new int[]{0, 0, 0, 0, 0, 0}, new int[]{0, 0, 0, 0, 0, 1}, new int[]{0, 0, 0, 0, 0, 0}};
     public static int gameTimeCount = 0;
     public static final String[] chapterName = {"Dark Forest", "Swamp of Despair", "Eternal Wasteland", "Infernal Volcano", "Nightmarish Demon World"};
-    public static int upgradeUnitSelectPos = 0;
-    public static int upgradeHeroUnitSelectPos = 0;
-    public static int upgradeHeroEquipSelectPos = 0;
-    public static int upgradeHeroUpgradeSelectPos = 0;
-    public static int upgradeHeroBuySelectPos = 0;
     public static int shopShopChapterSelectPos = 0;
     public static int shopShopItemSelectPos = 0;
     public static int shopShopInventorySelectPos = 0;
-    public static int shopGiftItemSelectPos = 0;
-    public static int lastUpdateItemPos = 0;
-    public static int lastUpdateItemViewDelay = 0;
     public static int TOWER_MAX_LEVEL_NORMAL = 3;
     public static int TOWER_MAX_LEVEL_HERO = 5;
     public static int WAVE_MAX_COUNT = 60;
     public static final int[][] tutorialUnitPos = {new int[]{2, 7, 0, 177, 111, 770, 111, 177, 367}, new int[]{4, 7, 1, 266, 171, 770, 176, 266, 367}, new int[]{6, 7, 2, 356, 231, 770, 241, 356, 367}, new int[]{8, 7, 3, 444, 289, 770, 306, 444, 367}, new int[]{10, 7, 4, 536, 349, 770, 371, 536, 367}, new int[]{12, 7, 5, 627, 374, 770, 436, 627, 367}, new int[]{7, 7, 6, 402, 77, 580, 40, 402, 367}};
-    public static final int[][] tutorialBoxLinePos = {new int[]{78, 30, 6, GameRenderer.GAME_SHOP_EQUIP_SKILL_START_X, 33, 233, InputDeviceCompat.SOURCE_KEYBOARD, 81}, new int[]{194, 30, 6, 114, 127, 145, InputDeviceCompat.SOURCE_KEYBOARD, 81}, new int[]{340, 30, 6, 27, 265, 57, InputDeviceCompat.SOURCE_KEYBOARD, 81}, new int[]{47, 408, 12, 6, 59, 338, 371, 134}, new int[]{723, 404, 14, 6, 465, 365, InputDeviceCompat.SOURCE_KEYBOARD, 81}, new int[]{GameRenderer.GAME_SHOP_SHOP_INVENTORY_START_X, 127, 6, 115, 58, 242, 271, 81}, new int[]{663, 153, 6, 89, 452, 242, 271, 81}, new int[]{568, 114, 60, 6, 297, 76, 271, 81}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, 150, 70, 226, 226}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, GameRenderer.GAME_STAGE_CLEAR_HIGH_SCORE_COUNT, 70, 226, 226}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, GameRenderer.GAME_SHOP_SHOP_SIDEBAR_END_Y, 70, 226, 226}, new int[]{0, 0, 0, 0, 179, 70, 442, 226}, new int[]{0, 0, 0, 0, 89, 174, GameRenderer.VOLUMEBAR_WIDTH, 230}, new int[]{0, 0, 0, 0, 323, 176, 350, 226}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}};
+    public static final int[][] tutorialBoxLinePos = {new int[]{78, 30, 6, 203, 33, 233, 257, 81}, new int[]{194, 30, 6, 114, 127, 145, 257, 81}, new int[]{340, 30, 6, 27, 265, 57, 257, 81}, new int[]{47, 408, 12, 6, 59, 338, 371, 134}, new int[]{723, 404, 14, 6, 465, 365, 257, 81}, new int[]{125, 127, 6, 115, 58, 242, 271, 81}, new int[]{663, 153, 6, 89, 452, 242, 271, 81}, new int[]{568, 114, 60, 6, 297, 76, 271, 81}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, 150, 70, 226, 226}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, 240, 70, 226, 226}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, 330, 70, 226, 226}, new int[]{0, 0, 0, 0, 179, 70, 442, 226}, new int[]{0, 0, 0, 0, 89, 174, 348, 230}, new int[]{0, 0, 0, 0, 323, 176, 350, 226}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}};
     public static final int[][] tutorialRectPos = {new int[]{737, 4, 60, 457}, new int[]{3, 336, 46, 140}, new int[]{190, 115, 152, 57}, new int[]{416, 115, 152, 57}};
 
     /**
@@ -832,36 +192,6 @@ public class GameThread extends Thread {
         return i + 1;
     }
 
-    public void moveGameStatusToStatus(int i, int i2) {
-    }
-
-    public void onPause() {
-    }
-
-    public void onResume() {
-    }
-
-    public void update_GAME_ABOUT() {
-    }
-
-    public void update_GAME_HELP() {
-    }
-
-    public void update_GAME_NEWS_CREDITS() {
-    }
-
-    public void update_GAME_NEW_MENU_IMAGE_LOAD() {
-    }
-
-    public void update_GAME_OPTION() {
-    }
-
-    public void update_GAME_PRE_TOTAL_IMAGE_LOAD() {
-    }
-
-    public void update_GAME_RESUME_TO_PLAY() {
-    }
-
     public GameThread(NewTower nt) {
         newTower = nt;
         m_bStop = false;
@@ -877,7 +207,7 @@ public class GameThread extends Thread {
                     NewTower.glGameSurfaceView.requestRender();
                     int i = gameLoadFlag;
                     if (i == 0 && loadingStatus >= 1000 && loadingStatus <= 1008) {
-                        sleep(12L);
+                        sleep(12L); //Loading
                         break;
                     } else if (i == 1)
                         sleep(24L);
@@ -1232,7 +562,7 @@ public class GameThread extends Thread {
         switch (characterMenuSelectFlag) {
             case 8:
                 for (int i4 = 0; i4 < 60; i4++) {
-                    addSpecialArrowUnit(getRandom(4) + 15, 33750, getRandom(LOAD_MAP_START_COUNT) * 50, -(i4 + 65), true);
+                    addSpecialArrowUnit(getRandom(4) + 15, 33750, getRandom(450) * 50, -(i4 + 65), true);
                 }
                 for (int i5 = 0; i5 < 20; i5++) {
                     int[][] iArr = specialDataValue;
@@ -1251,7 +581,7 @@ public class GameThread extends Thread {
                 return;
             case 9:
                 while (i3 < 75) {
-                    addSpecialArrowUnit(getRandom(3) + 33, getRandom(675) * 50, getRandom(LOAD_MAP_START_COUNT) * 50, -(i3 + 60), true);
+                    addSpecialArrowUnit(getRandom(3) + 33, getRandom(675) * 50, getRandom(450) * 50, -(i3 + 60), true);
                     i3++;
                 }
                 return;
@@ -1748,88 +1078,6 @@ public class GameThread extends Thread {
             }
         }
         characterAddBoolean = true;
-    }
-
-    public static void unequipItem() {
-        boolean z;
-        if (heroItemType[upgradeHeroUnitSelectPos][upgradeHeroEquipSelectPos] == -1) {
-            return;
-        }
-        int i = 0;
-        int i2 = 0;
-        while (true) {
-            if (i2 >= 24) {
-                z = false;
-                break;
-            } else {
-                if (itemUnitValue[i2] == -1) {
-                    z = true;
-                    break;
-                }
-                i2++;
-            }
-        }
-        if (z) {
-            int i3 = 0;
-            while (true) {
-                if (i3 >= 24) {
-                    break;
-                }
-                int[] iArr = itemUnitValue;
-                if (iArr[i3] == -1) {
-                    int[][] iArr2 = heroItemType;
-                    int i4 = upgradeHeroUnitSelectPos;
-                    int[] iArr3 = iArr2[i4];
-                    int i5 = upgradeHeroEquipSelectPos;
-                    iArr[i3] = iArr3[i5];
-                    iArr2[i4][i5] = -1;
-                    break;
-                }
-                i3++;
-            }
-            while (i < 23) {
-                int i6 = i + 1;
-                for (int i7 = i6; i7 < 24; i7++) {
-                    int[] iArr4 = itemUnitValue;
-                    if (iArr4[i] == -1 || (iArr4[i7] != -1 && iArr4[i] > iArr4[i7])) {
-                        int[] iArr5 = itemUnitValue;
-                        int i8 = iArr5[i7];
-                        iArr5[i7] = iArr5[i];
-                        iArr5[i] = i8;
-                    }
-                }
-                i = i6;
-            }
-        }
-    }
-
-    public static boolean equipItem() {
-        int[] iArr = itemUnitValue;
-        int i = shopShopInventorySelectPos;
-        if (iArr[i] == -1) {
-            return false;
-        }
-        int[][] iArr2 = heroItemType;
-        int i2 = upgradeHeroUnitSelectPos;
-        int[] iArr3 = iArr2[i2];
-        int i3 = upgradeHeroEquipSelectPos;
-        int i4 = iArr3[i3];
-        iArr2[i2][i3] = iArr[i];
-        iArr[i] = i4;
-        while (i < 23) {
-            int i5 = i + 1;
-            for (int i6 = i5; i6 < 24; i6++) {
-                int[] iArr4 = itemUnitValue;
-                if (iArr4[i] == -1 || (iArr4[i6] != -1 && iArr4[i] > iArr4[i6])) {
-                    int[] iArr5 = itemUnitValue;
-                    int i7 = iArr5[i6];
-                    iArr5[i6] = iArr5[i];
-                    iArr5[i] = i7;
-                }
-            }
-            i = i5;
-        }
-        return true;
     }
 
     public static boolean checkInvenEmpty() {

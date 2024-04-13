@@ -1,8 +1,11 @@
 package com.sncompany.newtower.Pages;
 
+
+import java.util.function.Consumer;
+
 import androidx.core.internal.view.SupportMenu;
-import androidx.core.util.Consumer;
 import androidx.core.view.ViewCompat;
+
 
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataStory;

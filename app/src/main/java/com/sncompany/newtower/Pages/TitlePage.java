@@ -3,7 +3,7 @@ package com.sncompany.newtower.Pages;
 import android.content.Intent;
 import android.net.Uri;
 
-import androidx.core.util.Consumer;
+import java.util.function.Consumer;
 
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGPoint;
