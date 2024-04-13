@@ -50,3 +50,4 @@ Other TODO:
 - Static variables for resource array locations for more mod-ability
 - Removing ID-Style resource gathering for a decompiled one
 - PC Port
+- Get rid of the androidx folder entirely

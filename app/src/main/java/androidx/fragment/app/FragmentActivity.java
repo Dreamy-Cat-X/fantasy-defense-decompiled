@@ -19,7 +19,7 @@ import android.view.Window;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ComponentActivity;
-import androidx.core.app.SharedElementCallback;
+import android.app.SharedElementCallback;
 import androidx.core.internal.view.SupportMenu;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelStore;
