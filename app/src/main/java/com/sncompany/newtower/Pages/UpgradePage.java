@@ -56,7 +56,7 @@ public class UpgradePage extends TPage {
     public final Texture2D[] uiUpgradeImage = new Texture2D[uiUpgradeResource.length], numberUpgradeImage = new Texture2D[numberUpgradeResource.length];
     public final Texture2D[] shopImages = new Texture2D[3], numberHeroismImage = new Texture2D[MenuPage.numberHeroismResource.length];
     public final Texture2D[] uiUpunitImage = new Texture2D[uiUpunitResource.length], uiUpheroImage = new Texture2D[uiUpheroResource.length];
-    private final Texture2D testboxImage = new Texture2D(R.drawable.etc_testbox), heroismImage = new Texture2D(R.drawable.etc_heroism);
+    private final Texture2D heroismImage = new Texture2D(R.drawable.etc_heroism);
 
     public boolean hero;
     public int lastUpdateItemViewDelay = 0, lastUpdateItemPos = 0, upgradeUnitSelectPos = 0;
@@ -97,7 +97,6 @@ public class UpgradePage extends TPage {
         shopImages[0].dealloc();
         shopImages[1].dealloc();
         shopImages[2].dealloc();
-        testboxImage.dealloc();
         heroismImage.dealloc();
         loaded = false;
     }
@@ -247,7 +246,7 @@ public class UpgradePage extends TPage {
         int rbound = Math.max((Texture2D.bounds_.right - Texture2D.bounds_.left) + 28, bound + bound2 + 65);
         float xbound = x - (rbound / 2);
         float ry = y - 73.0f;
-        GameRenderer.drawLeftRightBox(testboxImage, GameRenderer.testboxCoord, xbound, ry, rbound, 0); //TODO - Load TestBoxImg
+        GameRenderer.drawLeftRightBox(xbound, ry, rbound); //TODO - Load TestBoxImg
         GameRenderer.setFontColor(-68096);
         GameRenderer.setFontSize(17);
         GameRenderer.drawStringM(name, xbound + 14.0f, ry + 14.0f, 18);

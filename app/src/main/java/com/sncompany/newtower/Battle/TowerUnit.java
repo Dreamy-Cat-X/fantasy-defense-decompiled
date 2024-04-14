@@ -1,16 +1,20 @@
 package com.sncompany.newtower.Battle;
 
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.DataAnim;
+import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataHero;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
+import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.Texture2D;
 
 import java.util.ArrayList;
 
 /* loaded from: D:\decomp\classes.dex */
-public class TowerUnit implements Comparable<TowerUnit> {
+public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public static final int DUST_FAN_ATTACK_ROTATE_RATE = 15;
     public static final int DUST_FAN_BODY_EFFECT_ROTATE_RATE = 20;
     public static final int DUST_FAN_STAND_ROTATE_RATE = 2;
@@ -50,13 +54,13 @@ public class TowerUnit implements Comparable<TowerUnit> {
     public int towerCoolTime = 0;
     public int towerCoolTimeMax;
     public int towerType; //deprecated, replace with [type] and [level], use oldType() when needed for data arrays
-    public int level = 1;
+    public int level = 0;
     public int type;
     public int unitPower;
     public int unitStatus = 2;
     public int unitStatusCount = 0;
     public ArrayList<EnemyUnit> lockedEnemies = new ArrayList<>(3);
-    private final DataStage st;
+    protected final DataStage st;
 
     public static final String[] effectTypeString = {"Stun", "Splash", "DoT", "Slow", "Pierce", "Slow Mud", "Dot Fire", "Multi Shot", "Double Shot", "None"};
     public static String getEffectTypeString(int i) {
@@ -74,9 +78,12 @@ public class TowerUnit implements Comparable<TowerUnit> {
         posY = ((bY * 45) + 22) * 50;
         originalPosX = posX;
         originalPosY = posY;
+
+        drawData = DataAnim.towerDrawData[type];
+        drawTexture = st.page.towerImages[type];
     }
 
-    public void restatTowerUnit() {
+    public void restatTowerUnit(boolean classChange) {
         int ot = oldType();
 
         int[] dat = DataCharacter.charData[ot];
@@ -93,6 +100,11 @@ public class TowerUnit implements Comparable<TowerUnit> {
         if (targetMaxNum <= 1 || effectType != -1)
             return;
         effectType = 7;
+
+        if (classChange) {
+            drawData = DataAnim.towerDrawData[type];
+            drawTexture = st.page.towerImages[type];
+        }
     }
 
     public int atkDistanceSquare() {
@@ -100,11 +112,15 @@ public class TowerUnit implements Comparable<TowerUnit> {
     }
 
     public int oldType() {
-        return (type * 6) + level;
+        return (type * 3) + level;
     }
 
     public int getRole() {
         return type / 4; //0 = Warrior, 1 = Archer, 2 = Mage
+    }
+
+    public int getTier() {
+        return type % 4;
     }
 
     public int getAttackSpeed() {
@@ -119,6 +135,87 @@ public class TowerUnit implements Comparable<TowerUnit> {
             if (DataUpgradeUnit.upgradeUnitData[g][4] == ind)
                 tot += Config.unitUpgrades[role][g % 6] * DataUpgradeUnit.upgradeUnitData[g][0];
         return tot;
+    }
+
+    public int getUpgradeType() {
+        int tier = getTier();
+        return switch (tier) {
+            case 0 -> type + 2;
+            case 2 -> type + 1;
+            default -> -1;
+        };
+    }
+
+    public int getDowngradeType() {
+        int tier = getTier();
+        return switch (tier) {
+            case 2 -> type - 2;
+            case 3 -> type - 1;
+            default -> -1;
+        };
+    }
+
+    public static int getBuyPrice(int type) {
+        if (type == -1)
+            return 0;
+
+        int role = type / 4;
+        int i2 = DataCharacter.charData[type * 3][0];
+        int reduction = (i2 * Config.unitUpgrades[role][0] * DataUpgradeUnit.upgradeUnitData[role * 6][0]) / 100;
+
+        return i2 + reduction;
+    }
+
+    public int getSellPrice() {
+        return DataCharacter.charData[oldType()][13] / 2;
+    }
+
+    public void levelUpUnit() {
+        if (level == 2)
+            return;
+
+        st.Money -= getLevelupPrice();
+        level++;
+
+        if (level == 2 && (getTier() == 1 || getTier() == 3))
+            Config.awardValues[(getTier() == 1 ? DataAward.AWARD_Guardian_Of_War : DataAward.AWARD_Thrill_Of_The_Hammer) + getRole()] = true;
+
+        restatTowerUnit(false);
+        st.addEffectUnit(14, posX, posY);
+        GameThread.playSound(13);
+        GameRenderer.levelUpCount = 10;
+    }
+
+    public int getLevelupPrice() {
+        return DataCharacter.charData[oldType() + 1][0];
+    }
+
+    public void upgradeUnit() {
+        if (getUpgradeType() != -1 && st.Money >= getUpgradePrice()) {
+            st.Money -= getUpgradePrice();
+            towerType = getUpgradeType();
+            restatTowerUnit(true);
+            st.addEffectUnit(14, posX, posY);
+            GameThread.playSound(13);
+            GameRenderer.upgradeCount = 10;
+        }
+    }
+
+    public int getUpgradePrice() {
+        return DataCharacter.charData[oldType()][1];
+    }
+
+    public int getSoundHitType() {
+        return switch (type) {
+            case 0, 2, 3 -> 1; //Warrior, Knight, Warlord
+            case 1 -> 2; //Brandisher
+            case 4, 6, 7 -> 3; //Archer, Sharpshooter, Sky Arrow
+            case 5 -> 4; //Holy Eye
+            case 8 -> 5; //Mage
+            case 9 -> 7; //IceMage
+            case 10, 11 -> 6; //Sorceress, Blaster
+            default -> -1;
+        };
     }
 
     public void update() {
@@ -153,7 +250,7 @@ public class TowerUnit implements Comparable<TowerUnit> {
                     attackCount++;
                     towerCoolTime = towerCoolTimeMax;
                     if (attackType == 0) {
-                        int soundHitType = GameThread.getSoundHitType(this);
+                        int soundHitType = getSoundHitType();
                         if (soundHitType != -1)
                             GameThread.playSound(soundHitType);
 
@@ -194,32 +291,18 @@ public class TowerUnit implements Comparable<TowerUnit> {
     }
 
     public int getSoundAttackType() {
-        int ot = oldType();
-        switch (DataCharacter.charData[ot][12]) {
-            case 0:
-            case 2:
-                return 21;
-            case 1:
-                return 23;
-            case 3:
-                return 22;
-            case 4:
-            case 6:
-                return 24;
-            case 5:
-                return 26;
-            case 7:
-                return 25;
-            case 8:
-                return 27;
-            case 9:
-                return 29;
-            case 10:
-            case 11:
-                return 28;
-            default:
-                return -1;
-        }
+        return switch (type) {
+            case 0, 2 -> 21;
+            case 1 -> 23;
+            case 3 -> 22;
+            case 4, 6 -> 24;
+            case 5 -> 26;
+            case 7 -> 25;
+            case 8 -> 27;
+            case 9 -> 29;
+            case 10, 11 -> 28;
+            default -> -1;
+        };
     }
 
     void addArrowUnit(int type, int tInd) {
@@ -305,6 +388,133 @@ public class TowerUnit implements Comparable<TowerUnit> {
                     mon.damaged(getHitDamage(eu instanceof MonsterUnit ? (MonsterUnit)eu : mon), this);
                 }
             }
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:12:0x0054  */
+    /* JADX WARN: Removed duplicated region for block: B:19:0x00e6  */
+    /* JADX WARN: Removed duplicated region for block: B:55:0x01b5  */
+    /* JADX WARN: Removed duplicated region for block: B:64:0x01d4 A[LOOP:1: B:63:0x01d2->B:64:0x01d4, LOOP_END] */
+    /* JADX WARN: Removed duplicated region for block: B:70:0x01ce  */
+    /* JADX WARN: Removed duplicated region for block: B:74:0x0076  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public void draw() {
+        float x = posX / 50f + 62, y = posY / 50f + 30;
+        int i;
+        int[] iArr;
+        int i2;
+        int i3;
+        float f3;
+        int i4;
+        int i5;
+        int i6;
+        float f4;
+        float f5;
+        float f6 = x;
+        int i7 = towerType;
+        if (i7 == -1) {
+            return;
+        }
+        int i8 = 1;
+        int towerLevelOrder = getTowerLevelOrder(i7, heroFlag) + 1;
+        int i9 = unitStatus;
+        int i10 = 5;
+        if (i9 != 0) {
+            if (i9 == 1) {
+                i = lastViewDirection == 6 ? 2 : 3;
+                i10 = 3;
+            } else if (i9 != 2) {
+                i10 = 25;
+                i = 0;
+            }
+
+            int i12 = drawData[drawData[1] + i];
+            int i13 = drawData[drawData[0] + drawData[i12 + 1 + ((unitStatusCount / i10) % drawData[i12])]];
+            i2 = drawData[i13];
+            int i14 = i13 + 1;
+            float f7 = y + 10.0f;
+            st.page.shadowImage[0].drawAtPointOption(f6, f7, 9);
+            i3 = 0;
+            while (i3 < i2) {
+                boolean z = heroFlag == 1 && i3 == 0 && unitStatus == 0;
+                if (z) {
+                    if (specialMaxCooltime > 0) {
+                        f5 = (specialMaxCooltime - specialCooltime) / specialMaxCooltime;
+                        if (f5 < 0.3f) {
+                            f5 = 0.3f;
+                        }
+                    } else {
+                        f5 = 1.0f;
+                    }
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                    Texture2D.gl.glColor4f(f5, f5, f5, f5);
+                }
+                int i15 = (i3 * 5) + i14;
+                int i16 = i15 + 3;
+                if (drawData[i16] != 1000) {
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                    i6 = i14;
+                    Texture2D.gl.glColor4f(drawData[i16] / 1000.0f, drawData[i16] / 1000.0f, drawData[i16] / 1000.0f, drawData[i16] / 1000.0f);
+                } else {
+                    i6 = i14;
+                }
+                if (drawData[i15 + 4] == 0) {
+                    drawTexture[drawData[i15]].drawAtPointOption(drawData[i15 + 1] + f6, y + drawData[i15 + 2] + 10.0f, 18);
+                } else {
+                    drawTexture[drawData[i15]].drawAtPointOptionFlip(drawData[i15 + 1] + f6, y + drawData[i15 + 2] + 10.0f, 18);
+                }
+                if (drawData[i16] != 1000) {
+                    f4 = 1.0f;
+                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                } else {
+                    f4 = 1.0f;
+                }
+                if (z) {
+                    Texture2D.gl.glColor4f(f4, f4, f4, f4);
+                }
+                i3++;
+                i14 = i6;
+            }
+            if (towerLevelOrder == 1) {
+                f3 = f6 - DRAW_SCALE_X_SMALL_DEGREE;
+                i4 = 7;
+                f3 = f6;
+                i4 = 15;
+            } else {
+                f3 = f6 + 15.0f;
+                i4 = 0;
+            }
+            for (i5 = 0; i5 < towerLevelOrder; i5++) {
+                uiUpperImage[12].drawAtPointOption((i5 * i4) + f3, f7, 9);
+            }
+        }
+        i = lastViewDirection == 6 ? 0 : 1;
+        if (specialShowCount > 0) {
+            specialShowCount--;
+            if (heroFlag == 1) {
+                i = lastViewDirection == 6 ? 4 : 5;
+            }
+        }
+        int i17 = GameThread.turboFlag * 5;
+        if (i17 > 0) {
+            i10 = i17;
+        }
+        if (heroFlag != 1) {
+        }
+        int i122 = iArr[iArr[1] + i];
+        int i132 = iArr[iArr[0] + iArr[i122 + 1 + ((unitStatusCount / i10) % iArr[i122])]];
+        i2 = iArr[i132];
+        int i142 = i132 + 1;
+        float f72 = y + 10.0f;
+        st.page.shadowImage[0].drawAtPointOption(f6, f72, 9);
+        i3 = 0;
+        while (i3 < i2) {
+        }
+        if (towerLevelOrder == 1) {
+        }
+        while (i5 < towerLevelOrder) {
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
+import com.sncompany.newtower.Pages.stage.TutorialPage;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -56,7 +57,7 @@ public class HelpPage extends TPage {
         parent.paint(gl10, false);
 
         uiHelpImage[0].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
-        uiEtcImage[0].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
+        uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
         uiHelpShotImage.drawAtPointOption(32.0f, 94.0f, 18);
 
         uiHelpImage[i == 1 ? 2 : 1].drawAtPointOption(650.0f, 18.0f, 18);
@@ -67,7 +68,7 @@ public class HelpPage extends TPage {
         GameRenderer.setFontSize(19);
         GameRenderer.drawStringDoubleM(String.format("%d/%d", Integer.valueOf(GameThread.gameHelpViewNum + 1), 15), 705.0f, 431.0f, 17);
 
-        uiEtcImage[i == 0 ? 2 : 1].drawAtPointOption(11.0f, 412.0f, 18);
+        uiEtcImage[i == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
 
         if (init)
             TouchManager.swapTouchMap();

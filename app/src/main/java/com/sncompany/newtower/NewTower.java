@@ -81,6 +81,8 @@ public class NewTower extends AppCompatActivity {
             unloadRec(par);
         if (!currentPage.loaded)
             currentPage.load(null);
+        else
+            currentPage.onReload();
     }
 
     private static boolean checkAncestry(TPage p, TPage targ) {
@@ -139,7 +141,7 @@ public class NewTower extends AppCompatActivity {
             GameRenderer.isPaused = false;
             gameThread.start();
             PowerManager powerManager = (PowerManager) getSystemService("power");
-            wl = powerManager.newWakeLock(536870922, "My Tag");
+            wl = powerManager.newWakeLock(536870922, "Def Tag");
             wl.acquire();
             vibe = (Vibrator) getSystemService("vibrator");
             GameThread.gameLoadFlag = 0;

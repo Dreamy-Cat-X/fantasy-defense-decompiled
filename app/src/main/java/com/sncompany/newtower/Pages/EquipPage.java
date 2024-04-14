@@ -7,6 +7,7 @@ import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGPoint;
+import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
@@ -24,9 +25,9 @@ public class EquipPage extends TPage {
     protected final InventoryTable inventory;
     private final ShopPage shopP;
     private final HeroUnit[] heroes = new HeroUnit[Config.heroEquips.length];
-    public int upgradeHeroUnitSelectPos = -1, upgradeHeroEquipSelectPos = -1;
+    public int selectedHero = -1, selectedHeroEquip = -1;
     public static int touchStart_GAME_SHOP_EQUIP_NUM;
-    public static final int BACK = 60, SHOP = 62, L_ARROW = 70, R_ARROW = 71, SELL = 73, MIN_HERO = 10, MIN_LOCK = 75;
+    public static final int BACK = 15, SHOP = 16, L_ARROW = 17, R_ARROW = 18, SELL = 19, MIN_HERO = 9, MIN_LOCK = 20, TOTAL = MIN_LOCK + 3;
 
     public EquipPage(TPage par) {
         this(par, null);
@@ -35,7 +36,7 @@ public class EquipPage extends TPage {
     public EquipPage(TPage par, ShopPage shop) {
         super(par);
         shopP = shop == null ? new ShopPage(par, this) : shop;
-        inventory = shop == null ? new InventoryTable(shopP, this) : shop.inventory;
+        inventory = shop == null ? new InventoryTable(shopP) : shop.inventory;
         setEquipHeroSetting();
     }
 
@@ -80,7 +81,7 @@ public class EquipPage extends TPage {
                     TouchManager.addTouchRectListData(MIN_LOCK + (j / 2), GameRenderer.CGRectMake(109.0f, 174.0f, 100.0f, 120.0f));
             }
             inventory.addTouch();
-            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 78;
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;
             cTLS = TouchManager.checkTouchListStatus();
             parent.parent.paint(gl10, false);
         }
@@ -89,13 +90,13 @@ public class EquipPage extends TPage {
         shopP.uiShopImage[cTLS == BACK ? ShopPage.shop_btnbackon : ShopPage.shop_btnbackoff].drawAtPointOption(11f, 356f, 18);
 
         shopP.upImg.drawAtPointOption(572f, 8f, 18);
-        GameRenderer.drawNumberBlock(GameThread.myHeroism, shopP.numberHeroismImage, 779f, 24f, 1, 20, 1);
+        GameRenderer.drawNumberBlock(Config.heroPoints, shopP.numberHeroismImage, 779f, 24f, 1, 20, 1);
         for (int j = 0; j < heroes.length; j++)
             shopP.uiShopImage[ShopPage.shop_herobase].drawAtPointOption(20f + (j * 255), 60f, 18);
 
         byte[] i2 = null;
-        if (upgradeHeroUnitSelectPos >= 0 && upgradeHeroEquipSelectPos >= 0) {
-            i2 = Config.heroEquips[upgradeHeroUnitSelectPos][upgradeHeroEquipSelectPos];
+        if (selectedHero >= 0 && selectedHeroEquip >= 0) {
+            i2 = Config.heroEquips[selectedHero][selectedHeroEquip];
         } else if (inventory.shopShopInventorySelectPos >= 0)
             i2 = Config.inventory[inventory.shopShopInventorySelectPos];
 
@@ -105,7 +106,7 @@ public class EquipPage extends TPage {
             shopP.uiShopImage[ShopPage.shop_warriorbody + (j * 3)].drawAtPointOption(20f + pDis, 75f, 18);
             if (Config.rewardValues[j * 2]) {
                 shopP.uiShopImage[ShopPage.shop_heroslot].drawAtPointOption(25f + pDis, 222f, 18);
-                boolean avail = upgradeHeroUnitSelectPos == j && i2 != null;
+                boolean avail = selectedHero == j && i2 != null;
                 if (avail && i2[0] == DataUpgradeItem.EQ_RING)
                     GameRenderer.setFontColor(SupportMenu.CATEGORY_MASK);
                 else
@@ -123,9 +124,9 @@ public class EquipPage extends TPage {
                     GameRenderer.setFontColor(SupportMenu.CATEGORY_MASK);
                 } else
                     GameRenderer.setFontColor(-8519745);
-                GameRenderer.drawStringDoubleM(String.valueOf(GameThread.towerUnit[0].attackRange), 167.0f, 311.0f, 20);
+                GameRenderer.drawStringDoubleM(String.valueOf(heroes[j].attackRange), 167.0f, 311.0f, 20);
                 GameRenderer.setFontColor(-8519745);
-                GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(GameThread.towerUnit[0].effectType), 167.0f, 338.0f, 20);
+                GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(heroes[j].effectType), 167.0f, 338.0f, 20);
             } else {
                 shopP.uiShopImage[ShopPage.shop_warriorshadow + (j * 3)].drawAtPointOption(19f + pDis, 74.0f, 18);
                 shopP.uiShopImage[ShopPage.shop_lock].drawAtPointOption(109f, 174f, 18);
@@ -149,15 +150,15 @@ public class EquipPage extends TPage {
 
             Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
             Texture2D.gl.glColor4f(1, 1, 1, alpha);
-            for (int i11 = 0; i11 < 3; i11++) {
-                if (GameThread.heroUnitType[i11] != -1)
+            for (int j = 0; j < 3; j++) {
+                if (Config.rewardValues[j * 2])
                     for (int i12 = 0; i12 < 2; i12++)
-                        shopP.uiShopImage[ShopPage.shop_glow].drawAtPointOption(((i11 * 255) + GAME_SHOP_EQUIP_SKILL_START_X) - 7, ((i12 * 69) + GAME_SHOP_EQUIP_SKILL_START_Y) - 7, 18);
+                        shopP.uiShopImage[ShopPage.shop_glow].drawAtPointOption(((j * 255) + GAME_SHOP_EQUIP_SKILL_START_X) - 7, ((i12 * 69) + GAME_SHOP_EQUIP_SKILL_START_Y) - 7, 18);
             }
             Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            inventory.drawInventoryWindow(72, 362, inventory.shopShopInventorySelectPos, i8, -1, true);
+            inventory.drawInventoryWindow(72, 362, i8, true);
         } else
-            inventory.drawInventoryWindow(72, 362, inventory.shopShopInventorySelectPos, i8, -1, false);
+            inventory.drawInventoryWindow(72, 362, i8, false);
 
         CGPoint t = TouchManager.getFirstLastActionTouch();
         if (i2 != null) {
@@ -167,7 +168,7 @@ public class EquipPage extends TPage {
                 inventory.drawUpItemImage(i2, t.x, t.y - 25.0f, 9);
                 Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
             } else
-                inventory.drawInvenItemDescription((upgradeHeroUnitSelectPos * 255) + GAME_SHOP_EQUIP_SKILL_START_X + 30, (upgradeHeroEquipSelectPos * 69) + GAME_SHOP_EQUIP_SKILL_START_Y, i2);
+                inventory.drawInvenItemDescription((selectedHero * 255) + GAME_SHOP_EQUIP_SKILL_START_X + 30, (selectedHeroEquip * 69) + GAME_SHOP_EQUIP_SKILL_START_Y, i2);
         }
         if (init)
             TouchManager.swapTouchMap();
@@ -181,7 +182,7 @@ public class EquipPage extends TPage {
             if (cTLS == -1) {
                 touchStart_GAME_SHOP_EQUIP_NUM = -1;
             } else if (cTLS < MIN_HERO) {
-                if (Config.inventory[inventory.getPageStart() + cTLS] != null)
+                if (Config.inventory[inventory.getFirstInPage() + cTLS] != null)
                     touchStart_GAME_SHOP_EQUIP_NUM = cTLS;
                 else
                     touchStart_GAME_SHOP_EQUIP_NUM = -1;
@@ -200,17 +201,16 @@ public class EquipPage extends TPage {
             int cTLP = TouchManager.checkTouchListPressed(firstAct);
             if (cTLP != -1 && Math.abs(firstAct.x - lastAct.x) + Math.abs(firstAct.y - lastAct.y) >= 60)
                 if (cTLP < MIN_HERO) {
-                    int newP = inventory.getPageStart() + touchStart_GAME_SHOP_EQUIP_NUM;
+                    int newP = inventory.getFirstInPage() + touchStart_GAME_SHOP_EQUIP_NUM;
                     if (touchStart_GAME_SHOP_EQUIP_NUM != -1 && Config.inventory[newP] != null)
                         inventory.shopShopInventorySelectPos = newP;
                     else
                         TouchManager.clearTouchMap();
                 } else if (cTLP < BACK) {
                     int tP = cTLP - MIN_HERO, uni = tP / 2, eqi = tP % 2;
-                    if (GameThread.heroItemType[uni][eqi] != -1) {
-                        GameThread.gameSubStatus = 6;
-                        upgradeHeroUnitSelectPos = uni;
-                        upgradeHeroEquipSelectPos = eqi;
+                    if (Config.heroEquips[uni][eqi] != null) {
+                        selectedHero = uni;
+                        selectedHeroEquip = eqi;
                     }
                 }
         }
@@ -219,26 +219,21 @@ public class EquipPage extends TPage {
 
         int cTLS = TouchManager.checkTouchListStatus();
         if (cTLS == -1 || cTLS >= MIN_LOCK) {
-            upgradeHeroUnitSelectPos = 0;
-            upgradeHeroEquipSelectPos = 0;
+            selectedHero = 0;
+            selectedHeroEquip = 0;
         } else if (cTLS < MIN_HERO) {
             GameThread.playSound(14);
-            GameThread.shopShopInventorySelectPos = (GameThread.shopShopInventorySelectPos - (GameThread.shopShopInventorySelectPos % 8)) + (cTLS);
+            inventory.shopShopInventorySelectPos = (inventory.shopShopInventorySelectPos - (inventory.shopShopInventorySelectPos % 8)) + (cTLS);
             return;
-        } else if (cTLS < MIN_HERO + 6) {
+        } else if (cTLS < BACK) {
             if (inventory.shopShopInventorySelectPos >= 0 && Config.inventory[inventory.shopShopInventorySelectPos] != null) {
                 GameThread.playSound(14);
                 int rPos = cTLS - MIN_HERO;
-                upgradeHeroUnitSelectPos = rPos / 2;
-                upgradeHeroEquipSelectPos = rPos % 2;
+                selectedHero = rPos / 2;
+                selectedHeroEquip = rPos % 2;
                 inventory.shopShopInventorySelectPos -= inventory.getSelectedInd();
                 equipItem();
-                Config.saveAll();
             }
-        } else if (cTLS < BACK) {
-            int cT = cTLS - MIN_HERO;
-            upgradeHeroUnitSelectPos = cT / 2;
-            upgradeHeroEquipSelectPos = cT % 2;
         } else switch (cTLS) {
             case BACK:
                 NewTower.switchPage(parent, true);
@@ -257,31 +252,30 @@ public class EquipPage extends TPage {
                 inventory.shopShopInventorySelectPos = (inventory.shopShopInventorySelectPos + 8) % 24;
                 break;
             case SELL:
-                if (GameThread.gameSubStatus == 4) {
+                if (shopP.sellShopItem()) {
                     GameThread.playSound(14);
-                    if (shopP.sellShopItem())
-                        Config.saveAll();
+                    Config.saveAll();
                 }
+                break;
         }
         int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstLastActionTouch());
         if (cTLP >= MIN_HERO && cTLP < BACK) {
             GameThread.playSound(14);
             int pPos = cTLP - MIN_HERO;
-            upgradeHeroUnitSelectPos = pPos / 2;
-            upgradeHeroEquipSelectPos = pPos % 2;
+            selectedHero = pPos / 2;
+            selectedHeroEquip = pPos % 2;
             inventory.shopShopInventorySelectPos -= inventory.getSelectedInd();
             equipItem();
-            Config.saveAll();
         } else {
             unequipItem();
-            upgradeHeroUnitSelectPos = -1;
-            upgradeHeroEquipSelectPos = -1;
+            selectedHero = -1;
+            selectedHeroEquip = -1;
             Config.saveAll();
         }
     }
 
     public void unequipItem() {
-        if (Config.heroEquips[upgradeHeroUnitSelectPos][upgradeHeroEquipSelectPos] == null)
+        if (Config.heroEquips[selectedHero][selectedHeroEquip] == null)
             return;
 
         int slot = -1;
@@ -293,8 +287,8 @@ public class EquipPage extends TPage {
         if (slot == -1)
             return;
 
-        Config.inventory[slot] = Config.heroEquips[upgradeHeroUnitSelectPos][upgradeHeroEquipSelectPos];
-        Config.heroEquips[upgradeHeroUnitSelectPos][upgradeHeroEquipSelectPos] = null;
+        Config.inventory[slot] = Config.heroEquips[selectedHero][selectedHeroEquip];
+        Config.heroEquips[selectedHero][selectedHeroEquip] = null;
         setEquipHeroSetting();
     }
 
@@ -302,12 +296,23 @@ public class EquipPage extends TPage {
         if (inventory.shopShopInventorySelectPos == -1 || Config.inventory[inventory.shopShopInventorySelectPos] == null)
             return false;
 
-        Config.heroEquips[upgradeHeroUnitSelectPos][upgradeHeroEquipSelectPos] = Config.inventory[inventory.shopShopInventorySelectPos];
+        Config.heroEquips[selectedHero][selectedHeroEquip] = Config.inventory[inventory.shopShopInventorySelectPos];
         for (int i = inventory.shopShopInventorySelectPos; i < Config.inventory.length - 1; i++)
             Config.inventory[i] = Config.inventory[i + 1];
         Config.inventory[Config.inventory.length - 1] = null;
 
+        boolean armed = true;
+        for (int i = 0; i < heroes.length; i++)
+            for (int j = 0; j < Config.heroEquips[i].length; i++)
+                if (Config.heroEquips[i][j] == null) {
+                    armed = false;
+                    break;
+                }
+        if (armed)
+            Config.awardValues[DataAward.AWARD_Armed_To_The_Teeth] = true;
+
         setEquipHeroSetting();
+        Config.saveAll();
         return true;
     }
 
@@ -316,7 +321,7 @@ public class EquipPage extends TPage {
             if (Config.rewardValues[i * 2]) {
                 if (heroes[i] == null)
                     heroes[i] = new HeroUnit(null, i, 0, 0);
-                heroes[i].restatTowerUnit();
+                heroes[i].restatTowerUnit(false);
             } else
                 break;
     }

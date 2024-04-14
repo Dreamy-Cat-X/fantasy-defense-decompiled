@@ -3,12 +3,12 @@ package com.sncompany.newtower.Battle;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.Texture2D;
 
-import java.lang.reflect.Array;
 import java.util.LinkedList;
 
 /* loaded from: D:\decomp\classes.dex */
-public class ArrowUnit {
+public class ArrowUnit extends StageEntity {
     public static final int ARROW_MISSILE_MOVE_SPEED = 15;
     public static final int ARROW_MOVE_FULL_TIME = 5;
     public static final int ARROW_MOVE_START_TIME = 1;
@@ -35,7 +35,6 @@ public class ArrowUnit {
     public static final int SPLASH_RANGE_DEGREE_50_RATE = 1;
     public static final int SPLASH_RANGE_DEGREE_75_RATE = 0;
     public static final int SPLASH_RANGE_MAX_DISTANCE = 4556;
-    public int arrowType;
     public int endX;
     public int endY;
     public int moveCount = 1;
@@ -63,7 +62,7 @@ public class ArrowUnit {
 
     public ArrowUnit(DataStage sta, TowerUnit shtr, EnemyUnit targ, int tType) {
         st = sta;
-        arrowType = tType;
+        type = tType;
         shooter = shtr;
         target = targ;
 
@@ -80,10 +79,10 @@ public class ArrowUnit {
     }
 
     public void updateArrowUnit() {
-        if (arrowType == -1)
+        if (type == -1)
             return;
 
-        if (arrowType == 0) {
+        if (type == 0) {
             for (int i5 = 4; i5 > 0; i5--) {
                 int i6 = i5 - 1;
                 moveHistory[i5][0] = moveHistory[i6][0];
@@ -97,7 +96,7 @@ public class ArrowUnit {
                 target.hit(3, shooter);
                 if (target instanceof MonsterUnit)
                     hitMons.add((MonsterUnit) target);
-                arrowType = -1;
+                type = -1;
             } else {
                 double rotateDegree = TowerUnit.getRotateDegree(target.posX - startX, target.posY - startY);
                 float abs = Math.abs(((float) Math.cos(Math.toRadians(rotateDegree))) * moveSpeed);
@@ -112,7 +111,7 @@ public class ArrowUnit {
                 else
                     startY = (int) (startY + abs);
             }
-        } else if (arrowType >= 19 && arrowType <= 32) {
+        } else if (type >= 19 && type <= 32) {
             if (moveCount <= 0 || moveCount >= 1000) {
                 moveCount++;
                 float abs3 = Math.abs(((float) Math.cos(Math.toRadians(moveRotateDegree))) * moveSpeed);
@@ -127,7 +126,7 @@ public class ArrowUnit {
                     startY = (int) (startY + abs3);
             }
         } else {
-            switch (arrowType) {
+            switch (type) {
                 case 15:
                 case 16:
                 case 17:
@@ -175,10 +174,202 @@ public class ArrowUnit {
                             if (shooter.effectType == 4)
                                 mon.hitUnitFierce(this, shooter);
                         }
-                        arrowType = -1;
+                        type = -1;
                     }
                     break;
             }
         }
+    }
+
+    public void drawArrowUnit() {
+        Texture2D[] arrowTexture;
+        ArrowUnit arrow = st.arrowUnit.get(i);
+        int i3 = arrow.type;
+        float f = arrow.target.posX;
+        int i2 = arrow.target.posY;
+
+        if (i3 == 0) {
+            arrowTexture = arrowImage4;
+        } else if (i3 == 5) {
+            arrowTexture = arrowImage1;
+        } else if (i3 == 10) {
+            arrowTexture = arrowImage0;
+        } else if (i3 != 12) {
+            if (i3 != 2) {
+                if (i3 == 3) {
+                    arrowTexture = arrowImage3;
+                } else {
+                    switch (i3) {
+                        case 15:
+                        case 16:
+                        case 17:
+                        case 18:
+                            arrowTexture = specialSwordImage;
+                            break;
+                        case 19:
+                        case 20:
+                        case 21:
+                        case 22:
+                        case 23:
+                        case 24:
+                        case 25:
+                        case 26:
+                        case 27:
+                        case 28:
+                        case 29:
+                        case 30:
+                        case 31:
+                        case 32:
+                            arrowTexture = specialIceImage;
+                            break;
+                        case 33:
+                        case 34:
+                        case 35:
+                            arrowTexture = specialArrowImage;
+                            break;
+                        case 36:
+                            break;
+                        default:
+                            arrowTexture = arrowImage0;
+                            break;
+                    }
+                }
+            }
+            arrowTexture = arrowImage2;
+        } else {
+            arrowTexture = arrowImage9;
+        }
+        if (i3 != 0) {
+            if (i3 != 5) {
+                if (i3 == 10) {
+                    arrowTexture[0].drawLineWithImage((arrow.shooter.posX / 50f) + 62, (float) (((arrow.shooter.posY / 50) + 30) - 15), (f - arrow.shooter.posX) / 50, ((float) arrow.target.posY - arrow.shooter.posY) / 50, (arrow.moveCount * 1f) / arrow.moveMaxCount);
+                    return;
+                }
+                if (i3 != 12 && i3 != 2 && i3 != 3) {
+                    switch (i3) {
+                        case 15:
+                            arrowTexture[0].drawAtPointOption((arrow.startX / 50f) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
+                            return;
+                        case 16:
+                            arrowTexture[1].drawAtPointOption((arrow.startX / 50f) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
+                            return;
+                        case 17:
+                            arrowTexture[2].drawAtPointOption((arrow.startX / 50f) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
+                            break;
+                        case 18:
+                            break;
+                        case 19:
+                        case 20:
+                        case 21:
+                        case 22:
+                        case 23:
+                        case 24:
+                        case 25:
+                        case 26:
+                        case 27:
+                        case 28:
+                        case 29:
+                        case 30:
+                        case 31:
+                        case 32:
+                            if (arrow.moveCount >= 0) {
+                                arrowTexture[(i3 + 3) - 19].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 9);
+                                return;
+                            } else {
+                                if (arrow.moveCount > -10) {
+                                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                                    Texture2D.gl.glColor4f((arrow.moveCount * (-0.05f)) + 0.5f, (arrow.moveCount * (-0.05f)) + 0.5f, (arrow.moveCount * (-0.05f)) + 0.5f, (arrow.moveCount * (-0.05f)) + 0.5f);
+                                    arrowTexture[(i3 + 3) - 19].drawAtPointOptionSize((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 9, 1.0f - (arrow.moveCount * 0.5f));
+                                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                                    return;
+                                }
+                                return;
+                            }
+                        case 33:
+                            if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
+                                int i4 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
+                                if (i4 == 0) {
+                                    arrowTexture[6].drawAtPointOption((arrow.startX / 50) + 57, (arrow.startY / 50) + 54, 33);
+                                    return;
+                                } else {
+                                    if (i4 != 1) {
+                                        return;
+                                    }
+                                    arrowTexture[7].drawAtPointOption((arrow.startX / 50) + 57, (arrow.startY / 50) + 30, 33);
+                                    return;
+                                }
+                            }
+                            if (arrow.moveCount >= 0) {
+                                arrowTexture[5].drawAtPointOption((arrow.startX / 50) + 57, (arrow.startY / 50) + 30, 33);
+                                arrowTexture[12].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
+                                return;
+                            } else {
+                                arrowTexture[4].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
+                                return;
+                            }
+                        case 34:
+                            if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
+                                int i5 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
+                                if (i5 == 0) {
+                                    arrowTexture[2].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 54, 33);
+                                    return;
+                                } else {
+                                    if (i5 != 1) {
+                                        return;
+                                    }
+                                    arrowTexture[3].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
+                                    return;
+                                }
+                            }
+                            if (arrow.moveCount >= 0) {
+                                arrowTexture[1].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
+                                arrowTexture[12].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
+                                return;
+                            } else {
+                                arrowTexture[0].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
+                                return;
+                            }
+                        case 35:
+                            if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
+                                int i6 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
+                                if (i6 == 0) {
+                                    arrowTexture[10].drawAtPointOption((arrow.startX / 50) + 66, (arrow.startY / 50) + 54, 33);
+                                    return;
+                                } else {
+                                    if (i6 != 1) {
+                                        return;
+                                    }
+                                    arrowTexture[11].drawAtPointOption((arrow.startX / 50) + 67, (arrow.startY / 50) + 30, 33);
+                                    return;
+                                }
+                            }
+                            if (arrow.moveCount >= 0) {
+                                arrowTexture[9].drawAtPointOption((arrow.startX / 50) + 67, (arrow.startY / 50) + 30, 33);
+                                arrowTexture[12].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
+                                return;
+                            } else {
+                                arrowTexture[8].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
+                                return;
+                            }
+                        case 36:
+                            break;
+                        default:
+                            arrowTexture[0].drawLineWithImage((GameThread.towerUnit[arrow.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[arrow.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[arrow.shootNumber].posX) / 50.0f, ((float) i2 - GameThread.towerUnit[arrow.shootNumber].posY) / 50.0f, (arrow.moveCount * 1.0f) / arrow.moveMaxCount);
+                            return;
+                    }
+                    arrowTexture[3].drawAtPointOption((arrow.startX / 50) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
+                    return;
+                }
+            }
+            arrowTexture[0].drawLineWithImage((GameThread.towerUnit[arrow.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[arrow.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[arrow.shootNumber].posX) / 50.0f, ((float) i2 - GameThread.towerUnit[arrow.shootNumber].posY) / 50.0f, (arrow.moveCount * 1.0f) / arrow.moveMaxCount);
+            arrowTexture[1].drawArrowWithImage((GameThread.towerUnit[arrow.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[arrow.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[arrow.shootNumber].posX) / 50.0f, ((float) i2 - GameThread.towerUnit[arrow.shootNumber].posY) / 50.0f, (arrow.moveCount * 1.0f) / arrow.moveMaxCount);
+            return;
+        }
+        for (int i7 = 4; i7 >= 0; i7--) {
+            int i8 = i7 + 1;
+            if (i8 < arrowTexture.length)
+                arrowTexture[i8].drawAtPointOption((arrow.moveHistory[i7][0] / 50) + 62, (float) (((arrow.moveHistory[i7][1] / 50) + 30) - 15), 9);
+        }
+        arrowTexture[0].drawAtPointOption((arrow.startX / 50) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
     }
 }

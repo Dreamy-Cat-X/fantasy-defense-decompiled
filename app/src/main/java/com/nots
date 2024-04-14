@@ -29,24 +29,17 @@ for (int i = rank - 1; i > 0; i++)
 total += initialDeployCost
 
 PROGRESS:
-CinematicPage - 0 errors
-EquipPage - 0 errors
-HelpPage - 0 errors
-ListPage - 0 errors
-LoadingPage - 0 errors
-MenuPage - 0 errors
-RecordPage - 0 errors
-ShopPage - 57 errors
-StagePage - 1199 errors
-StageSelectPage - 0 errors
-TitlePage - 0 errors
-TPage - 0 errors
-TutorialPage - 205 errors
-UpgradePage - 0 errors
+All pages except Stage-related done
+TutorialPage - 134 errors
+StagePage - 861 errors
+
+All achievements done
 
 Other TODO:
+- Fix Draw on units, specially ObjectUnit class
 - Fix Special skills on Hero Unit
 - Fix up DataStage
+- Restructure type to merely identifying the class used instead of being [(class * 3) + lv]
 - Static variables for resource array locations for more mod-ability
 - Removing ID-Style resource gathering for a decompiled one
 - PC Port

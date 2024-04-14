@@ -1,9 +1,9 @@
 package com.sncompany.newtower.Pages;
 
-import java.util.function.Consumer;
+import androidx.core.view.ViewCompat;
 
-import com.sncompany.newtower.CircleItemDraw;
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
@@ -11,38 +11,25 @@ import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
+import java.util.function.Consumer;
+
 public class InventoryTable { //Probably useless, but only one way to tell
 
     public static final int[] uiUpitemResource = {R.drawable.ui_upitem_reset, R.drawable.ui_upitem_blue0, R.drawable.ui_upitem_blue1, R.drawable.ui_upitem_blue2, R.drawable.ui_upitem_blue3, R.drawable.ui_upitem_blue4, R.drawable.ui_upitem_blue5, R.drawable.ui_upitem_blue6, R.drawable.ui_upitem_blue7, R.drawable.ui_upitem_blue8, R.drawable.ui_upitem_blue9, R.drawable.ui_upitem_blue10, R.drawable.ui_upitem_blue11, R.drawable.ui_upitem_blue12, R.drawable.ui_upitem_blue13, R.drawable.ui_upitem_blue14, R.drawable.ui_upitem_blue15, R.drawable.ui_upitem_red0, R.drawable.ui_upitem_red1, R.drawable.ui_upitem_red2, R.drawable.ui_upitem_red3, R.drawable.ui_upitem_red12, R.drawable.ui_upitem_red13, R.drawable.ui_upitem_red14, R.drawable.ui_upitem_red15, R.drawable.ui_upitem_herospe0, R.drawable.ui_upitem_herospe1, R.drawable.ui_upitem_herospe2, R.drawable.ui_upitem_herospe3, R.drawable.ui_upitem_limit0};
 
-    public final CircleItemDraw inventoryItemListDraw = new CircleItemDraw(3, 3);
     private final Texture2D[] selectOutline = new Texture2D[2], uiUpitemImage = new Texture2D[uiUpitemResource.length];
     public int shopShopInventorySelectPos = 0;
     private final ShopPage sh;
-    private final EquipPage eq;
     private boolean loaded;
 
 
-    public InventoryTable(ShopPage shop, EquipPage eqip) {
+    public InventoryTable(ShopPage shop) {
         sh = shop;
-        eq = eqip;
     }
 
     public void load(Consumer<Float> prog) {
         if (loaded)
             return;
-        for (int i4 = 0; i4 < inventoryItemListDraw.totalHalfBlockSize; i4++) {
-            inventoryItemListDraw.blockLengthArray[i4] = i4 * 500;
-            inventoryItemListDraw.blockSizeArray[i4] = 1.0f;
-            inventoryItemListDraw.blockAlphaArray[i4] = 1.0f;
-        }
-        inventoryItemListDraw.blockLengthArray[0] = 0;
-        inventoryItemListDraw.FIRST_BLOCK_SIZE = 500;
-        inventoryItemListDraw.moveSpeed = 50;
-        inventoryItemListDraw.nextMoveCheckDegree = 40;
-        inventoryItemListDraw.moveCloseFlag = true;
-        inventoryItemListDraw.blockLastViewCount = 1;
-
         selectOutline[0] = new Texture2D(UpgradePage.uiUpgradeResource[UpgradePage.upgrade_iconselectn]);
         selectOutline[1] = new Texture2D(UpgradePage.uiUpgradeResource[UpgradePage.upgrade_iconselecta]);
         TPage.loadP(uiUpitemImage, uiUpitemResource, prog, 1, uiUpitemResource.length);
@@ -50,19 +37,13 @@ public class InventoryTable { //Probably useless, but only one way to tell
     }
 
     public void unload() {
+        if (!loaded)
+            return;
         selectOutline[0].dealloc();
         selectOutline[1].dealloc();
         for (Texture2D img : uiUpitemImage)
             img.dealloc();
         loaded = false;
-    }
-
-    public void update() {
-        inventoryItemListDraw.correctDistance();
-    }
-
-    public void correct() {
-        inventoryItemListDraw.getArrayAndCorrection();
     }
 
     public void addTouch() {
@@ -74,7 +55,7 @@ public class InventoryTable { //Probably useless, but only one way to tell
         return shopShopInventorySelectPos / 8;
     }
 
-    public int getPageStart() {
+    public int getFirstInPage() {
         if (shopShopInventorySelectPos == -1)
             return 0;
         return shopShopInventorySelectPos - getSelectedInd();
@@ -86,10 +67,10 @@ public class InventoryTable { //Probably useless, but only one way to tell
         return shopShopInventorySelectPos % 8;
     }
 
-    public void drawInventoryWindow(int x, int y, int uPos, int touch, int i5, boolean drawSell) {
+    public void drawInventoryWindow(int x, int y, int touch, boolean drawSell) {
         sh.uiShopImage[ShopPage.shop_underbar].drawAtPointOption(x, y, 18);
         for (int i = 0; i < 8; i++) {
-            int i10 = getPageStart() + i;
+            int i10 = getFirstInPage() + i;
             if (Config.inventory[i10] != null)
                 drawUpItemImage(Config.inventory[i10], x + 53 + ((i % 8) * 70), y + 28, 18);
             else
@@ -124,6 +105,19 @@ public class InventoryTable { //Probably useless, but only one way to tell
         uiUpitemImage[itmslot].drawAtPointOption(x, y, 18);
     }
 
+    public void drawUpItemImageGuide(int id, float x, float y, CGRect cGRect) {
+        if (id < 0)
+            return;
+
+        uiUpitemImage[id].drawAtPointOptionGuide(x, y, 18, cGRect);
+        if (DataUpgradeItem.upgradeItemData[id][0] != 0) {
+            return;
+        }
+        GameRenderer.setFontSize(11);
+        GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+        GameRenderer.drawStringDoubleGuideM(String.format("%dP", DataUpgradeItem.upgradeItemData[id][2]), x + 30, y + 43, 17, cGRect);
+    }
+
     public void drawInvenItemDescription(float x, float y, byte[] itm) {
         if (itm == null)
             return;
@@ -145,12 +139,12 @@ public class InventoryTable { //Probably useless, but only one way to tell
         float halfbnd = bnd / 2;
         float bX = x - halfbnd;
         float bY = y - 73.0f;
-        drawLeftRightBox(testboxImage, testboxCoord, bX, bY, bnd, 0);
+        GameRenderer.drawLeftRightBox(bX, bY, bnd);
         GameRenderer.setFontColor(-68096);
         GameRenderer.setFontSize(17);
         GameRenderer.drawStringM(DataUpgradeItem.upgradeItemName[idm], bX + 14.0f, bY + 14.0f, 18);
         GameRenderer.setFontSize(14);
-        GameRenderer.drawStringM(String.format(DataUpgradeItem.upgradeItemDescription[idm], Integer.valueOf(eff)), bX + halfbnd, bY + 34.0f, 17);
+        GameRenderer.drawStringM(String.format(DataUpgradeItem.upgradeItemDescription[idm], eff), bX + halfbnd, bY + 34.0f, 17);
         GameRenderer.setFontColor(-1);
         GameRenderer.setFontSize(12);
 

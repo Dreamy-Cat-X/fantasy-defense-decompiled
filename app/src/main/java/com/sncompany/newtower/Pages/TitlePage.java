@@ -45,14 +45,14 @@ public class TitlePage extends TPage {
     private final Texture2D[] titleBossImage = new Texture2D[titleBoss0Resource.length];
     private int gameTitleViewCount = 0, gameSubStatus = 0, GAME_TITLE_BOSS_VIEW_POS = 0;
     private MENUMODE mode = MENUMODE.TITLE;
-    private final MyScrollbar[] myScrollbar = new MyScrollbar[2];
+    private final MyScrollbar[] soundBars = new MyScrollbar[2];
 
     public TitlePage(TPage p) {
         super(p);
-        myScrollbar[0] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
-        myScrollbar[0].setReverseUpdatePosition(Config.musicVolume); //Used at title page, for music vol
-        myScrollbar[1] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume); //Used at TitlePage, for SE vol
-        myScrollbar[1].setReverseUpdatePosition(Config.effectVolume);
+        soundBars[0] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
+        soundBars[0].setReverseUpdatePosition(Config.musicVolume); //Used at title page, for music vol
+        soundBars[1] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume); //Used at TitlePage, for SE vol
+        soundBars[1].setReverseUpdatePosition(Config.effectVolume);
         for (int i = 0; i < titleBossImage.length; i++)
             titleBossImage[i] = new Texture2D();
         resetAnimations();
@@ -230,24 +230,24 @@ public class TitlePage extends TPage {
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = CONFIG_TOTAL;
 
             alwaysImage[ALWAYS_R_BG].drawAtPointOption(0.0f, 0.0f, 18);
-            uiEtcImage[3].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
-            uiEtcImage[4].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
+            uiEtcImage[etc_option].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
+            uiEtcImage[etc_optionbody].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
 
-            uiEtcImage[Config.movie ? 5 : 8].drawAtPointOption(218.0f, 307.0f, 18);
-            uiEtcImage[Config.vibration ? 5 : 8].drawAtPointOption(583.0f, 307.0f, 18);
+            uiEtcImage[Config.movie ? etc_onon : etc_offoff].drawAtPointOption(218.0f, 307.0f, 18);
+            uiEtcImage[Config.vibration ? etc_onon : etc_offoff].drawAtPointOption(583.0f, 307.0f, 18);
 
-            uiEtcImage[14].drawAtPointOption(myScrollbar[0].BarLastPosition, 159.0f, 9);
-            uiEtcImage[14].drawAtPointOption(myScrollbar[1].BarLastPosition, 244.0f, 9);
-            uiEtcImage[cTLS == 0 ? 2 : 1].drawAtPointOption(11.0f, 412.0f, 18);
+            uiEtcImage[etc_scrollbutton].drawAtPointOption(soundBars[0].BarLastPosition, 159.0f, 9);
+            uiEtcImage[etc_scrollbutton].drawAtPointOption(soundBars[1].BarLastPosition, 244.0f, 9);
+            uiEtcImage[cTLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
         } else {
             TouchManager.addTouchRectListData(BACK, GameRenderer.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
             TouchManager.addTouchRectListData(DEVELOPER, GameRenderer.CGRectMake(340.0f, 130.0f, 260.0f, 50.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = ABOUT_TOTAL;
 
             alwaysImage[ALWAYS_R_BG].drawAtPointOption(0.0f, 0.0f, 18);
-            uiEtcImage[0].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
+            uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
             if (gameSubStatus == 0) {
-                uiEtcImage[11].drawAtPointOption(GameRenderer.CX, 5.0f, 17);
+                uiEtcImage[etc_about].drawAtPointOption(GameRenderer.CX, 5.0f, 17);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontColor(-1);
                 GameRenderer.drawStringM("'Fantasy Defence' Version 2.0.1", GameRenderer.CX, 100.0f, 17);
@@ -258,7 +258,7 @@ public class TitlePage extends TPage {
                 GameRenderer.drawStringM("For support, please contact", GameRenderer.CX, 250.0f, 17);
                 GameRenderer.drawStringM("cs@sncompany.com", GameRenderer.CX, 275.0f, 17);
             } else if (gameSubStatus == 1) {
-                uiEtcImage[12].drawAtPointOption(GameRenderer.CX, 5.0f, 17);
+                uiEtcImage[etc_developer].drawAtPointOption(GameRenderer.CX, 5.0f, 17);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontColor(-1);
                 GameRenderer.drawStringM("General Director : Dong Hwa, Woo.", GameRenderer.CX, 140.0f, 17);
@@ -269,7 +269,7 @@ public class TitlePage extends TPage {
                 GameRenderer.drawStringM("Sub. Game Designer : Jin Kook, Park.", GameRenderer.CX, 265.0f, 17);
                 GameRenderer.drawStringM("Production Company : SN Mobile Technology.", GameRenderer.CX, 290.0f, 17);
             }
-            uiEtcImage[cTLS == 0 ? 2 : 1].drawAtPointOption(11.0f, 412.0f, 18);
+            uiEtcImage[cTLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
         }
         TouchManager.swapTouchMap();
     }
@@ -281,24 +281,24 @@ public class TitlePage extends TPage {
                 CGPoint action = TouchManager.getFirstFirstActionTouch();
                 int cTLS = TouchManager.checkTouchListStatus();
                 if (cTLS == BGM) {
-                    myScrollbar[0].setUpdatePosition(action.x);
-                    Config.updateVolume(myScrollbar[0].BarLastValue);
+                    soundBars[0].setUpdatePosition(action.x);
+                    Config.updateVolume(soundBars[0].BarLastValue);
                 } else if (cTLS == SFX) {
-                    myScrollbar[1].setUpdatePosition(action.x);
-                    Config.effectVolume = myScrollbar[1].BarLastValue;
+                    soundBars[1].setUpdatePosition(action.x);
+                    Config.effectVolume = soundBars[1].BarLastValue;
                 }
             } else if (TouchManager.lastActionStatus == TouchManager.TOUCH_STATUS_START_INPUTED) {
                 int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
                 if (cTLP == BGM) {
-                    myScrollbar[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-                    Config.updateVolume(myScrollbar[0].BarLastValue);
+                    soundBars[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
+                    Config.updateVolume(soundBars[0].BarLastValue);
                     return;
                 }
                 if (cTLP != SFX)
                     return;
 
-                myScrollbar[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-                Config.effectVolume = myScrollbar[1].BarLastValue;
+                soundBars[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
+                Config.effectVolume = soundBars[1].BarLastValue;
                 return;
             }
             if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
@@ -320,11 +320,11 @@ public class TitlePage extends TPage {
             }
             int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
             if (cTLP == BGM) {
-                myScrollbar[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-                Config.updateVolume(myScrollbar[0].BarLastValue);
+                soundBars[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
+                Config.updateVolume(soundBars[0].BarLastValue);
             } else if (cTLP == SFX) {
-                myScrollbar[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-                Config.effectVolume = myScrollbar[1].BarLastValue;
+                soundBars[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
+                Config.effectVolume = soundBars[1].BarLastValue;
             }
             Config.saveAll();
             return;

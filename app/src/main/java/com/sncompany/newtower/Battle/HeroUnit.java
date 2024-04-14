@@ -1,11 +1,16 @@
 package com.sncompany.newtower.Battle;
 
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.DataAnim;
+import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataHero;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeHero;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
+import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
+import com.sncompany.newtower.GameRenderer;
+import com.sncompany.newtower.GameThread;
 
 public class HeroUnit extends TowerUnit {
 
@@ -30,7 +35,7 @@ public class HeroUnit extends TowerUnit {
     }
 
     @Override
-    public void restatTowerUnit() {
+    public void restatTowerUnit(boolean classChange) {
         int i = oldType();
         int[] dat = DataHero.heroData[i];
         towerCoolTimeMax = Math.max(0, dat[2] - (dat[2] * (getUpgradeRate(8) + getEquipEffect(DataUpgradeItem.EQ_AMLT, 0))) / 100);
@@ -56,11 +61,23 @@ public class HeroUnit extends TowerUnit {
                 effectType = 8;
             }
         }
+
+        drawData = DataAnim.heroDrawData[type];
+        drawTexture = st.page.heroImages[type];
+    }
+
+    @Override
+    public int oldType() {
+        return (type * 5) + level;
     }
 
     @Override
     public int getRole() {
         return type;
+    }
+
+    public int getTier() {
+        return 0;
     }
 
     @Override
@@ -70,6 +87,48 @@ public class HeroUnit extends TowerUnit {
             if (DataUpgradeHero.upgradeHeroData[g][4] == ind)
                 tot += Config.heroUpgrades[type][g] * DataUpgradeHero.upgradeHeroData[g][0];
         return tot;
+    }
+
+    @Override
+    public int getUpgradeType() {
+        return -1;
+    }
+
+    @Override
+    public int getDowngradeType() {
+        return -1;
+    }
+
+    public static int getHeroBuyPrice(int type) {
+        if (type == -1 || !DataStage.heroAvail[type * 2])
+            return 0;
+        int i3 = DataHero.heroData[type * 5][0];
+        return i3 + ((Config.heroUpgrades[type][0] * DataUpgradeHero.upgradeHeroData[type][0] * i3) / 100);
+    }
+
+    @Override
+    public void levelUpUnit() {
+        if (level == 4)
+            return;
+
+        st.Mana -= getLevelupPrice();
+        level++;
+
+        if (level == 4) {
+            Config.awardValues[DataAward.AWARD_Awakening_Heros_Soul] = true;
+            Config.awardValues[DataAward.AWARD_War_GOD + type] = true;
+        }
+
+        st.addEffectUnit(14, posX, posY);
+        GameThread.playSound(13);
+        restatTowerUnit(false);
+        GameRenderer.levelUpCount = 10;
+    }
+
+    @Override
+    public int getLevelupPrice() {
+        int i3 = DataHero.heroData[oldType() + 1][0];
+        return i3 + ((getEquipEffect(DataUpgradeItem.EQ_ARMOR, 0) * i3) / 100);
     }
 
     public int getEquipEffect(int type, int pos) {
@@ -84,6 +143,11 @@ public class HeroUnit extends TowerUnit {
             if (e != null && e[0] == type)
                 eff += DataUpgradeItem.equipData[type][e[1]];
         return -1;
+    }
+
+    @Override
+    public int getSoundHitType() {
+        return 1 + (type * 3);
     }
 
     @Override
@@ -114,12 +178,10 @@ public class HeroUnit extends TowerUnit {
     }
 
     public void setReverseSpecialIce() {
-        for (int i = 0; i < arrowUnitCount; i++)
-            if (arrowUnit[i].arrowType != -1 && arrowUnit[i].arrowType >= 19 && arrowUnit[i].arrowType <= 32) {
-                arrowUnit[i].moveCount = 1000;
-                arrowUnit[i].moveRotateDegree += 180.0f;
-                if (arrowUnit[i].moveRotateDegree >= 360.0f)
-                    arrowUnit[i].moveRotateDegree -= 360.0f;
+        for (ArrowUnit arrow : st.arrowUnit)
+            if (arrow.type >= 19 && arrow.type <= 32) {
+                arrow.moveCount = 1000;
+                arrow.moveRotateDegree = (arrow.moveRotateDegree + 180) % 360;
             }
     }
 
@@ -151,75 +213,78 @@ public class HeroUnit extends TowerUnit {
         return false;
     }
 
-    public static void hitSpecialBladeAttack() {
-        if (characterSelectNumber < 0) {
-            return;
-        }
+    public void hitSpecialAttack() {
         int i = 0;
-        for (int i2 = 0; i2 < monsterUnitCount; i2++) {
-            if (monsterUnit[i2].monsterType != -1) {
-                playSound(1);
-                addEffectUnit(15, monsterUnit[i2].posX, monsterUnit[i2].posY, true);
-                for (int i3 = 0; i3 < towerUnit[characterSelectNumber].specialAttCount; i3++) {
-                    if (towerUnit[characterSelectNumber].hitSpecialAttackUnit(monsterUnit[i2])) {
+        for (MonsterUnit mon : st.monsterUnit)
+            if (!mon.dead()) {
+                GameThread.playSound(1 + (type * 3));
+                st.addEffectUnit(15, mon.posX, mon.posY);
+                for (int i3 = 0; i3 < specialAttCount; i3++)
+                    if (hitSpecialAttackUnit(mon))
                         i++;
-                    }
-                }
+                if (type == 1) {
+                    mon.dotHolyDamage = getSpecialHitDamage(mon) / 20;
+                    mon.dotHolyCount = DataCharacter.charData[17][8];
+                } else if (type == 2)
+                    mon.slowRate = DataHero.heroData[i][10];
+
             }
-        }
-        if (i >= 5) {
-            int[] iArr = awardDataValue;
-            iArr[48] = iArr[48] + 1;
-        }
+        if (i >= 5)
+            Config.awardValues[DataAward.AWARD_Swords_Banquet + type] = true;
     }
 
-    public static void hitSpecialArrowAttack() {
-        if (characterSelectNumber < 0) {
+    //HitSpecialAttack replaces all 3 functions below. Kept for hidden usages
+    public void hitSpecialBladeAttack() {
+        if (st.selectedUnit != this)
             return;
-        }
+
         int i = 0;
-        for (int i2 = 0; i2 < monsterUnitCount; i2++) {
-            if (monsterUnit[i2].monsterType != -1) {
-                playSound(4);
-                addEffectUnit(33, monsterUnit[i2].posX, monsterUnit[i2].posY, true);
-                for (int i3 = 0; i3 < towerUnit[characterSelectNumber].specialAttCount; i3++) {
-                    if (towerUnit[characterSelectNumber].hitSpecialAttackUnit(monsterUnit[i2])) {
+        for (MonsterUnit mon : st.monsterUnit)
+            if (!mon.dead()) {
+                GameThread.playSound(1);
+                st.addEffectUnit(15, mon.posX, mon.posY);
+                for (int i3 = 0; i3 < specialAttCount; i3++)
+                    if (hitSpecialAttackUnit(mon))
                         i++;
-                    }
-                }
-                monsterUnit[i2].dotHolyFlag = true;
-                monsterUnit[i2].dotHolyDamage = towerUnit[characterSelectNumber].getSpecialHitDamage(monsterUnit[i2]) / 20;
-                monsterUnit[i2].dotHolyCount = DataCharacter.charData[17][8];
             }
-        }
-        if (i >= 5) {
-            int[] iArr = awardDataValue;
-            iArr[49] = iArr[49] + 1;
-        }
+        if (i >= 5)
+            Config.awardValues[DataAward.AWARD_Swords_Banquet] = true;
     }
 
-    public static void hitSpecialIceAttack() {
-        int i;
-        int i2 = characterSelectNumber;
-        if (i2 >= 0 && (i = towerUnit[i2].towerType) != -1) {
-            int i3 = 0;
-            for (int i4 = 0; i4 < monsterUnitCount; i4++) {
-                if (monsterUnit[i4].monsterType != -1) {
-                    addEffectUnit(5, monsterUnit[i4].posX, monsterUnit[i4].posY, true);
-                    playSound(7);
-                    for (int i5 = 0; i5 < towerUnit[characterSelectNumber].specialAttCount; i5++) {
-                        if (towerUnit[characterSelectNumber].hitSpecialAttackUnit(monsterUnit[i4])) {
-                            i3++;
-                        }
-                    }
-                    monsterUnit[i4].slowIceFlag = true;
-                    monsterUnit[i4].slowRate = DataHero.heroData[i][10];
-                }
+    public void hitSpecialArrowAttack() {
+        if (st.selectedUnit != this)
+            return;
+
+        int i = 0;
+        for (MonsterUnit mon : st.monsterUnit)
+            if (!mon.dead()) {
+                GameThread.playSound(4);
+                st.addEffectUnit(15, mon.posX, mon.posY);
+                for (int i3 = 0; i3 < specialAttCount; i3++)
+                    if (hitSpecialAttackUnit(mon))
+                        i++;
+                mon.dotHolyDamage = getSpecialHitDamage(mon) / 20;
+                mon.dotHolyCount = DataCharacter.charData[17][8];
             }
-            if (i3 >= 5) {
-                int[] iArr = awardDataValue;
-                iArr[50] = iArr[50] + 1;
+        if (i >= 5)
+            Config.awardValues[DataAward.AWARD_Rain_Of_Death] = true;
+    }
+
+    public void hitSpecialIceAttack() {
+        if (st.selectedUnit != this)
+            return;
+
+        int i = 0;
+        for (MonsterUnit mon : st.monsterUnit)
+            if (!mon.dead()) {
+                GameThread.playSound(7);
+                st.addEffectUnit(15, mon.posX, mon.posY);
+                for (int i3 = 0; i3 < specialAttCount; i3++)
+                    if (hitSpecialAttackUnit(mon))
+                        i++;
+                mon.slowRate = DataHero.heroData[i][10];
             }
-        }
+        if (i >= 5)
+            Config.awardValues[DataAward.AWARD_Frozen_Heart] = true;
     }
 }

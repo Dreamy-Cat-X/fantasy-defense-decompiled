@@ -37,11 +37,13 @@ public class StageSelectPage extends TPage {
     public final Texture2D[] uiStageImage = new Texture2D[uiStageResource.length];
     private final Texture2D uiStageBossImage = new Texture2D();
 
-    public int stageSelectChapterNumber = 0, stageSelectStageNumber = 0, mapNumber = -1, mapAttackType, stageLoad = 0;
+    public int stageSelectChapterNumber, stageSelectStageNumber, mapNumber = -1, mapAttackType, stageLoad = 0;
     public DataMap map;
 
     public StageSelectPage(TPage par) {
         super(par);
+        stageSelectChapterNumber = Config.lastPlayed / 10;
+        stageSelectStageNumber = Config.lastPlayed % 10;
     }
 
     @Override
@@ -76,6 +78,8 @@ public class StageSelectPage extends TPage {
             samePlay[0] = mapNumber;
             samePlay[1] = 0;
         }
+        if (mapNumber == 4)
+            Config.awardValues[DataAward.AWARD_Crossroads_Of_Destiny] = true;
         Config.saveAll();
         DataStage nst = new DataStage(map, mapAttackType);
 
@@ -323,6 +327,15 @@ public class StageSelectPage extends TPage {
         for (Texture2D img : uiStageImage) img.dealloc();
         if (uiStageBossImage.name != -1)
             uiStageBossImage.dealloc();
+    }
+
+    @Override
+    public void onReload() {
+        stageSelectChapterNumber = Config.lastPlayed / 10;
+        stageSelectStageNumber = Config.lastPlayed % 10;
+        mapNumber = -1;
+
+        map = DataMap.loadMap(getStageIndex(), true);
     }
 
     private int getStageIndex() {

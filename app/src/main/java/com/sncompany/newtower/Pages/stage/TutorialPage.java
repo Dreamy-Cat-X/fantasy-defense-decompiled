@@ -1,4 +1,4 @@
-package com.sncompany.newtower.Pages;
+package com.sncompany.newtower.Pages.stage;
 
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
@@ -7,9 +7,12 @@ import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
+import com.sncompany.newtower.Pages.TPage;
 import com.sncompany.newtower.TouchManager;
 
-public class TutorialPage extends TPage {
+import javax.microedition.khronos.opengles.GL10;
+
+public class TutorialPage extends StageBase {
 
     public static final int GAME_TUTORIAL_TOUCH_BOX_ARCHER = 20;
     public static final int GAME_TUTORIAL_TOUCH_BOX_CLEAR1 = 27;
@@ -43,76 +46,53 @@ public class TutorialPage extends TPage {
     public static final int GAME_TUTORIAL_TOUCH_LIST_8_HERO_SLOT_0 = 7;
     public static final int GAME_TUTORIAL_TOUCH_LIST_9_HERO_SLOT_1 = 8;
     public static final int GAME_TUTORIAL_TOUCH_LIST_TOTAL_COUNT = 31;
+    public static final int[][] tutorialUnitPos = {new int[]{2, 7, 0, 177, 111, 770, 111, 177, 367}, new int[]{4, 7, 1, 266, 171, 770, 176, 266, 367}, new int[]{6, 7, 2, 356, 231, 770, 241, 356, 367}, new int[]{8, 7, 3, 444, 289, 770, 306, 444, 367}, new int[]{10, 7, 4, 536, 349, 770, 371, 536, 367}, new int[]{12, 7, 5, 627, 374, 770, 436, 627, 367}, new int[]{7, 7, 6, 402, 77, 580, 40, 402, 367}};
+    public static final int[][] tutorialBoxLinePos = {new int[]{78, 30, 6, 203, 33, 233, 257, 81}, new int[]{194, 30, 6, 114, 127, 145, 257, 81}, new int[]{340, 30, 6, 27, 265, 57, 257, 81}, new int[]{47, 408, 12, 6, 59, 338, 371, 134}, new int[]{723, 404, 14, 6, 465, 365, 257, 81}, new int[]{125, 127, 6, 115, 58, 242, 271, 81}, new int[]{663, 153, 6, 89, 452, 242, 271, 81}, new int[]{568, 114, 60, 6, 297, 76, 271, 81}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, 150, 70, 226, 226}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, 240, 70, 226, 226}, new int[]{0, 0, 0, 0, 144, 70, 512, 226}, new int[]{0, 0, 0, 0, 330, 70, 226, 226}, new int[]{0, 0, 0, 0, 179, 70, 442, 226}, new int[]{0, 0, 0, 0, 89, 174, 348, 230}, new int[]{0, 0, 0, 0, 323, 176, 350, 226}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}, new int[]{100, 40, 2, 160, 120, 200, 100, 100}};
+    public static final int[][] tutorialRectPos = {new int[]{737, 4, 60, 457}, new int[]{3, 336, 46, 140}, new int[]{190, 115, 152, 57}, new int[]{416, 115, 152, 57}};
+
     public final int[] tutorialBoxTouchFlag = new int[22];
-    public final DataMap tmap = DataMap.loadMap(50, false);
-    public final DataStage st = new DataStage(tmap, -1);
+    public int tutorStep = 0, tutorialViewCount = 0;
 
     public TutorialPage(TPage par) {
-        super(par);
-
+        super(par, new DataStage(DataMap.loadMap(50, false), -1));
     }
 
-    public void update_GAME_TUTORIAL() {
-        for (int i2 = 0; i2 < 11; i2++)
-            myOscillator[i2].updatePosition();
+    public void update() {
+        for (int i = 0; i < 11; i++)
+            myOscillator[i].updatePosition();
 
-        st.sortTowerEnemyUnit();
-        for (int i3 = 0; i3 < 22; i3++) {
-            int[] iArr = tutorialBoxTouchFlag;
-            if (iArr[i3] > 0 && iArr[i3] < 10) {
-                iArr[i3] = iArr[i3] + 1;
-            }
-        }
-        int i4 = gameSubStatus;
-        char c = 2;
-        if (i4 == 1) {
-            int[] iArr2 = tutorialBoxTouchFlag;
-            if (iArr2[0] == 10 && iArr2[1] == 10 && iArr2[2] == 10 && iArr2[3] == 10 && iArr2[4] == 10) {
-                gameSubStatus = 2;
-                return;
-            }
-            return;
-        }
-        if (i4 == 2) {
-            int[] iArr3 = tutorialBoxTouchFlag;
-            if (iArr3[5] == 10 && iArr3[6] == 10 && iArr3[7] == 10) {
-                gameSubStatus = 3;
-                tutorialViewCount = 0;
-                characterMenuSelectFlag = 0;
-                return;
-            }
-            return;
-        }
-        if (i4 == 3 || i4 == 5 || i4 == 7 || i4 == 9 || i4 == 11 || i4 == 13 || i4 == 15) {
-            int type;
-            if (gameSubStatus == 3) {
-                type = 0;
-                c = 0;
-            } else if (gameSubStatus == 5) {
-                type = 1;
-                c = 1;
-            } else if (gameSubStatus == 7) {
-                type = 4;
-            } else if (gameSubStatus == 9) {
-                type = 5;
-                c = 3;
-            } else if (gameSubStatus == 11) {
-                type = 8;
-                c = 4;
-            } else if (gameSubStatus != 13) {
-                type = 0;
-                c = 6;
-            } else {
-                type = 9;
-                c = 5;
-            }
+        st.sortEntities();
+        for (int i = 0; i < 22; i++)
+            if (tutorialBoxTouchFlag[i] > 0 && tutorialBoxTouchFlag[i] < 10)
+                tutorialBoxTouchFlag[i] = tutorialBoxTouchFlag[i] + 1;
+        if (tutorStep == 1) {
+            boolean first5Checks = true;
+            for (int i = 0; i < 5; i++)
+                if (tutorialBoxTouchFlag[i] < 10) {
+                    first5Checks = false;
+                    break;
+                }
+            if (first5Checks)
+                tutorStep++;
+        } else if (tutorStep == 2) {
+            boolean Checks = true;
+            for (int i = 5; i < 8; i++)
+                if (tutorialBoxTouchFlag[i] < 10) {
+                    Checks = false;
+                    break;
+                }
+            if (Checks)
+                tutorStep++;
+        } else if (tutorStep % 2 == 1 && tutorStep <= 15) {
+            byte c = (byte)Math.min(((tutorStep - 3) / 2), 6);
+            int type = (c % 2) + ((c / 2) * 4);
+
             if (TouchManager.getPressedCount() == 0)
                 tutorialViewCount++;
 
-            int[][] iArr4 = tutorialUnitPos;
-            if (checkTowerPos(type, iArr4[c][0], iArr4[c][1])) {
-                if (gameSubStatus % 2 == 1)
-                    gameSubStatus++;
+            if (checkTowerPos(type, tutorialUnitPos[c][0], tutorialUnitPos[c][1])) {
+                if (tutorStep % 2 == 1)
+                    tutorStep++;
             }
         }
     }
@@ -137,7 +117,7 @@ public class TutorialPage extends TPage {
     /*
         Code decompiled incorrectly, please refer to instructions dump.
     */
-    public void paint_GAME_TUTORIAL(GL10 gl10) {
+    public void paint_GAME_TUTORIAL(GL10 gl10, boolean init) {
         char c;
         int i;
         float f;
@@ -149,95 +129,95 @@ public class TutorialPage extends TPage {
         int i5;
         char c3;
         char c4;
-        checkBackBase();
-        backBaseImageArray[lastShowBackBase].drawAtPointOption(0.0f, 0.0f, 18);
+        tmap.checkBackBase();
+        tmap.backBaseImageArray[tmap.lastShowBackBase].drawAtPointOption(0.0f, 0.0f, 18);
         backShadowImage.drawAtPointOption(0.0f, 0.0f, 18);
         drawMapTile(gl10);
         drawAllUnit(gl10);
         TouchManager.clearTouchMap();
-        TouchManager.addTouchRectListData(11, CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
+        TouchManager.addTouchRectListData(11, GameRenderer.CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
         int i6 = 12;
-        switch (GameThread.gameSubStatus) {
+        switch (tutorStep) {
             case 1:
-                TouchManager.addTouchRectListData(10, CGRectMake(GameThread.tutorialBoxLinePos[0][4], GameThread.tutorialBoxLinePos[0][5], GameThread.tutorialBoxLinePos[0][6], GameThread.tutorialBoxLinePos[0][7]));
-                TouchManager.addTouchRectListData(11, CGRectMake(GameThread.tutorialBoxLinePos[1][4], GameThread.tutorialBoxLinePos[1][5], GameThread.tutorialBoxLinePos[1][6], GameThread.tutorialBoxLinePos[1][7]));
-                TouchManager.addTouchRectListData(12, CGRectMake(GameThread.tutorialBoxLinePos[2][4], GameThread.tutorialBoxLinePos[2][5], GameThread.tutorialBoxLinePos[2][6], GameThread.tutorialBoxLinePos[2][7]));
-                TouchManager.addTouchRectListData(13, CGRectMake(GameThread.tutorialBoxLinePos[3][4], GameThread.tutorialBoxLinePos[3][5], GameThread.tutorialBoxLinePos[3][6], GameThread.tutorialBoxLinePos[3][7]));
-                TouchManager.addTouchRectListData(14, CGRectMake(GameThread.tutorialBoxLinePos[4][4], GameThread.tutorialBoxLinePos[4][5], GameThread.tutorialBoxLinePos[4][6], GameThread.tutorialBoxLinePos[4][7]));
+                TouchManager.addTouchRectListData(10, GameRenderer.CGRectMake(tutorialBoxLinePos[0][4], tutorialBoxLinePos[0][5], tutorialBoxLinePos[0][6], tutorialBoxLinePos[0][7]));
+                TouchManager.addTouchRectListData(11, GameRenderer.CGRectMake(tutorialBoxLinePos[1][4], tutorialBoxLinePos[1][5], tutorialBoxLinePos[1][6], tutorialBoxLinePos[1][7]));
+                TouchManager.addTouchRectListData(12, GameRenderer.CGRectMake(tutorialBoxLinePos[2][4], tutorialBoxLinePos[2][5], tutorialBoxLinePos[2][6], tutorialBoxLinePos[2][7]));
+                TouchManager.addTouchRectListData(13, GameRenderer.CGRectMake(tutorialBoxLinePos[3][4], tutorialBoxLinePos[3][5], tutorialBoxLinePos[3][6], tutorialBoxLinePos[3][7]));
+                TouchManager.addTouchRectListData(14, GameRenderer.CGRectMake(tutorialBoxLinePos[4][4], tutorialBoxLinePos[4][5], tutorialBoxLinePos[4][6], tutorialBoxLinePos[4][7]));
                 break;
             case 2:
-                TouchManager.addTouchRectListData(15, CGRectMake(GameThread.tutorialBoxLinePos[5][4], GameThread.tutorialBoxLinePos[5][5], GameThread.tutorialBoxLinePos[5][6], GameThread.tutorialBoxLinePos[5][7]));
-                TouchManager.addTouchRectListData(16, CGRectMake(GameThread.tutorialBoxLinePos[6][4], GameThread.tutorialBoxLinePos[6][5], GameThread.tutorialBoxLinePos[6][6], GameThread.tutorialBoxLinePos[6][7]));
-                TouchManager.addTouchRectListData(17, CGRectMake(GameThread.tutorialBoxLinePos[7][4], GameThread.tutorialBoxLinePos[7][5], GameThread.tutorialBoxLinePos[7][6], GameThread.tutorialBoxLinePos[7][7]));
+                TouchManager.addTouchRectListData(15, GameRenderer.CGRectMake(tutorialBoxLinePos[5][4], tutorialBoxLinePos[5][5], tutorialBoxLinePos[5][6], tutorialBoxLinePos[5][7]));
+                TouchManager.addTouchRectListData(16, GameRenderer.CGRectMake(tutorialBoxLinePos[6][4], tutorialBoxLinePos[6][5], tutorialBoxLinePos[6][6], tutorialBoxLinePos[6][7]));
+                TouchManager.addTouchRectListData(17, GameRenderer.CGRectMake(tutorialBoxLinePos[7][4], tutorialBoxLinePos[7][5], tutorialBoxLinePos[7][6], tutorialBoxLinePos[7][7]));
                 break;
             case 3:
-                TouchManager.addTouchRectListData(0, CGRectMake(742.0f, 77.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742.0f, 77.0f, 56.0f, 56.0f));
                 break;
             case 4:
-                TouchManager.addTouchRectListData(18, CGRectMake(GameThread.tutorialBoxLinePos[8][4], GameThread.tutorialBoxLinePos[8][5], GameThread.tutorialBoxLinePos[8][6], GameThread.tutorialBoxLinePos[8][7]));
+                TouchManager.addTouchRectListData(18, GameRenderer.CGRectMake(tutorialBoxLinePos[8][4], tutorialBoxLinePos[8][5], tutorialBoxLinePos[8][6], tutorialBoxLinePos[8][7]));
                 break;
             case 5:
-                TouchManager.addTouchRectListData(1, CGRectMake(742.0f, 142.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(742.0f, 142.0f, 56.0f, 56.0f));
                 break;
             case 6:
-                TouchManager.addTouchRectListData(19, CGRectMake(GameThread.tutorialBoxLinePos[9][4], GameThread.tutorialBoxLinePos[9][5], GameThread.tutorialBoxLinePos[9][6], GameThread.tutorialBoxLinePos[9][7]));
+                TouchManager.addTouchRectListData(19, GameRenderer.CGRectMake(tutorialBoxLinePos[9][4], tutorialBoxLinePos[9][5], tutorialBoxLinePos[9][6], tutorialBoxLinePos[9][7]));
                 break;
             case 7:
-                TouchManager.addTouchRectListData(2, CGRectMake(742.0f, 207.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(2, GameRenderer.CGRectMake(742.0f, 207.0f, 56.0f, 56.0f));
                 break;
             case 8:
-                TouchManager.addTouchRectListData(20, CGRectMake(GameThread.tutorialBoxLinePos[10][4], GameThread.tutorialBoxLinePos[10][5], GameThread.tutorialBoxLinePos[10][6], GameThread.tutorialBoxLinePos[10][7]));
+                TouchManager.addTouchRectListData(20, GameRenderer.CGRectMake(tutorialBoxLinePos[10][4], tutorialBoxLinePos[10][5], tutorialBoxLinePos[10][6], tutorialBoxLinePos[10][7]));
                 break;
             case 9:
-                TouchManager.addTouchRectListData(3, CGRectMake(742.0f, 272.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(3, GameRenderer.CGRectMake(742.0f, 272.0f, 56.0f, 56.0f));
                 break;
             case 10:
-                TouchManager.addTouchRectListData(21, CGRectMake(GameThread.tutorialBoxLinePos[11][4], GameThread.tutorialBoxLinePos[11][5], GameThread.tutorialBoxLinePos[11][6], GameThread.tutorialBoxLinePos[11][7]));
+                TouchManager.addTouchRectListData(21, GameRenderer.CGRectMake(tutorialBoxLinePos[11][4], tutorialBoxLinePos[11][5], tutorialBoxLinePos[11][6], tutorialBoxLinePos[11][7]));
                 break;
             case 11:
-                TouchManager.addTouchRectListData(4, CGRectMake(742.0f, 337.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(4, GameRenderer.CGRectMake(742.0f, 337.0f, 56.0f, 56.0f));
                 break;
             case 12:
-                TouchManager.addTouchRectListData(22, CGRectMake(GameThread.tutorialBoxLinePos[12][4], GameThread.tutorialBoxLinePos[12][5], GameThread.tutorialBoxLinePos[12][6], GameThread.tutorialBoxLinePos[12][7]));
+                TouchManager.addTouchRectListData(22, GameRenderer.CGRectMake(tutorialBoxLinePos[12][4], tutorialBoxLinePos[12][5], tutorialBoxLinePos[12][6], tutorialBoxLinePos[12][7]));
                 break;
             case 13:
-                TouchManager.addTouchRectListData(5, CGRectMake(742.0f, 402.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(5, GameRenderer.CGRectMake(742.0f, 402.0f, 56.0f, 56.0f));
                 break;
             case 14:
-                TouchManager.addTouchRectListData(23, CGRectMake(GameThread.tutorialBoxLinePos[13][4], GameThread.tutorialBoxLinePos[13][5], GameThread.tutorialBoxLinePos[13][6], GameThread.tutorialBoxLinePos[13][7]));
+                TouchManager.addTouchRectListData(23, GameRenderer.CGRectMake(tutorialBoxLinePos[13][4], tutorialBoxLinePos[13][5], tutorialBoxLinePos[13][6], tutorialBoxLinePos[13][7]));
                 break;
             case 15:
                 int i7 = GameThread.characterMenuSelectFlag;
                 if (i7 != 0) {
                     if (i7 == 3) {
-                        TouchManager.addTouchRectListData(7, CGRectMake(558.0f, 12.0f, 56.0f, 56.0f));
-                        TouchManager.addTouchRectListData(8, CGRectMake(618.0f, 12.0f, 56.0f, 56.0f));
-                        TouchManager.addTouchRectListData(9, CGRectMake(678.0f, 12.0f, 56.0f, 56.0f));
+                        TouchManager.addTouchRectListData(7, GameRenderer.CGRectMake(558.0f, 12.0f, 56.0f, 56.0f));
+                        TouchManager.addTouchRectListData(8, GameRenderer.CGRectMake(618.0f, 12.0f, 56.0f, 56.0f));
+                        TouchManager.addTouchRectListData(9, GameRenderer.CGRectMake(678.0f, 12.0f, 56.0f, 56.0f));
                         break;
                     }
                 } else {
-                    TouchManager.addTouchRectListData(7, CGRectMake(742.0f, 12.0f, 56.0f, 56.0f));
+                    TouchManager.addTouchRectListData(7, GameRenderer.CGRectMake(742.0f, 12.0f, 56.0f, 56.0f));
                     break;
                 }
                 break;
             case 16:
-                TouchManager.addTouchRectListData(24, CGRectMake(GameThread.tutorialBoxLinePos[14][4], GameThread.tutorialBoxLinePos[14][5], GameThread.tutorialBoxLinePos[14][6], GameThread.tutorialBoxLinePos[14][7]));
+                TouchManager.addTouchRectListData(24, GameRenderer.CGRectMake(tutorialBoxLinePos[14][4], tutorialBoxLinePos[14][5], tutorialBoxLinePos[14][6], tutorialBoxLinePos[14][7]));
                 break;
             case 17:
-                TouchManager.addTouchRectListData(25, CGRectMake(GameThread.tutorialBoxLinePos[15][4], GameThread.tutorialBoxLinePos[15][5], GameThread.tutorialBoxLinePos[15][6], GameThread.tutorialBoxLinePos[15][7]));
+                TouchManager.addTouchRectListData(25, GameRenderer.CGRectMake(tutorialBoxLinePos[15][4], tutorialBoxLinePos[15][5], tutorialBoxLinePos[15][6], tutorialBoxLinePos[15][7]));
                 break;
             case 18:
-                TouchManager.addTouchRectListData(26, CGRectMake(GameThread.tutorialBoxLinePos[16][4], GameThread.tutorialBoxLinePos[16][5], GameThread.tutorialBoxLinePos[16][6], GameThread.tutorialBoxLinePos[16][7]));
+                TouchManager.addTouchRectListData(26, GameRenderer.CGRectMake(tutorialBoxLinePos[16][4], tutorialBoxLinePos[16][5], tutorialBoxLinePos[16][6], tutorialBoxLinePos[16][7]));
                 break;
             case 19:
-                TouchManager.addTouchRectListData(27, CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
+                TouchManager.addTouchRectListData(27, GameRenderer.CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
                 break;
             case 20:
-                TouchManager.addTouchRectListData(28, CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
+                TouchManager.addTouchRectListData(28, GameRenderer.CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
                 break;
             case 21:
             case 22:
-                TouchManager.addTouchRectListData(30, CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
+                TouchManager.addTouchRectListData(30, GameRenderer.CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
                 break;
         }
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 31;
@@ -255,38 +235,38 @@ public class TutorialPage extends TPage {
             uiUpperImage[2].drawAtPointOption(5.0f, 437.0f, 18);
         }
         uiUpperImage[16].drawAtPointOption(6.0f, 344.0f, 18);
-        drawNumberBlock(GameThread.myMoney, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
-        drawNumberBlock(GameThread.myMana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
+        drawNumberBlock(st.Money, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
+        drawNumberBlock(st.Mana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
         float drawNumberBlock = drawNumberBlock(1, numberWaveImage, 366.0f, 8.0f, 1, 18, 2);
         numberWaveImage[10].drawAtPointOption(2.0f + drawNumberBlock, 6.0f, 18);
         drawNumberBlock(1, numberWaveImage, drawNumberBlock + 10.0f, 8.0f, 1, 18, 2);
         drawMyLife();
-        uiButtonImage[0].drawAtPointOption(GameThread.myOscillator[0].getCurrentPosition() + 770, 77.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(0), numberUnitBuyImage, GameThread.myOscillator[0].getCurrentPosition() + 770, 114.0f, -2, 17, 1);
-        uiButtonImage[1].drawAtPointOption(GameThread.myOscillator[1].getCurrentPosition() + 770, 142.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(3), numberUnitBuyImage, GameThread.myOscillator[1].getCurrentPosition() + 770, 179.0f, -2, 17, 1);
-        uiButtonImage[2].drawAtPointOption(GameThread.myOscillator[2].getCurrentPosition() + 770, 207.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(12), numberUnitBuyImage, GameThread.myOscillator[2].getCurrentPosition() + 770, 244.0f, -2, 17, 1);
-        uiButtonImage[3].drawAtPointOption(GameThread.myOscillator[3].getCurrentPosition() + 770, 272.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(15), numberUnitBuyImage, GameThread.myOscillator[3].getCurrentPosition() + 770, 309.0f, -2, 17, 1);
-        uiButtonImage[4].drawAtPointOption(GameThread.myOscillator[4].getCurrentPosition() + 770, 337.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(24), numberUnitBuyImage, GameThread.myOscillator[4].getCurrentPosition() + 770, 374.0f, -2, 17, 1);
-        uiButtonImage[5].drawAtPointOption(GameThread.myOscillator[5].getCurrentPosition() + 770, 402.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(27), numberUnitBuyImage, GameThread.myOscillator[5].getCurrentPosition() + 770, 439.0f, -2, 17, 1);
+        uiButtonImage[0].drawAtPointOption(myOscillator[0].getCurrentPosition() + 770, 77.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(0), numberUnitBuyImage, myOscillator[0].getCurrentPosition() + 770, 114.0f, -2, 17, 1);
+        uiButtonImage[1].drawAtPointOption(myOscillator[1].getCurrentPosition() + 770, 142.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(3), numberUnitBuyImage, myOscillator[1].getCurrentPosition() + 770, 179.0f, -2, 17, 1);
+        uiButtonImage[2].drawAtPointOption(myOscillator[2].getCurrentPosition() + 770, 207.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(12), numberUnitBuyImage, myOscillator[2].getCurrentPosition() + 770, 244.0f, -2, 17, 1);
+        uiButtonImage[3].drawAtPointOption(myOscillator[3].getCurrentPosition() + 770, 272.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(15), numberUnitBuyImage, myOscillator[3].getCurrentPosition() + 770, 309.0f, -2, 17, 1);
+        uiButtonImage[4].drawAtPointOption(myOscillator[4].getCurrentPosition() + 770, 337.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(24), numberUnitBuyImage, myOscillator[4].getCurrentPosition() + 770, 374.0f, -2, 17, 1);
+        uiButtonImage[5].drawAtPointOption(myOscillator[5].getCurrentPosition() + 770, 402.0f, 17);
+        drawNumberBlock(GameThread.getBuyPrice(27), numberUnitBuyImage, myOscillator[5].getCurrentPosition() + 770, 439.0f, -2, 17, 1);
         int i8 = 586;
         int i9 = 0;
         for (int i10 = 3; i9 < i10; i10 = 3) {
             int i11 = i9 + 8;
-            uiButtonImage[6].drawAtPointOption(GameThread.myOscillator[i11].getCurrentPosition() + i8, 12.0f, 17);
-            drawNumberBlock(250, numberHeroBuyImage, i8 + 5 + GameThread.myOscillator[i11].getCurrentPosition(), 49.0f, -2, 17, 1);
-            uiUpperImage[13].drawAtPointOption((i8 - 17) + GameThread.myOscillator[i11].getCurrentPosition(), 49.0f, 17);
+            uiButtonImage[6].drawAtPointOption(myOscillator[i11].getCurrentPosition() + i8, 12.0f, 17);
+            drawNumberBlock(250, numberHeroBuyImage, i8 + 5 + myOscillator[i11].getCurrentPosition(), 49.0f, -2, 17, 1);
+            uiUpperImage[13].drawAtPointOption((i8 - 17) + myOscillator[i11].getCurrentPosition(), 49.0f, 17);
             i8 += 60;
             i9++;
         }
         uiButtonImage[18].drawAtPointOption(770.0f, 12.0f, 17);
         int i12 = GameThread.characterMenuSelectFlag;
         if (i12 == 1 || i12 == 4) {
-            GameThread.getAddSettingPosition();
+            getAddSettingPosition();
             drawAddGridBlock();
             c = 0;
             i = 3;
@@ -305,79 +285,79 @@ public class TutorialPage extends TPage {
             i3 = 7;
             c = 0;
         }
-        switch (GameThread.gameSubStatus) {
+        switch (tutorStep) {
             case 1:
-                if (GameThread.tutorialBoxTouchFlag[c] != 10) {
-                    float f2 = f - (GameThread.tutorialBoxTouchFlag[c] * 0.1f);
+                if (tutorialBoxTouchFlag[c] != 10) {
+                    float f2 = f - (tutorialBoxTouchFlag[c] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f2, f2, f2, f2);
-                    fillWhiteImage.fillRect(GameThread.tutorialBoxLinePos[c][c], GameThread.tutorialBoxLinePos[c][1], GameThread.tutorialBoxLinePos[c][i2], GameThread.tutorialBoxLinePos[c][i]);
-                    tutorialImage[20].drawAtPointOption(GameThread.tutorialBoxLinePos[c][4], GameThread.tutorialBoxLinePos[c][5], 18);
+                    fillWhiteImage.fillRect(tutorialBoxLinePos[c][c], tutorialBoxLinePos[c][1], tutorialBoxLinePos[c][i2], tutorialBoxLinePos[c][i]);
+                    tutorialImage[20].drawAtPointOption(tutorialBoxLinePos[c][4], tutorialBoxLinePos[c][5], 18);
                     Texture2D.gl.glColor4f(f, f, f, f);
                 }
-                if (GameThread.tutorialBoxTouchFlag[1] != 10) {
-                    float f3 = f - (GameThread.tutorialBoxTouchFlag[1] * 0.1f);
+                if (tutorialBoxTouchFlag[1] != 10) {
+                    float f3 = f - (tutorialBoxTouchFlag[1] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f3, f3, f3, f3);
-                    fillWhiteImage.fillRect(GameThread.tutorialBoxLinePos[1][c], GameThread.tutorialBoxLinePos[1][1], GameThread.tutorialBoxLinePos[1][i2], GameThread.tutorialBoxLinePos[1][i]);
-                    tutorialImage[21].drawAtPointOption(GameThread.tutorialBoxLinePos[1][4], GameThread.tutorialBoxLinePos[1][5], 18);
+                    fillWhiteImage.fillRect(tutorialBoxLinePos[1][c], tutorialBoxLinePos[1][1], tutorialBoxLinePos[1][i2], tutorialBoxLinePos[1][i]);
+                    tutorialImage[21].drawAtPointOption(tutorialBoxLinePos[1][4], tutorialBoxLinePos[1][5], 18);
                     Texture2D.gl.glColor4f(f, f, f, f);
                 }
-                if (GameThread.tutorialBoxTouchFlag[i2] != 10) {
-                    float f4 = f - (GameThread.tutorialBoxTouchFlag[i2] * 0.1f);
+                if (tutorialBoxTouchFlag[i2] != 10) {
+                    float f4 = f - (tutorialBoxTouchFlag[i2] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f4, f4, f4, f4);
-                    fillWhiteImage.fillRect(GameThread.tutorialBoxLinePos[i2][c], GameThread.tutorialBoxLinePos[i2][1], GameThread.tutorialBoxLinePos[i2][i2], GameThread.tutorialBoxLinePos[i2][i]);
-                    tutorialImage[22].drawAtPointOption(GameThread.tutorialBoxLinePos[i2][4], GameThread.tutorialBoxLinePos[i2][5], 18);
+                    fillWhiteImage.fillRect(tutorialBoxLinePos[i2][c], tutorialBoxLinePos[i2][1], tutorialBoxLinePos[i2][i2], tutorialBoxLinePos[i2][i]);
+                    tutorialImage[22].drawAtPointOption(tutorialBoxLinePos[i2][4], tutorialBoxLinePos[i2][5], 18);
                     Texture2D.gl.glColor4f(f, f, f, f);
                 }
-                if (GameThread.tutorialBoxTouchFlag[i] != 10) {
-                    float f5 = f - (GameThread.tutorialBoxTouchFlag[i] * 0.1f);
+                if (tutorialBoxTouchFlag[i] != 10) {
+                    float f5 = f - (tutorialBoxTouchFlag[i] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f5, f5, f5, f5);
-                    fillWhiteImage.fillRect(GameThread.tutorialBoxLinePos[i][c], GameThread.tutorialBoxLinePos[i][1], GameThread.tutorialBoxLinePos[i][i2], GameThread.tutorialBoxLinePos[i][i]);
-                    tutorialImage[23].drawAtPointOption(GameThread.tutorialBoxLinePos[i][4], GameThread.tutorialBoxLinePos[i][5], 18);
+                    fillWhiteImage.fillRect(tutorialBoxLinePos[i][c], tutorialBoxLinePos[i][1], tutorialBoxLinePos[i][i2], tutorialBoxLinePos[i][i]);
+                    tutorialImage[23].drawAtPointOption(tutorialBoxLinePos[i][4], tutorialBoxLinePos[i][5], 18);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
-                    fillWhiteImage.fillRect(GameThread.tutorialRectPos[1][c], GameThread.tutorialRectPos[1][1], GameThread.tutorialRectPos[1][i2], GameThread.tutorialRectPos[1][i]);
+                    fillWhiteImage.fillRect(tutorialRectPos[1][c], tutorialRectPos[1][1], tutorialRectPos[1][i2], tutorialRectPos[1][i]);
                     Texture2D.gl.glColor4f(f, f, f, f);
                 }
-                if (GameThread.tutorialBoxTouchFlag[4] != 10) {
-                    float f6 = f - (GameThread.tutorialBoxTouchFlag[4] * 0.1f);
+                if (tutorialBoxTouchFlag[4] != 10) {
+                    float f6 = f - (tutorialBoxTouchFlag[4] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f6, f6, f6, f6);
-                    fillWhiteImage.fillRect(GameThread.tutorialBoxLinePos[4][c], GameThread.tutorialBoxLinePos[4][1], GameThread.tutorialBoxLinePos[4][i2], GameThread.tutorialBoxLinePos[4][i]);
-                    tutorialImage[24].drawAtPointOption(GameThread.tutorialBoxLinePos[4][4], GameThread.tutorialBoxLinePos[4][5], 18);
+                    fillWhiteImage.fillRect(tutorialBoxLinePos[4][c], tutorialBoxLinePos[4][1], tutorialBoxLinePos[4][i2], tutorialBoxLinePos[4][i]);
+                    tutorialImage[24].drawAtPointOption(tutorialBoxLinePos[4][4], tutorialBoxLinePos[4][5], 18);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
-                    fillWhiteImage.fillRect(GameThread.tutorialRectPos[c][c], GameThread.tutorialRectPos[c][1], GameThread.tutorialRectPos[c][i2], GameThread.tutorialRectPos[c][i]);
+                    fillWhiteImage.fillRect(tutorialRectPos[c][c], tutorialRectPos[c][1], tutorialRectPos[c][i2], tutorialRectPos[c][i]);
                     Texture2D.gl.glColor4f(f, f, f, f);
                     break;
                 }
                 break;
             case 2:
-                if (GameThread.tutorialBoxTouchFlag[5] != 10) {
-                    float f7 = f - (GameThread.tutorialBoxTouchFlag[5] * 0.1f);
+                if (tutorialBoxTouchFlag[5] != 10) {
+                    float f7 = f - (tutorialBoxTouchFlag[5] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f7, f7, f7, f7);
-                    fillWhiteImage.fillRect(GameThread.tutorialBoxLinePos[5][c], GameThread.tutorialBoxLinePos[5][1], GameThread.tutorialBoxLinePos[5][i2], GameThread.tutorialBoxLinePos[5][i]);
-                    tutorialImage[25].drawAtPointOption(GameThread.tutorialBoxLinePos[5][4], GameThread.tutorialBoxLinePos[5][5], 18);
+                    fillWhiteImage.fillRect(tutorialBoxLinePos[5][c], tutorialBoxLinePos[5][1], tutorialBoxLinePos[5][i2], tutorialBoxLinePos[5][i]);
+                    tutorialImage[25].drawAtPointOption(tutorialBoxLinePos[5][4], tutorialBoxLinePos[5][5], 18);
                     Texture2D.gl.glColor4f(f, f, f, f);
                 }
-                if (GameThread.tutorialBoxTouchFlag[6] != 10) {
-                    float f8 = f - (GameThread.tutorialBoxTouchFlag[6] * 0.1f);
+                if (tutorialBoxTouchFlag[6] != 10) {
+                    float f8 = f - (tutorialBoxTouchFlag[6] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f8, f8, f8, f8);
-                    fillWhiteImage.fillRect(GameThread.tutorialBoxLinePos[6][c], GameThread.tutorialBoxLinePos[6][1], GameThread.tutorialBoxLinePos[6][i2], GameThread.tutorialBoxLinePos[6][i]);
-                    tutorialImage[26].drawAtPointOption(GameThread.tutorialBoxLinePos[6][4], GameThread.tutorialBoxLinePos[6][5], 18);
+                    fillWhiteImage.fillRect(tutorialBoxLinePos[6][c], tutorialBoxLinePos[6][1], tutorialBoxLinePos[6][i2], tutorialBoxLinePos[6][i]);
+                    tutorialImage[26].drawAtPointOption(tutorialBoxLinePos[6][4], tutorialBoxLinePos[6][5], 18);
                     Texture2D.gl.glColor4f(f, f, f, f);
                 }
-                if (GameThread.tutorialBoxTouchFlag[7] != 10) {
-                    float f9 = f - (GameThread.tutorialBoxTouchFlag[7] * 0.1f);
+                if (tutorialBoxTouchFlag[7] != 10) {
+                    float f9 = f - (tutorialBoxTouchFlag[7] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.gl.glColor4f(f9, f9, f9, f9);
-                    fillWhiteImage.fillRect(GameThread.tutorialBoxLinePos[7][c], GameThread.tutorialBoxLinePos[7][1], GameThread.tutorialBoxLinePos[7][i2], GameThread.tutorialBoxLinePos[7][i]);
-                    tutorialImage[27].drawAtPointOption(GameThread.tutorialBoxLinePos[7][4], GameThread.tutorialBoxLinePos[7][5], 18);
+                    fillWhiteImage.fillRect(tutorialBoxLinePos[7][c], tutorialBoxLinePos[7][1], tutorialBoxLinePos[7][i2], tutorialBoxLinePos[7][i]);
+                    tutorialImage[27].drawAtPointOption(tutorialBoxLinePos[7][4], tutorialBoxLinePos[7][5], 18);
                     Texture2D.gl.glColor4f(f, f, f, f);
                     break;
                 }
@@ -389,7 +369,7 @@ public class TutorialPage extends TPage {
             case 11:
             case 13:
             case 15:
-                int i13 = GameThread.gameSubStatus;
+                int i13 = tutorStep;
                 if (i13 != i) {
                     if (i13 == 5) {
                         z = false;
@@ -414,26 +394,26 @@ public class TutorialPage extends TPage {
                         z = false;
                         c2 = 5;
                     }
-                    if (GameThread.tutorialViewCount % 210 < 180) {
-                        i4 = (GameThread.tutorialViewCount % 210) - 180;
+                    if (tutorialViewCount % 210 < 180) {
+                        i4 = (tutorialViewCount % 210) - 180;
                         i5 = 6;
-                    } else if (GameThread.tutorialViewCount % 210 >= 150) {
-                        i4 = (GameThread.tutorialViewCount % 210) - 150;
+                    } else if (tutorialViewCount % 210 >= 150) {
+                        i4 = (tutorialViewCount % 210) - 150;
                         i5 = 5;
-                    } else if (GameThread.tutorialViewCount % 210 >= 120) {
-                        i4 = (GameThread.tutorialViewCount % 210) - 120;
+                    } else if (tutorialViewCount % 210 >= 120) {
+                        i4 = (tutorialViewCount % 210) - 120;
                         i5 = 4;
-                    } else if (GameThread.tutorialViewCount % 210 >= 90) {
-                        i4 = (GameThread.tutorialViewCount % 210) - 90;
+                    } else if (tutorialViewCount % 210 >= 90) {
+                        i4 = (tutorialViewCount % 210) - 90;
                         i5 = 3;
-                    } else if (GameThread.tutorialViewCount % 210 >= 60) {
-                        i4 = (GameThread.tutorialViewCount % 210) - 60;
+                    } else if (tutorialViewCount % 210 >= 60) {
+                        i4 = (tutorialViewCount % 210) - 60;
                         i5 = 2;
-                    } else if (GameThread.tutorialViewCount % 210 >= 30) {
-                        i4 = (GameThread.tutorialViewCount % 210) - 30;
+                    } else if (tutorialViewCount % 210 >= 30) {
+                        i4 = (tutorialViewCount % 210) - 30;
                         i5 = 1;
                     } else {
-                        i4 = (GameThread.tutorialViewCount % 210) + 0;
+                        i4 = (tutorialViewCount % 210) + 0;
                         i5 = 0;
                     }
                     tutorialImage[17].drawAtPointOption(17.0f, 41.0f, 18);
@@ -443,39 +423,39 @@ public class TutorialPage extends TPage {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                             Texture2D.gl.glColor4f(f10, f10, f10, f10);
                         }
-                        tutorialImage[GameThread.tutorialUnitPos[c2][i2]].drawAtPointOption(GameThread.tutorialUnitPos[c2][i], GameThread.tutorialUnitPos[c2][4], 18);
+                        tutorialImage[tutorialUnitPos[c2][i2]].drawAtPointOption(tutorialUnitPos[c2][i], tutorialUnitPos[c2][4], 18);
                     } else if (i5 > i2 && i5 < 6) {
-                        tutorialImage[GameThread.tutorialUnitPos[c2][i2]].drawAtPointOption(GameThread.tutorialUnitPos[c2][i], GameThread.tutorialUnitPos[c2][4], 18);
+                        tutorialImage[tutorialUnitPos[c2][i2]].drawAtPointOption(tutorialUnitPos[c2][i], tutorialUnitPos[c2][4], 18);
                     }
                     if ((i5 == 1 && (i4 / 5) % i2 == 0) || (i5 > 1 && i5 < 6)) {
-                        tutorialImage[28].drawAtPointOption(GameThread.tutorialUnitPos[c2][7], GameThread.tutorialUnitPos[c2][8], 9);
+                        tutorialImage[28].drawAtPointOption(tutorialUnitPos[c2][7], tutorialUnitPos[c2][8], 9);
                     }
                     if (i5 == i && (i4 / 5) % i2 == 0) {
-                        tutorialImage[18].drawAtPointOption(GameThread.tutorialUnitPos[c2][5] - 11, (float) (GameThread.tutorialUnitPos[c2][6] - 84), 18);
+                        tutorialImage[18].drawAtPointOption(tutorialUnitPos[c2][5] - 11, (float) (tutorialUnitPos[c2][6] - 84), 18);
                     }
                     if (i5 == 4) {
                         setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
                         setFontSize(40);
-                        drawStringDoubleM("터치", GameThread.tutorialUnitPos[c2][5] - 11, (float) (GameThread.tutorialUnitPos[c2][6] - 53), 20);
+                        drawStringDoubleM("터치", tutorialUnitPos[c2][5] - 11, (float) (tutorialUnitPos[c2][6] - 53), 20);
                         if (i4 < i) {
-                            tutorialImage[18].drawAtPointOption(GameThread.tutorialUnitPos[c2][5] - 11, (float) (GameThread.tutorialUnitPos[c2][6] - 84), 18);
+                            tutorialImage[18].drawAtPointOption(tutorialUnitPos[c2][5] - 11, (float) (tutorialUnitPos[c2][6] - 84), 18);
                         } else {
                             if ((i4 / 5) % i2 == 0) {
-                                tutorialImage[16].drawAtPointOption(GameThread.tutorialUnitPos[c2][5], GameThread.tutorialUnitPos[c2][6], 9);
+                                tutorialImage[16].drawAtPointOption(tutorialUnitPos[c2][5], tutorialUnitPos[c2][6], 9);
                             }
-                            tutorialImage[19].drawAtPointOption(GameThread.tutorialUnitPos[c2][5] - 11, (float) (GameThread.tutorialUnitPos[c2][6] - 84), 18);
+                            tutorialImage[19].drawAtPointOption(tutorialUnitPos[c2][5] - 11, (float) (tutorialUnitPos[c2][6] - 84), 18);
                         }
                     }
                     if (i5 == 5) {
-                        int i14 = GameThread.tutorialUnitPos[c2][5] + (((GameThread.tutorialUnitPos[c2][7] - GameThread.tutorialUnitPos[c2][5]) * i4) / 30);
-                        int i15 = GameThread.tutorialUnitPos[c2][6] + (((GameThread.tutorialUnitPos[c2][8] - GameThread.tutorialUnitPos[c2][6]) * i4) / 30);
+                        int i14 = tutorialUnitPos[c2][5] + (((tutorialUnitPos[c2][7] - tutorialUnitPos[c2][5]) * i4) / 30);
+                        int i15 = tutorialUnitPos[c2][6] + (((tutorialUnitPos[c2][8] - tutorialUnitPos[c2][6]) * i4) / 30);
                         drawSimpleTowerUnit(i6, z, i14, i15);
                         float f11 = i14 - 11;
                         tutorialImage[19].drawAtPointOption(f11, (float) (i15 - 84), 18);
                         drawStringDoubleM("드래그", f11, (float) (i15 - 53), 20);
                     }
                     if (i5 == 6) {
-                        drawSimpleTowerUnit(i6, z, GameThread.tutorialUnitPos[c2][7], GameThread.tutorialUnitPos[c2][8]);
+                        drawSimpleTowerUnit(i6, z, tutorialUnitPos[c2][7], tutorialUnitPos[c2][8]);
                         break;
                     }
                 } else {
@@ -483,15 +463,15 @@ public class TutorialPage extends TPage {
                     c2 = 0;
                 }
                 i6 = 0;
-                if (GameThread.tutorialViewCount % 210 < 180) {
+                if (tutorialViewCount % 210 < 180) {
                 }
                 tutorialImage[17].drawAtPointOption(17.0f, 41.0f, 18);
                 if (i5 != i2) {
                 }
                 if (i5 == 1) {
-                    tutorialImage[28].drawAtPointOption(GameThread.tutorialUnitPos[c2][7], GameThread.tutorialUnitPos[c2][8], 9);
+                    tutorialImage[28].drawAtPointOption(tutorialUnitPos[c2][7], tutorialUnitPos[c2][8], 9);
                     if (i5 == i) {
-                        tutorialImage[18].drawAtPointOption(GameThread.tutorialUnitPos[c2][5] - 11, (float) (GameThread.tutorialUnitPos[c2][6] - 84), 18);
+                        tutorialImage[18].drawAtPointOption(tutorialUnitPos[c2][5] - 11, (float) (tutorialUnitPos[c2][6] - 84), 18);
                     }
                     if (i5 == 4) {
                     }
@@ -500,7 +480,7 @@ public class TutorialPage extends TPage {
                     if (i5 == 6) {
                     }
                 }
-                tutorialImage[28].drawAtPointOption(GameThread.tutorialUnitPos[c2][7], GameThread.tutorialUnitPos[c2][8], 9);
+                tutorialImage[28].drawAtPointOption(tutorialUnitPos[c2][7], tutorialUnitPos[c2][8], 9);
                 if (i5 == i) {
                 }
                 if (i5 == 4) {
@@ -517,7 +497,7 @@ public class TutorialPage extends TPage {
             case 12:
             case 14:
             case 16:
-                int i16 = GameThread.gameSubStatus;
+                int i16 = tutorStep;
                 if (i16 == 4) {
                     c3 = 7;
                     c4 = '\b';
@@ -540,21 +520,21 @@ public class TutorialPage extends TPage {
                     c3 = '\f';
                     c4 = '\r';
                 }
-                tutorialImage[c3].drawAtPointOption(GameThread.tutorialBoxLinePos[c4][4], GameThread.tutorialBoxLinePos[c4][5], 18);
+                tutorialImage[c3].drawAtPointOption(tutorialBoxLinePos[c4][4], tutorialBoxLinePos[c4][5], 18);
                 break;
             case 17:
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                 Texture2D.gl.glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
-                fillWhiteImage.fillRect(GameThread.tutorialRectPos[i2][c], GameThread.tutorialRectPos[i2][1], GameThread.tutorialRectPos[i2][i2], GameThread.tutorialRectPos[i2][i]);
+                fillWhiteImage.fillRect(tutorialRectPos[i2][c], tutorialRectPos[i2][1], tutorialRectPos[i2][i2], tutorialRectPos[i2][i]);
                 Texture2D.gl.glColor4f(f, f, f, f);
-                tutorialImage[14].drawAtPointOption(GameThread.tutorialBoxLinePos[15][4], GameThread.tutorialBoxLinePos[15][5], 18);
+                tutorialImage[14].drawAtPointOption(tutorialBoxLinePos[15][4], tutorialBoxLinePos[15][5], 18);
                 break;
             case 18:
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                 Texture2D.gl.glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
-                fillWhiteImage.fillRect(GameThread.tutorialRectPos[i][c], GameThread.tutorialRectPos[i][1], GameThread.tutorialRectPos[i][i2], GameThread.tutorialRectPos[i][i]);
+                fillWhiteImage.fillRect(tutorialRectPos[i][c], tutorialRectPos[i][1], tutorialRectPos[i][i2], tutorialRectPos[i][i]);
                 Texture2D.gl.glColor4f(f, f, f, f);
-                tutorialImage[15].drawAtPointOption(GameThread.tutorialBoxLinePos[16][4], GameThread.tutorialBoxLinePos[16][5], 18);
+                tutorialImage[15].drawAtPointOption(tutorialBoxLinePos[16][4], tutorialBoxLinePos[16][5], 18);
                 break;
             case 19:
                 uiPopupImage[i3].drawAtPointOption(201.0f, 101.0f, 18);
@@ -620,26 +600,26 @@ public class TutorialPage extends TPage {
         int checkTouchListStatus = TouchManager.checkTouchListStatus();
         char c = 2;
         int i2 = 0;
-        switch (GameThread.gameSubStatus) {
+        switch (tutorStep) {
             case 1:
                 if (TouchManager.lastActionStatus != 2) {
                     return;
                 }
                 switch (checkTouchListStatus) {
                     case 10:
-                        GameThread.tutorialBoxTouchFlag[0] = 1;
+                        tutorialBoxTouchFlag[0] = 1;
                         break;
                     case 11:
-                        GameThread.tutorialBoxTouchFlag[1] = 1;
+                        tutorialBoxTouchFlag[1] = 1;
                         break;
                     case 12:
-                        GameThread.tutorialBoxTouchFlag[2] = 1;
+                        tutorialBoxTouchFlag[2] = 1;
                         break;
                     case 13:
-                        GameThread.tutorialBoxTouchFlag[3] = 1;
+                        tutorialBoxTouchFlag[3] = 1;
                         break;
                     case 14:
-                        GameThread.tutorialBoxTouchFlag[4] = 1;
+                        tutorialBoxTouchFlag[4] = 1;
                         break;
                 }
                 TouchManager.processTouchStatus();
@@ -650,13 +630,13 @@ public class TutorialPage extends TPage {
                 }
                 switch (TouchManager.checkTouchListStatus()) {
                     case 15:
-                        GameThread.tutorialBoxTouchFlag[5] = 1;
+                        tutorialBoxTouchFlag[5] = 1;
                         break;
                     case 16:
-                        GameThread.tutorialBoxTouchFlag[6] = 1;
+                        tutorialBoxTouchFlag[6] = 1;
                         break;
                     case 17:
-                        GameThread.tutorialBoxTouchFlag[7] = 1;
+                        tutorialBoxTouchFlag[7] = 1;
                         break;
                 }
                 TouchManager.processTouchStatus();
@@ -673,7 +653,7 @@ public class TutorialPage extends TPage {
                         return;
                     }
                     if (checkTouchListStatus == 0 || checkTouchListStatus == 1 || checkTouchListStatus == 2 || checkTouchListStatus == 3 || checkTouchListStatus == 4 || checkTouchListStatus == 5) {
-                        GameThread.tutorialViewCount = 0;
+                        tutorialViewCount = 0;
                         int i4 = checkTouchListStatus != 0 ? checkTouchListStatus != 1 ? checkTouchListStatus != 2 ? checkTouchListStatus != 3 ? checkTouchListStatus != 4 ? 27 : 24 : 15 : 12 : 3 : 0;
                         GameThread.characterMenuSelectFlag = 1;
                         GameThread.characterAddOrder = checkTouchListStatus;
@@ -682,7 +662,7 @@ public class TutorialPage extends TPage {
                         GameThread.characterAddType = 1;
                         while (i2 < 7) {
                             if (i2 != checkTouchListStatus) {
-                                GameThread.myOscillator[i2].initWithTwoWayStartPosition(0, 200, 10, 210, 5);
+                                myOscillator[i2].initWithTwoWayStartPosition(0, 200, 10, 210, 5);
                             }
                             i2++;
                         }
@@ -707,7 +687,7 @@ public class TutorialPage extends TPage {
                 }
                 if (GameThread.characterMenuSelectFlag == 1) {
                     GameThread.characterMenuSelectFlag = 0;
-                    int i5 = GameThread.gameSubStatus;
+                    int i5 = tutorStep;
                     if (i5 == 3) {
                         c = 0;
                     } else if (i5 == 5) {
@@ -717,16 +697,16 @@ public class TutorialPage extends TPage {
                     }
                     int pX = (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f);
                     int pY = (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f);
-                    if (pX == GameThread.tutorialUnitPos[c][0] && pY == GameThread.tutorialUnitPos[c][1]) {
+                    if (pX == tutorialUnitPos[c][0] && pY == tutorialUnitPos[c][1]) {
                         GameThread.playSound(14);
-                        GameThread.getAddSettingPosition();
-                        st.addTowerUnit(GameThread.characterAddNumber, pX, pY);
-                        GameThread.myMoney -= GameThread.getBuyPrice(GameThread.characterAddNumber);
+                        getAddSettingPosition();
+                        st.addUnit(GameThread.characterAddNumber, pX, pY);
+                        st.Money -= TowerUnit.getBuyPrice(GameThread.characterAddNumber);
                         GameThread.characterMenuSelectFlag = 0;
                     }
                     while (i2 < 7) {
                         if (i2 != GameThread.characterAddOrder) {
-                            GameThread.myOscillator[i2].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
+                            myOscillator[i2].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
                         }
                         i2++;
                     }
@@ -744,26 +724,26 @@ public class TutorialPage extends TPage {
                 }
                 switch (TouchManager.checkTouchListStatus()) {
                     case 18:
-                        GameThread.gameSubStatus = 5;
+                        tutorStep = 5;
                         break;
                     case 19:
-                        GameThread.gameSubStatus = 7;
+                        tutorStep = 7;
                         break;
                     case 20:
-                        GameThread.gameSubStatus = 9;
+                        tutorStep = 9;
                         break;
                     case 21:
-                        GameThread.gameSubStatus = 11;
+                        tutorStep = 11;
                         break;
                     case 22:
-                        GameThread.gameSubStatus = 13;
+                        tutorStep = 13;
                         break;
                     case 23:
-                        GameThread.gameSubStatus = 15;
+                        tutorStep = 15;
                         GameThread.characterMenuSelectFlag = 3;
-                        GameThread.myOscillator[8].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
-                        GameThread.myOscillator[9].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
-                        GameThread.myOscillator[10].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
+                        myOscillator[8].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
+                        myOscillator[9].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
+                        myOscillator[10].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
                         break;
                 }
                 TouchManager.processTouchStatus();
@@ -803,14 +783,14 @@ public class TutorialPage extends TPage {
                 if (GameThread.characterMenuSelectFlag == 4) {
                     int i9 = (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f);
                     int i10 = (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f);
-                    if (i9 == GameThread.tutorialUnitPos[6][0] && i10 == GameThread.tutorialUnitPos[6][1]) {
+                    if (i9 == tutorialUnitPos[6][0] && i10 == tutorialUnitPos[6][1]) {
                         GameThread.playSound(14);
-                        GameThread.getAddSettingPosition();
-                        GameThread.characterSelectNumber = GameThread.addHeroTowerUnit(GameThread.characterAddNumber, GameThread.characterAddOrder, i9, i10, true, false);
+                        getAddSettingPosition();
+                        st.selectedUnit = st.addHero(GameThread.characterAddNumber, i9, i10, false);
                         GameThread.characterMenuSelectFlag = 0;
-                        GameThread.myOscillator[8].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                        GameThread.myOscillator[9].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                        GameThread.myOscillator[10].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
+                        myOscillator[8].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
+                        myOscillator[9].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
+                        myOscillator[10].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                         GameThread.characterMenuSelectFlag = 0;
                     } else {
                         GameThread.characterMenuSelectFlag = 3;
@@ -819,80 +799,52 @@ public class TutorialPage extends TPage {
                 TouchManager.processTouchStatus();
                 return;
             case 16:
-                if (TouchManager.lastActionStatus != 2) {
-                    return;
-                }
-                if (TouchManager.checkTouchListStatus() == 24) {
-                    GameThread.gameSubStatus = 17;
-                }
+                if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 24)
+                    tutorStep++;
+
                 TouchManager.processTouchStatus();
                 return;
             case 17:
-                if (TouchManager.lastActionStatus != 2) {
-                    return;
-                }
-                if (TouchManager.checkTouchListStatus() == 25) {
-                    GameThread.gameSubStatus = 18;
-                }
+                if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 25)
+                    tutorStep++;
+
                 TouchManager.processTouchStatus();
                 return;
             case 18:
-                if (TouchManager.lastActionStatus != 2) {
-                    return;
-                }
-                if (TouchManager.checkTouchListStatus() == 26) {
-                    if (GameThread.tutorialFlag == 0) {
-                        GameThread.gameSubStatus = 19;
-                        GameThread.tutorialFlag = 1;
-                        GameThread.myHeroism += 300;
-                        GameThread.rewardDataValue[0] = 1;
-                        GameThread.heroUnitType[0] = 0;
-                        Config.saveAll(newTower);
-                    } else {
-                        GameThread.gameSubStatus = 22;
-                    }
+                if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 26) {
+                    if (!Config.tutorial) {
+                        tutorStep++;
+                        Config.tutorial = true;
+                        Config.heroPoints += 300;
+                        Config.saveAll();
+                        NewTower.switchPage(parent, true);
+                    } else
+                        tutorStep = 22;
                 }
                 TouchManager.processTouchStatus();
                 return;
             case 19:
-                if (TouchManager.lastActionStatus != 2) {
-                    return;
-                }
-                if (TouchManager.checkTouchListStatus() == 27) {
-                    GameThread.gameSubStatus = 20;
-                }
+                if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 27)
+                    tutorStep++;
+
                 TouchManager.processTouchStatus();
                 return;
             case 20:
-                if (TouchManager.lastActionStatus != 2) {
-                    return;
-                }
-                if (TouchManager.checkTouchListStatus() == 28) {
-                    GameThread.gameSubStatus = 21;
-                }
+                if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 28)
+                    tutorStep++;
+
                 TouchManager.processTouchStatus();
-                return;
+                break;
             case 21:
             case 22:
-                if (TouchManager.lastActionStatus != 2) {
-                    return;
-                }
-                if (TouchManager.checkTouchListStatus() == 30) {
+                if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 30) {
                     GameThread.playSound(14);
-                    GameThread.gameStatus = 10;
-                    GameThread.gameSubStatus = 0;
-                    GameRenderer.startViewCount = 0;
-                    GameThread.mapNumber = 0;
-                    GameThread.stageSelectChapterNumber = 0;
-                    GameThread.stageSelectStageNumber = 0;
-                    GameThread.mapAttackType = 0;
-                    GameThread.loadMap((GameThread.stageSelectChapterNumber * 10) + GameThread.stageSelectStageNumber, true);
-                    GameThread.playLoopSound(1);
+
+                    Config.lastPlayed = 0;
+                    NewTower.switchPage(parent, true);
                 }
                 TouchManager.processTouchStatus();
-                return;
-            default:
-                return;
+                break;
         }
     }
 }

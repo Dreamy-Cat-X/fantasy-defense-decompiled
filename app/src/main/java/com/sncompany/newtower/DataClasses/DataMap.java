@@ -192,10 +192,10 @@ public class DataMap {
     }
 
     public void checkBackBase() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++)
             if (i != lastShowBackBase && backBaseImageArray[i].name != -1)
                 backBaseImageArray[i].dealloc();
-        }
+
         if (backBaseImageArray[lastShowBackBase].name == -1)
             backBaseImageArray[lastShowBackBase].initWithImageName(tileBaseResource[lastShowBackBase]);
     }

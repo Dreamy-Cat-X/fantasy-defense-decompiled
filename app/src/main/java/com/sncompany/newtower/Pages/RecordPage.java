@@ -99,7 +99,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
 
         parent.paint(gl10, false);
         uiRecordImage[rec_title].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
-        uiEtcImage[0].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
+        uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
         if (Dscore) {
             uiRecordImage[rec_scorebase].drawAtPointOption(30.0f, 90.0f, 18);
             int px = 0;
@@ -138,7 +138,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                 int[] pxs = {120, 182, 245, 307, 370};
                 px = pxs[curP];
             }
-            uiEtcImage[14].drawAtPointOption(731.0f, px - ((rankListDraw.blockCorrectionPixel * 63) / 250), 10);
+            uiEtcImage[etc_scrollbutton].drawAtPointOption(731.0f, px - ((rankListDraw.blockCorrectionPixel * 63) / 250), 10);
         } else {
             uiRecordImage[rec_awardbase].drawAtPointOption(30.0f, 90.0f, 18);
             for (int j = awardListDraw.totalHalfBlockSize - 1; j <= awardListDraw.totalHalfBlockSize + 4; j++)
@@ -163,7 +163,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     else
                         uiRecordImage[rec_cup].drawAtPointOptionGuide(672.0f, ay + 112, 18, GameRenderer._CGRect);
                 }
-            uiEtcImage[14].drawAtPointOption(731.0f, (((awardListDraw.blockCurrentArray[awardListDraw.totalHalfBlockSize] * 250) / 58f) + 120) - (((awardListDraw.blockCorrectionPixel * 250) / 58f) / 250f), 10);
+            uiEtcImage[etc_scrollbutton].drawAtPointOption(731.0f, (((awardListDraw.blockCurrentArray[awardListDraw.totalHalfBlockSize] * 250) / 58f) + 120) - (((awardListDraw.blockCorrectionPixel * 250) / 58f) / 250f), 10);
             GameRenderer.setFontColor(-16777216);
             GameRenderer.setFontSize(20);
             GameRenderer.drawStringM(String.format("%02d%%", (Config.getAwardCount() * 100) / 62), 320.0f, 366.0f, 20);
@@ -173,7 +173,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
             GameRenderer.drawStringM(String.format("%d", Config.getAwardScore()), 610.0f, 365.0f, 18);
         }
 
-        uiEtcImage[TLS == 0 ? 2 : 1].drawAtPointOption(11.0f, 412.0f, 18);
+        uiEtcImage[TLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
         if (init)
             TouchManager.swapTouchMap();
     }

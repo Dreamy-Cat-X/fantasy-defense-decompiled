@@ -1,8 +1,5 @@
 package com.sncompany.newtower.DataClasses;
 
-import androidx.core.view.InputDeviceCompat;
-import androidx.core.view.PointerIconCompat;
-
 import com.sncompany.newtower.Battle.ArrowUnit;
 import com.sncompany.newtower.Battle.EnemyUnit;
 import com.sncompany.newtower.Battle.HeroUnit;
@@ -13,7 +10,7 @@ import com.sncompany.newtower.Battle.EffectUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.Battle.MonsterUnit;
-import com.sncompany.newtower.Texture2D;
+import com.sncompany.newtower.Pages.stage.StageBase;
 
 import java.util.ArrayList;
 
@@ -50,6 +47,7 @@ public class DataStage {
     public int Mana, Money;
     public final DataWave waveManager;
     public final DataMap map;
+    public StageBase page;
     public byte turbo = 1;
     public float bScore = 0.0f, victoryH;
 
@@ -103,7 +101,7 @@ public class DataStage {
     }
 
     public void updateArrowUnit() {
-        arrowUnit.removeIf(a -> a.arrowType == -1);
+        arrowUnit.removeIf(a -> a.type == -1);
         for (ArrowUnit au : arrowUnit)
             au.updateArrowUnit();
     }
@@ -129,7 +127,7 @@ public class DataStage {
             o.update();
     }
 
-    public void updateEffectUnit(boolean z) {
+    public void updateEffects(boolean z) {
         effectUnit.removeIf(e -> e.effectCount >= e.effectCountMax);
         for (EffectUnit eff : effectUnit)
             if ((!z || (eff.effectType == 14 && eff.lastGameUpdateCount != GameThread.gameTimeCount)) && !(eff.lastGameUpdateCount == GameThread.gameTimeCount && eff.effectType == 36)) {
@@ -138,7 +136,7 @@ public class DataStage {
             }
     }
 
-    public void unlockTowerUnit() {
+    public void unlockUnit() {
         for (TowerUnit two : towerUnit)
             if (two.unitStatus == 2)
                 two.unitStatus = 0;
@@ -163,32 +161,25 @@ public class DataStage {
         return Life == maxLife;
     }
 
-    public void sortTowerEnemyUnit() {
+    public void sortEntities() {
         monsterUnit.sort(null);
         towerUnit.sort(null);
         map.objectUnit.sort(null);
     }
 
     /* JADX INFO: Access modifiers changed from: package-private */
-    public void addTowerUnit(int type, int bX, int bY) {
+    public TowerUnit addUnit(int type, int bX, int bY) {
         TowerUnit twu = new TowerUnit(this, type, bX, bY);
-        twu.restatTowerUnit();
+        twu.restatTowerUnit(false);
         towerUnit.add(twu);
+        return twu;
     }
 
-    public void addHeroTowerUnit(int type, int bX, int bY, boolean restat) {
+    public HeroUnit addHero(int type, int bX, int bY, boolean restat) {
         HeroUnit twu = new HeroUnit(this, type, bX, bY);
         if (restat)
-            twu.restatTowerUnit();
+            twu.restatTowerUnit(false);
         towerUnit.add(twu);
-    }
-
-    //TODO - delete after all usages have been removed
-    public void addHeroTowerUnit(int type, int order, int bX, int bY, boolean z, boolean z2) {
-        TowerUnit twu = new TowerUnit(this, order, bX, bY);
-        twu.restatTowerUnit();
-        towerUnit.add(twu);
-        if (z2)
-            twu.restatTowerUnit();
+        return twu;
     }
 }

@@ -1,6 +1,7 @@
 package com.sncompany.newtower.Battle;
 
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.DataAnim;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataMap;
@@ -11,6 +12,7 @@ import com.sncompany.newtower.DataClasses.DataWave;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
+import com.sncompany.newtower.Texture2D;
 
 /* loaded from: D:\decomp\classes.dex */
 public class MonsterUnit extends EnemyUnit {
@@ -32,13 +34,8 @@ public class MonsterUnit extends EnemyUnit {
     public int fromBlockX;
     public int fromBlockY;
     public int lastViewDirection = 2;
-    public int monsterSerial;
-    public int monsterType; //Used to differ monster type, -1 means monster is dead. Deprecated, use super.type instead
-    public boolean slowIceFlag;
-    public boolean slowMudFlag;
     public float slowRate;
     public int stunCount;
-    public boolean stunFlag;
     public int targetBlockX;
     public int targetBlockY;
     public int unitDefense;
@@ -46,10 +43,9 @@ public class MonsterUnit extends EnemyUnit {
     public int unitSpeed = 150;
     public int unitStatus = 0; //1 means dead, -1 means removed
     public int unitStatusCount = 0;
-    private final DataStage st;
 
     public MonsterUnit(DataStage s, int type, boolean bossFlag) {
-        st = s;
+        super(s);
         this.type = type;
         this.bossFlag = bossFlag;
 
@@ -96,13 +92,18 @@ public class MonsterUnit extends EnemyUnit {
         direction = randomMapDirection;
         targetBlockX = fromBlockX + DataMap.DIR_MOVE_POS[randomMapDirection][0];
         targetBlockY = fromBlockY + DataMap.DIR_MOVE_POS[randomMapDirection][1];
+
+        int indf = type < 100 ? type % 25 : 25 + (type % 5);
+        drawData = DataAnim.enemyDrawData[indf];
+        drawTexture = st.page.enemyImages[indf];
     }
 
     @Override
     public boolean update() {
-        unitStatusCount++;
         if (stunCount > 0)
             stunCount--;
+        else
+            unitStatusCount++;
 
         if (dotHolyCount > 0) {
             dotHolyCount--;
@@ -114,20 +115,16 @@ public class MonsterUnit extends EnemyUnit {
             if (dotFireCount > 0)
                 damaged(dotFireDamage, null);
         }
-        if (slowIceFlag || slowMudFlag) {
-            slowRate -= 1.0f;
-            if (slowRate <= 0.0f) {
-                slowIceFlag = false;
-                slowMudFlag = false;
-            }
-        }
+        if (slowRate > 0)
+            slowRate--;
+
         if (dead())
             return false;
 
         int espd = unitSpeed;
         if (stunCount > 0)
             espd = 0;
-        else if ((slowIceFlag || slowMudFlag) && (espd = (int) ((espd * (100.0f - slowRate)) / 100.0f)) < unitMinSpeed)
+        else if ((slowRate > 0) && (espd = (int) ((espd * (100.0f - slowRate)) / 100.0f)) < unitMinSpeed)
             espd = unitMinSpeed;
 
         while (espd > 0) {
@@ -213,9 +210,8 @@ public class MonsterUnit extends EnemyUnit {
         int dWave = Math.min(st.waveManager.current, DataWave.WAVE_MAX_COUNT);
         if (dead() || unit == null)
             return;
-        int oType = unit.oldType();
 
-        int soundHitType = GameThread.getSoundHitType(unit);
+        int soundHitType = unit.getSoundHitType();
         if (soundHitType != -1)
             GameThread.playSound(soundHitType);
 
@@ -239,12 +235,12 @@ public class MonsterUnit extends EnemyUnit {
             }
             itemBuff = hero.getEquipEffect(DataUpgradeItem.EQ_MISC, 3);
             if (itemBuff > 0 && NewTower.getRandom(100) < itemBuff) {
-                slowIceFlag = true;
                 slowRate += DataCharacter.charData[29][8];
                 if (slowRate > 80.0f)
                     slowRate = 80.0f;
             }
         } else {
+            int oType = unit.oldType();
             switch (unit.effectType) {
                 case 0: {
                     int upgradeRate = (DataCharacter.charData[oType][7] * (unit.getUpgradeRate(10) + 100)) / 100;
@@ -267,10 +263,8 @@ public class MonsterUnit extends EnemyUnit {
                     int mRes = (DataMonster.monsterData[type][7] * (DataWave.monsterWaveData[dWave][bossFlag ? 13 : 5] + 100)) / 100;
                     int rawProb = ((DataCharacter.charData[oType][7] * (unit.getUpgradeRate(14) + 100)) / 100) - mRes;
                     mRes = rawProb - mRes;
-                    if (NewTower.getRandom(100) < mRes) {
-                        slowIceFlag = true;
+                    if (NewTower.getRandom(100) < mRes)
                         slowRate += Math.min((DataCharacter.charData[oType][8] * (unit.getUpgradeRate(15) + 100)) / 100f, SLOW_MAX_MINUS_RATE);
-                    }
                     break;
             }
         }
@@ -298,7 +292,7 @@ public class MonsterUnit extends EnemyUnit {
             int efx = (abs3 * e) + shooter.posX;
             int efy = (abs4 * e) + shooter.posY;
             for (MonsterUnit mon : st.monsterUnit) {
-                if (mon.monsterType != -1 && mon.unitStatus == 0 && !arrow.hitMons.contains(mon)) {
+                if (mon.type != -1 && mon.unitStatus == 0 && !arrow.hitMons.contains(mon)) {
                     int abs5 = Math.abs(efx - mon.posX) / 50;
                     int abs6 = Math.abs(efy - mon.posY) / 50;
                     if ((abs5 * abs5) + (abs6 * abs6) <= 225) {
@@ -348,5 +342,76 @@ public class MonsterUnit extends EnemyUnit {
         st.addEffectUnit(EffectUnit.EFFECT_TYPE_DIE, posX, posY);
         if (st.selectedTarget == this)
             st.selectedTarget = null;
+    }
+
+    public void draw() {
+        float x = posX / 50f + 62, y = posY / 50f + 30;
+        float size = bodySize / 100.0f;
+
+        int i = lastViewDirection == 2 ? 1 : 0;
+        if (direction == 0)
+            i += 2;
+
+        int i2 = drawData[drawData[1] + i];
+        int i3 = drawData[drawData[0] + drawData[i2 + 1 + ((unitStatusCount / 3) % drawData[i2])]];
+        int i4 = drawData[i3];
+        int i5 = i3 + 1;
+        st.page.shadowImage[0].drawAtPointOption(x, y + 10.0f, 9);
+        for (int i6 = 0; i6 < i4; i6++) {
+            float a = unitStatus == 1 ? (10 - unitStatusCount) * 0.1f : 1.0f;
+            if (unitStatus == 0 && unitStatusCount < 16)
+                a = unitStatusCount * 0.0625f;
+
+            int txtr = (i6 * 5) + i5;
+            if (drawData[txtr + 3] != 1000)
+                a = (a * drawData[txtr + 3]) / 1000.0f;
+
+            if (a != 1.0f) {
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.gl.glColor4f(a, a, a, a);
+            }
+            if (drawData[txtr + 4] == 0) {
+                if (size == 1)
+                    drawTexture[drawData[txtr]].drawAtPointOption(drawData[txtr + 1] + x, drawData[txtr + 2] + y + 10.0f, 18);
+                else
+                    drawTexture[drawData[txtr]].drawAtPointOptionSize((drawData[txtr + 1] * size) + x, (drawData[txtr + 2] * size) + y + 10.0f, 18, size);
+            } else if (size == 1)
+                drawTexture[drawData[txtr]].drawAtPointOptionFlip(drawData[txtr + 1] + x, drawData[txtr + 2] + y + 10.0f, 18);
+            else
+                drawTexture[drawData[txtr]].drawAtPointOptionFlipSize((drawData[txtr + 1] * size) + x, (drawData[txtr + 2] * size) + y + 10.0f, 18, size);
+            if (a != 1.0f)
+                Texture2D.gl.glColor4f(1, 1, 1, 1);
+        }
+        if (unitHP > 0 && unitHP < unitMaxHP)
+            drawHealthBar(x, (y - DataMonster.monsterData[type][9]) + 10.0f, unitMaxHP, unitHP);
+        if (st.selectedTarget == this)
+            st.page.targetImage.drawAtPointOption(x, y, 9);
+
+        if (dotHolyCount > 0)
+            drawAilment(x, y, 0);
+        if (slowRate > 0)
+            drawAilment(x, y, 1);
+        if (stunCount > 0)
+            drawAilment(x, y - DataMonster.monsterData[type][9], 2);
+    }
+
+    public void drawAilment(float x, float y, int type) {
+        int[] effData = DataAnim.debuffDrawData[type];
+        Texture2D[] effTexture = st.page.debuffImages[type];
+        int i2 = -15;
+        if (type == 2)
+            i2 = 20;
+
+        int i3 = effData[effData[1]];
+        int i4 = effData[effData[0] + effData[i3 + 1 + (GameThread.gameTimeCount % effData[i3])]];
+        int i5 = effData[i4];
+        int i6 = i4 + 1;
+        for (int i7 = 0; i7 < i5; i7++) {
+            int i8 = (i7 * 5) + i6;
+            if (effData[i8 + 4] == 0)
+                effTexture[effData[i8]].drawAtPointOption(effData[i8 + 1] + x, effData[i8 + 2] + y + i2, 18);
+            else
+                effTexture[effData[i8]].drawAtPointOptionFlip(effData[i8 + 1] + x, effData[i8 + 2] + y + i2, 18);
+        }
     }
 }

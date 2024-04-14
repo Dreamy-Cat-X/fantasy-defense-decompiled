@@ -61,7 +61,7 @@ public class ListPage extends TPage { //This class' parent will be a MenuPage al
         }
         images[i == 1 ? 3 : 2].drawAtPointOption(300.0f, 158.0f, 18);
         images[i == 2 ? 1 : 0].drawAtPointOption(300.0f, 258.0f, 18);
-        uiEtcImage[i == 0 ? 2 : 1].drawAtPointOption(1.0f, 421.0f, 18);
+        uiEtcImage[i == 0 ? etc_back_on : etc_back_off].drawAtPointOption(1.0f, 421.0f, 18);
 
         if (init)
             TouchManager.swapTouchMap();

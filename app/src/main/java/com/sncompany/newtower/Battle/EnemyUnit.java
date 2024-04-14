@@ -1,15 +1,22 @@
 package com.sncompany.newtower.Battle;
 
+import com.sncompany.newtower.DataClasses.DataStage;
+import com.sncompany.newtower.GameRenderer;
+
 /**
  * Superclass used to link enemies and objects.
  */
-public abstract class EnemyUnit implements Comparable<EnemyUnit> {
-    public int type = -1;
+public abstract class EnemyUnit extends StageEntity implements Comparable<EnemyUnit> {
     public int posX;
     public int posY;
 
     public int unitHP;
     public int unitMaxHP;
+    protected final DataStage st;
+
+    public EnemyUnit(DataStage s) {
+        st = s;
+    }
 
     public boolean dead() {
         return unitHP <= 0;
@@ -20,6 +27,17 @@ public abstract class EnemyUnit implements Comparable<EnemyUnit> {
     public abstract void hit(int dmgType, TowerUnit uni);
 
     public abstract void kill(TowerUnit uni);
+
+    public void drawHealthBar(float f, float f2, int i, int i2) {
+        int i3 = (i2 * 30) / i;
+        if (i3 < 2) {
+            i3 = 2;
+        }
+        float f3 = (int) f2;
+        float f4 = ((int) f) - 15.0f;
+        st.page.uiUpperImage[11].drawAtPointOptionClip(f4, f3, 18, GameRenderer.CGRectMake(0.0f, 0.0f, (float) (i3 - 1), 6.0f));
+        st.page.uiUpperImage[11].drawAtPointOptionClip((f4 + i3) - 1.0f, f3, 18, GameRenderer.CGRectMake(0.0f, 0.0f, 1.0f, 6.0f));
+    }
 
     @Override
     public int compareTo(EnemyUnit e) {

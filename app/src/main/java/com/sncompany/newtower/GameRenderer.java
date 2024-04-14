@@ -7,16 +7,11 @@ import android.opengl.GLU;
 import android.util.Log;
 
 import androidx.core.view.ViewCompat;
-import androidx.vectordrawable.graphics.drawable.PathInterpolatorCompat;
 
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataAnim;
-import com.sncompany.newtower.DataClasses.DataCharacter;
-import com.sncompany.newtower.DataClasses.DataHero;
 import com.sncompany.newtower.DataClasses.DataObject;
-import com.sncompany.newtower.DataClasses.DataUpgradeItem;
-import com.sncompany.newtower.DataClasses.DataWaveMob;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -168,7 +163,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static int startViewCount;
     public static int strokeColor;
     public static Texture2D targetImage;
-    public static Texture2D testboxImage;
+    public static final Texture2D testboxImage = new Texture2D(R.drawable.etc_testbox);
     public static Texture2D testboxImage2;
     public static Tombstone textTombstone;
     public static Texture2D[] titleBossImage;
@@ -217,14 +212,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static CircleItemDraw upgradeItemListDraw;
     public static Texture2D[] whiteCircleImage;
     public static boolean loadViewFlag = false;
-    public static int TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT = 20;
-    public static int TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT = 30;
-    public static int TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT = 30;
-    public static final int[] GAME_TITLE_BOSS_VIEW_POS_LIST = {77, 26, 41, 21, -30};
     public static final int[][] testboxCoord = {new int[]{0, 0, 20, 85}, new int[]{138, 0, 20, 85}, new int[]{59, 0, 40, 85}, new int[]{20, 0, 40, 85}};
-    public static final int GAME_SHOP_SHOP_INVENTORY_START_X = 125;
-    public static final int[][] testbox2Coord = {new int[]{0, 0, 9, 9}, new int[]{GAME_SHOP_SHOP_INVENTORY_START_X, 0, 9, 9}, new int[]{0, 53, 9, 9}, new int[]{GAME_SHOP_SHOP_INVENTORY_START_X, 53, 9, 9}, new int[]{9, 0, 116, 9}, new int[]{0, 9, 9, 44}, new int[]{GAME_SHOP_SHOP_INVENTORY_START_X, 9, 9, 44}, new int[]{9, 53, 116, 9}, new int[]{9, 9, 116, 44}};
-    public static final int[] logoResource = {R.drawable.logo_lg0, R.drawable.logo_lg1, R.drawable.logo_lg2, R.drawable.logo_lg3, R.drawable.logo_lg4, R.drawable.logo_lg5, R.drawable.logo_lg6, R.drawable.logo_lg7, R.drawable.logo_lg8, R.drawable.logo_lg9, R.drawable.logo_lg10, R.drawable.logo_lg11, R.drawable.logo_lg12, R.drawable.logo_lg13, R.drawable.logo_lg14, R.drawable.logo_lg15, R.drawable.logo_playbean, R.drawable.logo_12usesultry};
     public static final int[] numberMoneyResource = {R.drawable.num_money_0, R.drawable.num_money_1, R.drawable.num_money_2, R.drawable.num_money_3, R.drawable.num_money_4, R.drawable.num_money_5, R.drawable.num_money_6, R.drawable.num_money_7, R.drawable.num_money_8, R.drawable.num_money_9};
     public static final int[] numberManaResource = {R.drawable.num_mana_0, R.drawable.num_mana_1, R.drawable.num_mana_2, R.drawable.num_mana_3, R.drawable.num_mana_4, R.drawable.num_mana_5, R.drawable.num_mana_6, R.drawable.num_mana_7, R.drawable.num_mana_8, R.drawable.num_mana_9};
     public static final int[] numberWaveResource = {R.drawable.num_wave_0, R.drawable.num_wave_1, R.drawable.num_wave_2, R.drawable.num_wave_3, R.drawable.num_wave_4, R.drawable.num_wave_5, R.drawable.num_wave_6, R.drawable.num_wave_7, R.drawable.num_wave_8, R.drawable.num_wave_9, R.drawable.num_wave_10, R.drawable.num_wave_11};
@@ -236,8 +224,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int[] numberUpgradeResource = {R.drawable.num_upgrade_0, R.drawable.num_upgrade_1, R.drawable.num_upgrade_2, R.drawable.num_upgrade_3, R.drawable.num_upgrade_4, R.drawable.num_upgrade_5, R.drawable.num_upgrade_6, R.drawable.num_upgrade_7, R.drawable.num_upgrade_8, R.drawable.num_upgrade_9, R.drawable.num_upgrade_slash};
     public static final int[] numberClearResource = {R.drawable.num_clear_0, R.drawable.num_clear_1, R.drawable.num_clear_2, R.drawable.num_clear_3, R.drawable.num_clear_4, R.drawable.num_clear_5, R.drawable.num_clear_6, R.drawable.num_clear_7, R.drawable.num_clear_8, R.drawable.num_clear_9};
     public static final int[] numberTotalResource = {R.drawable.num_total_0, R.drawable.num_total_1, R.drawable.num_total_2, R.drawable.num_total_3, R.drawable.num_total_4, R.drawable.num_total_5, R.drawable.num_total_6, R.drawable.num_total_7, R.drawable.num_total_8, R.drawable.num_total_9};
-    public static final int[] titleResource = {R.drawable.ui_title_background, R.drawable.ui_title_background2, R.drawable.ui_title_mob0, R.drawable.ui_title_mob1, R.drawable.ui_title_mobeye, R.drawable.ui_title_title, R.drawable.ui_title_titleglow, R.drawable.ui_title_titlekorean, R.drawable.ui_title_startoff, R.drawable.ui_title_starton, R.drawable.ui_title_optionoff, R.drawable.ui_title_optionon, R.drawable.ui_title_sncompany, R.drawable.ui_title_about, R.drawable.ui_title_twitter, R.drawable.ui_title_facebook};
-    public static final int[] mainmenuResource = {R.drawable.ui_mainmenu_background2, R.drawable.ui_mainmenu_startonl, R.drawable.ui_mainmenu_helponl, R.drawable.ui_mainmenu_recordonl, R.drawable.ui_mainmenu_upgradeonl, R.drawable.ui_mainmenu_shoponl, R.drawable.ui_mainmenu_backonl};
     public static final int[] stageClearResource = {R.drawable.ui_clear_background, R.drawable.ui_clear_clear, R.drawable.ui_clear_fail, R.drawable.ui_clear_totalscore, R.drawable.ui_clear_heroism, R.drawable.ui_clear_nextstageoff, R.drawable.ui_clear_nextstageon, R.drawable.ui_clear_upgradeoff, R.drawable.ui_clear_upgradeon, R.drawable.ui_clear_stageselectoff, R.drawable.ui_clear_stageselecton, R.drawable.ui_clear_retryoff, R.drawable.ui_clear_retryon, R.drawable.ui_clear_perfect, R.drawable.ui_clear_bonus, R.drawable.ui_clear_iconskill, R.drawable.ui_clear_iconspe, R.drawable.ui_clear_iconitem, R.drawable.ui_clear_iconheroism, R.drawable.ui_clear_iconhero1, R.drawable.ui_clear_iconhero2, R.drawable.ui_clear_iconhero3, R.drawable.ui_clear_iconattup, R.drawable.ui_clear_p, R.drawable.ui_clear_e, R.drawable.ui_clear_r, R.drawable.ui_clear_f, R.drawable.ui_clear_c, R.drawable.ui_clear_t, R.drawable.ui_clear_1};
     public static final int[] ingameResource = {R.drawable.ui_ingame_paused, R.drawable.ui_ingame_resumeoff, R.drawable.ui_ingame_resumeon, R.drawable.ui_ingame_restartoff, R.drawable.ui_ingame_restarton, R.drawable.ui_ingame_stageoff, R.drawable.ui_ingame_stageon};
     public static final int[] uiUpperResource = {R.drawable.ui_upper_mana, R.drawable.ui_upper_money, R.drawable.ui_upper_ingameoff, R.drawable.ui_upper_ingameon, R.drawable.ui_upper_speed0, R.drawable.ui_upper_speed1, R.drawable.ui_upper_speed2, R.drawable.ui_upper_upbar, R.drawable.ui_upper_wave, R.drawable.ui_upper_slash, R.drawable.ui_upper_heart, R.drawable.ui_upper_hpbar, R.drawable.ui_upper_star, R.drawable.ui_upper_hero, R.drawable.ui_upper_speedempty, R.drawable.ui_upper_pauseoff, R.drawable.ui_upper_pauseon, R.drawable.ui_upper_bossstage};
@@ -278,11 +264,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int[] arrowResource3 = {R.drawable.arrow_3_0, R.drawable.arrow_3_1};
     public static final int[] arrowResource4 = {R.drawable.arrow_4_0, R.drawable.arrow_4_1, R.drawable.arrow_4_2, R.drawable.arrow_4_3, R.drawable.arrow_4_4, R.drawable.arrow_4_5};
     public static final int[] arrowResource9 = {R.drawable.arrow_9_0, R.drawable.arrow_9_1};
-    public static final int[] titleBoss0Resource = {R.drawable.ui_title0_0, R.drawable.ui_title0_1, R.drawable.ui_title0_2, R.drawable.ui_title0_3};
-    public static final int[] titleBoss1Resource = {R.drawable.ui_title1_0, R.drawable.ui_title1_1, R.drawable.ui_title1_2, R.drawable.ui_title1_3};
-    public static final int[] titleBoss2Resource = {R.drawable.ui_title2_0, R.drawable.ui_title2_1, R.drawable.ui_title2_2, R.drawable.ui_title2_3};
-    public static final int[] titleBoss3Resource = {R.drawable.ui_title3_0, R.drawable.ui_title3_1, R.drawable.ui_title3_2, R.drawable.ui_title3_3};
-    public static final int[] titleBoss4Resource = {R.drawable.ui_title4_0, R.drawable.ui_title4_1, R.drawable.ui_title4_2, R.drawable.ui_title4_3};
 
     public static int getMonsterImageOrder(int i) {
         if (i < 100)
@@ -477,20 +458,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         if (i != 0) {
             load_GAME_PLAY_IMAGE_LOAD(i);
             if (loadCount_GAME_PLAY_IMAGE_LOAD >= 17) {
-                GameThread.myOscillator[0].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-                GameThread.myOscillator[1].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-                GameThread.myOscillator[2].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-                GameThread.myOscillator[3].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-                GameThread.myOscillator[4].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-                GameThread.myOscillator[5].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-                GameThread.myOscillator[6].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-                GameThread.myOscillator[7].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
-                GameThread.myOscillator[8].initWithTwoWayStartPosition(0, 300, 10, PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                GameThread.myOscillator[9].initWithTwoWayStartPosition(0, 300, 10, PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                GameThread.myOscillator[10].initWithTwoWayStartPosition(0, 300, 10, PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                for (int i2 = 0; i2 < 11; i2++)
-                    GameThread.myOscillator[i2].fastForward();
-
                 GameThread.gameLoadFlag = 1;
                 GameThread.gameStatus = 26;
                 GameThread.gameSubStatus = 1;
@@ -529,8 +496,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         uiPopupImage = makeTextureArray(uiPopupResource.length);
         uiLoadingImage = makeTextureArray(uiLoadingResource.length);
         alwaysImage = makeTextureArray(alwaysResource.length);
-        titleBossImage = makeTextureArray(titleBoss0Resource.length);
-        mainmenuImage = makeTextureArray(mainmenuResource.length);
         stageClearImage = makeTextureArray(stageClearResource.length);
         uiUpperImage = makeTextureArray(uiUpperResource.length);
         uiIngameImage = makeTextureArray(ingameResource.length);
@@ -628,8 +593,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         arrowImage4 = makeTextureArray(arrowResource4.length);
         arrowImage9 = makeTextureArray(arrowResource9.length);
         shadowImage = makeTextureArray(2);
-        logoImage = makeTextureArray(logoResource.length);
-        testboxImage = new Texture2D();
         testboxImage2 = new Texture2D();
         return true;
     }
@@ -675,7 +638,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                         outBorderImage[2].initWithImageName(R.drawable.etc_outr);
                         outBorderImage[3].initWithImageName(R.drawable.etc_outu);
                         targetImage.initWithImageName(R.drawable.etc_target);
-                        testboxImage.initWithImageName(R.drawable.etc_testbox);
                         testboxImage2.initWithImageName(R.drawable.etc_testbox2);
                         if (!z) {
                             loadViewFlag = true;
@@ -772,45 +734,27 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     }
 
     public static void loadImageResourceToTexture(Texture2D[] texture2DArr, int[] iArr) {
-        if (texture2DArr == null || iArr == null) {
+        if (texture2DArr == null || iArr == null)
             return;
-        }
-        for (int i = 0; i < texture2DArr.length && i < iArr.length; i++) {
+        for (int i = 0; i < texture2DArr.length && i < iArr.length; i++)
             texture2DArr[i].initWithImageName(iArr[i]);
-        }
     }
 
     public static void removeImageResourceArray(Texture2D[] texture2DArr) {
-        if (texture2DArr == null) {
+        if (texture2DArr == null)
             return;
-        }
-        for (Texture2D texture2D : texture2DArr) {
+        for (Texture2D texture2D : texture2DArr)
             texture2D.dealloc();
-        }
     }
 
-    public static void drawLeftRightBox(Texture2D texture2D, int[][] iArr, float f, float f2, int i, int i2) {
-        if (i2 != 0) {
-            if (i2 != 1) {
-                return;
-            }
-            int i3 = i - iArr[1][2];
-            int i4 = iArr[0][2];
-            int i5 = i3 - iArr[0][2];
-            texture2D.drawAtPointOptionClip(f + 0, f2, 18, CGRectMake(iArr[0][0], iArr[0][1], iArr[0][2], iArr[0][3]));
-            texture2D.drawAtPointOptionClip(f + i3, f2, 18, CGRectMake(iArr[1][0], iArr[1][1], iArr[1][2], iArr[1][3]));
-            texture2D.drawAtPointOptionClipPixel(f + i4, f2, 18, CGRectMake(iArr[2][0], iArr[2][1], iArr[2][2], iArr[2][3]), i5, iArr[2][3]);
-            return;
-        }
-        int i6 = i - iArr[1][2];
-        int i7 = (i - iArr[2][2]) / 2;
-        int i8 = iArr[0][2];
-        int i9 = i7 - iArr[0][2];
-        int i10 = i7 + iArr[2][2];
-        texture2D.drawAtPointOptionClip(f + 0, f2, 18, CGRectMake(iArr[0][0], iArr[0][1], iArr[0][2], iArr[0][3]));
-        texture2D.drawAtPointOptionClip(f + i6, f2, 18, CGRectMake(iArr[1][0], iArr[1][1], iArr[1][2], iArr[1][3]));
-        texture2D.drawAtPointOptionClip(f + i7, f2, 18, CGRectMake(iArr[2][0], iArr[2][1], iArr[2][2], iArr[2][3]));
-        texture2D.drawAtPointOptionClipPixel(f + i8, f2, 18, CGRectMake(iArr[3][0], iArr[3][1], iArr[3][2], iArr[3][3]), i9, iArr[3][3]);
-        texture2D.drawAtPointOptionClipPixel(f + i10, f2, 18, CGRectMake(iArr[3][0], iArr[3][1], iArr[3][2], iArr[3][3]), i6 - i10, iArr[3][3]);
+    public static void drawLeftRightBox(float x, float y, int bound) {
+        int bX = bound - testboxCoord[1][2], cX = (bound - testboxCoord[2][2]) / 2;
+        int dX = cX - testboxCoord[0][2], eX = cX + testboxCoord[2][2];
+
+        testboxImage.drawAtPointOptionClip(x + 0, y, 18, CGRectMake(testboxCoord[0][0], testboxCoord[0][1], testboxCoord[0][2], testboxCoord[0][3]));
+        testboxImage.drawAtPointOptionClip(x + bX, y, 18, CGRectMake(testboxCoord[1][0], testboxCoord[1][1], testboxCoord[1][2], testboxCoord[1][3]));
+        testboxImage.drawAtPointOptionClip(x + cX, y, 18, CGRectMake(testboxCoord[2][0], testboxCoord[2][1], testboxCoord[2][2], testboxCoord[2][3]));
+        testboxImage.drawAtPointOptionClipPixel(x + testboxCoord[0][2], y, 18, CGRectMake(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), dX, testboxCoord[3][3]);
+        testboxImage.drawAtPointOptionClipPixel(x + eX, y, 18, CGRectMake(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), bX - eX, testboxCoord[3][3]);
     }
 }

@@ -21,7 +21,7 @@ public class Config {
     public static final int SAVEFILE_SIZE = 27392;
     static byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
     public static int musicVolume, effectVolume, musicMaxVolume;
-    public static byte lastPlayed, limitBreak; //limitBreak = GameThread.limitCashBuyCount
+    public static byte lastPlayed = 0, limitBreak;
     public static int heroPoints, killCount, top_money;
     public static long curPlaytime = 0, totalPlaytime;
     public static boolean movie, tutorial, vibration;
