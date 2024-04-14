@@ -148,9 +148,9 @@ public class UpgradePage extends TPage {
                 }
             } else {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                Texture2D.setColors(0.5f);
                 fillBlackImage.fillRect((I * 255) + 21, 61.0f, 248.0f, 298.0f);
-                Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                Texture2D.setColors(1);
                 GameRenderer.setFontColor(-1);
                 GameRenderer.drawStringDoubleM(HeroUnit.getUnlock(I), 149.0f + (I * 255), 284.0f, 17);
             }
@@ -165,9 +165,9 @@ public class UpgradePage extends TPage {
             float rY = (lastUpdateItemPos % 6 < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y;
             float alpha = lastUpdateItemViewDelay * 0.066f;
             Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(alpha, alpha, alpha, alpha);
+            Texture2D.setColors(alpha);
             fillWhiteImage.fillRect(rX, rY, 60.0f, 60.0f);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            Texture2D.setColors(1);
         }
         int sPos = hero ? upgradeUnitSelectPos % 6 : upgradeUnitSelectPos;
         float boxX = ((upgradeUnitSelectPos / 6) * 255) + 45 + ((sPos % 3) * 70);

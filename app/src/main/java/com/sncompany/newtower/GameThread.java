@@ -25,12 +25,9 @@ public class GameThread extends Thread {
     public static ArrowUnit[] arrowUnit;
     public static int arrowUnitCount;
     public static final MediaManager[] bgmMedia = new MediaManager[3];
-    public static boolean characterAddBoolean;
     public static boolean characterAddHeroFlag;
     public static int characterAddNumber;
     public static int characterAddOrder;
-    public static float characterAddPosX;
-    public static float characterAddPosY;
     public static int characterAddType;
     public static int characterMenuMonsterStartViewCount;
     public static int characterMenuMonsterViewCount;
@@ -47,7 +44,6 @@ public class GameThread extends Thread {
     public static final int total_SFX = 31;
     public static final MediaManager2 effectMedia = new MediaManager2(total_SFX);
     public static EffectUnit[] effectUnit;
-    public static int effectUnitCount;
 
     public static int gameHelpViewNum;
     public static int gameLoadFlag;
@@ -71,10 +67,7 @@ public class GameThread extends Thread {
     public static final MonsterUnit[] monsterUnit = new MonsterUnit[100];
     public static int monsterUnitCount;
     public static int myMana;
-    public static boolean myWaveRunFlag;
     public static NewTower newTower;
-    public static int objectSortDrawCount;
-    public static ObjectUnit[] objectSortUnit;
     public static ObjectUnit[] objectUnit;
     public static int objectUnitCount;
     public static boolean pauseFlag;
@@ -94,11 +87,8 @@ public class GameThread extends Thread {
     public static long startDate;
     public static long startDrawDate;
     public static int tempCharacterRangeViewNumber;
-    public static int towerSortDrawCount;
-    public static TowerUnit[] towerSortUnit;
     public static TowerUnit[] towerUnit;
     public static int towerUnitCount;
-    public static int turboFlag;
     public static final int[] upgradeUnitValue = new int[18];
     public static int[][] waveMobData;
     public static int gameTimeCount = 0;
@@ -107,21 +97,7 @@ public class GameThread extends Thread {
     public static int TOWER_MAX_LEVEL_HERO = 5;
     public static int WAVE_MAX_COUNT = 60;
 
-    /**
-     * Contains all the dialog for reward attaining.
-     */
-    static final String[] rewardDataString = {
-            "You've acquired a Hero.", "Hero: Champion acquired.", "Check for more info under the Item> Equipment menu.",
-            "Hero Points obtained.", "You obtained 1,500 Hero Points.", " ",
-            "You've acquired a Hero.", "Hero: Bow Master acquired.", "Check for more info under the Item> Equipment menu.",
-            "You acquired special skills.", "You can now use the special skill for all of your Heroes.", "Select a Hero character while playing.",
-            "You've acquired a Hero.", "Hero: Archmage acquired.", "Check for more info under the Item> Equipment menu.",
-            "The upgrade limit is now uncapped.", "The upgrade limit of your Hero units has increased.(+5)", " ",
-            "A Hero's normal attack has been upgraded.", "All of your Heroes now cause a special effect with their Normal attacks.", " ",
-            "Hero Points obtained.", "You obtained 2,000 Hero Points.", " ",
-            "You obtained a Hero item.", "You obtained a Zephyrus Amulet.", " ",
-            "Hero Points obtained.", "You obtained 3,500 Hero Points.", " "
-    };
+
     public static boolean[] cheatData = new boolean[5];
 
     public static int getAttackSpeed(int i) {
@@ -272,9 +248,8 @@ public class GameThread extends Thread {
         int i3 = 0;
         specialAttackFrameCount = 0;
         specialAttackSkipFlag = false;
-        if (!cheatData[4]) {
-            myMana -= towerUnit[i].specialMana;
-        }
+
+        myMana -= towerUnit[i].specialMana;
         switch (characterMenuSelectFlag) {
             case 8:
                 for (int i4 = 0; i4 < 60; i4++) {
@@ -474,7 +449,7 @@ public class GameThread extends Thread {
             }
         }
         for (int i4 = 0; i4 < objectUnitCount; i4++) {
-            if (objectUnit[i4].objectType != -1 && objectUnit[i4].objectType != -2) {
+            if (objectUnit[i4].type != -1 && objectUnit[i4].type != -2) {
                 int i5 = objectUnit[i4].blockSize;
                 if (i5 == 0) {
                     int i6 = (objectUnit[i4].posX / 50) / 45;
@@ -555,7 +530,7 @@ public class GameThread extends Thread {
         int i = (int) ((firstLastActionTouch.x - 62.0f) / 45.0f);
         int i2 = (int) ((firstLastActionTouch.y - 30.0f) / 45.0f);
         for (int i3 = 0; i3 < objectUnitCount; i3++) {
-            if (objectUnit[i3].objectType != -1 && objectUnit[i3].objectType != -2 && objectUnit[i3].destroyEnableFlag == 0) {
+            if (objectUnit[i3].type != -1 && objectUnit[i3].type != -2 && objectUnit[i3].destroyEnableFlag == 0) {
                 int i4 = objectUnit[i3].blockSize;
                 if (i4 == 0) {
                     int i5 = (objectUnit[i3].posX / 50) / 45;

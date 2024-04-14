@@ -25,6 +25,7 @@ public class TitlePage extends TPage {
         ABOUT
     }
 
+    public static final int VOLUMEBAR_START_POS_X = 331;
     public static final int BACK = 0, DEVELOPER = 1, ABOUT_TOTAL = 2;
     public static final int BGM = 1, SFX = 2, INTRO = 3, VIBRATE = 4, CONFIG_TOTAL = 5;
     public static final int START = 0, CONFIG = 1, ABOUT = 2, FACEBOOK = 3, TWITTER = 4, TITLE_TOTAL = 5;
@@ -49,9 +50,9 @@ public class TitlePage extends TPage {
 
     public TitlePage(TPage p) {
         super(p);
-        soundBars[0] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
+        soundBars[0] = new MyScrollbar(VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume);
         soundBars[0].setReverseUpdatePosition(Config.musicVolume); //Used at title page, for music vol
-        soundBars[1] = new MyScrollbar(GameRenderer.VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume); //Used at TitlePage, for SE vol
+        soundBars[1] = new MyScrollbar(VOLUMEBAR_START_POS_X, 679, 0, Config.musicMaxVolume); //Used at TitlePage, for SE vol
         soundBars[1].setReverseUpdatePosition(Config.effectVolume);
         for (int i = 0; i < titleBossImage.length; i++)
             titleBossImage[i] = new Texture2D();
@@ -136,9 +137,9 @@ public class TitlePage extends TPage {
                     titleBossImage[3].drawAtPointOption(0.0f, bPos + ((int) titleBossImage[0]._sizeY) + ((int) titleBossImage[1]._sizeY) + ((int) titleBossImage[2]._sizeY), 18);
                     if (alpha > 0.0f) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                        Texture2D.gl.glColor4f(1f, 1f, 1f, alpha);
+                        Texture2D.setAlpha(alpha);
                         fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                        Texture2D.setAlpha(1);
                     }
                     titleImage[title_mob1].drawAtPointOption(0.0f, 9, 18);
                     titleImage[title_mobeye].drawAtPointOption(64.0f, 38, 18);
@@ -166,14 +167,14 @@ public class TitlePage extends TPage {
                     titleImage[title_title].drawAtPointOption(41.0f, 22.0f, 18);
 
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, f);
+                    Texture2D.setAlpha(f);
                     titleImage[title_titleglow].drawAtPointOption(24.0f, 6.0f, 18);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    Texture2D.setAlpha(1);
                     if (f > 0.0f) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                        Texture2D.gl.glColor4f(1f, 1f, 1f, f);
+                        Texture2D.setAlpha(f);
                         fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                        Texture2D.setAlpha(1);
                         break;
                     }
                     break;
@@ -186,19 +187,19 @@ public class TitlePage extends TPage {
                     titleImage[title_title].drawAtPointOption(41.0f, 22.0f, 18);
 
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(f, f, f, f);
+                    Texture2D.setAlpha(f);
                     titleImage[title_titleglow].drawAtPointOption(24.0f, 6.0f, 18);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    Texture2D.setAlpha(1f);
                     float alp = GameThread.gameTitleViewCount * 0.1f;
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(alp, alp, alp, alp);
+                    Texture2D.setColors(alp);
                     titleImage[title_startoff].drawAtPointOption(296.0f, 337.0f, 18);
                     titleImage[title_optionoff].drawAtPointOption(326.0f, 412.0f, 18);
                     titleImage[title_sncompany].drawAtPointOption(GameRenderer.CX, 456.0f, 17);
                     titleImage[title_about].drawAtPointOption(9.0f, 429.0f, 18);
                     titleImage[title_twitter].drawAtPointOption(56.0f, 429.0f, 18);
                     titleImage[title_facebook].drawAtPointOption(104.0f, 429.0f, 18);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    Texture2D.setColors(1);
                     break;
                 case 12:
                     titleImage[title_bg].drawAtPointOption(0.0f, 0.0f, 18);
@@ -209,9 +210,9 @@ public class TitlePage extends TPage {
                     titleImage[title_title].drawAtPointOption(41.0f, 22.0f, 18);
 
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, f);
+                    Texture2D.setAlpha(f);
                     titleImage[title_titleglow].drawAtPointOption(24.0f, 6.0f, 18);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1.0f);
+                    Texture2D.setAlpha(1);
 
                     titleImage[cTLS == 0 ? 9 : 8].drawAtPointOption(296.0f, 337.0f, 18);
                     titleImage[cTLS == 1 ? 11 : 10].drawAtPointOption(326.0f, 412.0f, 18);

@@ -55,9 +55,9 @@ public class ListPage extends TPage { //This class' parent will be a MenuPage al
             i = TouchManager.checkTouchListStatus();
 
             Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(0f, 0f, 0f, 0.5f);
+            Texture2D.setColors(0.5f);
             fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-            Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+            Texture2D.setColors(1);
         }
         images[i == 1 ? 3 : 2].drawAtPointOption(300.0f, 158.0f, 18);
         images[i == 2 ? 1 : 0].drawAtPointOption(300.0f, 258.0f, 18);

@@ -38,14 +38,15 @@ public class DataMap {
     public static final int MAP_TILE_TYPE_ROAD_WE = 1;
     public static final int MAP_TUTORIAL = 50;
     public static final int[][] DIR_MOVE_POS = {new int[]{0, -1}, new int[]{1, -1}, new int[]{1, 0}, new int[]{1, 1}, new int[]{0, 1}, new int[]{-1, 1}, new int[]{-1, 0}, new int[]{-1, -1}};
-    public static final int[] mapDataResource = {R.raw.map0, R.raw.map1, R.raw.map2, R.raw.map3, R.raw.map4, R.raw.map5, R.raw.map6, R.raw.map7, R.raw.map8, R.raw.map9, R.raw.map10, R.raw.map11, R.raw.map12, R.raw.map13, R.raw.map14, R.raw.map15, R.raw.map16, R.raw.map17, R.raw.map18, R.raw.map19, R.raw.map20, R.raw.map21, R.raw.map22, R.raw.map23, R.raw.map24, R.raw.map25, R.raw.map26, R.raw.map27, R.raw.map28, R.raw.map29, R.raw.map30, R.raw.map31, R.raw.map32, R.raw.map33, R.raw.map34, R.raw.map35, R.raw.map36, R.raw.map37, R.raw.map38, R.raw.map39, R.raw.map40, R.raw.map41, R.raw.map42, R.raw.map43, R.raw.map44, R.raw.map45, R.raw.map46, R.raw.map47, R.raw.map48, R.raw.map49, R.raw.map_tutorial};
-    public static final int[][] tileTileResource = {new int[]{R.drawable.map_t0_0, R.drawable.map_t0_1, R.drawable.map_t0_2, R.drawable.map_t0_3, R.drawable.map_t0_4, R.drawable.map_t0_5, R.drawable.map_t0_6, R.drawable.map_t0_7, R.drawable.map_t0_8, R.drawable.map_t0_9}, new int[]{R.drawable.map_t1_0, R.drawable.map_t1_1, R.drawable.map_t1_2, R.drawable.map_t1_3, R.drawable.map_t1_4, R.drawable.map_t1_5, R.drawable.map_t1_6, R.drawable.map_t1_7, R.drawable.map_t1_8, R.drawable.map_t1_9}, new int[]{R.drawable.map_t2_0, R.drawable.map_t2_1, R.drawable.map_t2_2, R.drawable.map_t2_3, R.drawable.map_t2_4, R.drawable.map_t2_5, R.drawable.map_t2_6, R.drawable.map_t2_7, R.drawable.map_t2_8, R.drawable.map_t2_9}, new int[]{R.drawable.map_t3_0, R.drawable.map_t3_1, R.drawable.map_t3_2, R.drawable.map_t3_3, R.drawable.map_t3_4, R.drawable.map_t3_5, R.drawable.map_t3_6, R.drawable.map_t3_7, R.drawable.map_t3_8, R.drawable.map_t3_9}, new int[]{R.drawable.map_t4_0, R.drawable.map_t4_1, R.drawable.map_t4_2, R.drawable.map_t4_3, R.drawable.map_t4_4, R.drawable.map_t4_5, R.drawable.map_t4_6, R.drawable.map_t4_7, R.drawable.map_t4_8, R.drawable.map_t4_9}};
-    public static final int[] tileBaseResource = {R.drawable.map_b0, R.drawable.map_b1, R.drawable.map_b2, R.drawable.map_b3, R.drawable.map_b4};
-    public static final Texture2D[] backTileImage0 = new Texture2D[tileTileResource[0].length];
-    public static final Texture2D[] backTileImage1 = new Texture2D[tileTileResource[1].length];
-    public static final Texture2D[] backTileImage2 = new Texture2D[tileTileResource[2].length];
-    public static final Texture2D[] backTileImage3 = new Texture2D[tileTileResource[3].length];
-    public static final Texture2D[] backTileImage4 = new Texture2D[tileTileResource[4].length];
+    private static final int[] mapDataResource = {R.raw.map0, R.raw.map1, R.raw.map2, R.raw.map3, R.raw.map4, R.raw.map5, R.raw.map6, R.raw.map7, R.raw.map8, R.raw.map9, R.raw.map10, R.raw.map11, R.raw.map12, R.raw.map13, R.raw.map14, R.raw.map15, R.raw.map16, R.raw.map17, R.raw.map18, R.raw.map19, R.raw.map20, R.raw.map21, R.raw.map22, R.raw.map23, R.raw.map24, R.raw.map25, R.raw.map26, R.raw.map27, R.raw.map28, R.raw.map29, R.raw.map30, R.raw.map31, R.raw.map32, R.raw.map33, R.raw.map34, R.raw.map35, R.raw.map36, R.raw.map37, R.raw.map38, R.raw.map39, R.raw.map40, R.raw.map41, R.raw.map42, R.raw.map43, R.raw.map44, R.raw.map45, R.raw.map46, R.raw.map47, R.raw.map48, R.raw.map49, R.raw.map_tutorial};
+    private static final int[][] tileTileResource = {new int[]{R.drawable.map_t0_0, R.drawable.map_t0_1, R.drawable.map_t0_2, R.drawable.map_t0_3, R.drawable.map_t0_4, R.drawable.map_t0_5, R.drawable.map_t0_6, R.drawable.map_t0_7, R.drawable.map_t0_8, R.drawable.map_t0_9}, new int[]{R.drawable.map_t1_0, R.drawable.map_t1_1, R.drawable.map_t1_2, R.drawable.map_t1_3, R.drawable.map_t1_4, R.drawable.map_t1_5, R.drawable.map_t1_6, R.drawable.map_t1_7, R.drawable.map_t1_8, R.drawable.map_t1_9}, new int[]{R.drawable.map_t2_0, R.drawable.map_t2_1, R.drawable.map_t2_2, R.drawable.map_t2_3, R.drawable.map_t2_4, R.drawable.map_t2_5, R.drawable.map_t2_6, R.drawable.map_t2_7, R.drawable.map_t2_8, R.drawable.map_t2_9}, new int[]{R.drawable.map_t3_0, R.drawable.map_t3_1, R.drawable.map_t3_2, R.drawable.map_t3_3, R.drawable.map_t3_4, R.drawable.map_t3_5, R.drawable.map_t3_6, R.drawable.map_t3_7, R.drawable.map_t3_8, R.drawable.map_t3_9}, new int[]{R.drawable.map_t4_0, R.drawable.map_t4_1, R.drawable.map_t4_2, R.drawable.map_t4_3, R.drawable.map_t4_4, R.drawable.map_t4_5, R.drawable.map_t4_6, R.drawable.map_t4_7, R.drawable.map_t4_8, R.drawable.map_t4_9}};
+    private static final int[] tileBaseResource = {R.drawable.map_b0, R.drawable.map_b1, R.drawable.map_b2, R.drawable.map_b3, R.drawable.map_b4};
+    private static final Texture2D[] backTileImage0 = new Texture2D[tileTileResource[0].length];
+    private static final Texture2D[] backTileImage1 = new Texture2D[tileTileResource[1].length];
+    private static final Texture2D[] backTileImage2 = new Texture2D[tileTileResource[2].length];
+    private static final Texture2D[] backTileImage3 = new Texture2D[tileTileResource[3].length];
+    private static final Texture2D[] backTileImage4 = new Texture2D[tileTileResource[4].length];
+    private static final Texture2D[][] backTileImages = {backTileImage0, backTileImage1, backTileImage2, backTileImage3, backTileImage4};
     private static DataMap current = null;
 
     public final int mapEndPositionCount, mapBackgroundType, lastShowBackBase, SID;
@@ -172,21 +173,11 @@ public class DataMap {
                 }
             }
         }
-        int i23 = SID / 10;
-        mapBackgroundType = i23;
-        lastShowBackBase = i23 >= 5 ? 0 : i23;
+        int chap = SID / 10;
+        mapBackgroundType = chap;
+        lastShowBackBase = chap >= 5 || chap < 0 ? 0 : chap;
 
-        if (mapBackgroundType <= 0 || mapBackgroundType > 4) {
-            backTileOldImage = backTileImage0;
-        } else if (mapBackgroundType == 1) {
-            backTileOldImage = backTileImage1;
-        } else if (mapBackgroundType == 2) {
-            backTileOldImage = backTileImage2;
-        } else if (mapBackgroundType == 3) {
-            backTileOldImage = backTileImage3;
-        } else
-            backTileOldImage = backTileImage4;
-
+        backTileOldImage = backTileImages[lastShowBackBase];
         for (int i = 0; i < backObjectImage.length; i++)
             backObjectImage[i] = new Texture2D(DataObject.objectImageResource.length);
     }
@@ -201,11 +192,16 @@ public class DataMap {
     }
 
     public void unload() {
-
+        for (Texture2D img : backObjectImage)
+            img.dealloc();
+        for (Texture2D img : backBaseImageArray)
+            img.dealloc();
+        for (Texture2D img : backTileOldImage)
+            img.dealloc();
     }
 
     public void addObjectUnit(int oType, int bX, int bY) {
-        ObjectUnit o = new ObjectUnit(oType, bX, bY);
+        objectUnit.add(new ObjectUnit(oType, bX, bY));
     }
 
     public int getRandomMapDirection(int i2, int i3, int i4) {

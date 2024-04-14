@@ -3,7 +3,9 @@ package com.sncompany.newtower.Battle;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataObject;
 import com.sncompany.newtower.DataClasses.DataStage;
+import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.Pages.stage.StageBase;
 import com.sncompany.newtower.Texture2D;
 
 /* loaded from: D:\decomp\classes.dex */
@@ -16,14 +18,13 @@ public class ObjectUnit extends EnemyUnit {
     public final int blockY;
     public int destroyEnableFlag;
     public int objectLastVanishTime;
-    public int objectSerial;
-    public int objectType;
     public int objectVanishCount;
     public int rewardType;
     public int rewardValue;
     public DataStage st;
 
     public ObjectUnit(int oType, int bX, int bY) {
+        super(null);
         for (int ODataI = 0; ODataI < 34; ODataI++)
             if (oType == DataObject.objectData[ODataI][0]) {
                 type = ODataI;
@@ -53,6 +54,30 @@ public class ObjectUnit extends EnemyUnit {
                 posY = (((bY + 1) * 45) + 22) * 50;
                 break;
         }
+    }
+
+    /**
+     * Copy constructor that assigns stage when needed
+     * @param sta The stage
+     * @param ori The objectUnit to copy
+     */
+    public ObjectUnit(DataStage sta, ObjectUnit ori) {
+        super(sta);
+
+        type = ori.type;
+        objectVanishCount = ori.objectVanishCount;
+        destroyEnableFlag = ori.destroyEnableFlag;
+        unitHP = ori.unitHP;
+        unitMaxHP = ori.unitMaxHP;
+        rewardType = ori.rewardType;
+        rewardValue = ori.rewardValue;
+        blockSize = ori.blockSize;
+        blockX = ori.blockX;
+        blockY = ori.blockY;
+        posX = ori.posX;
+        posY = ori.posY;
+
+        //TODO - Load Images
     }
 
     @Override
@@ -106,18 +131,18 @@ public class ObjectUnit extends EnemyUnit {
         float x = posX / 50f + 62, y = posY / 50f + 30;
 
         if (type == -2) {
-            float f3 = objectVanishCount < 15 ? 1.0f : 1.0f - (objectVanishCount * 0.066f);
+            float f3 = objectVanishCount < OBJECT_VANISHING_HALF_COUNT ? 1 : 1 - (objectVanishCount * OBJECT_VANISHING_ALPHA_DEGREE);
             Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(f3, f3, f3, f3);
+            Texture2D.setAlpha(f3);
             int i2 = rewardType;
             if (i2 == 0) {
-                uiUpperImage[1].drawAtPointOption(x - 1.0f, y - (objectVanishCount * 2), 20);
-                drawNumberBlock(rewardValue, numberMoneyImage, x + 1.0f, (y - (objectVanishCount * 2)) + 2.0f, 1, 18, 1);
+                st.page.uiUpperImage[StageBase.upper_money].drawAtPointOption(x - 1, y - (objectVanishCount * 2), 20);
+                GameRenderer.drawNumberBlock(rewardValue,st.page.numberMoneyImage, x + 1, (y - (objectVanishCount * 2)) + 2, 1, 18, 1);
             } else if (i2 == 1) {
-                uiUpperImage[0].drawAtPointOption(x - 1.0f, (y - (objectVanishCount * 2)) + 1.0f, 20);
-                drawNumberBlock(rewardValue, numberManaImage, x + 1.0f, (y - (objectVanishCount * 2)) + 2.0f, 1, 18, 1);
+                st.page.uiUpperImage[StageBase.upper_mana].drawAtPointOption(x - 1, (y - (objectVanishCount * 2)) + 1, 20);
+                GameRenderer.drawNumberBlock(rewardValue, st.page.numberManaImage, x + 1, (y - (objectVanishCount * 2)) + 2, 1, 18, 1);
             }
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            Texture2D.setAlpha(1);
             return;
         }
         int i3 = 34;
@@ -152,15 +177,15 @@ public class ObjectUnit extends EnemyUnit {
         if (type != 28 && type != 29 && type != 32 && destroyEnableFlag == 0) {
             int i5 = blockSize;
             if (i5 == 0 || i5 == 1) {
-                shadowImage[0].drawAtPointOption(x, 27.0f + y, 33);
+                st.page.shadowImage[0].drawAtPointOption(x, 27.0f + y, 33);
             } else if (i5 == 2 || i5 == 3 || i5 == 4 || i5 == 5) {
-                shadowImage[1].drawAtPointOption(x, y + 27.0f, 33);
+                st.page.shadowImage[1].drawAtPointOption(x, y + 27.0f, 33);
             }
         }
         float f4 = i4 + x;
         float f5 = y + 22.0f + i3;
-        backObjectImage[type].drawAtPointOption(f4, f5, 33);
-        if (GameThread.commonTargetType == 1 && GameThread.commonTargetNumber == objectSerial) {
+        st.map.backObjectImage[type].drawAtPointOption(f4, f5, 33);
+        if (st.selectedTarget == this) {
             st.page.targetImage.drawAtPointOption(x, y, 9);
             int i6 = blockSize;
             int i7 = i6 != 0 ? (i6 == 1 || i6 == 2 || i6 == 3 || i6 == 4 || i6 == 5) ? -67 : -45 : -22;

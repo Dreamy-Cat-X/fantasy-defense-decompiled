@@ -9,6 +9,7 @@ import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.Pages.stage.StageBase;
 import com.sncompany.newtower.Texture2D;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public float headRotateDegree = 0f;
     public boolean heroFlag;//Replace with (this instanceof HeroUnit)
     public int heroOrder;
-    public int lastViewDirection = 6;
+    public int lastViewDirection = 6;//2 and 6 are all it ever gets written to it
     public int originalPosX;
     public int originalPosY;
     public int posX;
@@ -55,8 +56,10 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public int towerCoolTimeMax;
     public int towerType; //deprecated, replace with [type] and [level], use oldType() when needed for data arrays
     public int level = 0;
-    public int type;
     public int unitPower;
+    /**
+     * 0 means Idle, 1 means attacking, 2 is locked apparently
+     */
     public int unitStatus = 2;
     public int unitStatusCount = 0;
     public ArrayList<EnemyUnit> lockedEnemies = new ArrayList<>(3);
@@ -193,7 +196,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public void upgradeUnit() {
         if (getUpgradeType() != -1 && st.Money >= getUpgradePrice()) {
             st.Money -= getUpgradePrice();
-            towerType = getUpgradeType();
+            type = getUpgradeType();
             restatTowerUnit(true);
             st.addEffectUnit(14, posX, posY);
             GameThread.playSound(13);
@@ -390,131 +393,44 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
             }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:12:0x0054  */
-    /* JADX WARN: Removed duplicated region for block: B:19:0x00e6  */
-    /* JADX WARN: Removed duplicated region for block: B:55:0x01b5  */
-    /* JADX WARN: Removed duplicated region for block: B:64:0x01d4 A[LOOP:1: B:63:0x01d2->B:64:0x01d4, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:70:0x01ce  */
-    /* JADX WARN: Removed duplicated region for block: B:74:0x0076  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public void draw() {
         float x = posX / 50f + 62, y = posY / 50f + 30;
-        int i;
-        int[] iArr;
-        int i2;
-        int i3;
-        float f3;
-        int i4;
-        int i5;
-        int i6;
-        float f4;
-        float f5;
-        float f6 = x;
-        int i7 = towerType;
-        if (i7 == -1) {
-            return;
-        }
-        int i8 = 1;
-        int towerLevelOrder = getTowerLevelOrder(i7, heroFlag) + 1;
-        int i9 = unitStatus;
-        int i10 = 5;
-        if (i9 != 0) {
-            if (i9 == 1) {
-                i = lastViewDirection == 6 ? 2 : 3;
-                i10 = 3;
-            } else if (i9 != 2) {
-                i10 = 25;
-                i = 0;
-            }
 
-            int i12 = drawData[drawData[1] + i];
-            int i13 = drawData[drawData[0] + drawData[i12 + 1 + ((unitStatusCount / i10) % drawData[i12])]];
-            i2 = drawData[i13];
-            int i14 = i13 + 1;
-            float f7 = y + 10.0f;
-            st.page.shadowImage[0].drawAtPointOption(f6, f7, 9);
-            i3 = 0;
-            while (i3 < i2) {
-                boolean z = heroFlag == 1 && i3 == 0 && unitStatus == 0;
-                if (z) {
-                    if (specialMaxCooltime > 0) {
-                        f5 = (specialMaxCooltime - specialCooltime) / specialMaxCooltime;
-                        if (f5 < 0.3f) {
-                            f5 = 0.3f;
-                        }
-                    } else {
-                        f5 = 1.0f;
-                    }
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(f5, f5, f5, f5);
-                }
-                int i15 = (i3 * 5) + i14;
-                int i16 = i15 + 3;
-                if (drawData[i16] != 1000) {
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    i6 = i14;
-                    Texture2D.gl.glColor4f(drawData[i16] / 1000.0f, drawData[i16] / 1000.0f, drawData[i16] / 1000.0f, drawData[i16] / 1000.0f);
-                } else {
-                    i6 = i14;
-                }
-                if (drawData[i15 + 4] == 0) {
-                    drawTexture[drawData[i15]].drawAtPointOption(drawData[i15 + 1] + f6, y + drawData[i15 + 2] + 10.0f, 18);
-                } else {
-                    drawTexture[drawData[i15]].drawAtPointOptionFlip(drawData[i15 + 1] + f6, y + drawData[i15 + 2] + 10.0f, 18);
-                }
-                if (drawData[i16] != 1000) {
-                    f4 = 1.0f;
-                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                } else {
-                    f4 = 1.0f;
-                }
-                if (z) {
-                    Texture2D.gl.glColor4f(f4, f4, f4, f4);
-                }
-                i3++;
-                i14 = i6;
+        int towerLevelOrder = level + 1;
+
+        int sprSpd = 5;
+        int dire = lastViewDirection == 6 ? 0 : 1;
+        if (unitStatus == 1) {
+            dire = lastViewDirection == 6 ? 2 : 3;
+            sprSpd = 3;
+        } else if (unitStatus != 2) {
+            sprSpd = 25;
+            dire = 0;
+        }
+        if (st.turbo > 0)
+            sprSpd /= st.turbo;
+
+        int sCount = drawData[drawData[1] + dire];
+        int sCur = drawData[drawData[0] + drawData[sCount + 1 + ((unitStatusCount / sprSpd) % drawData[sCount])]];
+        st.page.shadowImage[0].drawAtPointOption(x, y + 10, 9);
+        for (int i = 0; i < drawData[sCur]; i++) {
+            int i15 = (i * 5) + (sCur + 1);
+            int i16 = i15 + 3;
+            if (drawData[i16] != 1000) {
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                Texture2D.setColors(drawData[i16] / 1000f);
             }
-            if (towerLevelOrder == 1) {
-                f3 = f6 - DRAW_SCALE_X_SMALL_DEGREE;
-                i4 = 7;
-                f3 = f6;
-                i4 = 15;
-            } else {
-                f3 = f6 + 15.0f;
-                i4 = 0;
-            }
-            for (i5 = 0; i5 < towerLevelOrder; i5++) {
-                uiUpperImage[12].drawAtPointOption((i5 * i4) + f3, f7, 9);
-            }
+            if (drawData[i15 + 4] == 0)
+                drawTexture[drawData[i15]].drawAtPointOption(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10.0f, 18);
+            else
+                drawTexture[drawData[i15]].drawAtPointOptionFlip(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10.0f, 18);
+
+            if (drawData[i16] != 1000)
+                Texture2D.setColors(1);
         }
-        i = lastViewDirection == 6 ? 0 : 1;
-        if (specialShowCount > 0) {
-            specialShowCount--;
-            if (heroFlag == 1) {
-                i = lastViewDirection == 6 ? 4 : 5;
-            }
-        }
-        int i17 = GameThread.turboFlag * 5;
-        if (i17 > 0) {
-            i10 = i17;
-        }
-        if (heroFlag != 1) {
-        }
-        int i122 = iArr[iArr[1] + i];
-        int i132 = iArr[iArr[0] + iArr[i122 + 1 + ((unitStatusCount / i10) % iArr[i122])]];
-        i2 = iArr[i132];
-        int i142 = i132 + 1;
-        float f72 = y + 10.0f;
-        st.page.shadowImage[0].drawAtPointOption(f6, f72, 9);
-        i3 = 0;
-        while (i3 < i2) {
-        }
-        if (towerLevelOrder == 1) {
-        }
-        while (i5 < towerLevelOrder) {
-        }
+        float starX = x - (7.5f * (level));
+        for (int i5 = 0; i5 < towerLevelOrder; i5++)
+            st.page.uiUpperImage[StageBase.upper_star].drawAtPointOption((i5 * 15) + starX, y + 10, 9);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.sncompany.newtower.Pages;
 
 import androidx.core.view.ViewCompat;
 
-import com.sncompany.newtower.Battle.ArrowUnit;
 import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
@@ -70,6 +69,21 @@ public class StagePage extends StageBase {
     public static final int GAME_STAGE_CLEAR_TOUCH_LIST_5_REWARD_OK = 5;
     public static final int GAME_STAGE_CLEAR_TOUCH_LIST_6_ENDING_VIEW_OK = 6;
     public static final int GAME_STAGE_CLEAR_TOUCH_LIST_TOTAL_COUNT = 7;
+    /**
+     * Contains all the dialog for reward attaining.
+     */
+    static final String[] rewardDataString = {
+            "You've acquired a Hero.", "Hero: Champion acquired.", "Check for more info under the Item> Equipment menu.",
+            "Hero Points obtained.", "You obtained 1,500 Hero Points.", " ",
+            "You've acquired a Hero.", "Hero: Bow Master acquired.", "Check for more info under the Item> Equipment menu.",
+            "You acquired special skills.", "You can now use the special skill for all of your Heroes.", "Select a Hero character while playing.",
+            "You've acquired a Hero.", "Hero: Archmage acquired.", "Check for more info under the Item> Equipment menu.",
+            "The upgrade limit is now uncapped.", "The upgrade limit of your Hero units has increased.(+5)", " ",
+            "A Hero's normal attack has been upgraded.", "All of your Heroes now cause a special effect with their Normal attacks.", " ",
+            "Hero Points obtained.", "You obtained 2,000 Hero Points.", " ",
+            "You obtained a Hero item.", "You obtained a Zephyrus Amulet.", " ",
+            "Hero Points obtained.", "You obtained 3,500 Hero Points.", " "
+    };
 
     public StagePage(TPage par, DataStage s) {
         super(par, s);
@@ -95,7 +109,7 @@ public class StagePage extends StageBase {
 
     /* JADX WARN: Code restructure failed: missing block: B:263:0x005f, code lost:
 
-        if (com.sncompany.newtower.GameThread.myWaveRunFlag != false) goto L30;
+        if (st.waveManager.waveRunF != false) goto L30;
      */
     /* JADX WARN: Code restructure failed: missing block: B:264:0x0061, code lost:
 
@@ -158,7 +172,7 @@ public class StagePage extends StageBase {
      */
     /* JADX WARN: Code restructure failed: missing block: B:302:0x00f5, code lost:
 
-        if (com.sncompany.newtower.GameThread.myWaveRunFlag != false) goto L66;
+        if (st.waveManager.waveRunF != false) goto L66;
      */
     /* JADX WARN: Code restructure failed: missing block: B:303:0x00f7, code lost:
 
@@ -275,11 +289,11 @@ public class StagePage extends StageBase {
                                 st.updateObjectUnit();
                             }
                         } else {
-                            for (int i10 = 0; i10 < turbo; i10++) {
-                                waveManager.monsterWaveUpdate();
+                            for (int i10 = 0; i10 < st.turbo; i10++) {
+                                st.waveManager.monsterWaveUpdate();
                                 st.updateEffects(false);
                                 st.updateArrowUnit();
-                                if (updateMonsterUnit()) { //Gayme over
+                                if (st.updateMonsterUnit()) { //Gayme over
                                     st.sortEntities();
                                     gameStatus = 23;
                                     GameRenderer.startViewCount = 0;
@@ -342,34 +356,34 @@ public class StagePage extends StageBase {
                 break;
         }
         st.sortEntities();
-        int checkWaveAndFinishCheck = waveManager.checkWaveAndFinishCheck();
-        if (checkWaveAndFinishCheck != 1) {
-            if (checkWaveAndFinishCheck != 3)
-                return;
-
+        int checkWaveAndFinishCheck = st.waveManager.checkWaveAndFinishCheck();
+        if (checkWaveAndFinishCheck == 3) { //This is a game over too btw
             st.sortEntities();
             gameStatus = 23;
             GameRenderer.startViewCount = 0;
             gameSubStatus = 0;
-            stopLoopSound(2);
-            playSound(11);
+            GameThread.stopLoopSound(2);
+            GameThread.playSound(11);
             setClearPointAndHighscore();
-            if (mapType == 0)
+            /*if (mapType == 0)
                 victoryH = (waveManager.current * 8) + (Life * 10);
             else if (mapType == 1)
                 victoryH = waveManager.current * 15;
             else if (mapType == 2)
                 victoryH = waveManager.current * 5;
             if (st.perfectClear())
-                st.victoryH *= 2;
+                st.victoryH *= 2;*/
+            st.victoryH = 50;
 
             Config.heroPoints += st.victoryH;
             DataAward.check_heroPoint();
 
-            Config.saveAll(newTower);
+            Config.saveAll();
             myOscillator[11].initWithTwoWayStartPosition(-350, 0, 15, 30, 10);
             return;
-        }
+        } else if (checkWaveAndFinishCheck != 1)
+            return;
+
         stopLoopSound(2);
         playSound(10);
 
@@ -746,7 +760,7 @@ public class StagePage extends StageBase {
             drawStringDoubleM(String.format("Stage %d", Integer.valueOf(GameThread.mapNumber + 1)), 183.0f, 220.0f, 18);
             drawStringDoubleM(String.format("Wave %-2d", Integer.valueOf(DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[GameThread.mapNumber])), 435.0f, 220.0f, 18);
             if (GameThread.mapNumber % 10 == 9) {
-                uiUpperImage[17].drawAtPointOption(CX, 308.0f, 17);
+                uiUpperImage[StageBase.upper_bossstage].drawAtPointOption(CX, 308.0f, 17);
             }
             setFontDoubleColor(-65703, -9816043);
             setFontSize(25);
@@ -824,11 +838,11 @@ public class StagePage extends StageBase {
         drawPlayingUi(false, z);
         int i9 = GameThread.characterMenuSelectFlag;
         if (i9 == 1 || i9 == 4) {
-            getAddSettingPosition();
+            boolean addable = getAddSettingPosition();
             drawAddGridBlock();
-            drawAddRangeCircle(GameThread.characterMenuSelectFlag, GameThread.characterAddNumber, GameThread.characterAddOrder, GameThread.characterAddPosX, GameThread.characterAddPosY, GameThread.characterAddBoolean);
+            drawAddRangeCircle(GameThread.characterMenuSelectFlag, GameThread.characterAddNumber, GameThread.characterAddOrder, characterAddPosX, characterAddPosY, addable);
             try {
-                drawSimpleTowerUnit(GameThread.characterAddNumber, GameThread.characterAddHeroFlag, GameThread.characterAddPosX, GameThread.characterAddPosY);
+                drawSimpleTowerUnit(GameThread.characterAddNumber, GameThread.characterAddHeroFlag, characterAddPosX, characterAddPosY);
             } catch (Exception unused) {
             }
         }
@@ -1495,10 +1509,10 @@ public class StagePage extends StageBase {
                 }
                 setFontDoubleColor(ViewCompat.MEASURED_STATE_MASK, ViewCompat.MEASURED_STATE_MASK);
                 setFontSize(15);
-                drawStringDoubleM(GameThread.rewardDataString[GameThread.rewardShowOrder * 3], CX, 153.0f, 17);
+                drawStringDoubleM(rewardDataString[GameThread.rewardShowOrder * 3], CX, 153.0f, 17);
                 setFontColor(ViewCompat.MEASURED_STATE_MASK);
-                drawStringM(GameThread.rewardDataString[(GameThread.rewardShowOrder * 3) + 1], CX, 243.0f, 17);
-                drawStringM(GameThread.rewardDataString[(GameThread.rewardShowOrder * 3) + 2], CX, 262.0f, 17);
+                drawStringM(rewardDataString[(GameThread.rewardShowOrder * 3) + 1], CX, 243.0f, 17);
+                drawStringM(rewardDataString[(GameThread.rewardShowOrder * 3) + 2], CX, 262.0f, 17);
                 break;
             case 5:
                 stageClearImage[23].drawAtPointOption(124.0f, myOscillator[12].getCurrentPosition() + 196, 18);
@@ -2013,17 +2027,12 @@ public class StagePage extends StageBase {
                     return;
                 case 12:
                     GameThread.playSound(14);
-                    GameThread.myWaveRunFlag = !GameThread.myWaveRunFlag;
+                    st.waveManager.waveRunF = !st.waveManager.waveRunF;
                     TouchManager.processTouchStatus();
                     return;
                 case 13:
                     GameThread.playSound(14);
-                    int i7 = GameThread.turboFlag;
-                    if (i7 == 1) {
-                        GameThread.turboFlag = 3;
-                    } else if (i7 == 3) {
-                        GameThread.turboFlag = 1;
-                    }
+                    st.turbo = (byte)(st.turbo == 1 ? 3 : 1);
                     TouchManager.processTouchStatus();
                     return;
                 default:
@@ -2076,7 +2085,7 @@ public class StagePage extends StageBase {
                             if (NewTower.gameThread.enableAddUnit()) {
                                 GameThread.playSound(14);
                                 getAddSettingPosition();
-                                st.addUnit(GameThread.characterAddNumber, (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f), (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f));
+                                st.addUnit(GameThread.characterAddNumber, (int) ((characterAddPosX - 62.0f) / 45.0f), (int) ((characterAddPosY - 30.0f) / 45.0f));
                                 st.Money -= TowerUnit.getBuyPrice(GameThread.characterAddNumber);
                                 GameThread.characterMenuSelectFlag = 0;
                             }
@@ -2118,7 +2127,7 @@ public class StagePage extends StageBase {
                             if (NewTower.gameThread.enableAddUnit()) {
                                 GameThread.playSound(14);
                                 getAddSettingPosition();
-                                st.selectedUnit = st.addHero(GameThread.characterAddOrder, (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f), (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f), true);
+                                st.selectedUnit = st.addHero(GameThread.characterAddOrder, (int) ((characterAddPosX - 62.0f) / 45.0f), (int) ((characterAddPosY - 30.0f) / 45.0f), true);
                                 myOscillator[8].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                                 myOscillator[9].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                                 myOscillator[10].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
@@ -2150,7 +2159,7 @@ public class StagePage extends StageBase {
                         case 6:
                             if (checkTouchListStatus2 == 17) {
                                 GameThread.playSound(14);
-                                GameThread.myMana -= HeroUnit.getHeroBuyPrice(GameThread.characterAddOrder);
+                                st.Mana -= HeroUnit.getHeroBuyPrice(GameThread.characterAddOrder);
                                 GameThread.characterMenuSelectFlag = 0;
                                 break;
                             } else if (checkTouchListStatus2 != 19) {
@@ -2930,9 +2939,9 @@ public class StagePage extends StageBase {
                             setFontColor(-1);
                             uiCharButtonImage[5].drawAtPointOption(670.0f, 350.0f, i13);
                             if (GameThread.towerUnit[i17].heroFlag == 1) {
-                                uiUpperImage[0].drawAtPointOption(696.0f, 428.0f, i13);
+                                uiUpperImage[StageBase.upper_mana].drawAtPointOption(696.0f, 428.0f, i13);
                             } else {
-                                uiUpperImage[1].drawAtPointOption(696.0f, 427.0f, i13);
+                                uiUpperImage[StageBase.upper_money].drawAtPointOption(696.0f, 427.0f, i13);
                             }
                             drawStringM(String.valueOf(i2), 755.0f, 430.0f, 20);
                             return;
@@ -2940,9 +2949,9 @@ public class StagePage extends StageBase {
                         setFontColor(-1);
                         uiCharButtonImage[4].drawAtPointOption(670.0f, 350.0f, i13);
                         if (GameThread.towerUnit[i17].heroFlag == 1) {
-                            uiUpperImage[0].drawAtPointOption(696.0f, 428.0f, i13);
+                            uiUpperImage[StageBase.upper_mana].drawAtPointOption(696.0f, 428.0f, i13);
                         } else {
-                            uiUpperImage[1].drawAtPointOption(696.0f, 427.0f, i13);
+                            uiUpperImage[StageBase.upper_money].drawAtPointOption(696.0f, 427.0f, i13);
                         }
                         drawStringM(String.valueOf(i2), 755.0f, 430.0f, 20);
                         return;
@@ -2966,7 +2975,7 @@ public class StagePage extends StageBase {
         if (towerLevelOrder < getTowerMaxLevel(GameThread.towerUnit[i17].heroFlag) - 1 && !z2) {
             TouchManager.addTouchRectListData(16, CGRectMake(670.0f, 350.0f, 115.0f, 115.0f));
         }
-        if (GameThread.towerUnit[i17].heroFlag == 1 && GameThread.rewardDataValue[3] == 1 && GameThread.towerUnit[i17].specialCooltime <= 0 && GameThread.myMana >= GameThread.towerUnit[i17].specialMana) {
+        if (GameThread.towerUnit[i17].heroFlag == 1 && GameThread.rewardDataValue[3] == 1 && GameThread.towerUnit[i17].specialCooltime <= 0 && st.Mana >= GameThread.towerUnit[i17].specialMana) {
             TouchManager.addTouchRectListData(18, CGRectMake(625.0f, 272.0f, 160.0f, 69.0f));
         }
         if (GameThread.cheatData[4]) {
@@ -3077,7 +3086,7 @@ public class StagePage extends StageBase {
             } else {
                 uiCharButtonImage[8].drawAtPointOption(625.0f, 272.0f, 18);
             }
-            if (GameThread.towerUnit[i17].specialCooltime > 0 || GameThread.myMana < GameThread.towerUnit[i17].specialMana) {
+            if (GameThread.towerUnit[i17].specialCooltime > 0 || st.Mana < GameThread.towerUnit[i17].specialMana) {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                 Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
                 fillBlackImage.fillRect(631.0f, 278.0f, (GameThread.towerUnit[i17].specialCooltime * 148) / GameThread.towerUnit[i17].specialMaxCooltime, 57.0f);
@@ -3132,29 +3141,29 @@ public class StagePage extends StageBase {
         TouchManager.addTouchRectListData(4, CGRectMake(742.0f, 337.0f, 56.0f, 56.0f));
         TouchManager.addTouchRectListData(5, CGRectMake(742.0f, 402.0f, 56.0f, 56.0f));
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 14;
-        uiUpperImage[7].drawAtPointOption(0.0f, 0.0f, 18);
-        uiUpperImage[1].drawAtPointOption(9.0f, 4.0f, 18);
-        uiUpperImage[0].drawAtPointOption(126.0f, 5.0f, 18);
-        uiUpperImage[8].drawAtPointOption(298.0f, 6.0f, 18);
-        int i5 = GameThread.turboFlag;
+        uiUpperImage[StageBase.upper_upbar].drawAtPointOption(0.0f, 0.0f, 18);
+        uiUpperImage[StageBase.upper_money].drawAtPointOption(9.0f, 4.0f, 18);
+        uiUpperImage[StageBase.upper_mana].drawAtPointOption(126.0f, 5.0f, 18);
+        uiUpperImage[StageBase.upper_wave].drawAtPointOption(298.0f, 6.0f, 18);
+        int i5 = st.turbo;
         if (i5 == 1) {
-            uiUpperImage[14].drawAtPointOption(22.0f, 398.0f, 18);
-            uiUpperImage[14].drawAtPointOption(16.0f, 398.0f, 18);
-            uiUpperImage[4].drawAtPointOption(1.0f, 391.0f, 18);
+            uiUpperImage[StageBase.upper_speedempty].drawAtPointOption(22.0f, 398.0f, 18);
+            uiUpperImage[StageBase.upper_speedempty].drawAtPointOption(16.0f, 398.0f, 18);
+            uiUpperImage[StageBase.upper_speed0].drawAtPointOption(1.0f, 391.0f, 18);
         } else if (i5 == 3) {
-            uiUpperImage[6].drawAtPointOption(DRAW_SCALE_X_SMALL_DEGREE, 391.0f, 18);
-            uiUpperImage[5].drawAtPointOption(7.0f, 391.0f, 18);
-            uiUpperImage[4].drawAtPointOption(1.0f, 391.0f, 18);
+            uiUpperImage[StageBase.upper_speed2].drawAtPointOption(DRAW_SCALE_X_SMALL_DEGREE, 391.0f, 18);
+            uiUpperImage[StageBase.upper_speed1].drawAtPointOption(7.0f, 391.0f, 18);
+            uiUpperImage[StageBase.upper_speed0].drawAtPointOption(1.0f, 391.0f, 18);
         }
         if (GameThread.gameStatus == 21) {
-            uiUpperImage[3].drawAtPointOption(5.0f, 437.0f, 18);
+            uiUpperImage[StageBase.upper_ingameon].drawAtPointOption(5.0f, 437.0f, 18);
         } else {
-            uiUpperImage[2].drawAtPointOption(5.0f, 437.0f, 18);
+            uiUpperImage[StageBase.upper_ingameoff].drawAtPointOption(5.0f, 437.0f, 18);
         }
-        if (GameThread.myWaveRunFlag) {
-            uiUpperImage[15].drawAtPointOption(6.0f, 344.0f, 18);
+        if (st.waveManager.waveRunF) {
+            uiUpperImage[StageBase.upper_pauseoff].drawAtPointOption(6.0f, 344.0f, 18);
         } else {
-            uiUpperImage[16].drawAtPointOption(6.0f, 344.0f, 18);
+            uiUpperImage[StageBase.upper_pauseon].drawAtPointOption(6.0f, 344.0f, 18);
         }
         drawNumberBlock(st.Money, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
         drawNumberBlock(st.Mana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
@@ -3170,7 +3179,7 @@ public class StagePage extends StageBase {
         } else {
             drawNumberBlock(DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[GameThread.mapNumber], numberWaveImage, drawNumberBlock + 10.0f, 8.0f, 1, 18, 2);
         }
-        drawMyLife();
+        drawBaseHealth();
         boolean sele = GameThread.characterMenuSelectFlag == 3 || GameThread.characterMenuSelectFlag == 4 || GameThread.characterMenuSelectFlag == 6;
         uiButtonImage[((sele || !checkEnableBuyUnit(0)) ? 9 : 0)].drawAtPointOption(myOscillator[0].getCurrentPosition() + 770, 77.0f, 17);
         drawNumberBlock(GameThread.getBuyPrice(0), numberUnitBuyImage, myOscillator[0].getCurrentPosition() + 770, 114.0f, -2, 17, 1);
@@ -3202,7 +3211,7 @@ public class StagePage extends StageBase {
                 int i12 = i10 + 8;
                 uiButtonImage[(i11 != 0 ? i11 != 5 ? i11 != 10 ? 0 : 8 : 7 : 6) + (checkEnableHeroBuyUnit(i10) ? 0 : 9)].drawAtPointOption(myOscillator[i12].getCurrentPosition() + i8, 12.0f, 17);
                 drawNumberBlock(heroBuyPrice, numberHeroBuyImage, i8 + 5 + myOscillator[i12].getCurrentPosition(), 49.0f, -2, 17, 1);
-                uiUpperImage[13].drawAtPointOption((i8 - 17) + myOscillator[i12].getCurrentPosition(), 49.0f, 17);
+                uiUpperImage[StageBase.upper_hero].drawAtPointOption((i8 - 17) + myOscillator[i12].getCurrentPosition(), 49.0f, 17);
                 i8 += 60;
             }
         }
@@ -3342,6 +3351,6 @@ public class StagePage extends StageBase {
             if (twu instanceof HeroUnit && twu.type == i)
                 return false;
 
-        return myMana >= HeroUnit.getHeroBuyPrice(i);
+        return st.Mana >= HeroUnit.getHeroBuyPrice(i);
     }
 }

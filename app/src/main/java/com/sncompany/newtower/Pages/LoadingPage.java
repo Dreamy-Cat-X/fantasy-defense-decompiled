@@ -148,9 +148,9 @@ public class LoadingPage extends TPage {
         GameRenderer.drawFont.getTextBounds(TIP_TEXT[loadTipNumber], 0, TIP_TEXT[loadTipNumber].length(), Texture2D.bounds_);
         int boundsize = Texture2D.bounds_.right - Texture2D.bounds_.left;
         Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-        Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+        Texture2D.setColors(0.5f);
         fillBlackImage.fillRect((GameRenderer.CX - (boundsize / 2f)) - 5, 380.0f, boundsize + 10, split.length * 27);
-        Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        Texture2D.setColors(1f);
         for (int part = 0; part < split.length; part++)
             GameRenderer.drawStringDoubleM(split[part], 385.0f, (part * 21) + 387, 17);
     }

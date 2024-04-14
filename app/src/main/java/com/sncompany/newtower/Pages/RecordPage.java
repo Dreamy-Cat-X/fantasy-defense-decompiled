@@ -221,27 +221,27 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
         if (lastAction == TouchManager.TOUCH_STATUS_NO_INPUT) {
             int cTLS = TouchManager.checkTouchListStatus();
             if (cTLS == 3)
-                GameRenderer.awardListDraw.backupCurrentDrawPosition();
+                awardListDraw.backupCurrentDrawPosition();
             else if (cTLS == 4) {
                 scrollbars[1].setUpdatePosition(TouchManager.getFirstFirstActionTouch().y);
-                GameRenderer.awardListDraw.setAnchorDrawPosition(scrollbars[1].BarLastValue);
+                awardListDraw.setAnchorDrawPosition(scrollbars[1].BarLastValue);
             }
             return;
         } else if (lastAction == TouchManager.TOUCH_STATUS_START_INPUTED) {
             int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstLastActionTouch());
             if (cTLP == 3) {
                 if (TouchManager.checkTouchMoveDegree(true))
-                    GameRenderer.awardListDraw.resetWithDegree((int) (-TouchManager.lastMoveCheckDistance.y));
+                    awardListDraw.resetWithDegree((int) (-TouchManager.lastMoveCheckDistance.y));
             } else if (cTLP == 4) {
                 scrollbars[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().y);
-                GameRenderer.awardListDraw.setAnchorDrawPosition(scrollbars[1].BarLastValue);
+                awardListDraw.setAnchorDrawPosition(scrollbars[1].BarLastValue);
             }
             return;
         }
         if (lastAction != TouchManager.TOUCH_STATUS_START_PROCESSED) {
             return;
         }
-        GameRenderer.awardListDraw.resetTargetPosition();
+        awardListDraw.resetTargetPosition();
         switch (TouchManager.checkTouchListStatus()) {
             case BACK:
                 GameThread.playSound(15);

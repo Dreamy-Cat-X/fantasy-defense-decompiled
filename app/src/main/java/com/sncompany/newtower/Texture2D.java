@@ -67,6 +67,18 @@ public class Texture2D {
     public static final float VIEW_SCRWIDTH = 800.0f;
     public static final float VIEW_SCRHEIGHT = 480.0f;
 
+    public static void setAlpha(float a) {
+        gl.glColor4f(1, 1, 1, a);
+    }
+
+    /**
+     * Similar to setAlpha, but darkens the picture as the opacity lowers
+     * @param a RGBA value
+     */
+    public static void setColors(float a) {
+        gl.glColor4f(a, a, a, a);
+    }
+
     public Texture2D() {
         if (bounds_ == null)
             bounds_ = new Rect();
@@ -236,20 +248,19 @@ public class Texture2D {
 
         pointX += DRAW_ADJUST_X_MOVE;
         pointY = VIEW_SCRHEIGHT - pointY - height + DRAW_ADJUST_Y_MOVE;
-        float[] fArr2 = vertices;
-        fArr2[0] = pointX - TEXTURE_DRAW_MARGIN;
-        fArr2[1] = pointY - TEXTURE_DRAW_MARGIN;
-        fArr2[2] = 0.0f;
-        fArr2[3] = pointX + width;
-        fArr2[4] = pointY - TEXTURE_DRAW_MARGIN;
-        fArr2[5] = 0.0f;
-        fArr2[6] = pointX - TEXTURE_DRAW_MARGIN;
-        fArr2[7] = pointY + height;
-        fArr2[8] = 0.0f;
-        fArr2[9] = pointX + width;
-        fArr2[10] = pointY + height;
-        fArr2[11] = 0.0f;
-        mVertexBuffer.put(fArr2);
+        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[2] = 0.0f;
+        vertices[3] = pointX + width;
+        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[5] = 0.0f;
+        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[7] = pointY + height;
+        vertices[8] = 0.0f;
+        vertices[9] = pointX + width;
+        vertices[10] = pointY + height;
+        vertices[11] = 0.0f;
+        mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
         coordinatesBuffer.put(coordinates);
         coordinatesBuffer.position(0);
@@ -657,91 +668,41 @@ public class Texture2D {
         gl.glDrawArrays(5, 0, 4);
     }
 
-    public void drawAtPointOptionClipSize(float f, float f2, int i, CGRect cGRect, float f3) {
+    public void drawAtPointOptionClipSize(float x, float y, int pivot, CGRect rect, float siz) {
         if (this.name == -1) {
             return;
         }
-        coordinates[0] = (cGRect.originX * this._maxS) / this._sizeX;
-        coordinates[1] = ((cGRect.originY + cGRect.sizeHeight) * this._maxT) / this._sizeY;
-        coordinates[2] = ((cGRect.originX + cGRect.sizeWidth) * this._maxS) / this._sizeX;
-        coordinates[3] = ((cGRect.originY + cGRect.sizeHeight) * this._maxT) / this._sizeY;
-        coordinates[4] = (cGRect.originX * this._maxS) / this._sizeX;
-        coordinates[5] = (cGRect.originY * this._maxT) / this._sizeY;
-        coordinates[6] = ((cGRect.originX + cGRect.sizeWidth) * this._maxS) / this._sizeX;
-        coordinates[7] = (cGRect.originY * this._maxT) / this._sizeY;
-        float[] fArr = coordinates;
-        if (fArr[1] > 1.0f) {
-            fArr[1] = 1.0f;
-        }
-        float[] fArr2 = coordinates;
-        if (fArr2[2] > 1.0f) {
-            fArr2[2] = 1.0f;
-        }
-        float[] fArr3 = coordinates;
-        if (fArr3[3] > 1.0f) {
-            fArr3[3] = 1.0f;
-        }
-        float[] fArr4 = coordinates;
-        if (fArr4[6] > 1.0f) {
-            fArr4[6] = 1.0f;
-        }
-        width = (((this._width * this._maxS) * cGRect.sizeWidth) / this._sizeX) * f3;
-        float f4 = (((this._height * this._maxT) * cGRect.sizeHeight) / this._sizeY) * f3;
-        height = f4;
-        pointX = f;
-        pointY = f2;
-        if (i == 9) {
-            pointX = f - (width / 2.0f);
-            pointY = f2 - (f4 / 2.0f);
-        } else if (i == 10) {
-            pointY = f2 - (f4 / 2.0f);
-        } else if (i == 12) {
-            pointX = f - width;
-            pointY = f2 - (f4 / 2.0f);
-        } else if (i == 17) {
-            pointX = f - (width / 2.0f);
-        } else if (i == 20) {
-            pointX = f - width;
-        } else if (i == 36) {
-            pointX = f - width;
-            pointY = f2 - f4;
-        } else if (i == 33) {
-            pointX = f - (width / 2.0f);
-            pointY = f2 - f4;
-        } else if (i == 34) {
-            pointY = f2 - f4;
-        }
-        float f5 = VIEW_SCRHEIGHT;
-        float f6 = f5 - pointY;
-        float f7 = height;
-        float f8 = f6 - f7;
-        pointY = f8;
-        float f9 = width;
-        if (f9 <= 0.0f || f7 <= 0.0f) {
+        coordinates[0] = (rect.originX * _maxS) / _sizeX;
+        coordinates[1] = Math.min(((rect.originY + rect.sizeHeight) * _maxT) / _sizeY, 1);
+        coordinates[2] = Math.min(((rect.originX + rect.sizeWidth) * _maxS) / _sizeX, 1);
+        coordinates[3] = Math.min(((rect.originY + rect.sizeHeight) * _maxT) / _sizeY, 1);
+        coordinates[4] = (rect.originX * _maxS) / _sizeX;
+        coordinates[5] = (rect.originY * _maxT) / _sizeY;
+        coordinates[6] = Math.min(((rect.originX + rect.sizeWidth) * _maxS) / _sizeX, 1);
+        coordinates[7] = (rect.originY * _maxT) / _sizeY;
+
+        width = (((_width * _maxS) * rect.sizeWidth) / _sizeX) * siz;
+        height = (((_height * _maxT) * rect.sizeHeight) / _sizeY) * siz;
+        setPivot(x, y, pivot);
+        pointY = VIEW_SCRHEIGHT - pointY - height;
+        if (width <= 0.0f || height <= 0.0f || pointX + width <= 0.0f || pointX >= VIEW_SCRWIDTH || pointY + height <= 0.0f || pointY >= VIEW_SCRHEIGHT)
             return;
-        }
-        float f10 = pointX;
-        if (f10 + f9 <= 0.0f || f10 >= VIEW_SCRWIDTH || f8 + f7 <= 0.0f || f8 >= f5) {
-            return;
-        }
-        float f11 = f10 + DRAW_ADJUST_X_MOVE;
-        pointX = f11;
-        float f12 = f8 + DRAW_ADJUST_Y_MOVE;
-        pointY = f12;
-        float[] fArr5 = vertices;
-        fArr5[0] = f11 - TEXTURE_DRAW_MARGIN;
-        fArr5[1] = f12 - TEXTURE_DRAW_MARGIN;
-        fArr5[2] = 0.0f;
-        fArr5[3] = f11 + f9;
-        fArr5[4] = f12 - TEXTURE_DRAW_MARGIN;
-        fArr5[5] = 0.0f;
-        fArr5[6] = f11 - TEXTURE_DRAW_MARGIN;
-        fArr5[7] = f12 + f7;
-        fArr5[8] = 0.0f;
-        fArr5[9] = f11 + f9;
-        fArr5[10] = f12 + f7;
-        fArr5[11] = 0.0f;
-        mVertexBuffer.put(fArr5);
+
+        pointX += DRAW_ADJUST_X_MOVE;
+        pointY += DRAW_ADJUST_Y_MOVE;
+        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[2] = 0.0f;
+        vertices[3] = pointX + width;
+        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[5] = 0.0f;
+        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[7] = pointY + height;
+        vertices[8] = 0.0f;
+        vertices[9] = pointX + width;
+        vertices[10] = pointY + height;
+        vertices[11] = 0.0f;
+        mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
         coordinatesBuffer.put(coordinates);
         coordinatesBuffer.position(0);
@@ -793,7 +754,7 @@ public class Texture2D {
         gl.glDrawArrays(5, 0, 4);
     }
 
-    public void drawAtPointOptionGuide(float x, float y, int pivot, CGRect cGRect) {
+    public void drawAtPointOptionGuide(float x, float y, int pivot, CGRect rect) {
         if (name == -1)
             return;
 
@@ -802,10 +763,10 @@ public class Texture2D {
         drawStartX = drawStartY = 0;
         drawLengthX = width;
         drawLengthY = height;
-        guideStartX = cGRect.originX;
-        guideStartY = cGRect.originY;
-        guideEndX = cGRect.originX + cGRect.sizeWidth;
-        guideEndY = cGRect.originY + cGRect.sizeHeight;
+        guideStartX = rect.originX;
+        guideStartY = rect.originY;
+        guideEndX = rect.originX + rect.sizeWidth;
+        guideEndY = rect.originY + rect.sizeHeight;
         setPivot(x, y, pivot);
         if (drawStartX < 0) {
             drawLengthX += drawStartX;
@@ -914,7 +875,7 @@ public class Texture2D {
 
     public void initWithStringDoubleColor(String str) {
         gl.glGenTextures(1, _name, 0);
-        this.name = _name[0];
+        name = _name[0];
         int i = GameRenderer.fontSize / 6;
         int i2 = i > 0 ? i : 1;
         GameRenderer.drawFont.getTextBounds(str, 0, str.length(), bounds_);
@@ -944,15 +905,13 @@ public class Texture2D {
         gl.glTexParameterx(3553, 10241, 9729);
         gl.glTexParameterx(3553, 10240, 9729);
         GLUtils.texImage2D(3553, 0, createBitmap, 0);
-        this._width = i7;
-        this._height = i6;
-        float f = i4;
-        this._sizeX = f;
-        float f2 = i5;
-        this._sizeY = f2;
-        float f3 = f / i7;
-        this._maxS = f3;
-        this._maxT = f2 / i6;
+        _width = i7;
+        _height = i6;
+        _sizeX = (float) i4;
+        _sizeY = (float) i5;
+        float f3 = (float) i4 / i7;
+        _maxS = f3;
+        _maxT = (float) i5 / i6;
         if (f3 > 1.0f) {
             this._maxS = 1.0f;
         }
@@ -962,69 +921,37 @@ public class Texture2D {
         createBitmap.recycle();
     }
 
-    public void drawAtPointOptionRotate(float f, float f2, int i, float f3, float f4) {
+    public void drawAtPointOptionRotate(float x, float y, int pivot, float angle, float siz) {
         if (name == -1)
             return;
 
         coordinates[0] = 0;
-        float f5 = this._maxT;
-        coordinates[1] = f5;
-        float f6 = this._maxS;
-        coordinates[2] = f6;
-        coordinates[3] = f5;
+        coordinates[1] = _maxT;
+        coordinates[2] = _maxS;
+        coordinates[3] = _maxT;
         coordinates[4] = 0;
         coordinates[5] = 0;
-        coordinates[6] = f6;
+        coordinates[6] = _maxS;
         coordinates[7] = 0;
-        float f7 = this._width * f6 * f4;
-        width = f7;
-        float f8 = this._height * f5 * f4;
-        height = f8;
-        pointX = 0.0f;
-        pointY = 0.0f;
-        if (i == 9) {
-            pointX = 0.0f - (f7 / 2.0f);
-            pointY = 0.0f - (f8 / 2.0f);
-        } else if (i == 10) {
-            pointY = 0.0f - (f8 / 2.0f);
-        } else if (i == 12) {
-            pointX = 0.0f - f7;
-            pointY = 0.0f - (f8 / 2.0f);
-        } else if (i == 17) {
-            pointX = 0.0f - (f7 / 2.0f);
-        } else if (i == 20) {
-            pointX = 0.0f - f7;
-        } else if (i == 36) {
-            pointX = 0.0f - f7;
-            pointY = 0.0f - f8;
-        } else if (i == 33) {
-            pointX = 0.0f - (f7 / 2.0f);
-            pointY = 0.0f - f8;
-        } else if (i == 34) {
-            pointY = 0.0f - f8;
-        }
-        float f9 = height;
-        float f10 = (-f9) - pointY;
-        pointY = f10;
-        float f11 = pointX + DRAW_ADJUST_X_MOVE;
-        pointX = f11;
-        float f12 = f10 + DRAW_ADJUST_Y_MOVE;
-        pointY = f12;
-        float[] fArr2 = vertices;
-        fArr2[0] = f11 - TEXTURE_DRAW_MARGIN;
-        fArr2[1] = f12 - TEXTURE_DRAW_MARGIN;
-        fArr2[2] = 0.0f;
-        float f13 = width;
-        fArr2[3] = f11 + f13;
-        fArr2[4] = f12 - TEXTURE_DRAW_MARGIN;
-        fArr2[5] = 0.0f;
-        fArr2[6] = f11 - TEXTURE_DRAW_MARGIN;
-        fArr2[7] = f12 + f9;
-        fArr2[8] = 0.0f;
-        fArr2[9] = f11 + f13;
-        fArr2[10] = f12 + f9;
-        fArr2[11] = 0.0f;
-        mVertexBuffer.put(fArr2);
+
+        width = _width * _maxS * siz;
+        height = _height * _maxT * siz;
+        setPivot(0, 0, pivot);
+        pointX += DRAW_ADJUST_X_MOVE;
+        pointY = (-height) - pointY + DRAW_ADJUST_Y_MOVE;
+        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[2] = 0.0f;
+        vertices[3] = pointX + width;
+        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[5] = 0.0f;
+        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[7] = pointY + height;
+        vertices[8] = 0.0f;
+        vertices[9] = pointX + width;
+        vertices[10] = pointY + height;
+        vertices[11] = 0.0f;
+        mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
         coordinatesBuffer.put(coordinates);
         coordinatesBuffer.position(0);
@@ -1032,8 +959,8 @@ public class Texture2D {
         gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
         gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
         gl.glPushMatrix();
-        gl.glTranslatef(f, VIEW_SCRHEIGHT - f2, 0.0f);
-        gl.glRotatef(-f3, 0.0f, 0.0f, 1.0f);
+        gl.glTranslatef(x, VIEW_SCRHEIGHT - y, 0.0f);
+        gl.glRotatef(-angle, 0.0f, 0.0f, 1.0f);
         gl.glDrawArrays(5, 0, 4);
         gl.glPopMatrix();
     }

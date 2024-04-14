@@ -11,6 +11,8 @@ import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.Pages.stage.StageBase;
+import com.sncompany.newtower.Texture2D;
 
 public class HeroUnit extends TowerUnit {
 
@@ -286,5 +288,54 @@ public class HeroUnit extends TowerUnit {
             }
         if (i >= 5)
             Config.awardValues[DataAward.AWARD_Frozen_Heart] = true;
+    }
+
+    public void draw() {
+        float x = posX / 50f + 62, y = posY / 50f + 30;
+
+        int dire = lastViewDirection == 6 ? 0 : 1;
+        int sprSpd = 5;
+        if (specialShowCount > 0) {
+            specialShowCount--;
+            dire = lastViewDirection == 6 ? 4 : 5;
+        } else if (unitStatus == 1) {
+            dire = lastViewDirection == 6 ? 2 : 3;
+            sprSpd = 3;
+        } else if (unitStatus != 2)
+            sprSpd = 25;
+
+        if (st.turbo > 0)
+            sprSpd /= st.turbo;
+
+        int sCount = drawData[drawData[1] + dire];
+        int sCur = drawData[drawData[0] + drawData[sCount + 1 + ((unitStatusCount / sprSpd) % drawData[sCount])]];
+        st.page.shadowImage[0].drawAtPointOption(x, y + 10, 9);
+        for (int i = 0; i < drawData[sCur]; i++) {
+            boolean glow = i == 0 && unitStatus == 0;
+            if (glow) {
+                float f5 = 1;
+                if (specialMaxCooltime > 0)
+                    f5 = Math.max(0.3f, (float)(specialMaxCooltime - specialCooltime) / specialMaxCooltime);
+
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                Texture2D.setAlpha(f5);
+            }
+            int i15 = (i * 5) + (sCur + 1);
+            int i16 = i15 + 3;
+            if (drawData[i16] != 1000) {
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                Texture2D.setColors(drawData[i16] / 1000f);
+            }
+            if (drawData[i15 + 4] == 0)
+                drawTexture[drawData[i15]].drawAtPointOption(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10.0f, 18);
+            else
+                drawTexture[drawData[i15]].drawAtPointOptionFlip(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10.0f, 18);
+
+            if (drawData[i16] != 1000 || glow)
+                Texture2D.setColors(1);
+        }
+        float starX = x - (7.5f * (level));
+        for (int i5 = 0; i5 < level + 1; i5++)
+            st.page.uiUpperImage[StageBase.upper_star].drawAtPointOption((i5 * 15) + starX, y + 10, 9);
     }
 }

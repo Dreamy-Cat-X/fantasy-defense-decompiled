@@ -24,28 +24,15 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static float DRAW_SCALE_SIZE_X = 1.0f;
     public static float DRAW_SCALE_SIZE_Y = 1.0f;
     public static float DRAW_SCALE_X_MOVE = 0.0f;
-    static final float DRAW_SCALE_X_SMALL_DEGREE = 13.0f;
+    public static final float DRAW_SCALE_X_SMALL_DEGREE = 13.0f;
     public static float DRAW_SCALE_Y_MOVE = 0.0f;
-    public static final int GAME_SHOP_EQUIP_SKILL_START_X = 203;
-    public static final int GAME_SHOP_EQUIP_SKILL_START_Y = 224;
-    public static final int GAME_SHOP_SHOP_INVENTORY_START_Y = 390;
     public static final int GAME_SHOP_SHOP_SIDEBAR_END_Y = 330;
-    public static final int GAME_STAGE_CLEAR_HIGH_SCORE_COUNT = 240;
     public static final int GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS = 168;
-    public static final int GAME_STAGE_CLEAR_THEME_VIEW_END_POS = 198;
-    public static int GAME_TITLE_BOSS_VIEW_POS = 0;
-    public static final int GAME_UPGRADE_HERO_SKILL_START_Y = 220;
-    public static final int PHONE_INPUT_START_Y = 137;
-    public static final int PHONE_INPUT_WIDTH_X = 121;
     public static final int PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS = 310;
     public static int SCRHEIGHT = 0;
     public static int SCRHEIGHT_SMALL = 0;
     public static int SCRWIDTH = 0;
     public static int SCRWIDTH_SMALL = 0;
-    public static final int VOLUMEBAR_EFFECT_POS_Y = 244;
-    public static final int VOLUMEBAR_MUSIC_POS_Y = 159;
-    public static final int VOLUMEBAR_START_POS_X = 331;
-    public static final int VOLUMEBAR_WIDTH = 348;
     public static CGPoint _CGPoint = null;
     public static CGRect _CGRect = null;
     public static Texture2D[] alwaysImage = null;
@@ -55,20 +42,12 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] arrowImage3 = null;
     public static Texture2D[] arrowImage4 = null;
     public static Texture2D[] arrowImage9 = null;
-    public static CircleItemDraw awardListDraw = null;
-    public static Texture2D[] backBaseImageArray = null;
     public static Texture2D[] backObjectImage = null;
     public static Texture2D backShadowImage = null;
-    public static Texture2D[] backTileImage0 = null;
-    public static Texture2D[] backTileImage1 = null;
-    public static Texture2D[] backTileImage2 = null;
-    public static Texture2D[] backTileImage3 = null;
-    public static Texture2D[] backTileImage4 = null;
     public static Texture2D[] continueImage_600 = null;
     public static Texture2D[] continueImage_601 = null;
     public static Texture2D[] continueImage_604 = null;
     public static int darkViewCount = 0;
-    public static Texture2D dollarImage = null;
     public static Paint drawFont = null;
     public static Texture2D drawStringBuffer = null;
     public static Texture2D[] effectImage_500 = null;
@@ -102,12 +81,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static int loadCount_GAME_MENU_IMAGE_LOAD;
     public static int loadCount_GAME_PLAY_IMAGE_LOAD;
     public static int loadCount_GAME_PRE_IMAGE_LOAD;
-    public static int loadCount_GAME_PRE_TOTAL_IMAGE_LOAD;
-    public static int loadCount_GAME_RESUME_TO_MENU;
-    public static int loadCount_GAME_RESUME_TO_PLAY;
     public static int loadingViewType;
-    public static Texture2D[] logoImage;
-    public static Texture2D[] mainmenuImage;
     public static int monsterGoalBlinkCount;
     public static Texture2D[] monsterImage_0;
     public static Texture2D[] monsterImage_1;
@@ -145,8 +119,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] numberHeroBuyImage;
     public static Texture2D[] numberHeroismImage;
     public static Texture2D[] numberLifeImage;
-    public static Texture2D[] numberManaImage;
-    public static Texture2D[] numberMoneyImage;
     public static Texture2D[] numberStagePointImage;
     public static Texture2D[] numberTotalImage;
     public static Texture2D[] numberUnitBuyImage;
@@ -162,12 +134,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] stageClearImage;
     public static int startViewCount;
     public static int strokeColor;
-    public static Texture2D targetImage;
     public static final Texture2D testboxImage = new Texture2D(R.drawable.etc_testbox);
-    public static Texture2D testboxImage2;
     public static Tombstone textTombstone;
-    public static Texture2D[] titleBossImage;
-    public static int titleCount;
     public static int titlePressed;
     public static Texture2D[] towerImage_200;
     public static Texture2D[] towerImage_201;
@@ -206,19 +174,14 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] uiUpgradeImage;
     public static Texture2D[] uiUpheroImage;
     public static Texture2D[] uiUpitemImage;
-    public static Texture2D[] uiUpperImage;
     public static Texture2D[] uiUpunitImage;
     public static int upgradeCount;
-    public static CircleItemDraw upgradeItemListDraw;
     public static Texture2D[] whiteCircleImage;
     public static boolean loadViewFlag = false;
     public static final int[][] testboxCoord = {new int[]{0, 0, 20, 85}, new int[]{138, 0, 20, 85}, new int[]{59, 0, 40, 85}, new int[]{20, 0, 40, 85}};
-    public static final int[] numberMoneyResource = {R.drawable.num_money_0, R.drawable.num_money_1, R.drawable.num_money_2, R.drawable.num_money_3, R.drawable.num_money_4, R.drawable.num_money_5, R.drawable.num_money_6, R.drawable.num_money_7, R.drawable.num_money_8, R.drawable.num_money_9};
-    public static final int[] numberManaResource = {R.drawable.num_mana_0, R.drawable.num_mana_1, R.drawable.num_mana_2, R.drawable.num_mana_3, R.drawable.num_mana_4, R.drawable.num_mana_5, R.drawable.num_mana_6, R.drawable.num_mana_7, R.drawable.num_mana_8, R.drawable.num_mana_9};
     public static final int[] numberWaveResource = {R.drawable.num_wave_0, R.drawable.num_wave_1, R.drawable.num_wave_2, R.drawable.num_wave_3, R.drawable.num_wave_4, R.drawable.num_wave_5, R.drawable.num_wave_6, R.drawable.num_wave_7, R.drawable.num_wave_8, R.drawable.num_wave_9, R.drawable.num_wave_10, R.drawable.num_wave_11};
     public static final int[] numberUnitBuyResource = {R.drawable.num_unit_buy_0, R.drawable.num_unit_buy_1, R.drawable.num_unit_buy_2, R.drawable.num_unit_buy_3, R.drawable.num_unit_buy_4, R.drawable.num_unit_buy_5, R.drawable.num_unit_buy_6, R.drawable.num_unit_buy_7, R.drawable.num_unit_buy_8, R.drawable.num_unit_buy_9};
     public static final int[] numberHeroBuyResource = {R.drawable.num_hero_buy_0, R.drawable.num_hero_buy_1, R.drawable.num_hero_buy_2, R.drawable.num_hero_buy_3, R.drawable.num_hero_buy_4, R.drawable.num_hero_buy_5, R.drawable.num_hero_buy_6, R.drawable.num_hero_buy_7, R.drawable.num_hero_buy_8, R.drawable.num_hero_buy_9};
-    public static final int[] numberLifeResource = {R.drawable.num_life_0, R.drawable.num_life_1, R.drawable.num_life_2, R.drawable.num_life_3, R.drawable.num_life_4, R.drawable.num_life_5, R.drawable.num_life_6, R.drawable.num_life_7, R.drawable.num_life_8, R.drawable.num_life_9};
     public static final int[] numberHeroismResource = {R.drawable.num_heroism_0, R.drawable.num_heroism_1, R.drawable.num_heroism_2, R.drawable.num_heroism_3, R.drawable.num_heroism_4, R.drawable.num_heroism_5, R.drawable.num_heroism_6, R.drawable.num_heroism_7, R.drawable.num_heroism_8, R.drawable.num_heroism_9};
     public static final int[] numberStagePointResource = {R.drawable.num_stage_point_0, R.drawable.num_stage_point_1, R.drawable.num_stage_point_2, R.drawable.num_stage_point_3, R.drawable.num_stage_point_4, R.drawable.num_stage_point_5, R.drawable.num_stage_point_6, R.drawable.num_stage_point_7, R.drawable.num_stage_point_8, R.drawable.num_stage_point_9};
     public static final int[] numberUpgradeResource = {R.drawable.num_upgrade_0, R.drawable.num_upgrade_1, R.drawable.num_upgrade_2, R.drawable.num_upgrade_3, R.drawable.num_upgrade_4, R.drawable.num_upgrade_5, R.drawable.num_upgrade_6, R.drawable.num_upgrade_7, R.drawable.num_upgrade_8, R.drawable.num_upgrade_9, R.drawable.num_upgrade_slash};
@@ -226,7 +189,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int[] numberTotalResource = {R.drawable.num_total_0, R.drawable.num_total_1, R.drawable.num_total_2, R.drawable.num_total_3, R.drawable.num_total_4, R.drawable.num_total_5, R.drawable.num_total_6, R.drawable.num_total_7, R.drawable.num_total_8, R.drawable.num_total_9};
     public static final int[] stageClearResource = {R.drawable.ui_clear_background, R.drawable.ui_clear_clear, R.drawable.ui_clear_fail, R.drawable.ui_clear_totalscore, R.drawable.ui_clear_heroism, R.drawable.ui_clear_nextstageoff, R.drawable.ui_clear_nextstageon, R.drawable.ui_clear_upgradeoff, R.drawable.ui_clear_upgradeon, R.drawable.ui_clear_stageselectoff, R.drawable.ui_clear_stageselecton, R.drawable.ui_clear_retryoff, R.drawable.ui_clear_retryon, R.drawable.ui_clear_perfect, R.drawable.ui_clear_bonus, R.drawable.ui_clear_iconskill, R.drawable.ui_clear_iconspe, R.drawable.ui_clear_iconitem, R.drawable.ui_clear_iconheroism, R.drawable.ui_clear_iconhero1, R.drawable.ui_clear_iconhero2, R.drawable.ui_clear_iconhero3, R.drawable.ui_clear_iconattup, R.drawable.ui_clear_p, R.drawable.ui_clear_e, R.drawable.ui_clear_r, R.drawable.ui_clear_f, R.drawable.ui_clear_c, R.drawable.ui_clear_t, R.drawable.ui_clear_1};
     public static final int[] ingameResource = {R.drawable.ui_ingame_paused, R.drawable.ui_ingame_resumeoff, R.drawable.ui_ingame_resumeon, R.drawable.ui_ingame_restartoff, R.drawable.ui_ingame_restarton, R.drawable.ui_ingame_stageoff, R.drawable.ui_ingame_stageon};
-    public static final int[] uiUpperResource = {R.drawable.ui_upper_mana, R.drawable.ui_upper_money, R.drawable.ui_upper_ingameoff, R.drawable.ui_upper_ingameon, R.drawable.ui_upper_speed0, R.drawable.ui_upper_speed1, R.drawable.ui_upper_speed2, R.drawable.ui_upper_upbar, R.drawable.ui_upper_wave, R.drawable.ui_upper_slash, R.drawable.ui_upper_heart, R.drawable.ui_upper_hpbar, R.drawable.ui_upper_star, R.drawable.ui_upper_hero, R.drawable.ui_upper_speedempty, R.drawable.ui_upper_pauseoff, R.drawable.ui_upper_pauseon, R.drawable.ui_upper_bossstage};
     public static final int[] uiCharButtonResource = {R.drawable.ui_char_button_class_off, R.drawable.ui_char_button_class_on, R.drawable.ui_char_button_lvlup_off, R.drawable.ui_char_button_lvlup_on, R.drawable.ui_char_button_ok_off, R.drawable.ui_char_button_ok_on, R.drawable.ui_char_button_sell_off, R.drawable.ui_char_button_sell_on, R.drawable.ui_char_button_spe_dancing_blade_off, R.drawable.ui_char_button_spe_dancing_blade_on, R.drawable.ui_char_button_spe_millon_arrow_off, R.drawable.ui_char_button_spe_millon_arrow_on, R.drawable.ui_char_button_spe_ice_quake_off, R.drawable.ui_char_button_spe_ice_quake_on, R.drawable.ui_char_button_lvluphero_off, R.drawable.ui_char_button_lvluphero_on, R.drawable.ui_char_button_1_off, R.drawable.ui_char_button_1_on, R.drawable.ui_char_button_2_off, R.drawable.ui_char_button_2_on, R.drawable.ui_char_button_3_off, R.drawable.ui_char_button_3_on, R.drawable.ui_char_button_4_off, R.drawable.ui_char_button_4_on, R.drawable.ui_char_button_5_off, R.drawable.ui_char_button_5_on};
     public static final int[] uiCharEtcResource = {R.drawable.ui_char_etc_background, R.drawable.ui_char_etc_stat, R.drawable.ui_char_etc_lv, R.drawable.ui_char_etc_1, R.drawable.ui_char_etc_2, R.drawable.ui_char_etc_3, R.drawable.ui_char_etc_4, R.drawable.ui_char_etc_5, R.drawable.ui_char_etc_hero, R.drawable.ui_char_etc_specialdancingblade, R.drawable.ui_char_etc_specialmillionarrow, R.drawable.ui_char_etc_specialicequake, R.drawable.ui_char_etc_backline};
     public static final int[] uiCharFaceResource = {R.drawable.ui_char_face_warrior, R.drawable.ui_char_face_manatarms, R.drawable.ui_char_face_knight, R.drawable.ui_char_face_warlord, R.drawable.ui_char_face_archer, R.drawable.ui_char_face_holyeye, R.drawable.ui_char_face_splatter, R.drawable.ui_char_face_skybeholder, R.drawable.ui_char_face_wizard, R.drawable.ui_char_face_colddiviner, R.drawable.ui_char_face_warlock, R.drawable.ui_char_face_magmablaster, R.drawable.ui_char_face_hero0, R.drawable.ui_char_face_hero1, R.drawable.ui_char_face_hero2};
@@ -250,7 +212,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int[] uiHelpShotResource = {R.drawable.ui_help_01, R.drawable.ui_help_02, R.drawable.ui_help_03, R.drawable.ui_help_04, R.drawable.ui_help_05, R.drawable.ui_help_06, R.drawable.ui_help_07, R.drawable.ui_help_08, R.drawable.ui_help_09, R.drawable.ui_help_10, R.drawable.ui_help_11, R.drawable.ui_help_12, R.drawable.ui_help_13, R.drawable.ui_help_14, R.drawable.ui_help_15};
     public static final int[] uiRecordResource = {R.drawable.ui_record_title, R.drawable.ui_record_awardbase, R.drawable.ui_record_awardbar, R.drawable.ui_record_scorebase, R.drawable.ui_record_scoreback, R.drawable.ui_record_lock, R.drawable.ui_record_cup};
     public static final int[] uiEtcResource = {R.drawable.ui_etc_window, R.drawable.ui_etc_back_off, R.drawable.ui_etc_back_on, R.drawable.ui_etc_option, R.drawable.ui_etc_optionbody, R.drawable.ui_etc_onon, R.drawable.ui_etc_onoff, R.drawable.ui_etc_offon, R.drawable.ui_etc_offoff, R.drawable.ui_etc_stageboxone, R.drawable.ui_etc_stageselect, R.drawable.ui_etc_about, R.drawable.ui_etc_developer, R.drawable.ui_etc_gaedungwi, R.drawable.ui_etc_scrollbutton, R.drawable.ui_ect_movie_btn};
-    public static final int[] tileBaseResource = {R.drawable.map_b0, R.drawable.map_b1, R.drawable.map_b2, R.drawable.map_b3, R.drawable.map_b4};
     public static final int[] tutorialResource = {R.drawable.tutorial_arrow1, R.drawable.tutorial_arrow2, R.drawable.tutorial_arrow3, R.drawable.tutorial_arrow4, R.drawable.tutorial_arrow5, R.drawable.tutorial_arrow6, R.drawable.tutorial_arrow7, R.drawable.tutorial_box0, R.drawable.tutorial_box1, R.drawable.tutorial_box2, R.drawable.tutorial_box3, R.drawable.tutorial_box4, R.drawable.tutorial_box5, R.drawable.tutorial_box6, R.drawable.tutorial_box7, R.drawable.tutorial_box8, R.drawable.tutorial_button, R.drawable.tutorial_follow, R.drawable.tutorial_hand0, R.drawable.tutorial_hand1, R.drawable.tutorial_ment0, R.drawable.tutorial_ment1, R.drawable.tutorial_ment2, R.drawable.tutorial_ment3, R.drawable.tutorial_ment4, R.drawable.tutorial_ment5, R.drawable.tutorial_ment6, R.drawable.tutorial_ment7, R.drawable.tutorial_target};
     public static final int[] uiButtonResource = {R.drawable.ui_addunit_warrior, R.drawable.ui_addunit_manatarms, R.drawable.ui_addunit_archer, R.drawable.ui_addunit_holyeye, R.drawable.ui_addunit_wizard, R.drawable.ui_addunit_colddiviner, R.drawable.ui_addunit_hero0, R.drawable.ui_addunit_hero1, R.drawable.ui_addunit_hero2, R.drawable.ui_addunit_warrior_f, R.drawable.ui_addunit_manatarms_f, R.drawable.ui_addunit_archer_f, R.drawable.ui_addunit_holyeye_f, R.drawable.ui_addunit_wizard_f, R.drawable.ui_addunit_colddiviner_f, R.drawable.ui_addunit_hero0_f, R.drawable.ui_addunit_hero1_f, R.drawable.ui_addunit_hero2_f, R.drawable.ui_addunit_hero};
     public static final int[] uiLoadingResource = {R.drawable.ui_loading_outline, R.drawable.ui_loading_blackline, R.drawable.ui_loading_loadingline, R.drawable.ui_loading_whiteline};
@@ -468,7 +429,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     }
 
     public static boolean makeBaseStruct() {
-        backBaseImageArray = makeTextureArray(tileBaseResource.length);
         backObjectImage = makeTextureArray(DataObject.objectImageResource.length);
         fillBlackImage = new Texture2D();
         fillWhiteImage = new Texture2D();
@@ -476,15 +436,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         whiteCircleImage = makeTextureArray(4);
         redCircleImage = makeTextureArray(4);
         outBorderImage = makeTextureArray(4);
-        targetImage = new Texture2D();
-        dollarImage = new Texture2D();
         heroismImage = new Texture2D();
-        numberMoneyImage = makeTextureArray(numberMoneyResource.length);
-        numberManaImage = makeTextureArray(numberManaResource.length);
         numberWaveImage = makeTextureArray(numberWaveResource.length);
         numberUnitBuyImage = makeTextureArray(numberUnitBuyResource.length);
         numberHeroBuyImage = makeTextureArray(numberHeroBuyResource.length);
-        numberLifeImage = makeTextureArray(numberLifeResource.length);
         numberHeroismImage = makeTextureArray(numberHeroismResource.length);
         numberStagePointImage = makeTextureArray(numberStagePointResource.length);
         numberUpgradeImage = makeTextureArray(numberUpgradeResource.length);
@@ -497,7 +452,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         uiLoadingImage = makeTextureArray(uiLoadingResource.length);
         alwaysImage = makeTextureArray(alwaysResource.length);
         stageClearImage = makeTextureArray(stageClearResource.length);
-        uiUpperImage = makeTextureArray(uiUpperResource.length);
         uiIngameImage = makeTextureArray(ingameResource.length);
         uiCharButtonImage = makeTextureArray(uiCharButtonResource.length);
         uiCharEtcImage = makeTextureArray(uiCharEtcResource.length);
@@ -593,18 +547,12 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         arrowImage4 = makeTextureArray(arrowResource4.length);
         arrowImage9 = makeTextureArray(arrowResource9.length);
         shadowImage = makeTextureArray(2);
-        testboxImage2 = new Texture2D();
         return true;
     }
 
     /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
     public static boolean load_GAME_PRE_TOTAL_IMAGE_LOAD(int i, boolean z) {
-        Log.d("LOADING", String.format("load_GAME_PRE_TOTAL_IMAGE_LOAD!!! %d", Integer.valueOf(i)));
-        Log.d("LOADING", String.format("load_GAME_PRE_TOTAL_IMAGE_LOAD!!! %d", Integer.valueOf(i)));
-        Log.d("LOADING", String.format("load_GAME_PRE_TOTAL_IMAGE_LOAD!!! %d", Integer.valueOf(i)));
-        Log.d("LOADING", String.format("load_GAME_PRE_TOTAL_IMAGE_LOAD!!! %d", Integer.valueOf(i)));
-        Log.d("LOADING", String.format("load_GAME_PRE_TOTAL_IMAGE_LOAD!!! %d", Integer.valueOf(i)));
-        Log.d("LOADING", String.format("load_GAME_PRE_TOTAL_IMAGE_LOAD!!! %d", Integer.valueOf(i)));
+        Log.d("LOADING", String.format("load_GAME_PRE_TOTAL_IMAGE_LOAD!!! %d", i));
         if (i != 1) {
             if (i == 2) {
                 fillBlackImage.initWithImageColor(ViewCompat.MEASURED_STATE_MASK);
@@ -637,8 +585,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                         outBorderImage[1].initWithImageName(R.drawable.etc_outl);
                         outBorderImage[2].initWithImageName(R.drawable.etc_outr);
                         outBorderImage[3].initWithImageName(R.drawable.etc_outu);
-                        targetImage.initWithImageName(R.drawable.etc_target);
-                        testboxImage2.initWithImageName(R.drawable.etc_testbox2);
                         if (!z) {
                             loadViewFlag = true;
                             break;
@@ -738,13 +684,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             return;
         for (int i = 0; i < texture2DArr.length && i < iArr.length; i++)
             texture2DArr[i].initWithImageName(iArr[i]);
-    }
-
-    public static void removeImageResourceArray(Texture2D[] texture2DArr) {
-        if (texture2DArr == null)
-            return;
-        for (Texture2D texture2D : texture2DArr)
-            texture2D.dealloc();
     }
 
     public static void drawLeftRightBox(float x, float y, int bound) {

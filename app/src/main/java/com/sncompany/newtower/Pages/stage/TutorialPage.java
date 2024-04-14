@@ -240,7 +240,7 @@ public class TutorialPage extends StageBase {
         float drawNumberBlock = drawNumberBlock(1, numberWaveImage, 366.0f, 8.0f, 1, 18, 2);
         numberWaveImage[10].drawAtPointOption(2.0f + drawNumberBlock, 6.0f, 18);
         drawNumberBlock(1, numberWaveImage, drawNumberBlock + 10.0f, 8.0f, 1, 18, 2);
-        drawMyLife();
+        drawBaseHealth();
         uiButtonImage[0].drawAtPointOption(myOscillator[0].getCurrentPosition() + 770, 77.0f, 17);
         drawNumberBlock(GameThread.getBuyPrice(0), numberUnitBuyImage, myOscillator[0].getCurrentPosition() + 770, 114.0f, -2, 17, 1);
         uiButtonImage[1].drawAtPointOption(myOscillator[1].getCurrentPosition() + 770, 142.0f, 17);
@@ -266,16 +266,16 @@ public class TutorialPage extends StageBase {
         uiButtonImage[18].drawAtPointOption(770.0f, 12.0f, 17);
         int i12 = GameThread.characterMenuSelectFlag;
         if (i12 == 1 || i12 == 4) {
-            getAddSettingPosition();
+            boolean addable = getAddSettingPosition();
             drawAddGridBlock();
             c = 0;
             i = 3;
             f = 1.0f;
             i2 = 2;
             i3 = 7;
-            drawAddRangeCircle(GameThread.characterMenuSelectFlag, GameThread.characterAddNumber, GameThread.characterAddOrder, GameThread.characterAddPosX, GameThread.characterAddPosY, GameThread.characterAddBoolean);
+            drawAddRangeCircle(GameThread.characterMenuSelectFlag, GameThread.characterAddNumber, GameThread.characterAddOrder, characterAddPosX, characterAddPosY, addable);
             try {
-                drawSimpleTowerUnit(GameThread.characterAddNumber, GameThread.characterAddHeroFlag, GameThread.characterAddPosX, GameThread.characterAddPosY);
+                drawSimpleTowerUnit(GameThread.characterAddNumber, GameThread.characterAddHeroFlag, characterAddPosX, characterAddPosY);
             } catch (Exception unused) {
             }
         } else {
@@ -695,8 +695,8 @@ public class TutorialPage extends StageBase {
                     } else if (i5 != 7) {
                         c = i5 != 9 ? i5 != 11 ? (char) 5 : (char) 4 : (char) 3;
                     }
-                    int pX = (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f);
-                    int pY = (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f);
+                    int pX = (int) ((characterAddPosX - 62.0f) / 45.0f);
+                    int pY = (int) ((characterAddPosY - 30.0f) / 45.0f);
                     if (pX == tutorialUnitPos[c][0] && pY == tutorialUnitPos[c][1]) {
                         GameThread.playSound(14);
                         getAddSettingPosition();
@@ -781,8 +781,8 @@ public class TutorialPage extends StageBase {
                     return;
                 }
                 if (GameThread.characterMenuSelectFlag == 4) {
-                    int i9 = (int) ((GameThread.characterAddPosX - 62.0f) / 45.0f);
-                    int i10 = (int) ((GameThread.characterAddPosY - 30.0f) / 45.0f);
+                    int i9 = (int) ((characterAddPosX - 62.0f) / 45.0f);
+                    int i10 = (int) ((characterAddPosY - 30.0f) / 45.0f);
                     if (i9 == tutorialUnitPos[6][0] && i10 == tutorialUnitPos[6][1]) {
                         GameThread.playSound(14);
                         getAddSettingPosition();

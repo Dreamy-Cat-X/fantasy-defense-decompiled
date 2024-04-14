@@ -289,7 +289,7 @@ public class StageSelectPage extends TPage {
         float f4 = 0f;
         float f5 = 0f;
         for (int i4 = 0; i4 < map.objectUnit.size(); i4++) {
-            int i5 = map.objectUnit.get(i4).objectType;
+            int i5 = map.objectUnit.get(i4).type;
             if (i5 != -1) {
                 switch (i5) {
                     case 28:

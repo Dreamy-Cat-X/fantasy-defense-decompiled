@@ -41,9 +41,9 @@ public abstract class TPage {
         parent = par;
     }
 
-    public static void loadP(Texture2D[] T2Darr, int[] ress, Consumer<Float> prog, int pstart, int ptot) {
+    public static int loadP(Texture2D[] T2Darr, int[] ress, Consumer<Float> prog, int pstart, int ptot) {
         if (T2Darr == null || ress == null)
-            return;
+            return pstart;
         for (int i = 0; i < T2Darr.length && i < ress.length; i++) {
             if (T2Darr[i] == null)
                 T2Darr[i] = new Texture2D(ress[i]);
@@ -53,6 +53,7 @@ public abstract class TPage {
             if (prog != null)
                 prog.accept((float)(pstart + i) / ptot);
         }
+        return pstart + T2Darr.length;
     }
 
     public static void loadImageResourceToTexture(Texture2D[] T2Darr, int[] ress) {

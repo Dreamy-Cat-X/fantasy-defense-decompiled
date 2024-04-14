@@ -2,6 +2,7 @@ package com.sncompany.newtower.Battle;
 
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameRenderer;
+import com.sncompany.newtower.Pages.stage.StageBase;
 
 /**
  * Superclass used to link enemies and objects.
@@ -35,8 +36,8 @@ public abstract class EnemyUnit extends StageEntity implements Comparable<EnemyU
         }
         float f3 = (int) f2;
         float f4 = ((int) f) - 15.0f;
-        st.page.uiUpperImage[11].drawAtPointOptionClip(f4, f3, 18, GameRenderer.CGRectMake(0.0f, 0.0f, (float) (i3 - 1), 6.0f));
-        st.page.uiUpperImage[11].drawAtPointOptionClip((f4 + i3) - 1.0f, f3, 18, GameRenderer.CGRectMake(0.0f, 0.0f, 1.0f, 6.0f));
+        st.page.uiUpperImage[StageBase.upper_hpbar].drawAtPointOptionClip(f4, f3, 18, GameRenderer.CGRectMake(0.0f, 0.0f, (float) (i3 - 1), 6.0f));
+        st.page.uiUpperImage[StageBase.upper_hpbar].drawAtPointOptionClip((f4 + i3) - 1.0f, f3, 18, GameRenderer.CGRectMake(0.0f, 0.0f, 1.0f, 6.0f));
     }
 
     @Override

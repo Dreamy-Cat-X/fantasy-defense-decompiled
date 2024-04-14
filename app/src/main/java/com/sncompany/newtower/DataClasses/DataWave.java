@@ -1,5 +1,7 @@
 package com.sncompany.newtower.DataClasses;
 
+import android.util.Log;
+
 import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.GameRenderer;
@@ -37,8 +39,8 @@ public class DataWave {
     public DataStage st;
     public final DataMap map;
 
-    public final int waveCount;
-    public boolean waveRunF = true, perfectWave = true, waveMonsterOutPos = false; //WaveRunF is myWaveRunFlag
+    public final int waveCount, wcc;
+    public boolean waveRunF = true, perfectWave = true, waveMonsterOutPos = false;
     public int waveStartT = 90, current = 0, monsterOpenTime = 0;
     public int wavePattern, gatePattern;
     public final int[] waveMonsterType = new int[2], waveMonsterRemainCount = new int[2], waveMonsterShowTime = new int[2], waveMonsterShowCurrent = new int[2];
@@ -70,40 +72,34 @@ public class DataWave {
         for (int i3 = 0; i3 < waveCount; i3++)
             for (int i4 = 0; i4 < 8; i4++)
                 waveMobData[i3][i4] = Config.ByteArrayToInt(data, (i3 * 32) + 4 + (i4 * 4));
+        wcc = DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID];
+        Log.d("Check", "The " + (wcc == waveCount) + " check");
     }
 
+    /**
+     * Checks if the wave is the last. If it isn't, sets the next wave. On infinite mode it loops again
+     * @return 1 if it's the last wave on Normal Mode, 3 if it's the last wave on BaseDestroyer Mode, 2 if it isn't the last wave
+     */
     public int setWave() {
         int wv = current;
-        if (st.mapType != 0) {
-            if (st.mapType == 1) {
-                if (wv >= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID]) //Replace with waveCount?
-                    wv %= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID];
-            } else if (st.mapType == 2 && wv >= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID])
-                return 3;
-        } else if (wv >= DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID])
-            return 1;
+        if (wv >= wcc) {
+            if (st.mapType != 1)
+                return 1 + st.mapType;
+            wv %= wcc;
+        }
 
-        waveMonsterType[0] = waveMobData[wv][0];
-        waveMonsterRemainCount[0] = waveMobData[wv][1];
-        if (waveMonsterType[0] != -1) {
-            waveMonsterShowTime[0] = DataMonster.monsterData[waveMonsterType[0]][8] / 3;
-            int[] iArr3 = waveMonsterShowTime;
-            iArr3[0] = (iArr3[0] * waveMobData[wv][2]) / 100;
+        for (int i = 0; i < waveMonsterType.length; i++) {
+            int datP = i * 3;
+            waveMonsterType[i] = waveMobData[wv][datP];
+            waveMonsterRemainCount[i] = waveMobData[wv][datP + 1];
+            if (waveMonsterType[i] != -1) {
+                waveMonsterShowTime[i] = DataMonster.monsterData[waveMonsterType[i]][8] / 3;
+                waveMonsterShowTime[i] = (waveMonsterShowTime[i] * waveMobData[wv][5]) / 100;
+            }
+            waveMonsterShowCurrent[i] = 0;
         }
-        waveMonsterShowCurrent[0] = 0;
-        int[] iArr4 = waveMonsterType;
-        int[][] iArr5 = waveMobData;
-        iArr4[1] = iArr5[wv][3];
-        waveMonsterRemainCount[1] = iArr5[wv][4];
-        if (iArr4[1] != -1) {
-            waveMonsterShowTime[1] = DataMonster.monsterData[waveMonsterType[1]][8] / 3;
-            int[] iArr6 = waveMonsterShowTime;
-            iArr6[1] = (iArr6[1] * waveMobData[wv][5]) / 100;
-        }
-        waveMonsterShowCurrent[1] = 0;
-        int[][] iArr7 = waveMobData;
-        wavePattern = iArr7[wv][6];
-        gatePattern = iArr7[wv][7];
+        wavePattern = waveMobData[wv][6];
+        gatePattern = waveMobData[wv][7];
         return 2;
     }
 
@@ -156,47 +152,27 @@ public class DataWave {
     }
 
     public int checkWaveAndFinishCheck() {
-        int i = st.mapType;
-        if (i > 2)
-            return 0;
-        if (i == 0) {
+        if (st.mapType < 2) {
             if (!st.monsterUnit.isEmpty())
                 return 0;
 
-            for (int i2 = 0; i2 < 2; i2++) {
-                if (waveMonsterRemainCount[i2] > 0) {
+            for (int i2 = 0; i2 < waveMonsterType.length; i2++)
+                if (waveMonsterRemainCount[i2] > 0)
                     return 0;
-                }
-            }
-            if (perfectWave) {
-                st.bScore += ((current * 0.1f) + 1.0f) * 600.0f;
-            }
+            if (perfectWave)
+                st.bScore += ((current * 0.1f) + 1) * 600;
+
             current++;
             waveStartT = 60;
             perfectWave = true;
             return setWave();
         }
-        if (i == 1) {
-            if (!st.monsterUnit.isEmpty())
-                return 0;
-
-            for (int i3 = 0; i3 < 2; i3++)
-                if (waveMonsterRemainCount[i3] > 0)
-                    return 0;
-            if (perfectWave) {
-                st.bScore += ((st.bScore * 0.1f) + 1.0f) * 600.0f;
-            }
-            st.bScore++;
-            waveStartT = 60;
-            perfectWave = true;
-            return setWave();
-        }
-        if (i != 2) {
+        if (st.mapType > 2) {
             return 0;
         }
         boolean z = false;
         for (ObjectUnit obj : map.objectUnit) {
-            int i5 = obj.objectType;
+            int i5 = obj.type;
             if (i5 == 28 || i5 == 29 || i5 == 32) {
                 z = true;
                 break;
