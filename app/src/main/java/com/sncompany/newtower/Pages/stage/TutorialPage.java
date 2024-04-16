@@ -158,31 +158,31 @@ public class TutorialPage extends StageBase {
                 TouchManager.addTouchRectListData(18, GameRenderer.CGRectMake(tutorialBoxLinePos[8][4], tutorialBoxLinePos[8][5], tutorialBoxLinePos[8][6], tutorialBoxLinePos[8][7]));
                 break;
             case 5:
-                TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(742.0f, 142.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742.0f, 142.0f, 56.0f, 56.0f));
                 break;
             case 6:
                 TouchManager.addTouchRectListData(19, GameRenderer.CGRectMake(tutorialBoxLinePos[9][4], tutorialBoxLinePos[9][5], tutorialBoxLinePos[9][6], tutorialBoxLinePos[9][7]));
                 break;
             case 7:
-                TouchManager.addTouchRectListData(2, GameRenderer.CGRectMake(742.0f, 207.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742.0f, 207.0f, 56.0f, 56.0f));
                 break;
             case 8:
                 TouchManager.addTouchRectListData(20, GameRenderer.CGRectMake(tutorialBoxLinePos[10][4], tutorialBoxLinePos[10][5], tutorialBoxLinePos[10][6], tutorialBoxLinePos[10][7]));
                 break;
             case 9:
-                TouchManager.addTouchRectListData(3, GameRenderer.CGRectMake(742.0f, 272.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742.0f, 272.0f, 56.0f, 56.0f));
                 break;
             case 10:
                 TouchManager.addTouchRectListData(21, GameRenderer.CGRectMake(tutorialBoxLinePos[11][4], tutorialBoxLinePos[11][5], tutorialBoxLinePos[11][6], tutorialBoxLinePos[11][7]));
                 break;
             case 11:
-                TouchManager.addTouchRectListData(4, GameRenderer.CGRectMake(742.0f, 337.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742.0f, 337.0f, 56.0f, 56.0f));
                 break;
             case 12:
                 TouchManager.addTouchRectListData(22, GameRenderer.CGRectMake(tutorialBoxLinePos[12][4], tutorialBoxLinePos[12][5], tutorialBoxLinePos[12][6], tutorialBoxLinePos[12][7]));
                 break;
             case 13:
-                TouchManager.addTouchRectListData(5, GameRenderer.CGRectMake(742.0f, 402.0f, 56.0f, 56.0f));
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742.0f, 402.0f, 56.0f, 56.0f));
                 break;
             case 14:
                 TouchManager.addTouchRectListData(23, GameRenderer.CGRectMake(tutorialBoxLinePos[13][4], tutorialBoxLinePos[13][5], tutorialBoxLinePos[13][6], tutorialBoxLinePos[13][7]));
@@ -409,7 +409,7 @@ public class TutorialPage extends StageBase {
                     if (i5 == 4) {
                         setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
                         setFontSize(40);
-                        drawStringDoubleM("터치", tutorialUnitPos[c2][5] - 11, (float) (tutorialUnitPos[c2][6] - 53), 20);
+                        GameRenderer.drawStringDoubleM("터치", tutorialUnitPos[c2][5] - 11, (float) (tutorialUnitPos[c2][6] - 53), 20);
                         if (i4 < i) {
                             tutorialImage[18].drawAtPointOption(tutorialUnitPos[c2][5] - 11, (float) (tutorialUnitPos[c2][6] - 84), 18);
                         } else {
@@ -425,7 +425,7 @@ public class TutorialPage extends StageBase {
                         drawSimpleTowerUnit(i6, z, i14, i15);
                         float f11 = i14 - 11;
                         tutorialImage[19].drawAtPointOption(f11, (float) (i15 - 84), 18);
-                        drawStringDoubleM("드래그", f11, (float) (i15 - 53), 20);
+                        GameRenderer.drawStringDoubleM("드래그", f11, (float) (i15 - 53), 20);
                     }
                     if (i5 == 6) {
                         drawSimpleTowerUnit(i6, z, tutorialUnitPos[c2][7], tutorialUnitPos[c2][8]);
@@ -513,8 +513,8 @@ public class TutorialPage extends StageBase {
                 uiPopupImage[i3].drawAtPointOption(201.0f, 101.0f, 18);
                 setFontSize(20);
                 setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("You have cleared the Tutorial stage.", CX, 156.0f, 17);
-                drawStringDoubleM("You have obtained 300 Hero Points.", CX, 206.0f, 17);
+                GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 156.0f, 17);
+                GameRenderer.drawStringDoubleM("You have obtained 300 Hero Points.", GameRenderer.CX, 206.0f, 17);
                 if (checkTouchListStatus == 27) {
                     uiPopupImage[13].drawAtPointOption(209.0f, 289.0f, 18);
                     break;
@@ -526,8 +526,8 @@ public class TutorialPage extends StageBase {
                 uiPopupImage[i3].drawAtPointOption(201.0f, 101.0f, 18);
                 setFontSize(20);
                 setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("Use Hero Points to buy items ", CX, 156.0f, 17);
-                drawStringDoubleM("or upgrade your units.", CX, 206.0f, 17);
+                GameRenderer.drawStringDoubleM("Use Hero Points to buy items ", GameRenderer.CX, 156.0f, 17);
+                GameRenderer.drawStringDoubleM("or upgrade your units.", GameRenderer.CX, 206.0f, 17);
                 if (checkTouchListStatus == 28) {
                     uiPopupImage[13].drawAtPointOption(209.0f, 289.0f, 18);
                     break;
@@ -539,10 +539,10 @@ public class TutorialPage extends StageBase {
                 uiPopupImage[i3].drawAtPointOption(201.0f, 101.0f, 18);
                 setFontSize(20);
                 setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("Use Help if you want ", CX, 122.0f, 17);
-                drawStringDoubleM("to replay the Tutorial.", CX, 162.0f, 17);
-                drawStringDoubleM("(No Hero Points will be rewarded", CX, 202.0f, 17);
-                drawStringDoubleM("when replaying the Tutorial.)", CX, 242.0f, 17);
+                GameRenderer.drawStringDoubleM("Use Help if you want ", GameRenderer.CX, 122.0f, 17);
+                GameRenderer.drawStringDoubleM("to replay the Tutorial.", GameRenderer.CX, 162.0f, 17);
+                GameRenderer.drawStringDoubleM("(No Hero Points will be rewarded", GameRenderer.CX, 202.0f, 17);
+                GameRenderer.drawStringDoubleM("when replaying the Tutorial.)", GameRenderer.CX, 242.0f, 17);
                 if (checkTouchListStatus == 30) {
                     uiPopupImage[13].drawAtPointOption(209.0f, 289.0f, 18);
                     break;
@@ -554,14 +554,9 @@ public class TutorialPage extends StageBase {
                 uiPopupImage[i3].drawAtPointOption(201.0f, 101.0f, 18);
                 setFontSize(20);
                 setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("You have cleared the Tutorial stage.", CX, 182.0f, 17);
-                if (checkTouchListStatus == 30) {
-                    uiPopupImage[13].drawAtPointOption(209.0f, 289.0f, 18);
-                    break;
-                } else {
-                    uiPopupImage[12].drawAtPointOption(209.0f, 289.0f, 18);
-                    break;
-                }
+                GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 182.0f, 17);
+                uiPopupImage[checkTouchListStatus == 30 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
+                break;
         }
         TouchManager.swapTouchMap();
     }

@@ -27,20 +27,3 @@ for (int i = lv - 1; i > 0; i++)
 for (int i = rank - 1; i > 0; i++)
     total += getClassChangeCost(i)
 total += initialDeployCost
-
-PROGRESS:
-All pages except Stage-related done
-TutorialPage - 62 errors
-StagePage - 583 errors
-
-All achievements done
-
-Other TODO:
-- Fix Draw on units, specially ObjectUnit class
-- Fix Special skills on Hero Unit
-- Fix up DataStage
-- Restructure type to merely identifying the class used instead of being [(class * 3) + lv]
-- Static variables for resource array locations for more mod-ability
-- Removing ID-Style resource gathering for a decompiled one
-- PC Port
-- Get rid of the androidx folder entirely
