@@ -66,7 +66,7 @@ public class HelpPage extends TPage {
 
         GameRenderer.setFontDoubleColor(-1, -1);
         GameRenderer.setFontSize(19);
-        GameRenderer.drawStringDoubleM(String.format("%d/%d", Integer.valueOf(GameThread.gameHelpViewNum + 1), 15), 705.0f, 431.0f, 17);
+        GameRenderer.drawStringDoubleM(String.format("%d/%d", GameThread.gameHelpViewNum + 1, 15), 705.0f, 431.0f, 17);
 
         uiEtcImage[i == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
 

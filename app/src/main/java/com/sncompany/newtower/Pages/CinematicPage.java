@@ -1,21 +1,18 @@
 package com.sncompany.newtower.Pages;
 
 
-import java.util.function.Consumer;
-
 import androidx.core.internal.view.SupportMenu;
 import androidx.core.view.ViewCompat;
 
-
 import com.sncompany.newtower.Config;
-import com.sncompany.newtower.DataClasses.DataStory;
-import com.sncompany.newtower.DataClasses.DataStory2;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
+
+import java.util.function.Consumer;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -32,6 +29,8 @@ public class CinematicPage extends TPage {
     public static final int[][] storyData = {new int[]{103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 30, 0, 0, 3, 1, 0, 100}, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 4, 7, 0, 0, 100}, new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 30, 0, 8, 9, 0, 0, 100}, new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 30, 0, 10, 11, 0, 0, 100}, new int[]{9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 30, 0, -1, -1, 0, 0, 100}, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 102, 0, 0, 0, 0, 0, 30, 0, 12, 15, 1, 0, 100}, new int[]{102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 30, 0, 16, 18, 0, 0, 100}, new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 30, 0, 19, 20, 1, 0, 100}, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 15, 40, -1, -1, 0, 0, 50}, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 15, 0, 21, 22, 0, 0, 100}, new int[]{3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 10, 0, 23, 27, 0, 0, 100}, new int[]{4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 10, 0, 28, 29, 0, 0, 100}, new int[]{3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 30, 0, -1, -1, 0, 0, 100}, new int[]{5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 15, 0, 30, 30, 0, 0, 100}, new int[]{5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 15, 0, 31, 31, 0, 0, 100}, new int[]{5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 15, 40, -1, -1, 0, 0, 50}, new int[]{5, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 5, 1, 1, 1, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 15, 0, -1, -1, 0, 0, 100}, new int[]{5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 15, 0, 32, 33, 0, 0, 100}, new int[]{5, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 10, 0, 34, 35, 0, 0, 100}, new int[]{11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 1, 1, 20, 0, -1, -1, 0, 0, 100}, new int[]{6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 6, 0, 0, 0, 0, 1, 20, 0, 36, 38, 0, 0, 100}};
     public static int[] story2DrawDataBlock = new int[10];
     public static final int[][] story2Data = {new int[]{30, 0, 0, 6, 0, 0, 100}, new int[]{30, 150, 7, 14, 0, 0, 100}, new int[]{30, 90, 15, 22, 1, 0, 100}};
+    public static final String[] storyText = {"Humans and monsters used to coexist _ on the Crasto Continent,", "and its history was determined by", "its founding heroes who fought", "against the Wraith King _ who wished to annihilate the Humans.", "Thousands of years ago,", "the Humans started a war _ against the monsters", "that were born to prey upon men.", "For hundreds of years,", "thousands of Humans died", "until heroes rose up to seal the Wraith King,_ the father of all monsters.", "He was sealed at the end of the world", "and his children were weakened.", "While the Humans enjoyed their victory,", "the surviving monsters fled to the _ end of the continent.", "And then…", "It was a new era of peace.", "The signs of war's ravage slowly vanished.", "The soil was rich", "and the forests grew far and wide.", "The Humans forgot ", "one important truth:", "the evil king might be sealed,", "but he wasn't destroyed.", "One day, a volcano erupted without warning", "and spewed flaming red lava for a week.", "The sun didn't rise.", "The moon or stars hid themselves.", "It was a week when", "the sky was always pitch-dark.", "No light could be seen, day or night.", "One night, an evil moon appeared.", "It was an omen declaring the evil king's coming.", "On the seventh night of the evil moon,", "the seal of the evil king completely lost its power,", "allowing the king resurrect", "at the end of the world.", "Wraith King is now on the loose, stronger than ever, _ and ready to strike back.", "", ""};
+    public static final String[] story2Text = {"The heroes resealed Wraith King,", "finally bringing an end to the war.", "Peace returned to the Crasto Continent.", "The people shouted for joy,", "and the soldiers came back home safely.", "Everyone thought that the", "Crasto Continent would be prosperous again,", "but", "they weren't aware of another disaster _ looming on the horizon.", "Perhaps they preferred ignorant bliss after being ravaged _ by the horrendous war for a long time. ", "..", "How did the Wraith King break out of his seal?", "He returned to punish all the Humans on earth.", "His seal wasn't supposed to", "break so easily.", "Fin.", "Developed by SN Mobile Technology._Published by PLAYBEAN.", "General Director : Dong Hwa, Woo._Producer : Min Young, Han.", "Programmer : Haeng Bok, Lee._Artist : Han joo, Kang._Game Designer : Min Young, Han._Sub. Game Designer : Jin Kook, Park.", "Thanks for Playing._Fantasy Defenders.", "To be continued..", "", ""};
 
     enum RunMode {
         LOGO,
@@ -262,7 +261,7 @@ public class CinematicPage extends TPage {
                     }
                     GameRenderer.setFontSize(28);
                     GameRenderer.setFontDoubleColor(-1, -16777216);
-                    String[] split = DataStory.storyText[storyDrawDataBlock[26]].split("_");
+                    String[] split = storyText[storyDrawDataBlock[26]].split("_");
                     if (storyDrawDataBlock[22] != 1) {
                         for (int i4 = 0; i4 < split.length; i4++)
                             GameRenderer.drawStringDoubleM(split[i4], GameRenderer.CX, GameRenderer.CY + (i4 * 35), 17);
@@ -308,7 +307,7 @@ public class CinematicPage extends TPage {
                     else
                         GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
 
-                    String[] split = DataStory2.storyText[story2DrawDataBlock[8]].split("_");
+                    String[] split = story2Text[story2DrawDataBlock[8]].split("_");
                     int length = story2DrawDataBlock[4] != 1 ? GameRenderer.CY - ((split.length * 35) / 2) : 415 - ((split.length - 1) * 35);
 
                     for (int i3 = 0; i3 < split.length; i3++)

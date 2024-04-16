@@ -8,7 +8,6 @@ import com.sncompany.newtower.Battle.ArrowUnit;
 import com.sncompany.newtower.Battle.EffectUnit;
 import com.sncompany.newtower.Battle.MonsterUnit;
 import com.sncompany.newtower.DataClasses.CGPoint;
-import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.Battle.ObjectUnit;
@@ -18,7 +17,6 @@ import java.lang.reflect.Array;
 
 /* loaded from: D:\decomp\classes.dex */
 public class GameThread extends Thread {
-    public static final int GAME_PLAY2_IMAGE_LOAD = 1005;
     public static final int SPECIAL_ATTACK_ARROW_LEG_POS_X = 403;
     public static final int SPECIAL_ATTACK_ARROW_LEG_POS_Y = 558;
     public static final int SPECIAL_ATTACK_ARROW_UNIT_START_FRAME = 165;
@@ -177,112 +175,37 @@ public class GameThread extends Thread {
         bgmMedia[0] = new MediaManager(newTower, R.raw.bgm_1);
         bgmMedia[1] = new MediaManager(newTower, R.raw.bgm_2);
         bgmMedia[2] = new MediaManager(newTower, R.raw.bgm_3);
-        effectMedia.setMediaFile(0, newTower, R.raw.snlogo, false);
-        effectMedia.setMediaFile(1, newTower, R.raw.att_1, false);
-        effectMedia.setMediaFile(2, newTower, R.raw.att_2, false);
-        effectMedia.setMediaFile(3, newTower, R.raw.att_3, false);
-        effectMedia.setMediaFile(4, newTower, R.raw.att_4, false);
-        effectMedia.setMediaFile(5, newTower, R.raw.att_5, false);
-        effectMedia.setMediaFile(6, newTower, R.raw.att_6, false);
-        effectMedia.setMediaFile(7, newTower, R.raw.att_7, false);
-        effectMedia.setMediaFile(8, newTower, R.raw.att_8, false);
-        effectMedia.setMediaFile(9, newTower, R.raw.att_9, false);
-        effectMedia.setMediaFile(10, newTower, R.raw.etc_1, false);
-        effectMedia.setMediaFile(11, newTower, R.raw.etc_2, false);
-        effectMedia.setMediaFile(12, newTower, R.raw.etc_3, false);
-        effectMedia.setMediaFile(13, newTower, R.raw.etc_4, false);
-        effectMedia.setMediaFile(14, newTower, R.raw.etc_5, false);
-        effectMedia.setMediaFile(15, newTower, R.raw.etc_6, false);
-        effectMedia.setMediaFile(16, newTower, R.raw.etc_7, false);
-        effectMedia.setMediaFile(17, newTower, R.raw.etc_8, false);
-        effectMedia.setMediaFile(18, newTower, R.raw.etc_9, false);
-        effectMedia.setMediaFile(19, newTower, R.raw.etc_10, false);
-        effectMedia.setMediaFile(20, newTower, R.raw.etc_11, false);
-        effectMedia.setMediaFile(21, newTower, R.raw.voice_1, false);
-        effectMedia.setMediaFile(22, newTower, R.raw.voice_2, false);
-        effectMedia.setMediaFile(23, newTower, R.raw.voice_3, false);
-        effectMedia.setMediaFile(24, newTower, R.raw.voice_4, false);
-        effectMedia.setMediaFile(25, newTower, R.raw.voice_5, false);
-        effectMedia.setMediaFile(26, newTower, R.raw.voice_6, false);
-        effectMedia.setMediaFile(27, newTower, R.raw.voice_7, false);
-        effectMedia.setMediaFile(28, newTower, R.raw.voice_8, false);
-        effectMedia.setMediaFile(29, newTower, R.raw.voice_9, false);
-        effectMedia.setMediaFile(30, newTower, R.raw.spebladehit, false);
-    }
-
-    public static int getBuyPrice(int i) {
-        int upgradeUnitRate;
-        if (i == -1)
-            return 0;
-
-        int i2 = DataCharacter.charData[i][0];
-        int i3 = DataCharacter.charData[i][11];
-        if (i3 == 0) {
-            upgradeUnitRate = (DataCharacter.charData[i][0] * getUpgradeUnitRate(1, 6)) / 100;
-        } else if (i3 == 1) {
-            upgradeUnitRate = (DataCharacter.charData[i][0] * getUpgradeUnitRate(2, 6)) / 100;
-        } else {
-            if (i3 != 2) {
-                return i2;
-            }
-            upgradeUnitRate = (DataCharacter.charData[i][0] * getUpgradeUnitRate(3, 6)) / 100;
-        }
-        return i2 + upgradeUnitRate;
-    }
-
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to find 'out' block for switch in B:13:0x0043. Please report as an issue. */
-    public static void useSpecialAttack(int i) {
-        if (i < 0) {
-            return;
-        }
-        playSound(19);
-        int i2 = towerUnit[i].specialType;
-        if (i2 == 0) {
-            characterMenuSelectFlag = 8;
-        } else if (i2 == 1) {
-            characterMenuSelectFlag = 9;
-        } else if (i2 == 2) {
-            characterMenuSelectFlag = 10;
-        }
-        int i3 = 0;
-        specialAttackFrameCount = 0;
-        specialAttackSkipFlag = false;
-
-        myMana -= towerUnit[i].specialMana;
-        switch (characterMenuSelectFlag) {
-            case 8:
-                for (int i4 = 0; i4 < 60; i4++) {
-                    addSpecialArrowUnit(getRandom(4) + 15, 33750, getRandom(450) * 50, -(i4 + 65), true);
-                }
-                for (int i5 = 0; i5 < 20; i5++) {
-                    int[][] iArr = specialDataValue;
-                    int i6 = i5 % 3;
-                    iArr[i5][0] = i6;
-                    iArr[i5][1] = getRandom(GameRenderer.SCRWIDTH_SMALL);
-                    specialDataValue[i5][2] = getRandom(GameRenderer.SCRHEIGHT_SMALL);
-                    if (i6 == 0) {
-                        specialDataValue[i5][3] = 100;
-                    } else if (i6 == 1) {
-                        specialDataValue[i5][3] = 160;
-                    } else if (i6 == 2) {
-                        specialDataValue[i5][3] = 200;
-                    }
-                }
-                return;
-            case 9:
-                while (i3 < 75) {
-                    addSpecialArrowUnit(getRandom(3) + 33, getRandom(675) * 50, getRandom(450) * 50, -(i3 + 60), true);
-                    i3++;
-                }
-                return;
-            case 10:
-                while (i3 < 60) {
-                    addSpecialArrowUnit(getRandom(14) + 19, (getRandom(337) + GameRenderer.GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS) * 50, (getRandom(225) + 112) * 50, -(i3 + 65), true);
-                    i3++;
-                }
-                break;
-        }
+        effectMedia.setMediaFile(0, newTower, R.raw.snlogo);
+        effectMedia.setMediaFile(1, newTower, R.raw.att_1);
+        effectMedia.setMediaFile(2, newTower, R.raw.att_2);
+        effectMedia.setMediaFile(3, newTower, R.raw.att_3);
+        effectMedia.setMediaFile(4, newTower, R.raw.att_4);
+        effectMedia.setMediaFile(5, newTower, R.raw.att_5);
+        effectMedia.setMediaFile(6, newTower, R.raw.att_6);
+        effectMedia.setMediaFile(7, newTower, R.raw.att_7);
+        effectMedia.setMediaFile(8, newTower, R.raw.att_8);
+        effectMedia.setMediaFile(9, newTower, R.raw.att_9);
+        effectMedia.setMediaFile(10, newTower, R.raw.etc_1);
+        effectMedia.setMediaFile(11, newTower, R.raw.etc_2);
+        effectMedia.setMediaFile(12, newTower, R.raw.etc_3);
+        effectMedia.setMediaFile(13, newTower, R.raw.etc_4);
+        effectMedia.setMediaFile(14, newTower, R.raw.etc_5);
+        effectMedia.setMediaFile(15, newTower, R.raw.etc_6);
+        effectMedia.setMediaFile(16, newTower, R.raw.etc_7);
+        effectMedia.setMediaFile(17, newTower, R.raw.etc_8);
+        effectMedia.setMediaFile(18, newTower, R.raw.etc_9);
+        effectMedia.setMediaFile(19, newTower, R.raw.etc_10);
+        effectMedia.setMediaFile(20, newTower, R.raw.etc_11);
+        effectMedia.setMediaFile(21, newTower, R.raw.voice_1);
+        effectMedia.setMediaFile(22, newTower, R.raw.voice_2);
+        effectMedia.setMediaFile(23, newTower, R.raw.voice_3);
+        effectMedia.setMediaFile(24, newTower, R.raw.voice_4);
+        effectMedia.setMediaFile(25, newTower, R.raw.voice_5);
+        effectMedia.setMediaFile(26, newTower, R.raw.voice_6);
+        effectMedia.setMediaFile(27, newTower, R.raw.voice_7);
+        effectMedia.setMediaFile(28, newTower, R.raw.voice_8);
+        effectMedia.setMediaFile(29, newTower, R.raw.voice_9);
+        effectMedia.setMediaFile(30, newTower, R.raw.spebladehit);
     }
 
     public static void clearSpecialArrowUnit() {

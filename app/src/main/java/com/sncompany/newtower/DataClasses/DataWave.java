@@ -4,10 +4,8 @@ import android.util.Log;
 
 import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Config;
-import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.R;
-import com.sncompany.newtower.Texture2D;
 
 import java.io.InputStream;
 
@@ -40,7 +38,7 @@ public class DataWave {
     public final DataMap map;
 
     public final int waveCount, wcc;
-    public boolean waveRunF = true, perfectWave = true, waveMonsterOutPos = false;
+    public boolean waveRunF = true, perfectWave = true, waveMonsterOutPos = false; //WaveRunF is literally just pause, btw
     public int waveStartT = 90, current = 0, monsterOpenTime = 0;
     public int wavePattern, gatePattern;
     public final int[] waveMonsterType = new int[2], waveMonsterRemainCount = new int[2], waveMonsterShowTime = new int[2], waveMonsterShowCurrent = new int[2];

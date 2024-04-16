@@ -4,7 +4,6 @@ import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataAnim;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataCharacter;
-import com.sncompany.newtower.DataClasses.DataHero;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameRenderer;
@@ -70,6 +69,12 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         if (i == -1 || i > 9)
             return effectTypeString[9];
         return effectTypeString[i];
+    }
+
+    public static int getTowerBoxImageOrder(int type) {
+        if (type % 4 < 2)
+            return -1;
+        return (type % 2) + ((type / 4) * 2); //While merely dividing by 2 looks like a more reasonable choice, this takes advantage of flooring
     }
 
     public TowerUnit(DataStage s, int tType, int bX, int bY) {

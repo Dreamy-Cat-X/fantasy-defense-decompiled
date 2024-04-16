@@ -8,7 +8,6 @@ import com.sncompany.newtower.DataClasses.DataHero;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeHero;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
-import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.Pages.stage.StageBase;
@@ -16,6 +15,53 @@ import com.sncompany.newtower.Texture2D;
 
 public class HeroUnit extends TowerUnit {
 
+    public static final int SPECIAL_ATTACK_ARROW_ANIM_START_FRAME = 135;
+    public static final int SPECIAL_ATTACK_ARROW_ANIM_VIEW_COUNT = 60;
+    public static final int SPECIAL_ATTACK_ARROW_DRAW_PER_FRAME = 5;
+    public static final int SPECIAL_ATTACK_ARROW_DROP_START_FRAME = 60;
+    public static final int SPECIAL_ATTACK_ARROW_FRAME_TOTAL_COUNT = 195;
+    public static final int SPECIAL_ATTACK_ARROW_ITEM_COUNT = 75;
+    public static final int SPECIAL_ATTACK_ARROW_LEG_POS_X = 403;
+    public static final int SPECIAL_ATTACK_ARROW_LEG_POS_Y = 558;
+    public static final int SPECIAL_ATTACK_ARROW_MOVE_VALUE = 100;
+    public static final int SPECIAL_ATTACK_ARROW_STAY_POS_X = 200;
+    public static final int SPECIAL_ATTACK_ARROW_STAY_POS_Y = 10;
+    static final float SPECIAL_ATTACK_ARROW_UNIT_SIZE_DEGREE = 0.025f;
+    static final float SPECIAL_ATTACK_ARROW_UNIT_SIZE_START = 0.5f;
+    public static final int SPECIAL_ATTACK_ARROW_UNIT_START_FRAME = 165;
+    public static final int SPECIAL_ATTACK_ARROW_UNIT_VIEW_START_COUNT = 30;
+    static final float SPECIAL_ATTACK_BACKGROUND_ALPHA_DEGREE = 0.1f;
+    public static final int SPECIAL_ATTACK_BACKGROUND_ENTER_START_POS = 0;
+    public static final int SPECIAL_ATTACK_BACKGROUND_LINE_COUNT = 30;
+    public static final int SPECIAL_ATTACK_BACKGROUND_OUT_START_POS = 50;
+    public static final int SPECIAL_ATTACK_BLADE_DROP_START_FRAME = 65;
+    public static final int SPECIAL_ATTACK_BLADE_FRAME_TOTAL_COUNT = 150;
+    public static final int SPECIAL_ATTACK_BLADE_MOVE_VALUE = 100;
+    public static final int SPECIAL_ATTACK_BLADE_STAY_POS = 100;
+    public static final int SPECIAL_ATTACK_HERO_MOVE_ENTER_START_POS = 10;
+    public static final int SPECIAL_ATTACK_HERO_MOVE_OUT_END_POS = 50;
+    public static final int SPECIAL_ATTACK_HERO_MOVE_OUT_START_POS = 45;
+    public static final int SPECIAL_ATTACK_HERO_MOVE_STAY_POS = 15;
+    public static final int SPECIAL_ATTACK_HERO_VIEW_COUNT = 60;
+    public static final int SPECIAL_ATTACK_ICE_ANIM_ICE_REVERSE_GO = 15;
+    public static final int SPECIAL_ATTACK_ICE_ANIM_UNIT_VIEW_POS = 15;
+    public static final int SPECIAL_ATTACK_ICE_ANIM_VIEW_COUNT = 50;
+    public static final int SPECIAL_ATTACK_ICE_ANIM_WHITE_VIEW_POS = 30;
+    public static final int SPECIAL_ATTACK_ICE_DROP_START_FRAME = 60;
+    public static final int SPECIAL_ATTACK_ICE_FRAME_TOTAL_COUNT = 170;
+    public static final int SPECIAL_ATTACK_ICE_ITEM_COUNT = 60;
+    public static final int SPECIAL_ATTACK_ICE_MOVE_VALUE = 200;
+    public static final int SPECIAL_ATTACK_ICE_OUT_START_NUM = 1000;
+    public static final int SPECIAL_ATTACK_ICE_REVERSE_START_FRAME = 135;
+    public static final int SPECIAL_ATTACK_ICE_STAY_POS_Y = 40;
+    static final float SPECIAL_ATTACK_ICE_UNIT_SIZE_START = 0.3f;
+    static final float SPECIAL_ATTACK_ICE_UNIT_SIZE_ZOOM_DEGREE = 0.1f;
+    public static final int SPECIAL_ATTACK_ICE_UNIT_START_FRAME = 135;
+    static final float SPECIAL_ATTACK_ICE_WHITE_ALPHA_DEGREE = 0.1f;
+    static final float SPECIAL_ATTACK_ICE_WHITE_ALPHA_START = 2.0f;
+    public static final int SPECIAL_ATTACK_ICE_WHITE_END_FRAME = 170;
+    public static final int SPECIAL_ATTACK_ICE_WHITE_START_FRAME = 150;
+    private static final int[] hitPoint = {150, 195, 170};
     public int specialAttCount;
     public int specialAttPower;
     public int specialCooltime = 0;
@@ -50,7 +96,7 @@ public class HeroUnit extends TowerUnit {
         attackType = dat[11];
         effectType = -1;
         attackEffect = dat[12];
-        specialType = dat[5];
+        specialType = type;
         specialMana = dat[6] + ((dat[6] * getUpgradeRate(17)) / 100);
         specialAttPower = dat[7] + ((dat[7] * (getUpgradeRate(16) + getEquipEffect(DataUpgradeItem.EQ_CHARM, 0))) / 100);
         specialAttCount = dat[8];
@@ -162,6 +208,27 @@ public class HeroUnit extends TowerUnit {
         super.update();
     }
 
+    //skip will be handled by setting specialAttackFrameCount to the maximum
+
+    /**
+     * Updates the time of a special attack
+     * @return true if the special ended or it's not in use
+     */
+    public boolean updateSpecial() {
+        if (specialAttackFrameCount != -1) {
+            specialAttackFrameCount++;
+
+            if (specialAttackFrameCount == 60)
+                playSound(17);
+            if (specialAttackFrameCount >= hitPoint[type]) {
+                specialAttackFrameCount = -1;
+                hitSpecialAttack();
+                specialCooltime = specialMaxCooltime;
+            }
+        }
+        return specialAttackFrameCount == -1;
+    }
+
     @Override
     public int getSoundAttackType() {
         int i3 = DataHero.heroData[oldType()][13];
@@ -177,6 +244,51 @@ public class HeroUnit extends TowerUnit {
     public int getHitDamage(MonsterUnit mon) {
         int pow = Math.max(1, (unitPower * (100 - mon.unitDefense)) / 100);
         return pow + (((getUpgradeRate(7) + getEquipEffect(2, 0)) * pow) / 100);
+    }
+
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Failed to find 'out' block for switch in B:13:0x0043. Please report as an issue. */
+    public void useSpecialAttack() {
+        playSound(19);
+
+        st.selectedUnit = this; //type + 8
+        int arrowC = 0;
+        specialAttackFrameCount = 0;
+        st.Mana -= specialMana;
+
+        switch (type) {
+            case 0:
+                for (int i4 = 0; i4 < 60; i4++)
+                    st.addSpecialArrowUnit(getRandom(4) + 15, 33750, getRandom(450) * 50, -(i4 + 65), true);
+
+                for (int i5 = 0; i5 < 20; i5++) {
+                    int[][] iArr = specialDataValue;
+                    int i6 = i5 % 3;
+                    iArr[i5][0] = i6;
+                    iArr[i5][1] = getRandom(GameRenderer.SCRWIDTH_SMALL);
+                    specialDataValue[i5][2] = getRandom(GameRenderer.SCRHEIGHT_SMALL);
+                    if (i6 == 0) {
+                        specialDataValue[i5][3] = 100;
+                    } else if (i6 == 1) {
+                        specialDataValue[i5][3] = 160;
+                    } else if (i6 == 2) {
+                        specialDataValue[i5][3] = 200;
+                    }
+                }
+                return;
+            case 1:
+                while (arrowC < 75) {
+                    st.addSpecialArrowUnit(getRandom(3) + 33, getRandom(675) * 50, getRandom(450) * 50, -(arrowC + 60), true);
+                    arrowC++;
+                }
+                return;
+            case 2:
+                while (arrowC < 60) {
+                    st.addSpecialArrowUnit(getRandom(14) + 19, (getRandom(337) + GameRenderer.GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS) * 50, (getRandom(225) + 112) * 50, -(arrowC + 65), true);
+                    arrowC++;
+                }
+                break;
+        }
     }
 
     public void setReverseSpecialIce() {

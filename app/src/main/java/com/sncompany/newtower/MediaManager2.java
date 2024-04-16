@@ -13,23 +13,22 @@ public class MediaManager2 {
     }
 
     //Z is always false lol
-    public void setMediaFile(int i, Context context, int rid, boolean loop) {
+    public void setMediaFile(int i, Context context, int rid) {
         MediaPlayer[] mediaPlayerArr = this.mPlayer;
         if (i >= mediaPlayerArr.length)
             return;
 
         mediaPlayerArr[i] = MediaPlayer.create(context, rid);
-        this.mPlayer[i].setLooping(loop);
-        this.mPlayer[i].setOnCompletionListener(new MediaPlayer.OnCompletionListener() { // from class: com.sncompany.newtower.MediaManager2.1
-            @Override // android.media.MediaPlayer.OnCompletionListener
-            public final void onCompletion(MediaPlayer mediaPlayer) {
-                try {
-                    mediaPlayer.stop();
-                    mediaPlayer.prepare();
-                } catch (Exception unused) {
-                    mediaPlayer.reset();
-                    Log.d("SOUND", "PREPARE ERROR");
-                }
+        this.mPlayer[i].setLooping(false);
+        // from class: com.sncompany.newtower.MediaManager2.1
+// android.media.MediaPlayer.OnCompletionListener
+        this.mPlayer[i].setOnCompletionListener(mediaPlayer -> {
+            try {
+                mediaPlayer.stop();
+                mediaPlayer.prepare();
+            } catch (Exception unused) {
+                mediaPlayer.reset();
+                Log.d("SOUND", "PREPARE ERROR");
             }
         });
     }

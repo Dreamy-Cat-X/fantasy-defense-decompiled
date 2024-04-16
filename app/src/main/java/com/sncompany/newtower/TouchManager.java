@@ -1,7 +1,5 @@
 package com.sncompany.newtower;
 
-import android.util.Log;
-
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.CGRect;
 

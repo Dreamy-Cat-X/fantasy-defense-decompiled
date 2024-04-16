@@ -8,6 +8,7 @@ import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Pages.TPage;
+import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -135,20 +136,20 @@ public class TutorialPage extends StageBase {
         drawMapTile(gl10);
         drawAllUnit(gl10);
         TouchManager.clearTouchMap();
-        TouchManager.addTouchRectListData(11, GameRenderer.CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
+        TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
         int i6 = 12;
         switch (tutorStep) {
             case 1:
-                TouchManager.addTouchRectListData(10, GameRenderer.CGRectMake(tutorialBoxLinePos[0][4], tutorialBoxLinePos[0][5], tutorialBoxLinePos[0][6], tutorialBoxLinePos[0][7]));
-                TouchManager.addTouchRectListData(11, GameRenderer.CGRectMake(tutorialBoxLinePos[1][4], tutorialBoxLinePos[1][5], tutorialBoxLinePos[1][6], tutorialBoxLinePos[1][7]));
-                TouchManager.addTouchRectListData(12, GameRenderer.CGRectMake(tutorialBoxLinePos[2][4], tutorialBoxLinePos[2][5], tutorialBoxLinePos[2][6], tutorialBoxLinePos[2][7]));
-                TouchManager.addTouchRectListData(13, GameRenderer.CGRectMake(tutorialBoxLinePos[3][4], tutorialBoxLinePos[3][5], tutorialBoxLinePos[3][6], tutorialBoxLinePos[3][7]));
-                TouchManager.addTouchRectListData(14, GameRenderer.CGRectMake(tutorialBoxLinePos[4][4], tutorialBoxLinePos[4][5], tutorialBoxLinePos[4][6], tutorialBoxLinePos[4][7]));
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(tutorialBoxLinePos[0][4], tutorialBoxLinePos[0][5], tutorialBoxLinePos[0][6], tutorialBoxLinePos[0][7]));
+                TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(tutorialBoxLinePos[1][4], tutorialBoxLinePos[1][5], tutorialBoxLinePos[1][6], tutorialBoxLinePos[1][7]));
+                TouchManager.addTouchRectListData(2, GameRenderer.CGRectMake(tutorialBoxLinePos[2][4], tutorialBoxLinePos[2][5], tutorialBoxLinePos[2][6], tutorialBoxLinePos[2][7]));
+                TouchManager.addTouchRectListData(3, GameRenderer.CGRectMake(tutorialBoxLinePos[3][4], tutorialBoxLinePos[3][5], tutorialBoxLinePos[3][6], tutorialBoxLinePos[3][7]));
+                TouchManager.addTouchRectListData(4, GameRenderer.CGRectMake(tutorialBoxLinePos[4][4], tutorialBoxLinePos[4][5], tutorialBoxLinePos[4][6], tutorialBoxLinePos[4][7]));
                 break;
             case 2:
-                TouchManager.addTouchRectListData(15, GameRenderer.CGRectMake(tutorialBoxLinePos[5][4], tutorialBoxLinePos[5][5], tutorialBoxLinePos[5][6], tutorialBoxLinePos[5][7]));
-                TouchManager.addTouchRectListData(16, GameRenderer.CGRectMake(tutorialBoxLinePos[6][4], tutorialBoxLinePos[6][5], tutorialBoxLinePos[6][6], tutorialBoxLinePos[6][7]));
-                TouchManager.addTouchRectListData(17, GameRenderer.CGRectMake(tutorialBoxLinePos[7][4], tutorialBoxLinePos[7][5], tutorialBoxLinePos[7][6], tutorialBoxLinePos[7][7]));
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(tutorialBoxLinePos[5][4], tutorialBoxLinePos[5][5], tutorialBoxLinePos[5][6], tutorialBoxLinePos[5][7]));
+                TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(tutorialBoxLinePos[6][4], tutorialBoxLinePos[6][5], tutorialBoxLinePos[6][6], tutorialBoxLinePos[6][7]));
+                TouchManager.addTouchRectListData(2, GameRenderer.CGRectMake(tutorialBoxLinePos[7][4], tutorialBoxLinePos[7][5], tutorialBoxLinePos[7][6], tutorialBoxLinePos[7][7]));
                 break;
             case 3:
                 TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742.0f, 77.0f, 56.0f, 56.0f));
@@ -187,7 +188,7 @@ public class TutorialPage extends StageBase {
                 TouchManager.addTouchRectListData(23, GameRenderer.CGRectMake(tutorialBoxLinePos[13][4], tutorialBoxLinePos[13][5], tutorialBoxLinePos[13][6], tutorialBoxLinePos[13][7]));
                 break;
             case 15:
-                int i7 = GameThread.characterMenuSelectFlag;
+                int i7 = characterMenuSelectFlag;
                 if (i7 != 0) {
                     if (i7 == 3) {
                         TouchManager.addTouchRectListData(7, GameRenderer.CGRectMake(558.0f, 12.0f, 56.0f, 56.0f));
@@ -222,49 +223,21 @@ public class TutorialPage extends StageBase {
         }
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 31;
         int checkTouchListStatus = TouchManager.checkTouchListStatus();
-        uiUpperImage[7].drawAtPointOption(0.0f, 0.0f, 18);
-        uiUpperImage[1].drawAtPointOption(9.0f, 4.0f, 18);
-        uiUpperImage[0].drawAtPointOption(126.0f, 5.0f, 18);
-        uiUpperImage[8].drawAtPointOption(298.0f, 6.0f, 18);
-        uiUpperImage[14].drawAtPointOption(22.0f, 398.0f, 18);
-        uiUpperImage[14].drawAtPointOption(16.0f, 398.0f, 18);
-        uiUpperImage[4].drawAtPointOption(1.0f, 391.0f, 18);
-        if (GameThread.gameStatus == 21) {
-            uiUpperImage[3].drawAtPointOption(5.0f, 437.0f, 18);
-        } else {
-            uiUpperImage[2].drawAtPointOption(5.0f, 437.0f, 18);
+        drawUpperUI();
+
+        for (int j = 0; j < 6; j++) {
+            uiButtonImage[j].drawAtPointOption(myOscillator[j].getCurrentPosition() + 770, 77f + (65 * j), 17);
+            GameRenderer.drawNumberBlock(TowerUnit.getBuyPrice((j * 2) - (j % 2)), numberUnitBuyImage, myOscillator[j].getCurrentPosition() + 770, 114.0f + (65 * j), -2, 17, 1);
         }
-        uiUpperImage[16].drawAtPointOption(6.0f, 344.0f, 18);
-        drawNumberBlock(st.Money, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
-        drawNumberBlock(st.Mana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
-        float drawNumberBlock = drawNumberBlock(1, numberWaveImage, 366.0f, 8.0f, 1, 18, 2);
-        numberWaveImage[10].drawAtPointOption(2.0f + drawNumberBlock, 6.0f, 18);
-        drawNumberBlock(1, numberWaveImage, drawNumberBlock + 10.0f, 8.0f, 1, 18, 2);
-        drawBaseHealth();
-        uiButtonImage[0].drawAtPointOption(myOscillator[0].getCurrentPosition() + 770, 77.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(0), numberUnitBuyImage, myOscillator[0].getCurrentPosition() + 770, 114.0f, -2, 17, 1);
-        uiButtonImage[1].drawAtPointOption(myOscillator[1].getCurrentPosition() + 770, 142.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(3), numberUnitBuyImage, myOscillator[1].getCurrentPosition() + 770, 179.0f, -2, 17, 1);
-        uiButtonImage[2].drawAtPointOption(myOscillator[2].getCurrentPosition() + 770, 207.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(12), numberUnitBuyImage, myOscillator[2].getCurrentPosition() + 770, 244.0f, -2, 17, 1);
-        uiButtonImage[3].drawAtPointOption(myOscillator[3].getCurrentPosition() + 770, 272.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(15), numberUnitBuyImage, myOscillator[3].getCurrentPosition() + 770, 309.0f, -2, 17, 1);
-        uiButtonImage[4].drawAtPointOption(myOscillator[4].getCurrentPosition() + 770, 337.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(24), numberUnitBuyImage, myOscillator[4].getCurrentPosition() + 770, 374.0f, -2, 17, 1);
-        uiButtonImage[5].drawAtPointOption(myOscillator[5].getCurrentPosition() + 770, 402.0f, 17);
-        drawNumberBlock(GameThread.getBuyPrice(27), numberUnitBuyImage, myOscillator[5].getCurrentPosition() + 770, 439.0f, -2, 17, 1);
         int i8 = 586;
-        int i9 = 0;
-        for (int i10 = 3; i9 < i10; i10 = 3) {
-            int i11 = i9 + 8;
-            uiButtonImage[6].drawAtPointOption(myOscillator[i11].getCurrentPosition() + i8, 12.0f, 17);
-            drawNumberBlock(250, numberHeroBuyImage, i8 + 5 + myOscillator[i11].getCurrentPosition(), 49.0f, -2, 17, 1);
-            uiUpperImage[13].drawAtPointOption((i8 - 17) + myOscillator[i11].getCurrentPosition(), 49.0f, 17);
+        for (int i9 = 0; i9 < 3; i9++) {
+            uiButtonImage[6].drawAtPointOption(myOscillator[i9 + 8].getCurrentPosition() + i8, 12.0f, 17);
+            GameRenderer.drawNumberBlock(250, numberHeroBuyImage, i8 + 5 + myOscillator[i9 + 8].getCurrentPosition(), 49.0f, -2, 17, 1);
+            uiUpperImage[13].drawAtPointOption((i8 - 17) + myOscillator[i9 + 8].getCurrentPosition(), 49.0f, 17);
             i8 += 60;
-            i9++;
         }
         uiButtonImage[18].drawAtPointOption(770.0f, 12.0f, 17);
-        int i12 = GameThread.characterMenuSelectFlag;
+        int i12 = characterMenuSelectFlag;
         if (i12 == 1 || i12 == 4) {
             boolean addable = getAddSettingPosition();
             drawAddGridBlock();
@@ -273,7 +246,7 @@ public class TutorialPage extends StageBase {
             f = 1.0f;
             i2 = 2;
             i3 = 7;
-            drawAddRangeCircle(GameThread.characterMenuSelectFlag, GameThread.characterAddNumber, GameThread.characterAddOrder, characterAddPosX, characterAddPosY, addable);
+            drawAddRangeCircle(characterMenuSelectFlag, GameThread.characterAddNumber, GameThread.characterAddOrder, characterAddPosX, characterAddPosY, addable);
             try {
                 drawSimpleTowerUnit(GameThread.characterAddNumber, GameThread.characterAddHeroFlag, characterAddPosX, characterAddPosY);
             } catch (Exception unused) {
@@ -597,50 +570,18 @@ public class TutorialPage extends StageBase {
         int checkTowerUnit;
         int i;
         int checkTowerUnit2;
-        int checkTouchListStatus = TouchManager.checkTouchListStatus();
+        int cTLS = TouchManager.checkTouchListStatus();
         char c = 2;
         int i2 = 0;
         switch (tutorStep) {
             case 1:
-                if (TouchManager.lastActionStatus != 2) {
-                    return;
-                }
-                switch (checkTouchListStatus) {
-                    case 10:
-                        tutorialBoxTouchFlag[0] = 1;
-                        break;
-                    case 11:
-                        tutorialBoxTouchFlag[1] = 1;
-                        break;
-                    case 12:
-                        tutorialBoxTouchFlag[2] = 1;
-                        break;
-                    case 13:
-                        tutorialBoxTouchFlag[3] = 1;
-                        break;
-                    case 14:
-                        tutorialBoxTouchFlag[4] = 1;
-                        break;
-                }
-                TouchManager.processTouchStatus();
-                return;
+                if (TouchManager.lastActionStatus == 2)
+                    tutorialBoxTouchFlag[cTLS] = 1;
+                break;
             case 2:
-                if (TouchManager.lastActionStatus != 2) {
-                    return;
-                }
-                switch (TouchManager.checkTouchListStatus()) {
-                    case 15:
-                        tutorialBoxTouchFlag[5] = 1;
-                        break;
-                    case 16:
-                        tutorialBoxTouchFlag[6] = 1;
-                        break;
-                    case 17:
-                        tutorialBoxTouchFlag[7] = 1;
-                        break;
-                }
-                TouchManager.processTouchStatus();
-                return;
+                if (TouchManager.lastActionStatus == 2)
+                    tutorialBoxTouchFlag[cTLS + 5] = 1;
+                break;
             case 3:
             case 5:
             case 7:
@@ -649,19 +590,19 @@ public class TutorialPage extends StageBase {
             case 13:
                 int i3 = TouchManager.lastActionStatus;
                 if (i3 == 0) {
-                    if (GameThread.characterMenuSelectFlag != 0) {
+                    if (characterMenuSelectFlag != 0) {
                         return;
                     }
-                    if (checkTouchListStatus == 0 || checkTouchListStatus == 1 || checkTouchListStatus == 2 || checkTouchListStatus == 3 || checkTouchListStatus == 4 || checkTouchListStatus == 5) {
+                    if (cTLS == 0 || cTLS == 1 || cTLS == 2 || cTLS == 3 || cTLS == 4 || cTLS == 5) {
                         tutorialViewCount = 0;
-                        int i4 = checkTouchListStatus != 0 ? checkTouchListStatus != 1 ? checkTouchListStatus != 2 ? checkTouchListStatus != 3 ? checkTouchListStatus != 4 ? 27 : 24 : 15 : 12 : 3 : 0;
-                        GameThread.characterMenuSelectFlag = 1;
-                        GameThread.characterAddOrder = checkTouchListStatus;
+                        int i4 = cTLS != 0 ? cTLS != 1 ? cTLS != 2 ? cTLS != 3 ? cTLS != 4 ? 27 : 24 : 15 : 12 : 3 : 0;
+                        characterMenuSelectFlag = 1;
+                        GameThread.characterAddOrder = cTLS;
                         GameThread.characterAddNumber = i4;
                         GameThread.characterAddHeroFlag = false;
                         GameThread.characterAddType = 1;
                         while (i2 < 7) {
-                            if (i2 != checkTouchListStatus) {
+                            if (i2 != cTLS) {
                                 myOscillator[i2].initWithTwoWayStartPosition(0, 200, 10, 210, 5);
                             }
                             i2++;
@@ -671,7 +612,7 @@ public class TutorialPage extends StageBase {
                     return;
                 }
                 if (i3 == 1) {
-                    if (GameThread.characterMenuSelectFlag == 0 && (checkTowerUnit = GameThread.checkTowerUnit()) != -1) {
+                    if (characterMenuSelectFlag == 0 && (checkTowerUnit = GameThread.checkTowerUnit()) != -1) {
                         GameThread.tempCharacterRangeViewNumber = checkTowerUnit;
                         return;
                     }
@@ -685,8 +626,8 @@ public class TutorialPage extends StageBase {
                     TouchManager.processTouchStatus();
                     return;
                 }
-                if (GameThread.characterMenuSelectFlag == 1) {
-                    GameThread.characterMenuSelectFlag = 0;
+                if (characterMenuSelectFlag == 1) {
+                    characterMenuSelectFlag = 0;
                     int i5 = tutorStep;
                     if (i5 == 3) {
                         c = 0;
@@ -702,7 +643,7 @@ public class TutorialPage extends StageBase {
                         getAddSettingPosition();
                         st.addUnit(GameThread.characterAddNumber, pX, pY);
                         st.Money -= TowerUnit.getBuyPrice(GameThread.characterAddNumber);
-                        GameThread.characterMenuSelectFlag = 0;
+                        characterMenuSelectFlag = 0;
                     }
                     while (i2 < 7) {
                         if (i2 != GameThread.characterAddOrder) {
@@ -740,7 +681,7 @@ public class TutorialPage extends StageBase {
                         break;
                     case 23:
                         tutorStep = 15;
-                        GameThread.characterMenuSelectFlag = 3;
+                        characterMenuSelectFlag = 3;
                         myOscillator[8].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
                         myOscillator[9].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
                         myOscillator[10].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
@@ -751,22 +692,22 @@ public class TutorialPage extends StageBase {
             case 15:
                 int i8 = TouchManager.lastActionStatus;
                 if (i8 == 0) {
-                    if (GameThread.characterMenuSelectFlag != 3) {
+                    if (characterMenuSelectFlag != 3) {
                         return;
                     }
                     i = 8;
-                    if (checkTouchListStatus != 7)
-                        if (checkTouchListStatus != 8 && checkTouchListStatus != 9)
+                    if (cTLS != 7)
+                        if (cTLS != 8 && cTLS != 9)
                             return;
-                    GameThread.characterMenuSelectFlag = 4;
-                    GameThread.characterAddOrder = checkTouchListStatus - i;
+                    characterMenuSelectFlag = 4;
+                    GameThread.characterAddOrder = cTLS - i;
                     GameThread.characterAddNumber = 0;
                     GameThread.characterAddHeroFlag = true;
                     GameThread.characterAddType = 4;
                     return;
                 }
                 if (i8 == 1) {
-                    if (GameThread.characterMenuSelectFlag == 0 && (checkTowerUnit2 = GameThread.checkTowerUnit()) != -1) {
+                    if (characterMenuSelectFlag == 0 && (checkTowerUnit2 = GameThread.checkTowerUnit()) != -1) {
                         GameThread.tempCharacterRangeViewNumber = checkTowerUnit2;
                         return;
                     }
@@ -780,20 +721,20 @@ public class TutorialPage extends StageBase {
                     TouchManager.processTouchStatus();
                     return;
                 }
-                if (GameThread.characterMenuSelectFlag == 4) {
+                if (characterMenuSelectFlag == 4) {
                     int i9 = (int) ((characterAddPosX - 62.0f) / 45.0f);
                     int i10 = (int) ((characterAddPosY - 30.0f) / 45.0f);
                     if (i9 == tutorialUnitPos[6][0] && i10 == tutorialUnitPos[6][1]) {
                         GameThread.playSound(14);
                         getAddSettingPosition();
                         st.selectedUnit = st.addHero(GameThread.characterAddNumber, i9, i10, false);
-                        GameThread.characterMenuSelectFlag = 0;
+                        characterMenuSelectFlag = 0;
                         myOscillator[8].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                         myOscillator[9].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                         myOscillator[10].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                        GameThread.characterMenuSelectFlag = 0;
+                        characterMenuSelectFlag = 0;
                     } else {
-                        GameThread.characterMenuSelectFlag = 3;
+                        characterMenuSelectFlag = 3;
                     }
                 }
                 TouchManager.processTouchStatus();

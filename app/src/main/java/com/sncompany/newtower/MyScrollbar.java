@@ -11,97 +11,75 @@ public class MyScrollbar {
     public int BarStartValue;
     public int BarValueWidth;
 
-    public MyScrollbar(int i, int i2, int i3, int i4) {
-        this.BarStartPos = i;
-        this.BarEndPos = i2;
-        this.BarPosWidth = i2 - i;
-        this.BarStartValue = i3;
-        this.BarEndValue = i4;
-        this.BarValueWidth = i4 - i3;
-        this.BarLastPosition = i;
+    public MyScrollbar(int startP, int endP, int startVal, int endVal) {
+        BarStartPos = startP;
+        BarEndPos = endP;
+        BarPosWidth = endP - startP;
+        BarStartValue = startVal;
+        BarEndValue = endVal;
+        BarValueWidth = endVal - startVal;
+        BarLastPosition = startP;
     }
 
     public void setUpdatePosition(float f) {
         int i = (int) f;
-        this.BarLastPosition = i;
-        if (this.BarPosWidth >= 0) {
-            int i2 = this.BarEndPos;
-            if (i > i2) {
-                this.BarLastPosition = i2;
-                this.BarLastValue = this.BarEndValue;
+        BarLastPosition = i;
+        if (BarPosWidth >= 0) {
+            if (i > BarEndPos) {
+                BarLastPosition = BarEndPos;
+                BarLastValue = BarEndValue;
                 return;
-            } else {
-                int i3 = this.BarStartPos;
-                if (i < i3) {
-                    this.BarLastPosition = i3;
-                    this.BarLastValue = this.BarStartValue;
-                    return;
-                }
+            } else if (i < BarStartPos) {
+                BarLastPosition = BarStartPos;
+                BarLastValue = BarStartValue;
+                return;
             }
         } else {
-            int i4 = this.BarEndPos;
-            if (i < i4) {
-                this.BarLastPosition = i4;
-                this.BarLastValue = this.BarEndValue;
+            if (i < BarEndPos) {
+                BarLastPosition = BarEndPos;
+                BarLastValue = BarEndValue;
                 return;
-            } else {
-                int i5 = this.BarStartPos;
-                if (i > i5) {
-                    this.BarLastPosition = i5;
-                    this.BarLastValue = this.BarStartValue;
-                    return;
-                }
+            } else if (i > BarStartPos) {
+                BarLastPosition = BarStartPos;
+                BarLastValue = BarStartValue;
+                return;
             }
         }
-        int i6 = this.BarLastPosition;
-        int i7 = this.BarStartPos;
-        float f2 = (i6 - i7) / (this.BarEndPos - i7);
-        float f3 = this.BarStartValue + ((this.BarEndValue - r0) * f2);
-        if (f3 >= 0.0f) {
-            f3 += 0.5f;
-        }
-        this.BarLastValue = (int) f3;
+        float f2 = (float)(BarLastPosition - BarStartPos) / (BarEndPos - BarStartPos);
+        float val = BarStartValue + ((BarEndValue - BarStartValue) * f2);
+        if (val >= 0)
+            val += 0.5f;
+        this.BarLastValue = (int) val;
     }
 
     public void setReverseUpdatePosition(float f) {
         int i = (int) f;
-        this.BarLastValue = i;
-        if (this.BarValueWidth >= 0) {
-            int i2 = this.BarEndValue;
-            if (i > i2) {
-                this.BarLastValue = i2;
-                this.BarLastPosition = this.BarEndPos;
+        BarLastValue = i;
+        if (BarValueWidth >= 0) {
+            if (i > BarEndValue) {
+                BarLastValue = BarEndValue;
+                BarLastPosition = BarEndPos;
                 return;
-            } else {
-                int i3 = this.BarStartValue;
-                if (i < i3) {
-                    this.BarLastValue = i3;
-                    this.BarLastPosition = this.BarStartPos;
-                    return;
-                }
+            } else if (i < BarStartValue) {
+                this.BarLastValue = BarStartValue;
+                this.BarLastPosition = this.BarStartPos;
+                return;
             }
         } else {
-            int i4 = this.BarEndValue;
-            if (i < i4) {
-                this.BarLastValue = i4;
+            if (i < BarEndValue) {
+                this.BarLastValue = BarEndValue;
                 this.BarLastPosition = this.BarEndPos;
                 return;
-            } else {
-                int i5 = this.BarStartValue;
-                if (i > i5) {
-                    this.BarLastValue = i5;
-                    this.BarLastPosition = this.BarStartPos;
-                    return;
-                }
+            } else if (i > BarStartValue) {
+                this.BarLastValue = BarStartValue;
+                this.BarLastPosition = this.BarStartPos;
+                return;
             }
         }
-        int i6 = this.BarLastValue;
-        int i7 = this.BarStartValue;
-        float f2 = (i6 - i7) / (this.BarEndValue - i7);
-        float f3 = this.BarStartPos + ((this.BarEndPos - r0) * f2);
-        if (f3 >= 0.0f) {
-            f3 += 0.5f;
-        }
-        this.BarLastPosition = (int) f3;
+        float f2 = (float) (BarLastValue - BarStartValue) / (BarEndValue - BarStartValue);
+        float val = BarStartPos + ((BarEndPos - BarStartPos) * f2);
+        if (val >= 0.0f)
+            val += 0.5f;
+        this.BarLastPosition = (int) val;
     }
 }

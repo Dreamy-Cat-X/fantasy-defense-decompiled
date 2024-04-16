@@ -1,13 +1,7 @@
 package com.sncompany.newtower;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.opengl.GLSurfaceView;
-import android.util.Log;
 import android.view.MotionEvent;
-import androidx.vectordrawable.graphics.drawable.PathInterpolatorCompat;
-
-import com.sncompany.newtower.DataClasses.CGPoint;
 
 /* loaded from: D:\decomp\classes.dex */
 public class GLGameSurfaceView extends GLSurfaceView {

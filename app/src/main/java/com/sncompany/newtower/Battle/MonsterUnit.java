@@ -44,6 +44,12 @@ public class MonsterUnit extends EnemyUnit {
     public int unitStatus = 0; //1 means dead, -1 means removed
     public int unitStatusCount = 0;
 
+    public static int getMonsterImageOrder(int type) {
+        if (type < 100)
+            return type % 25;
+        return 25 + (type % 5);
+    }
+
     public MonsterUnit(DataStage s, int type, boolean bossFlag) {
         super(s);
         this.type = type;
