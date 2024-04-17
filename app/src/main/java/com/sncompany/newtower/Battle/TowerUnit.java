@@ -137,7 +137,10 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public int getUpgradeRate(int ind) {
-        int role = getRole();
+        return getUpgradeRate(getRole(), ind);
+    }
+
+    public static int getUpgradeRate(int role, int ind) {
         int tot = 0;
         for (int g = role * 6; g < (role * 6) + 6; g++)
             if (DataUpgradeUnit.upgradeUnitData[g][4] == ind)
@@ -401,8 +404,6 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public void draw() {
         float x = posX / 50f + 62, y = posY / 50f + 30;
 
-        int towerLevelOrder = level + 1;
-
         int sprSpd = 5;
         int dire = lastViewDirection == 6 ? 0 : 1;
         if (unitStatus == 1) {
@@ -434,8 +435,13 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
                 Texture2D.setColors(1);
         }
         float starX = x - (7.5f * (level));
-        for (int i5 = 0; i5 < towerLevelOrder; i5++)
+        for (int i5 = 0; i5 < level + 1; i5++)
             st.page.uiUpperImage[StageBase.upper_star].drawAtPointOption((i5 * 15) + starX, y + 10, 9);
+    }
+
+    public void drawUnitRangeCircle() {
+        int circle = Math.min((attackRange - 1) / 100, 3);
+        whiteCircleImage[circle].drawAtPointOptionSize((originalPosX / 50.0f) + 62.0f, (originalPosY / 50.0f) + 30.0f, 9, (attackRange * 0.9f) / ((circle + 1) * 100));
     }
 
     @Override

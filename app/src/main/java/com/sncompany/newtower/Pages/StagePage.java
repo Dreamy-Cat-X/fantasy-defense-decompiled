@@ -823,29 +823,24 @@ public class StagePage extends StageBase {
                 }
                 break;
         }
-        st.map.checkBackBase();
-        backBaseImageArray[lastShowBackBase].drawAtPointOption(0.0f, 0.0f, 18);
+        tmap.checkBackBase();
+        tmap.backBaseImageArray[tmap.lastShowBackBase].drawAtPointOption(0.0f, 0.0f, 18);
         backShadowImage.drawAtPointOption(0.0f, 0.0f, 18);
         drawMapTile(gl10);
-        int i8 = characterMenuSelectFlag;
-        if (i8 == 2 || i8 == 5 || i8 == 6 || i8 == 12 || i8 == 13) {
+        if (st.selectedUnit != null && !(st.selectedUnit instanceof HeroUnit hero && hero.specialShowCount >= 0)) {
             drawAddGridBlock();
-            drawUnitRangeCircle(GameThread.characterSelectNumber, GameThread.towerUnit[GameThread.characterSelectNumber].originalPosX, GameThread.towerUnit[GameThread.characterSelectNumber].originalPosY);
+            st.selectedUnit.drawUnitRangeCircle();
         }
-        if (GameThread.tempCharacterRangeViewNumber != -1) {
-            drawUnitRangeCircle(GameThread.tempCharacterRangeViewNumber, GameThread.towerUnit[GameThread.tempCharacterRangeViewNumber].originalPosX, GameThread.towerUnit[GameThread.tempCharacterRangeViewNumber].originalPosY);
-        }
+        if (GameThread.tempCharacterRangeViewNumber != -1)
+            st.towerUnit.get(GameThread.tempCharacterRangeViewNumber).drawUnitRangeCircle();
+
         drawAllUnit(gl10);
         drawPlayingUi(z);
         int i9 = characterMenuSelectFlag;
         if (i9 == 1 || i9 == 4) {
             boolean addable = getAddSettingPosition();
             drawAddGridBlock();
-            drawAddRangeCircle(characterMenuSelectFlag, GameThread.characterAddNumber, GameThread.characterAddOrder, characterAddPosX, characterAddPosY, addable);
-            try {
-                drawSimpleTowerUnit(GameThread.characterAddNumber, GameThread.characterAddHeroFlag, characterAddPosX, characterAddPosY);
-            } catch (Exception unused) {
-            }
+            drawAddRangeCircle(characterAddNumber, characterAddPosX, characterAddPosY, addable);
         }
         switch (characterMenuSelectFlag) {
             case 8:

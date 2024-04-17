@@ -62,6 +62,7 @@ public class HeroUnit extends TowerUnit {
     public static final int SPECIAL_ATTACK_ICE_WHITE_END_FRAME = 170;
     public static final int SPECIAL_ATTACK_ICE_WHITE_START_FRAME = 150;
     private static final int[] hitPoint = {150, 195, 170};
+    public int specialAttackFrameCount = -1;
     public int specialAttCount;
     public int specialAttPower;
     public int specialCooltime = 0;
@@ -180,14 +181,18 @@ public class HeroUnit extends TowerUnit {
     }
 
     public int getEquipEffect(int type, int pos) {
+        return getEquipEffect(getEquipment(), type, pos);
+    }
+
+    public static int getEquipEffect(byte[][] equipment, int type, int pos) {
         int eff = 0;
         if (type == DataUpgradeItem.EQ_MISC) {
-            for (byte[] e : getEquipment())
+            for (byte[] e : equipment)
                 if (e != null && e[0] == type && e[1] == pos)
                     eff += DataUpgradeItem.equipData[type][pos];
             return eff;
         }
-        for (byte[] e : getEquipment())
+        for (byte[] e : equipment)
             if (e != null && e[0] == type)
                 eff += DataUpgradeItem.equipData[type][e[1]];
         return -1;
@@ -237,13 +242,13 @@ public class HeroUnit extends TowerUnit {
 
     @Override
     public int getHitPower() {
-        return unitPower + (((getUpgradeRate(7) + getEquipEffect(2, 0)) * unitPower) / 100);
+        return unitPower + (((getUpgradeRate(7) + getEquipEffect(DataUpgradeItem.EQ_RING, 0)) * unitPower) / 100);
     }
 
     @Override
     public int getHitDamage(MonsterUnit mon) {
         int pow = Math.max(1, (unitPower * (100 - mon.unitDefense)) / 100);
-        return pow + (((getUpgradeRate(7) + getEquipEffect(2, 0)) * pow) / 100);
+        return pow + (((getUpgradeRate(7) + getEquipEffect(DataUpgradeItem.EQ_RING, 0)) * pow) / 100);
     }
 
     /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */

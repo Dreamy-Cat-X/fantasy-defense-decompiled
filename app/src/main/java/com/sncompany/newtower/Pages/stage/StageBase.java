@@ -1,13 +1,16 @@
 package com.sncompany.newtower.Pages.stage;
 
+import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
+import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.DataAnim;
 import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataHero;
 import com.sncompany.newtower.DataClasses.DataMap;
 import com.sncompany.newtower.DataClasses.DataStage;
+import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.MyOscillator;
@@ -25,6 +28,7 @@ public abstract class StageBase extends TPage {
     public static final int PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS = 310;
     public static final MyOscillator[] myOscillator = new MyOscillator[20];
     public static final int[] numberUnitBuyResource = {R.drawable.num_unit_buy_0, R.drawable.num_unit_buy_1, R.drawable.num_unit_buy_2, R.drawable.num_unit_buy_3, R.drawable.num_unit_buy_4, R.drawable.num_unit_buy_5, R.drawable.num_unit_buy_6, R.drawable.num_unit_buy_7, R.drawable.num_unit_buy_8, R.drawable.num_unit_buy_9};
+    public static final int[] numberHeroBuyResource = {R.drawable.num_hero_buy_0, R.drawable.num_hero_buy_1, R.drawable.num_hero_buy_2, R.drawable.num_hero_buy_3, R.drawable.num_hero_buy_4, R.drawable.num_hero_buy_5, R.drawable.num_hero_buy_6, R.drawable.num_hero_buy_7, R.drawable.num_hero_buy_8, R.drawable.num_hero_buy_9};
     public static final int[] uiCharButtonResource = {R.drawable.ui_char_button_class_off, R.drawable.ui_char_button_class_on, R.drawable.ui_char_button_lvlup_off, R.drawable.ui_char_button_lvlup_on, R.drawable.ui_char_button_ok_off, R.drawable.ui_char_button_ok_on, R.drawable.ui_char_button_sell_off, R.drawable.ui_char_button_sell_on, R.drawable.ui_char_button_spe_dancing_blade_off, R.drawable.ui_char_button_spe_dancing_blade_on, R.drawable.ui_char_button_spe_millon_arrow_off, R.drawable.ui_char_button_spe_millon_arrow_on, R.drawable.ui_char_button_spe_ice_quake_off, R.drawable.ui_char_button_spe_ice_quake_on, R.drawable.ui_char_button_lvluphero_off, R.drawable.ui_char_button_lvluphero_on, R.drawable.ui_char_button_1_off, R.drawable.ui_char_button_1_on, R.drawable.ui_char_button_2_off, R.drawable.ui_char_button_2_on, R.drawable.ui_char_button_3_off, R.drawable.ui_char_button_3_on, R.drawable.ui_char_button_4_off, R.drawable.ui_char_button_4_on, R.drawable.ui_char_button_5_off, R.drawable.ui_char_button_5_on};
     public static final int[] uiCharEtcResource = {R.drawable.ui_char_etc_background, R.drawable.ui_char_etc_stat, R.drawable.ui_char_etc_lv, R.drawable.ui_char_etc_1, R.drawable.ui_char_etc_2, R.drawable.ui_char_etc_3, R.drawable.ui_char_etc_4, R.drawable.ui_char_etc_5, R.drawable.ui_char_etc_hero, R.drawable.ui_char_etc_specialdancingblade, R.drawable.ui_char_etc_specialmillionarrow, R.drawable.ui_char_etc_specialicequake, R.drawable.ui_char_etc_backline};
     public static final int[] uiCharFaceResource = {R.drawable.ui_char_face_warrior, R.drawable.ui_char_face_manatarms, R.drawable.ui_char_face_knight, R.drawable.ui_char_face_warlord, R.drawable.ui_char_face_archer, R.drawable.ui_char_face_holyeye, R.drawable.ui_char_face_splatter, R.drawable.ui_char_face_skybeholder, R.drawable.ui_char_face_wizard, R.drawable.ui_char_face_colddiviner, R.drawable.ui_char_face_warlock, R.drawable.ui_char_face_magmablaster, R.drawable.ui_char_face_hero0, R.drawable.ui_char_face_hero1, R.drawable.ui_char_face_hero2};
@@ -55,13 +59,13 @@ public abstract class StageBase extends TPage {
         numberWaveImage = new Texture2D[numberWaveResource.length], shadowImage = new Texture2D[2], uiUpperImage = new Texture2D[uiUpperResource.length], uiButtonImage = new Texture2D[uiButtonResource.length],
         uiCharButtonImage = new Texture2D[uiCharButtonResource.length], uiCharEtcImage = new Texture2D[uiCharEtcResource.length], uiCharFaceImage = new Texture2D[uiCharFaceResource.length], uiCharNameImage = new Texture2D[uiCharNameResource.length],
         uiCharUpFaceImage = new Texture2D[uiCharUpFaceResource.length], uiMonsterEtcImage = new Texture2D[uiMonsterEtcResource.length], uiMonsterFaceImage = new Texture2D[uiMonsterFaceResource.length], uiMonsterNameImage = new Texture2D[uiMonsterNameResource.length],
-        numberUnitBuyImage = new Texture2D[numberUnitBuyResource.length];
+        numberUnitBuyImage = new Texture2D[numberUnitBuyResource.length], numberHeroBuyImage = new Texture2D[numberHeroBuyResource.length], whiteCircleImage = new Texture2D[4], redCircleImage = new Texture2D[4];
     public final Texture2D[][] enemyImages = new Texture2D[DataAnim.enemyDrawResource.length][], debuffImages = new Texture2D[DataAnim.debuffDrawResource.length][], heroImages = new Texture2D[DataAnim.heroDrawResource.length][],
     towerImages = new Texture2D[DataAnim.towerDrawResource.length][];
     public final DataMap tmap;
     public final DataStage st;
     public float characterAddPosX, characterAddPosY;
-    public int characterMenuSelectFlag;
+    public int characterAddNumber, tempCharacterRangeViewNumber, characterMenuSelectFlag; //restructure so 1 is unit, 2 is hero menu
     protected boolean inGamePause = false;
     protected STATE state = STATE.START;
 
@@ -88,9 +92,18 @@ public abstract class StageBase extends TPage {
         int lod = 3;
         int tot = numberMoneyImage.length + enemyImages.length + debuffImages.length + heroImages.length + towerImages.length + uiUpperResource.length + numberManaImage.length +
                 numberLifeImage.length + numberWaveImage.length + uiButtonImage.length + uiCharButtonImage.length + uiCharEtcImage.length + uiCharFaceImage.length + uiCharNameImage.length +
-                uiCharUpFaceImage.length + uiMonsterEtcImage.length + uiMonsterFaceImage.length + uiMonsterNameImage.length + numberUnitBuyImage.length + 2;
+                uiCharUpFaceImage.length + uiMonsterEtcImage.length + uiMonsterFaceImage.length + uiMonsterNameImage.length + numberUnitBuyImage.length + numberHeroBuyImage.length + 10;
         shadowImage[0] = new Texture2D(R.drawable.etc_sha34);
         shadowImage[1] = new Texture2D(R.drawable.etc_sha63);
+        whiteCircleImage[0] = new Texture2D(R.drawable.etc_whitecircle1);
+        whiteCircleImage[1] = new Texture2D(R.drawable.etc_whitecircle2);
+        whiteCircleImage[2] = new Texture2D(R.drawable.etc_whitecircle3);
+        whiteCircleImage[3] = new Texture2D(R.drawable.etc_whitecircle4);
+        redCircleImage[0] = new Texture2D(R.drawable.etc_redcircle1);
+        redCircleImage[1] = new Texture2D(R.drawable.etc_redcircle2);
+        redCircleImage[2] = new Texture2D(R.drawable.etc_redcircle3);
+        redCircleImage[3] = new Texture2D(R.drawable.etc_redcircle4);
+
         for (int i = 0; i < enemyImages.length; i++) {
             enemyImages[i] = new Texture2D[DataAnim.enemyDrawResource[i].length];
             for (int j = 0; j < enemyImages[i].length; j++)
@@ -134,8 +147,13 @@ public abstract class StageBase extends TPage {
         lod = loadP(uiMonsterFaceImage, numberWaveResource, prog, lod, tot);
         lod = loadP(uiMonsterNameImage, uiButtonResource, prog, lod, tot);
         lod = loadP(numberUnitBuyImage, numberUnitBuyResource, prog, lod, tot);
-
+        lod = loadP(numberHeroBuyImage, numberHeroBuyResource, prog, lod, tot);
         loaded = true;
+    }
+
+    @Override
+    public void unload() {
+        loaded = false;
     }
 
     public boolean getAddSettingPosition() {
@@ -280,13 +298,14 @@ public abstract class StageBase extends TPage {
         GameRenderer.drawNumberBlock(DataStage.maxLife, numberLifeImage, x + 2, f2, -1, 18, 2);
     }
 
-    public void drawSimpleTowerUnit(int type, boolean hero, float x, float y) {
+    public void drawSimpleTowerUnit(int type, float x, float y) {
         if (type == -1)
             return;
 
         int[] drawData;
         Texture2D[] textures;
-        if (hero) {
+        if (type >= 12) {
+            type -= 12;
             drawData = DataAnim.towerDrawData[type];
             textures = st.page.towerImages[type];
         } else {
@@ -325,73 +344,43 @@ public abstract class StageBase extends TPage {
         Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public void drawAddRangeCircle(int i, int i2, int i3, float f, float f2, boolean z) {
-        float f3;
-        int upgradeUnitRate;
-        if (i2 == -1) {
+    public void drawAddRangeCircle(int type, float x, float y, boolean addable) {
+        float rang;
+        int rngUpgr;
+        if (type == -1)
             return;
-        }
-        if (i == 1) {
-            f3 = DataCharacter.charData[i2][4];
-            int i4 = DataCharacter.charData[i2][11];
-            if (i4 == 0) {
-                upgradeUnitRate = GameThread.getUpgradeUnitRate(1, 9);
-            } else if (i4 == 1) {
-                upgradeUnitRate = GameThread.getUpgradeUnitRate(2, 9);
-            } else if (i4 == 2) {
-                upgradeUnitRate = GameThread.getUpgradeUnitRate(3, 9);
-            }
-            f3 += (upgradeUnitRate * f3) / 100.0f;
-        } else if (i != 4) {
-            f3 = 0.0f;
+
+        if (type < 12) {
+            rang = DataCharacter.charData[type][4];
+            rngUpgr = TowerUnit.getUpgradeRate(DataCharacter.charData[type][11] + 1, 9);
         } else {
-            f3 = DataHero.heroData[i2][3];
-            upgradeUnitRate = GameThread.getUpgradeItemRate(i3, 4);
-            f3 += (upgradeUnitRate * f3) / 100.0f;
+            int t2 = type - 12;
+            rang = DataHero.heroData[t2][3];
+            rngUpgr = HeroUnit.getEquipEffect(Config.heroEquips[t2], DataUpgradeItem.EQ_HELM, 4);
         }
-        if (f3 <= 0.0f) {
+        rang += (rngUpgr * rang) / 100.0f;
+        if (rang <= 0)
             return;
-        }
-        if (z) {
-            if (f3 <= 100.0f) {
-                whiteCircleImage[0].drawAtPointOptionSize(f, f2, 9, (f3 * 0.9f) / 100.0f);
-                return;
-            }
-            if (f3 <= 200.0f) {
-                whiteCircleImage[1].drawAtPointOptionSize(f, f2, 9, (f3 * 0.9f) / 200.0f);
-                return;
-            } else if (f3 <= 300.0f) {
-                whiteCircleImage[2].drawAtPointOptionSize(f, f2, 9, (f3 * 0.9f) / 300.0f);
-                return;
-            } else {
-                whiteCircleImage[3].drawAtPointOptionSize(f, f2, 9, (f3 * 0.9f) / 400.0f);
-                return;
-            }
-        }
-        if (f3 <= 100.0f) {
-            redCircleImage[0].drawAtPointOptionSize(f, f2, 9, (f3 * 0.9f) / 100.0f);
-            return;
-        }
-        if (f3 <= 200.0f) {
-            redCircleImage[1].drawAtPointOptionSize(f, f2, 9, (f3 * 0.9f) / 200.0f);
-        } else if (f3 <= 300.0f) {
-            redCircleImage[2].drawAtPointOptionSize(f, f2, 9, (f3 * 0.9f) / 300.0f);
-        } else {
-            redCircleImage[3].drawAtPointOptionSize(f, f2, 9, (f3 * 0.9f) / 400.0f);
+
+        Texture2D[] circleImage = addable ? whiteCircleImage : redCircleImage;
+        int circle = Math.min(((int)rang - 1) / 100, 3);
+        circleImage[circle].drawAtPointOptionSize(x, y, 9, (rang * 0.9f) / ((circle + 1) * 100));
+
+        try {
+            drawSimpleTowerUnit(type, x, y);
+        } catch (Exception ignored) {
         }
     }
 
-    public void drawUnitRangeCircle(int i, float f, float f2) {
-        if (GameThread.towerUnit[i].attackRange <= 100) {
-            whiteCircleImage[0].drawAtPointOptionSize((f / 50.0f) + 62.0f, (f2 / 50.0f) + 30.0f, 9, (GameThread.towerUnit[i].attackRange * 0.9f) / 100.0f);
-            return;
+    public int checkTowerUnit() {
+        CGPoint ActionTouch = TouchManager.getFirstLastActionTouch();
+        if (ActionTouch.x >= 62.0f && ActionTouch.y >= 30.0f && ActionTouch.x < 737.0f && ActionTouch.y < Texture2D.VIEW_SCRHEIGHT) {
+            int rX = (int) ((ActionTouch.x - 62.0f) / 45.0f);
+            int rY = (int) ((ActionTouch.y - 30.0f) / 45.0f);
+            for (int i3 = 0; i3 < st.towerUnit.size(); i3++)
+                if (st.towerUnit.get(i3).blockX == rX && st.towerUnit.get(i3).blockY == rY)
+                    return i3;
         }
-        if (GameThread.towerUnit[i].attackRange <= 200) {
-            whiteCircleImage[1].drawAtPointOptionSize((f / 50.0f) + 62.0f, (f2 / 50.0f) + 30.0f, 9, (GameThread.towerUnit[i].attackRange * 0.9f) / 200.0f);
-        } else if (GameThread.towerUnit[i].attackRange <= 300) {
-            whiteCircleImage[2].drawAtPointOptionSize((f / 50.0f) + 62.0f, (f2 / 50.0f) + 30.0f, 9, (GameThread.towerUnit[i].attackRange * 0.9f) / 300.0f);
-        } else {
-            whiteCircleImage[3].drawAtPointOptionSize((f / 50.0f) + 62.0f, (f2 / 50.0f) + 30.0f, 9, (GameThread.towerUnit[i].attackRange * 0.9f) / 400.0f);
-        }
+        return -1;
     }
 }

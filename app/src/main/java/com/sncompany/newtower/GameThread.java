@@ -9,7 +9,6 @@ import com.sncompany.newtower.Battle.EffectUnit;
 import com.sncompany.newtower.Battle.MonsterUnit;
 import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
-import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 
@@ -87,7 +86,6 @@ public class GameThread extends Thread {
     public static int tempCharacterRangeViewNumber;
     public static TowerUnit[] towerUnit;
     public static int towerUnitCount;
-    public static final int[] upgradeUnitValue = new int[18];
     public static int[][] waveMobData;
     public static int gameTimeCount = 0;
     public static final String[] chapterName = {"Dark Forest", "Swamp of Despair", "Eternal Wasteland", "Infernal Volcano", "Nightmarish Demon World"};
@@ -505,32 +503,6 @@ public class GameThread extends Thread {
             }
         }
         return -1;
-    }
-
-    public static int getUpgradeUnitRate(int i, int i2) {
-        int i3 = 0;
-        for (int i4 = 0; i4 < 18; i4++) {
-            if ((DataUpgradeUnit.upgradeUnitData[i4][5] == i || DataUpgradeUnit.upgradeUnitData[i4][5] == 0) && DataUpgradeUnit.upgradeUnitData[i4][4] == i2) {
-                i3 += upgradeUnitValue[i4] * DataUpgradeUnit.upgradeUnitData[i4][0];
-            }
-        }
-        return i3;
-    }
-
-    public static int getUpgradeItemRate(int i, int i2) {
-        if (i < 0) {
-            return 0;
-        }
-        int i3 = 0;
-        for (int i4 = 0; i4 < 2; i4++) {
-            if (heroItemType[i][i4] != -1) {
-                int i5 = heroItemType[i][i4];
-                if (DataUpgradeItem.upgradeItemData[i5][5] == i2) {
-                    i3 += DataUpgradeItem.upgradeItemData[i5][2];
-                }
-            }
-        }
-        return i3;
     }
 
     public static void playSound(int i) {

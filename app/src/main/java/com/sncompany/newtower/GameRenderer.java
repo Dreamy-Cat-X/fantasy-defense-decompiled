@@ -69,7 +69,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static int monsterGoalBlinkCount;
     public static NewTower newTower;
     public static Texture2D[] numberClearImage;
-    public static Texture2D[] numberHeroBuyImage;
     public static Texture2D[] numberStagePointImage;
     public static Texture2D[] numberTotalImage;
     public static Texture2D[] numberUpgradeImage;
@@ -99,7 +98,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] whiteCircleImage;
     public static boolean loadViewFlag = false;
     public static final int[][] testboxCoord = {new int[]{0, 0, 20, 85}, new int[]{138, 0, 20, 85}, new int[]{59, 0, 40, 85}, new int[]{20, 0, 40, 85}};
-    public static final int[] numberHeroBuyResource = {R.drawable.num_hero_buy_0, R.drawable.num_hero_buy_1, R.drawable.num_hero_buy_2, R.drawable.num_hero_buy_3, R.drawable.num_hero_buy_4, R.drawable.num_hero_buy_5, R.drawable.num_hero_buy_6, R.drawable.num_hero_buy_7, R.drawable.num_hero_buy_8, R.drawable.num_hero_buy_9};
     public static final int[] numberStagePointResource = {R.drawable.num_stage_point_0, R.drawable.num_stage_point_1, R.drawable.num_stage_point_2, R.drawable.num_stage_point_3, R.drawable.num_stage_point_4, R.drawable.num_stage_point_5, R.drawable.num_stage_point_6, R.drawable.num_stage_point_7, R.drawable.num_stage_point_8, R.drawable.num_stage_point_9};
     public static final int[] numberUpgradeResource = {R.drawable.num_upgrade_0, R.drawable.num_upgrade_1, R.drawable.num_upgrade_2, R.drawable.num_upgrade_3, R.drawable.num_upgrade_4, R.drawable.num_upgrade_5, R.drawable.num_upgrade_6, R.drawable.num_upgrade_7, R.drawable.num_upgrade_8, R.drawable.num_upgrade_9, R.drawable.num_upgrade_slash};
     public static final int[] numberClearResource = {R.drawable.num_clear_0, R.drawable.num_clear_1, R.drawable.num_clear_2, R.drawable.num_clear_3, R.drawable.num_clear_4, R.drawable.num_clear_5, R.drawable.num_clear_6, R.drawable.num_clear_7, R.drawable.num_clear_8, R.drawable.num_clear_9};
@@ -305,7 +303,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         whiteCircleImage = makeTextureArray(4);
         redCircleImage = makeTextureArray(4);
         outBorderImage = makeTextureArray(4);
-        numberHeroBuyImage = makeTextureArray(numberHeroBuyResource.length);
         numberStagePointImage = makeTextureArray(numberStagePointResource.length);
         numberUpgradeImage = makeTextureArray(numberUpgradeResource.length);
         numberClearImage = makeTextureArray(numberClearResource.length);
@@ -357,14 +354,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                     loadImageResourceToTexture(uiPopupImage, uiPopupResource);
                     break;
                 case 14:
-                    whiteCircleImage[0].initWithImageName(R.drawable.etc_whitecircle1);
-                    whiteCircleImage[1].initWithImageName(R.drawable.etc_whitecircle2);
-                    whiteCircleImage[2].initWithImageName(R.drawable.etc_whitecircle3);
-                    whiteCircleImage[3].initWithImageName(R.drawable.etc_whitecircle4);
-                    redCircleImage[0].initWithImageName(R.drawable.etc_redcircle1);
-                    redCircleImage[1].initWithImageName(R.drawable.etc_redcircle2);
-                    redCircleImage[2].initWithImageName(R.drawable.etc_redcircle3);
-                    redCircleImage[3].initWithImageName(R.drawable.etc_redcircle4);
                     outBorderImage[0].initWithImageName(R.drawable.etc_out);
                     outBorderImage[1].initWithImageName(R.drawable.etc_outl);
                     outBorderImage[2].initWithImageName(R.drawable.etc_outr);
