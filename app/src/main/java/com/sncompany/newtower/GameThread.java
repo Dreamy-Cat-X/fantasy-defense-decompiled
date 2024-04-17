@@ -44,11 +44,9 @@ public class GameThread extends Thread {
 
     public static int gameHelpViewNum;
     public static int gameLoadFlag;
-    public static int[][] gamePlayedCount;
     public static int gameStatus;
     public static int gameSubStatus;
     public static int gameTitleViewCount;
-    public static int[][] heroItemType;
     public static int[] heroUnitType;
     public static int[][] highScoreValue;
     public static int lastDrawCount;
@@ -63,7 +61,6 @@ public class GameThread extends Thread {
     public static AudioManager mgr;
     public static final MonsterUnit[] monsterUnit = new MonsterUnit[100];
     public static int monsterUnitCount;
-    public static int myMana;
     public static NewTower newTower;
     public static ObjectUnit[] objectUnit;
     public static int objectUnitCount;
@@ -71,9 +68,7 @@ public class GameThread extends Thread {
     public static long playTimeStartValue;
     public static int randomNumber;
     public static int realDrawCount;
-    public static int[] rewardDataValue;
-    public static boolean rewardShowFlag;
-    public static int rewardShowOrder;
+    public static int rewardShowOrder = -1;
     public static final boolean soundFlag = true;
     public static final boolean[] soundPlayCheckFlag = new boolean[total_SFX];
     public static int[] soundPlayDelayCount = new int[total_SFX];
@@ -86,12 +81,10 @@ public class GameThread extends Thread {
     public static int tempCharacterRangeViewNumber;
     public static TowerUnit[] towerUnit;
     public static int towerUnitCount;
-    public static int[][] waveMobData;
     public static int gameTimeCount = 0;
     public static final String[] chapterName = {"Dark Forest", "Swamp of Despair", "Eternal Wasteland", "Infernal Volcano", "Nightmarish Demon World"};
     public static int TOWER_MAX_LEVEL_NORMAL = 3;
     public static int TOWER_MAX_LEVEL_HERO = 5;
-    public static int WAVE_MAX_COUNT = 60;
 
 
     public static boolean[] cheatData = new boolean[5];
@@ -140,10 +133,6 @@ public class GameThread extends Thread {
             Config.effectVolume = streamMaxVolume / 2;
 
             specialDataValue = (int[][]) Array.newInstance(int.class, 20, 4);
-
-            heroItemType = (int[][]) Array.newInstance(int.class, 3, 2);
-
-            waveMobData = (int[][]) Array.newInstance(int.class, WAVE_MAX_COUNT, 8);
 
             loadSounds();
             gameTimeCount = 0;

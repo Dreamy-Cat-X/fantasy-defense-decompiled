@@ -4,8 +4,8 @@
 Note: This code doesn't build smoothly due to compilation issues and WIP restructuring
 
 PROGRESS:
-All pages except Stage-related done
-StagePage - 580 errors
+All pages except StagePage done
+StagePage - 555 errors
 
 All achievements done
 

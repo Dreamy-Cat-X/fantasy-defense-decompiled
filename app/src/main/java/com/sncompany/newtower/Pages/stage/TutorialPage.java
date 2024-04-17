@@ -136,7 +136,7 @@ public class TutorialPage extends StageBase {
                 break;
         }
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 31;
-        int checkTouchListStatus = TouchManager.checkTouchListStatus();
+        int cTLS = TouchManager.checkTouchListStatus();
         drawUpperUI();
 
         for (int i = 0; i < 6; i++) {
@@ -239,11 +239,7 @@ public class TutorialPage extends StageBase {
                 GameRenderer.setFontDoubleColor(-1, -16777216);
                 GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 156.0f, 17);
                 GameRenderer.drawStringDoubleM("You have obtained 300 Hero Points.", GameRenderer.CX, 206.0f, 17);
-                if (checkTouchListStatus == 27) {
-                    uiPopupImage[13].drawAtPointOption(209.0f, 289.0f, 18);
-                } else {
-                    uiPopupImage[12].drawAtPointOption(209.0f, 289.0f, 18);
-                }
+                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
                 break;
             case 20:
                 uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
@@ -251,11 +247,7 @@ public class TutorialPage extends StageBase {
                 GameRenderer.setFontDoubleColor(-1, -16777216);
                 GameRenderer.drawStringDoubleM("Use Hero Points to buy items ", GameRenderer.CX, 156.0f, 17);
                 GameRenderer.drawStringDoubleM("or upgrade your units.", GameRenderer.CX, 206.0f, 17);
-                if (checkTouchListStatus == 28) {
-                    uiPopupImage[13].drawAtPointOption(209.0f, 289.0f, 18);
-                } else {
-                    uiPopupImage[12].drawAtPointOption(209.0f, 289.0f, 18);
-                }
+                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
                 break;
             case 21:
                 uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
@@ -265,19 +257,14 @@ public class TutorialPage extends StageBase {
                 GameRenderer.drawStringDoubleM("to replay the Tutorial.", GameRenderer.CX, 162.0f, 17);
                 GameRenderer.drawStringDoubleM("(No Hero Points will be rewarded", GameRenderer.CX, 202.0f, 17);
                 GameRenderer.drawStringDoubleM("when replaying the Tutorial.)", GameRenderer.CX, 242.0f, 17);
-                if (checkTouchListStatus == 30) {
-                    uiPopupImage[13].drawAtPointOption(209.0f, 289.0f, 18);
-                    break;
-                } else {
-                    uiPopupImage[12].drawAtPointOption(209.0f, 289.0f, 18);
-                    break;
-                }
+                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
+                break;
             case 22:
                 uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontDoubleColor(-1, -16777216);
                 GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 182.0f, 17);
-                uiPopupImage[checkTouchListStatus == 30 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
+                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
                 break;
         }
         TouchManager.swapTouchMap();

@@ -224,7 +224,7 @@ public class HeroUnit extends TowerUnit {
             specialAttackFrameCount++;
 
             if (specialAttackFrameCount == 60)
-                playSound(17);
+                GameThread.playSound(17);
             if (specialAttackFrameCount >= hitPoint[type]) {
                 specialAttackFrameCount = -1;
                 hitSpecialAttack();

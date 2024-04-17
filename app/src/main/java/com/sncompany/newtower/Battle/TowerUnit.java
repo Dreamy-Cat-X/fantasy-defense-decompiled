@@ -441,7 +441,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
 
     public void drawUnitRangeCircle() {
         int circle = Math.min((attackRange - 1) / 100, 3);
-        whiteCircleImage[circle].drawAtPointOptionSize((originalPosX / 50.0f) + 62.0f, (originalPosY / 50.0f) + 30.0f, 9, (attackRange * 0.9f) / ((circle + 1) * 100));
+        st.page.whiteCircleImage[circle].drawAtPointOptionSize((originalPosX / 50.0f) + 62.0f, (originalPosY / 50.0f) + 30.0f, 9, (attackRange * 0.9f) / ((circle + 1) * 100));
     }
 
     @Override
