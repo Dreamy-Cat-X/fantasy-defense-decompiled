@@ -289,13 +289,13 @@ public class TutorialPage extends StageBase {
                     if (i != tp)
                         myOscillator[i].initWithTwoWayStartPosition(0, 200, 10, 210, 5);
             } else if (TouchManager.lastActionStatus == 1) {
-                int checkTowerUnit;
-                if (characterAddNumber >= 0 && (checkTowerUnit = checkTowerUnit()) != -1)
-                    tempCharacterRangeViewNumber = checkTowerUnit;
+                TowerUnit twu;
+                if (characterAddNumber >= 0 && (twu = checkTowerUnit()) != null)
+                    tempChara = twu;
             }
             if (TouchManager.lastActionStatus != 2)
                 return;
-            tempCharacterRangeViewNumber = -1;
+            tempChara = null;
             if (cTLS == -1)
                 return;
 
@@ -309,17 +309,18 @@ public class TutorialPage extends StageBase {
                     getAddSettingPosition();
                     if (tutorStep < 15) {
                         st.addUnit(characterAddNumber, pX, pY);
-                        st.Money -= TowerUnit.getBuyPrice(characterAddNumber);
+                        st.money -= TowerUnit.getBuyPrice(characterAddNumber);
                         for (byte i = 0; i < 7; i++)
                             if (i != tp)
                                 myOscillator[i].initWithTwoWayStartPosition(0, 200, 10, 210, 5);
                     } else {
                         st.addHero(characterAddNumber - 12, pX, pY, false);
-                        st.Mana -= HeroUnit.getBuyPrice(characterAddNumber - 12);
+                        st.mana -= HeroUnit.getBuyPrice(characterAddNumber - 12);
                         myOscillator[8].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                         myOscillator[9].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                         myOscillator[10].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                     }
+                    characterAddNumber = 0;
                 } else
                     characterMenuSelectFlag--;
             }

@@ -193,16 +193,16 @@ public class MonsterUnit extends EnemyUnit {
                 type = -1;
                 unitHP = 0;
                 GameRenderer.monsterGoalBlinkCount = 6;
-                if (st.Life > 0) {
+                if (st.life > 0) {
                     int i10 = st.waveManager.wavePattern;
                     if (i10 == 2)
-                        st.Life = Math.max(0, st.Life - 3);
+                        st.life = Math.max(0, st.life - 3);
                     else if (i10 == 3)
-                        st.Life = bossFlag ? 0 : st.Life - 1;
+                        st.life = bossFlag ? 0 : st.life - 1;
                     else
-                        st.Life--;
+                        st.life--;
                 }
-                if (st.Life <= 0) {
+                if (st.life <= 0) {
                     GameRenderer.monsterGoalBlinkCount = 0;
                     return true;
                 }
@@ -332,14 +332,14 @@ public class MonsterUnit extends EnemyUnit {
             money += overWave * DataWave.monsterWaveData[60][slot];
         if (unit instanceof HeroUnit)
             money += (DataWave.monsterWaveData[cWav][6] * ((HeroUnit) unit).getEquipEffect(DataUpgradeItem.EQ_CHARM, -1)) / 100;
-        st.Money += money;
-        DataAward.check_money(st.Money);
+        st.money += money;
+        DataAward.check_money(st.money);
 
         int DropMana = overLim ? DataWave.monsterWaveData[60][bossFlag ? 15 : 7] : DataWave.monsterWaveData[cWav][bossFlag ? 15 : 7];
         if (unit instanceof HeroUnit)
             DropMana += (DataWave.monsterWaveData[cWav][7] * ((HeroUnit) unit).getEquipEffect(DataUpgradeItem.EQ_CHARM, -1)) / 100;
 
-        st.Mana += DropMana;
+        st.mana += DropMana;
         st.bScore += ((st.waveManager.current * 0.1f) + 1f) * 120f * (bossFlag ? 5 : 1);
         DataAward.check_kill();
 

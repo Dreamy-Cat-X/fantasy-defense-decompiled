@@ -26,8 +26,6 @@ public class GameThread extends Thread {
     public static int characterAddNumber;
     public static int characterAddOrder;
     public static int characterAddType;
-    public static int characterMenuMonsterStartViewCount;
-    public static int characterMenuMonsterViewCount;
     public static int characterMenuSelectFlag;
     public static int characterSelectNumber;
     public static boolean cheatFlag;
@@ -78,7 +76,6 @@ public class GameThread extends Thread {
     public static int stageClearViewHeroism;
     public static long startDate;
     public static long startDrawDate;
-    public static int tempCharacterRangeViewNumber;
     public static TowerUnit[] towerUnit;
     public static int towerUnitCount;
     public static int gameTimeCount = 0;
@@ -195,143 +192,6 @@ public class GameThread extends Thread {
         effectMedia.setMediaFile(30, newTower, R.raw.spebladehit);
     }
 
-    public static void clearSpecialArrowUnit() {
-        for (int i = 0; i < arrowUnitCount; i++) {
-            if (arrowUnit[i].type >= 15 && arrowUnit[i].type <= 35)
-                arrowUnit[i].type = -1;
-        }
-    }
-
-    public static int addSpecialArrowUnit(int i, int i2, int i3, int i4, boolean z) {
-        int i5;
-        if (z) {
-            i5 = 0;
-            while (i5 < arrowUnitCount) {
-                if (arrowUnit[i5].type == -1) {
-                    break;
-                }
-                i5++;
-            }
-        }
-        i5 = -1;
-        if (i5 == -1 && arrowUnitCount == 199) {
-            return -1;
-        }
-        if (i5 == -1) {
-            i5 = arrowUnitCount;
-            arrowUnitCount = i5 + 1;
-        }
-        arrowUnit[i5].type = i;
-        arrowUnit[i5].targetType = 1;
-        arrowUnit[i5].endX = i2;
-        arrowUnit[i5].endY = i3;
-        ArrowUnit[] arrowUnitArr = arrowUnit;
-        arrowUnitArr[i5].startX = arrowUnitArr[i5].endX;
-        ArrowUnit[] arrowUnitArr2 = arrowUnit;
-        arrowUnitArr2[i5].startY = arrowUnitArr2[i5].endY;
-        arrowUnit[i5].moveCount = i4;
-        switch (i) {
-            case 15:
-                arrowUnit[i5].moveSpeed = 5000;
-                arrowUnit[i5].startX -= i4 * arrowUnit[i5].moveSpeed;
-                break;
-            case 16:
-                arrowUnit[i5].moveSpeed = 3750;
-                arrowUnit[i5].startX -= i4 * arrowUnit[i5].moveSpeed;
-                break;
-            case 17:
-                arrowUnit[i5].moveSpeed = 2750;
-                arrowUnit[i5].startX -= i4 * arrowUnit[i5].moveSpeed;
-                break;
-            case 18:
-                arrowUnit[i5].moveSpeed = 1750;
-                arrowUnit[i5].startX -= i4 * arrowUnit[i5].moveSpeed;
-                break;
-            case 19:
-            case 20:
-            case 21:
-            case 22:
-            case 23:
-            case 24:
-            case 25:
-            case 26:
-            case 27:
-            case 28:
-            case 29:
-            case 30:
-            case 31:
-            case 32:
-                arrowUnit[i5].moveSpeed = 3500;
-                arrowUnit[i5].moveRotateDegree = getRandom(360);
-                float abs = Math.abs(((float) Math.cos(Math.toRadians(arrowUnit[i5].moveRotateDegree))) * arrowUnit[i5].moveSpeed);
-                float abs2 = Math.abs(((float) Math.sin(Math.toRadians(arrowUnit[i5].moveRotateDegree))) * arrowUnit[i5].moveSpeed);
-                if (arrowUnit[i5].moveRotateDegree >= 0.0f && arrowUnit[i5].moveRotateDegree < 180.0f) {
-                    arrowUnit[i5].startX = (int) (r2.startX + (abs2 * i4));
-                } else {
-                    arrowUnit[i5].startX = (int) (r2.startX - (abs2 * i4));
-                }
-                if ((arrowUnit[i5].moveRotateDegree >= 0.0f && arrowUnit[i5].moveRotateDegree < 90.0f) || (arrowUnit[i5].moveRotateDegree >= 270.0f && arrowUnit[i5].moveRotateDegree < 360.0f)) {
-                    arrowUnit[i5].startY = (int) (r7.startY - (abs * i4));
-                } else {
-                    arrowUnit[i5].startY = (int) (r7.startY + (abs * i4));
-                }
-                break;
-            break;
-            case 33:
-                arrowUnit[i5].moveSpeed = 7000;
-                arrowUnit[i5].moveRotateDegree = 165.0f;
-                float abs3 = Math.abs(((float) Math.cos(Math.toRadians(arrowUnit[i5].moveRotateDegree))) * arrowUnit[i5].moveSpeed);
-                float abs4 = Math.abs(((float) Math.sin(Math.toRadians(arrowUnit[i5].moveRotateDegree))) * arrowUnit[i5].moveSpeed);
-                if (arrowUnit[i5].moveRotateDegree >= 0.0f && arrowUnit[i5].moveRotateDegree < 180.0f) {
-                    arrowUnit[i5].startX = (int) (r2.startX + (abs4 * i4));
-                } else {
-                    arrowUnit[i5].startX = (int) (r2.startX - (abs4 * i4));
-                }
-                if ((arrowUnit[i5].moveRotateDegree >= 0.0f && arrowUnit[i5].moveRotateDegree < 90.0f) || (arrowUnit[i5].moveRotateDegree >= 270.0f && arrowUnit[i5].moveRotateDegree < 360.0f)) {
-                    arrowUnit[i5].startY = (int) (r7.startY - (abs3 * i4));
-                } else {
-                    arrowUnit[i5].startY = (int) (r7.startY + (abs3 * i4));
-                }
-                break;
-            break;
-            case 34:
-                arrowUnit[i5].moveSpeed = 7000;
-                arrowUnit[i5].moveRotateDegree = 180.0f;
-                float abs5 = Math.abs(((float) Math.cos(Math.toRadians(arrowUnit[i5].moveRotateDegree))) * arrowUnit[i5].moveSpeed);
-                float abs6 = Math.abs(((float) Math.sin(Math.toRadians(arrowUnit[i5].moveRotateDegree))) * arrowUnit[i5].moveSpeed);
-                if (arrowUnit[i5].moveRotateDegree >= 0.0f && arrowUnit[i5].moveRotateDegree < 180.0f) {
-                    arrowUnit[i5].startX = (int) (r2.startX + (abs6 * i4));
-                } else {
-                    arrowUnit[i5].startX = (int) (r2.startX - (abs6 * i4));
-                }
-                if ((arrowUnit[i5].moveRotateDegree >= 0.0f && arrowUnit[i5].moveRotateDegree < 90.0f) || (arrowUnit[i5].moveRotateDegree >= 270.0f && arrowUnit[i5].moveRotateDegree < 360.0f)) {
-                    arrowUnit[i5].startY = (int) (r7.startY - (abs5 * i4));
-                } else {
-                    arrowUnit[i5].startY = (int) (r7.startY + (abs5 * i4));
-                }
-                break;
-            break;
-            case 35:
-                arrowUnit[i5].moveSpeed = 7000;
-                arrowUnit[i5].moveRotateDegree = 195.0f;
-                float abs7 = Math.abs(((float) Math.cos(Math.toRadians(arrowUnit[i5].moveRotateDegree))) * arrowUnit[i5].moveSpeed);
-                float abs8 = Math.abs(((float) Math.sin(Math.toRadians(arrowUnit[i5].moveRotateDegree))) * arrowUnit[i5].moveSpeed);
-                if (arrowUnit[i5].moveRotateDegree >= 0.0f && arrowUnit[i5].moveRotateDegree < 180.0f) {
-                    arrowUnit[i5].startX = (int) (r2.startX + (abs8 * i4));
-                } else {
-                    arrowUnit[i5].startX = (int) (r2.startX - (abs8 * i4));
-                }
-                if ((arrowUnit[i5].moveRotateDegree >= 0.0f && arrowUnit[i5].moveRotateDegree < 90.0f) || (arrowUnit[i5].moveRotateDegree >= 270.0f && arrowUnit[i5].moveRotateDegree < 360.0f)) {
-                    arrowUnit[i5].startY = (int) (r7.startY - (abs7 * i4));
-                } else {
-                    arrowUnit[i5].startY = (int) (r7.startY + (abs7 * i4));
-                }
-                break;
-            break;
-        }
-        return i5;
-    }
-
     public static int getRandom(int i) {
         int currentTimeMillis = (int) ((((randomNumber & SupportMenu.USER_MASK) * 93217) + 1 + (System.currentTimeMillis() & 65535)) & 65535);
         randomNumber = currentTimeMillis;
@@ -409,89 +269,6 @@ public class GameThread extends Thread {
             }
         }
         return true;
-    }
-
-    public static int checkTowerUnit() {
-        CGPoint firstLastActionTouch = TouchManager.getFirstLastActionTouch();
-        if (firstLastActionTouch.x >= 62.0f && firstLastActionTouch.y >= 30.0f && firstLastActionTouch.x < 737.0f && firstLastActionTouch.y < 480.0f) {
-            int i = (int) ((firstLastActionTouch.x - 62.0f) / 45.0f);
-            int i2 = (int) ((firstLastActionTouch.y - 30.0f) / 45.0f);
-            for (int i3 = 0; i3 < towerUnitCount; i3++) {
-                if (towerUnit[i3].towerType != -1 && towerUnit[i3].blockX == i && towerUnit[i3].blockY == i2) {
-                    return i3;
-                }
-            }
-        }
-        return -1;
-    }
-
-    public static int searchEnemyTouch() {
-        CGPoint firstLastActionTouch = TouchManager.getFirstLastActionTouch();
-        for (int i = 0; i < monsterUnitCount; i++) {
-            if (monsterUnit[i].type != -1 && firstLastActionTouch.x >= ((float) (((monsterUnit[i].posX / 50) + 62) - 20)) && firstLastActionTouch.y >= ((float) (((monsterUnit[i].posY / 50) + 30) - 30)) && firstLastActionTouch.x < (monsterUnit[i].posX / 50) + 62 + 40 && firstLastActionTouch.y < (monsterUnit[i].posY / 50) + 30 + 40) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public static int searchObjectTouch() {
-        CGPoint firstLastActionTouch = TouchManager.getFirstLastActionTouch();
-        int i = (int) ((firstLastActionTouch.x - 62.0f) / 45.0f);
-        int i2 = (int) ((firstLastActionTouch.y - 30.0f) / 45.0f);
-        for (int i3 = 0; i3 < objectUnitCount; i3++) {
-            if (objectUnit[i3].type != -1 && objectUnit[i3].type != -2 && objectUnit[i3].destroyEnableFlag == 0) {
-                int i4 = objectUnit[i3].blockSize;
-                if (i4 == 0) {
-                    int i5 = (objectUnit[i3].posX / 50) / 45;
-                    int i6 = (objectUnit[i3].posY / 50) / 45;
-                    if (i == i5 && i2 == i6) {
-                        return i3;
-                    }
-                } else if (i4 == 1) {
-                    int i7 = (objectUnit[i3].posX / 50) / 45;
-                    int i8 = (objectUnit[i3].posY / 50) / 45;
-                    int i9 = i8 - 1;
-                    if (i == i7 && i2 >= i9 && i2 <= i8) {
-                        return i3;
-                    }
-                } else if (i4 == 2) {
-                    int i10 = (objectUnit[i3].posX / 50) / 45;
-                    int i11 = (objectUnit[i3].posY / 50) / 45;
-                    int i12 = i11 - 1;
-                    if (i >= i10 - 1 && i <= i10 && i2 >= i12 && i2 <= i11) {
-                        return i3;
-                    }
-                } else if (i4 == 3) {
-                    int i13 = (objectUnit[i3].posX / 50) / 45;
-                    int i14 = ((objectUnit[i3].posY / 50) / 45) - 1;
-                    int i15 = i13 + 1;
-                    int i16 = i14 + 2;
-                    if (i >= i13 && i <= i15 && i2 >= i14 && i2 <= i16) {
-                        return i3;
-                    }
-                } else if (i4 == 4) {
-                    int i17 = ((objectUnit[i3].posX / 50) / 45) - 1;
-                    int i18 = ((objectUnit[i3].posY / 50) / 45) - 1;
-                    int i19 = i17 + 1;
-                    int i20 = i18 + 2;
-                    if (i >= i17 && i <= i19 && i2 >= i18 && i2 <= i20) {
-                        return i3;
-                    }
-                } else if (i4 != 5) {
-                    continue;
-                } else {
-                    int i21 = ((objectUnit[i3].posX / 50) / 45) - 1;
-                    int i22 = ((objectUnit[i3].posY / 50) / 45) - 1;
-                    int i23 = i21 + 2;
-                    int i24 = i22 + 1;
-                    if (i >= i21 && i <= i23 && i2 >= i22 && i2 <= i24) {
-                        return i3;
-                    }
-                }
-            }
-        }
-        return -1;
     }
 
     public static void playSound(int i) {

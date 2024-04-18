@@ -5,12 +5,12 @@ Note: This code doesn't build smoothly due to compilation issues and WIP restruc
 
 PROGRESS:
 All pages except StagePage done
-StagePage - 555 errors
+StagePage - 440 errors
 
 All achievements done
 
 Other TODO:
-- Fix Draw on units, specially ObjectUnit class
+- Fix Draw on EffectUnit and ObjectUnit class
 - Fix Special skills on Hero Unit
 - Restructure type to merely identifying the class used instead of being [(class * 3) + lv]
 - Static variables for resource array locations for more mod-ability

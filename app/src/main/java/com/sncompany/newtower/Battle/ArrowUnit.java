@@ -3,6 +3,7 @@ package com.sncompany.newtower.Battle;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Texture2D;
 
 import java.util.LinkedList;
@@ -59,6 +60,46 @@ public class ArrowUnit extends StageEntity {
     public static final int[] ARROW_MOVE_UP_HEIGHT = {0, -20, -45, -45, -20};
     public final int[][] moveHistory = new int[5][2];
     public LinkedList<MonsterUnit> hitMons = new LinkedList<>();
+
+    /**
+     * Special Arrow constructor
+     * @param sta
+     * @param tType
+     */
+    public ArrowUnit(DataStage sta, int tType, int eX, int eY, int moveNum) {
+        st = sta;
+        type = tType;
+        shooter = null;
+        target = null;
+        startX = endX = eX;
+        startY = endY = eY;
+        moveCount = moveNum;
+        
+        if (type >= 19) {
+            if (type <= 32) {
+                moveSpeed = 3500;
+                moveRotateDegree = NewTower.getRandom(360);
+            } else {
+                moveSpeed = 7000;
+                moveRotateDegree = 165 + ((type - 32) * 15);
+            }
+            float yRot = Math.abs(((float) Math.cos(Math.toRadians(moveRotateDegree))) * moveSpeed);
+            float xRot = Math.abs(((float) Math.sin(Math.toRadians(moveRotateDegree))) * moveSpeed);
+            if (moveRotateDegree >= 0.0f && moveRotateDegree < 180.0f) {
+                startX = (int) (startX + (xRot * moveNum));
+            } else
+                startX = (int) (startX - (xRot * moveNum));
+            if ((moveRotateDegree >= 0.0f && moveRotateDegree < 90.0f) || (moveRotateDegree >= 270.0f && moveRotateDegree < 360.0f)) {
+                startY = (int) (startY - (yRot * moveNum));
+            } else
+                startY = (int) (startY + (yRot * moveNum));
+        } else if (type >= 15) {
+            moveSpeed = 1750 + ((18 - type) * 1000);
+            if (type == 15)
+                moveSpeed += 250;
+            startX -= moveNum * moveSpeed;
+        }
+    }
 
     public ArrowUnit(DataStage sta, TowerUnit shtr, EnemyUnit targ, int tType) {
         st = sta;
@@ -127,9 +168,7 @@ public class ArrowUnit extends StageEntity {
             }
         } else {
             switch (type) {
-                case 15:
-                case 16:
-                case 17:
+                case 15, 16, 17:
                     startX -= moveSpeed;
                     break;
                 case 18:

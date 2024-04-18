@@ -75,7 +75,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static Texture2D[] outBorderImage;
     public static Texture2D[] redCircleImage;
     public static Texture2D[] specialArrowImage;
-    public static int specialBlinkCount;
     public static Texture2D[] specialIceImage;
     public static Texture2D[] specialSwordImage;
     public static Texture2D[] stageClearImage;

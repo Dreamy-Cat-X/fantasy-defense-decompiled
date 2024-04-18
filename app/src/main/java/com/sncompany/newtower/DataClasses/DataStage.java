@@ -41,8 +41,8 @@ public class DataStage {
     public TowerUnit selectedUnit;
 
     public final int SID, mapType;
-    public int Life = maxLife;
-    public int Mana, Money;
+    public int life = maxLife;
+    public int mana, money;
     public final DataWave waveManager;
     public final DataMap map;
     public StageBase page;
@@ -52,12 +52,10 @@ public class DataStage {
     public DataStage(DataMap m, int type) {
         SID = m.SID;
         mapType = type;
-        Money = DataStage.stageData[SID][DATA_STAGE_START_MONEY];
-        Mana = DataStage.stageData[SID][DATA_STAGE_START_MANA];
+        money = DataStage.stageData[SID][DATA_STAGE_START_MONEY];
+        mana = DataStage.stageData[SID][DATA_STAGE_START_MANA];
 
-        GameRenderer.upgradeCount = 0;
         GameRenderer.levelUpCount = 0;
-        GameRenderer.specialBlinkCount = 0;
         GameRenderer.monsterGoalBlinkCount = 0;
         map = m;
         waveManager = m.wav;
@@ -105,13 +103,30 @@ public class DataStage {
             au.updateArrowUnit();
     }
 
+    public int addSpecialArrowUnit(int type, int eX, int eY, int moveNum) {
+        ArrowUnit arr = new ArrowUnit(this, type, eX, eY, moveNum);
+        return 1488;
+    }
+
+    public void clearSpecialArrowUnit() {
+        arrowUnit.removeIf(a -> a.type >= 15 && a.type <= 35);
+    }
+
+    public void setReverseSpecialIce() {
+        for (ArrowUnit arrow : arrowUnit)
+            if (arrow.type >= 19 && arrow.type <= 32) {
+                arrow.moveCount = 1000;
+                arrow.moveRotateDegree = (arrow.moveRotateDegree + 180) % 360;
+            }
+    }
+
     /**
      * Updates all monster positions
      * @return True if the monsters destroyed the player base
      */
     public boolean updateMonsterUnit() {
         monsterUnit.removeIf(m -> m.dead() && m.unitStatusCount >= 10);
-        if (Life == 0)
+        if (life == 0)
             return false;
 
         for (MonsterUnit m : monsterUnit)
@@ -135,6 +150,13 @@ public class DataStage {
             }
     }
 
+    public void updateNonMonster() {
+        updateEffects(false);
+        updateArrowUnit();
+        updateTowerUnit();
+        updateObjectUnit();
+    }
+
     public void unlockUnit() {
         for (TowerUnit two : towerUnit)
             if (two.unitStatus == 2)
@@ -147,8 +169,8 @@ public class DataStage {
             scr = (int) (scr + PERFECT_MULTIPLIER);
 
         scr += (maxLife * 1000);
-        scr += (Money * 10);
-        scr += (Mana * 30);
+        scr += (money * 10);
+        scr += (mana * 30);
 
         if (scr > Config.highScores[SID][mapType])
             Config.highScores[SID][mapType] = scr;
@@ -157,7 +179,7 @@ public class DataStage {
     }
 
     public boolean perfectClear() {
-        return Life == maxLife;
+        return life == maxLife;
     }
 
     public void sortEntities() {

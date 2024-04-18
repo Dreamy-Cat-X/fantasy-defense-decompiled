@@ -46,14 +46,6 @@ public abstract class StageBase extends TPage {
             upper_slash = 9, upper_heart = 10, upper_hpbar = 11, upper_star = 12, upper_hero = 13, upper_speedempty = 14, upper_pauseoff = 15, upper_pauseon = 16, upper_bossstage = 17;
     public static final int[] uiButtonResource = {R.drawable.ui_addunit_warrior, R.drawable.ui_addunit_manatarms, R.drawable.ui_addunit_archer, R.drawable.ui_addunit_holyeye, R.drawable.ui_addunit_wizard, R.drawable.ui_addunit_colddiviner, R.drawable.ui_addunit_hero0, R.drawable.ui_addunit_hero1, R.drawable.ui_addunit_hero2, R.drawable.ui_addunit_warrior_f, R.drawable.ui_addunit_manatarms_f, R.drawable.ui_addunit_archer_f, R.drawable.ui_addunit_holyeye_f, R.drawable.ui_addunit_wizard_f, R.drawable.ui_addunit_colddiviner_f, R.drawable.ui_addunit_hero0_f, R.drawable.ui_addunit_hero1_f, R.drawable.ui_addunit_hero2_f, R.drawable.ui_addunit_hero};
 
-    protected enum STATE {
-        START,
-        PLAYING,
-        CLEAR,
-        GAMEOVER,
-        SOFTPAUSE, //This one is just st.waveManager.waveRunF's replacement
-        PAUSE
-    }
     public final Texture2D targetImage = new Texture2D(R.drawable.etc_target), backShadowImage = new Texture2D(R.drawable.etc_shadow);
     public final Texture2D[] numberManaImage = new Texture2D[numberManaResource.length], numberMoneyImage = new Texture2D[numberMoneyResource.length], numberLifeImage = new Texture2D[numberLifeResource.length],
         numberWaveImage = new Texture2D[numberWaveResource.length], shadowImage = new Texture2D[2], uiUpperImage = new Texture2D[uiUpperResource.length], uiButtonImage = new Texture2D[uiButtonResource.length],
@@ -65,9 +57,9 @@ public abstract class StageBase extends TPage {
     public final DataMap tmap;
     public final DataStage st;
     public float characterAddPosX, characterAddPosY;
-    public int characterAddNumber, tempCharacterRangeViewNumber, characterMenuSelectFlag; //restructure so 1 is unit, 2 is hero menu
+    public int characterAddNumber, characterMenuSelectFlag; //restructure so 1 is unit, 2 is hero menu. Also used as the button for menus lol
+    public TowerUnit tempChara;
     protected boolean inGamePause = false;
-    protected STATE state = STATE.START;
 
     public StageBase(TPage par, DataStage stage) {
         super(par);
@@ -153,6 +145,17 @@ public abstract class StageBase extends TPage {
 
     @Override
     public void unload() {
+        shadowImage[0].dealloc();
+        shadowImage[1].dealloc();
+        whiteCircleImage[0].dealloc();
+        whiteCircleImage[1].dealloc();
+        whiteCircleImage[2].dealloc();
+        whiteCircleImage[3].dealloc();
+        redCircleImage[0].dealloc();
+        redCircleImage[1].dealloc();
+        redCircleImage[2].dealloc();
+        redCircleImage[3].dealloc();
+
         loaded = false;
     }
 
@@ -173,33 +176,43 @@ public abstract class StageBase extends TPage {
         for (TowerUnit twu : st.towerUnit)
             if (twu.blockX == bX || twu.blockY == bY)
                 return false;
+        return searchObjectTouch(bX, bY) == null;
+    }
 
+    public ObjectUnit searchObjectTouch() {
+        CGPoint acTouch = TouchManager.getFirstLastActionTouch();
+        int bX = (int) ((acTouch.x - 62.0f) / 45.0f);
+        int bY = (int) (((acTouch.y - 25.0f) - 30.0f) / 45.0f);
+        return searchObjectTouch(bX, bY);
+    }
+
+    public ObjectUnit searchObjectTouch(float bX, float bY) {
         for (ObjectUnit obj : st.map.objectUnit) {
             if (!obj.dead()) {
                 int sX = (obj.posX / 50) / 45;
                 int sY = (obj.posY / 50) / 45;
                 if (obj.blockSize == 0) {
                     if (bX == sX && bY == sY)
-                        return false;
+                        return obj;
                 } else if (obj.blockSize == 1) {
                     if (bX == sX && bY >= sY - 1 && bY <= sY)
-                        return false;
+                        return obj;
                 } else if (obj.blockSize == 2) {
                     if (bX >= sX - 1 && bX <= sX && bY >= sY - 1 && bY <= sY)
-                        return false;
+                        return obj;
                 } else if (obj.blockSize == 3) {
                     if (bX >= sX && bX <= sX + 1 && bY >= sY - 1 && bY <= sY + 1)
-                        return false;
+                        return obj;
                 } else if (obj.blockSize == 4) {
                     if (bX >= sX + 1 && bX <= sX + 2 && bY >= sY + 1 && bY <= sY + 3)
-                        return false;
+                        return obj;
                 } else if (obj.blockSize == 5) {
                     if (bX >= sX + 1 && bX <= sX + 3 && bY >= sY + 1 && bY <= sY + 2)
-                        return false;
+                        return obj;
                 }
             }
         }
-        return true;
+        return null;
     }
 
     public void drawAllUnit(GL10 gl10) {
@@ -261,8 +274,8 @@ public abstract class StageBase extends TPage {
         }
         uiUpperImage[inGamePause ? upper_ingameon : upper_ingameoff].drawAtPointOption(5.0f, 437.0f, 18);
         uiUpperImage[st.waveManager.waveRunF ? upper_pauseoff : upper_pauseon].drawAtPointOption(6.0f, 344.0f, 18);
-        GameRenderer.drawNumberBlock(st.Money, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
-        GameRenderer.drawNumberBlock(st.Mana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
+        GameRenderer.drawNumberBlock(st.money, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
+        GameRenderer.drawNumberBlock(st.mana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
         int wavInd = st.waveManager.current;
         if (st.mapType != 1 && wavInd >= st.waveManager.wcc)
             wavInd = st.waveManager.wcc - 1;
@@ -287,14 +300,14 @@ public abstract class StageBase extends TPage {
             y = (GameThread.mapEndPosition[0][1] * 45) + 30;
             uiUpperImage[upper_slash].drawAtPointOption(x, (float) (y - 1), 17);
             uiUpperImage[upper_heart].drawAtPointOption((float) (x - 37), y, 18);
-            GameRenderer.drawNumberBlock(st.Life, numberLifeImage, (float) (x - 2), y, -1, 20, 2);
+            GameRenderer.drawNumberBlock(st.life, numberLifeImage, (float) (x - 2), y, -1, 20, 2);
             GameRenderer.drawNumberBlock(DataStage.maxLife, numberLifeImage, x + 2, y, -1, 18, 2);
         }
         y = ((GameThread.mapEndPosition[0][1] * 45) + 30) - 22;
         uiUpperImage[upper_slash].drawAtPointOption(x, (float) (y - 1), 17);
         float f2 = y;
         uiUpperImage[upper_heart].drawAtPointOption((float) (x - 37), f2, 18);
-        GameRenderer.drawNumberBlock(st.Life, numberLifeImage, (float) (x - 2), f2, -1, 20, 2);
+        GameRenderer.drawNumberBlock(st.life, numberLifeImage, (float) (x - 2), f2, -1, 20, 2);
         GameRenderer.drawNumberBlock(DataStage.maxLife, numberLifeImage, x + 2, f2, -1, 18, 2);
     }
 
@@ -372,15 +385,15 @@ public abstract class StageBase extends TPage {
         }
     }
 
-    public int checkTowerUnit() {
+    public TowerUnit checkTowerUnit() {
         CGPoint ActionTouch = TouchManager.getFirstLastActionTouch();
         if (ActionTouch.x >= 62.0f && ActionTouch.y >= 30.0f && ActionTouch.x < 737.0f && ActionTouch.y < Texture2D.VIEW_SCRHEIGHT) {
             int rX = (int) ((ActionTouch.x - 62.0f) / 45.0f);
             int rY = (int) ((ActionTouch.y - 30.0f) / 45.0f);
-            for (int i3 = 0; i3 < st.towerUnit.size(); i3++)
-                if (st.towerUnit.get(i3).blockX == rX && st.towerUnit.get(i3).blockY == rY)
-                    return i3;
+            for (TowerUnit twu : st.towerUnit)
+                if (twu.blockX == rX && twu.blockY == rY)
+                    return twu;
         }
-        return -1;
+        return null;
     }
 }

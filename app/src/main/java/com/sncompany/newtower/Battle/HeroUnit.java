@@ -10,6 +10,8 @@ import com.sncompany.newtower.DataClasses.DataUpgradeHero;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.NewTower;
+import com.sncompany.newtower.Pages.StagePage;
 import com.sncompany.newtower.Pages.stage.StageBase;
 import com.sncompany.newtower.Texture2D;
 
@@ -160,7 +162,7 @@ public class HeroUnit extends TowerUnit {
         if (level == 4)
             return;
 
-        st.Mana -= getLevelupPrice();
+        st.mana -= getLevelupPrice();
         level++;
 
         if (level == 4) {
@@ -223,12 +225,12 @@ public class HeroUnit extends TowerUnit {
         if (specialAttackFrameCount != -1) {
             specialAttackFrameCount++;
 
-            if (specialAttackFrameCount == 60)
-                GameThread.playSound(17);
             if (specialAttackFrameCount >= hitPoint[type]) {
                 specialAttackFrameCount = -1;
                 hitSpecialAttack();
                 specialCooltime = specialMaxCooltime;
+                st.selectedUnit = null;
+                ((StagePage)st.page).specialBlinkCount = 10;
             }
         }
         return specialAttackFrameCount == -1;
@@ -254,54 +256,45 @@ public class HeroUnit extends TowerUnit {
     /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
     /* JADX WARN: Failed to find 'out' block for switch in B:13:0x0043. Please report as an issue. */
     public void useSpecialAttack() {
-        playSound(19);
+        GameThread.playSound(19);
 
         st.selectedUnit = this; //type + 8
         int arrowC = 0;
         specialAttackFrameCount = 0;
-        st.Mana -= specialMana;
+        st.mana -= specialMana;
 
         switch (type) {
             case 0:
                 for (int i4 = 0; i4 < 60; i4++)
-                    st.addSpecialArrowUnit(getRandom(4) + 15, 33750, getRandom(450) * 50, -(i4 + 65), true);
+                    st.addSpecialArrowUnit(NewTower.getRandom(4) + 15, 33750, NewTower.getRandom(450) * 50, -(i4 + 65));
 
                 for (int i5 = 0; i5 < 20; i5++) {
-                    int[][] iArr = specialDataValue;
                     int i6 = i5 % 3;
-                    iArr[i5][0] = i6;
-                    iArr[i5][1] = getRandom(GameRenderer.SCRWIDTH_SMALL);
-                    specialDataValue[i5][2] = getRandom(GameRenderer.SCRHEIGHT_SMALL);
+                    specialDataValue[i5][0] = i6;
+                    specialDataValue[i5][1] = NewTower.getRandom(GameRenderer.SCRWIDTH_SMALL);
+                    specialDataValue[i5][2] = NewTower.getRandom(GameRenderer.SCRHEIGHT_SMALL);
                     if (i6 == 0) {
                         specialDataValue[i5][3] = 100;
                     } else if (i6 == 1) {
                         specialDataValue[i5][3] = 160;
-                    } else if (i6 == 2) {
+                    } else {
                         specialDataValue[i5][3] = 200;
                     }
                 }
                 return;
             case 1:
                 while (arrowC < 75) {
-                    st.addSpecialArrowUnit(getRandom(3) + 33, getRandom(675) * 50, getRandom(450) * 50, -(arrowC + 60), true);
+                    st.addSpecialArrowUnit(NewTower.getRandom(3) + 33, NewTower.getRandom(675) * 50, NewTower.getRandom(450) * 50, -(arrowC + 60));
                     arrowC++;
                 }
                 return;
             case 2:
                 while (arrowC < 60) {
-                    st.addSpecialArrowUnit(getRandom(14) + 19, (getRandom(337) + GameRenderer.GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS) * 50, (getRandom(225) + 112) * 50, -(arrowC + 65), true);
+                    st.addSpecialArrowUnit(NewTower.getRandom(14) + 19, (NewTower.getRandom(337) + GameRenderer.GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS) * 50, (NewTower.getRandom(225) + 112) * 50, -(arrowC + 65));
                     arrowC++;
                 }
                 break;
         }
-    }
-
-    public void setReverseSpecialIce() {
-        for (ArrowUnit arrow : st.arrowUnit)
-            if (arrow.type >= 19 && arrow.type <= 32) {
-                arrow.moveCount = 1000;
-                arrow.moveRotateDegree = (arrow.moveRotateDegree + 180) % 360;
-            }
     }
 
     public int getSpecialHitDamage(MonsterUnit mon) {

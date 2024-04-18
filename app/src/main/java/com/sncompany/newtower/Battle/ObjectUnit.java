@@ -16,18 +16,18 @@ public class ObjectUnit extends EnemyUnit {
     public final int blockSize;
     public final int blockX;
     public final int blockY;
+    public final int rewardType;
+    public final int rewardValue;
+    public final int oType;
     public int destroyEnableFlag;
     public int objectLastVanishTime;
     public int objectVanishCount;
-    public int rewardType;
-    public int rewardValue;
-    public DataStage st;
 
     public ObjectUnit(int oType, int bX, int bY) {
         super(null);
         for (int ODataI = 0; ODataI < 34; ODataI++)
             if (oType == DataObject.objectData[ODataI][0]) {
-                type = ODataI;
+                oType = type = ODataI;
                 break;
             }
         objectVanishCount = 0;
@@ -38,8 +38,6 @@ public class ObjectUnit extends EnemyUnit {
         blockSize = DataObject.objectData[type][5];
         blockX = bX;
         blockY = bY;
-        posX = 0;
-        posY = 0;
         switch (blockSize) {
             case 0, 3, 4, 5:
                 posX = ((bX * 45) + 22) * 50;
@@ -53,6 +51,9 @@ public class ObjectUnit extends EnemyUnit {
                 posX = (bX + 1) * 45 * 50;
                 posY = (((bY + 1) * 45) + 22) * 50;
                 break;
+            default:
+                posX = 0;
+                posY = 0;
         }
     }
 
@@ -115,11 +116,11 @@ public class ObjectUnit extends EnemyUnit {
         if (rewardType != 0) {
             if (rewardType != 1)
                 return;
-            st.Mana += rewardValue;
+            st.mana += rewardValue;
             return;
         }
-        st.Money += rewardValue;
-        DataAward.check_money(st.Money);
+        st.money += rewardValue;
+        DataAward.check_money(st.money);
 
         type = -2;
         st.addEffectUnit(EffectUnit.EFFECT_TYPE_DIE, posX, posY);

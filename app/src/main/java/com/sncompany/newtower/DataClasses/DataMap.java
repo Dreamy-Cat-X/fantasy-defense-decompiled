@@ -51,7 +51,7 @@ public class DataMap {
 
     public final int mapEndPositionCount, mapBackgroundType, lastShowBackBase, SID;
     public int mapStartPositionLoop = 0, mapStartPositionCount, gatePattern;
-    public final ArrayList<ObjectUnit> objectUnit = new ArrayList<>(50);
+    public final ArrayList<ObjectUnit> objectUnit = new ArrayList<>(50), defaultObjs = new ArrayList<>(50);
     public final Texture2D[] backObjectImage = new Texture2D[DataObject.objectImageResource.length];
     public final int[] mapEndDirection = new int[10];
     public final Texture2D[] backBaseImageArray = new Texture2D[tileBaseResource.length];
@@ -137,13 +137,12 @@ public class DataMap {
             }
         }
         for (int i15 = 0; i15 < mapStartPositionCount; i15++) {
-            int[][] iArr3 = mapMoveData;
             int[][] iArr4 = mapStartPosition;
-            if ((4 & iArr3[iArr4[i15][0]][iArr4[i15][1]]) != 0) {
+            if ((mapMoveData[iArr4[i15][0]][iArr4[i15][1]] & 4) != 0) {
                 addObjectUnit(207, iArr4[i15][0], iArr4[i15][1]);
-            } else if ((iArr3[iArr4[i15][0]][iArr4[i15][1]] & 16) != 0) {
+            } else if ((mapMoveData[iArr4[i15][0]][iArr4[i15][1]] & 16) != 0) {
                 addObjectUnit(200, iArr4[i15][0], iArr4[i15][1]);
-            } else if ((iArr3[iArr4[i15][0]][iArr4[i15][1]] & 64) != 0) {
+            } else if ((mapMoveData[iArr4[i15][0]][iArr4[i15][1]] & 64) != 0) {
                 addObjectUnit(201, iArr4[i15][0], iArr4[i15][1]);
             }
         }
@@ -201,7 +200,9 @@ public class DataMap {
     }
 
     public void addObjectUnit(int oType, int bX, int bY) {
-        objectUnit.add(new ObjectUnit(oType, bX, bY));
+        ObjectUnit obj = new ObjectUnit(oType, bX, bY);
+        objectUnit.add(obj);
+        defaultObjs.add(obj);
     }
 
     public int getRandomMapDirection(int i2, int i3, int i4) {

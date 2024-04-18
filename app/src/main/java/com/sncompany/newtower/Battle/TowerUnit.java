@@ -8,6 +8,7 @@ import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.Pages.StagePage;
 import com.sncompany.newtower.Pages.stage.StageBase;
 import com.sncompany.newtower.Texture2D;
 
@@ -185,7 +186,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         if (level == 2)
             return;
 
-        st.Money -= getLevelupPrice();
+        st.money -= getLevelupPrice();
         level++;
 
         if (level == 2 && (getTier() == 1 || getTier() == 3))
@@ -202,13 +203,13 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public void upgradeUnit() {
-        if (getUpgradeType() != -1 && st.Money >= getUpgradePrice()) {
-            st.Money -= getUpgradePrice();
+        if (getUpgradeType() != -1 && st.money >= getUpgradePrice()) {
+            st.money -= getUpgradePrice();
             type = getUpgradeType();
             restatTowerUnit(true);
             st.addEffectUnit(14, posX, posY);
             GameThread.playSound(13);
-            GameRenderer.upgradeCount = 10;
+            ((StagePage)st.page).upgradeCount = 10;
         }
     }
 
