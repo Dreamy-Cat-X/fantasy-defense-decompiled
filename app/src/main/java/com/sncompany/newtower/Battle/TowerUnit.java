@@ -45,10 +45,9 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public int effectType;
     public float headRotateDegree = 0f;
     public boolean heroFlag;//Replace with (this instanceof HeroUnit)
-    public int heroOrder;
     public int lastViewDirection = 6;//2 and 6 are all it ever gets written to it
-    public int originalPosX;
-    public int originalPosY;
+    public final int originalPosX;
+    public final int originalPosY;
     public int posX;
     public int posY;
     public int targetMaxNum;
@@ -90,6 +89,18 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
 
         drawData = DataAnim.towerDrawData[type];
         drawTexture = st.page.towerImages[type];
+    }
+
+    public TowerUnit(TowerUnit twr, int tType, int lvl) { //Used exclusively for comparison upgrades
+        st = twr.st;
+        type = tType;
+        level = lvl;
+        blockX = twr.blockX;
+        blockY = twr.blockY;
+        originalPosX = twr.originalPosX;
+        originalPosY = twr.originalPosY;
+
+        restatTowerUnit(true);
     }
 
     public void restatTowerUnit(boolean classChange) {

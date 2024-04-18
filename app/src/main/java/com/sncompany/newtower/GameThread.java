@@ -2,15 +2,13 @@ package com.sncompany.newtower;
 
 import android.media.AudioManager;
 import android.util.Log;
+
 import androidx.core.internal.view.SupportMenu;
 
-import com.sncompany.newtower.Battle.ArrowUnit;
 import com.sncompany.newtower.Battle.EffectUnit;
-import com.sncompany.newtower.Battle.MonsterUnit;
-import com.sncompany.newtower.DataClasses.CGPoint;
-import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
+import com.sncompany.newtower.DataClasses.CGPoint;
 
 import java.lang.reflect.Array;
 
@@ -18,9 +16,6 @@ import java.lang.reflect.Array;
 public class GameThread extends Thread {
     public static final int SPECIAL_ATTACK_ARROW_LEG_POS_X = 403;
     public static final int SPECIAL_ATTACK_ARROW_LEG_POS_Y = 558;
-    public static final int SPECIAL_ATTACK_ARROW_UNIT_START_FRAME = 165;
-    public static ArrowUnit[] arrowUnit;
-    public static int arrowUnitCount;
     public static final MediaManager[] bgmMedia = new MediaManager[3];
     public static boolean characterAddHeroFlag;
     public static int characterAddNumber;
@@ -28,10 +23,6 @@ public class GameThread extends Thread {
     public static int characterAddType;
     public static int characterMenuSelectFlag;
     public static int characterSelectNumber;
-    public static boolean cheatFlag;
-    public static int commonTargetNumber;
-    public static int commonTargetType;
-    public static TowerUnit compareTowerUnit;
     public static long currentDate;
     public static long currentDrawDate;
     public static int currentFrameCount;
@@ -55,13 +46,8 @@ public class GameThread extends Thread {
     public static final int[] mapEndDirection = new int[10];
     public static final int[][] mapEndPosition = new int[10][2];
     public static int mapNumber;
-    public static final int[][] mapTileData = new int[15][10];
     public static AudioManager mgr;
-    public static final MonsterUnit[] monsterUnit = new MonsterUnit[100];
-    public static int monsterUnitCount;
     public static NewTower newTower;
-    public static ObjectUnit[] objectUnit;
-    public static int objectUnitCount;
     public static boolean pauseFlag;
     public static long playTimeStartValue;
     public static int randomNumber;
@@ -77,19 +63,10 @@ public class GameThread extends Thread {
     public static long startDate;
     public static long startDrawDate;
     public static TowerUnit[] towerUnit;
-    public static int towerUnitCount;
     public static int gameTimeCount = 0;
     public static final String[] chapterName = {"Dark Forest", "Swamp of Despair", "Eternal Wasteland", "Infernal Volcano", "Nightmarish Demon World"};
     public static int TOWER_MAX_LEVEL_NORMAL = 3;
     public static int TOWER_MAX_LEVEL_HERO = 5;
-
-
-    public static boolean[] cheatData = new boolean[5];
-
-    public static int getAttackSpeed(int i) {
-        int i2 = Math.max(0,60 - i);
-        return (i2 * 5) + 70;
-    }
 
     public GameThread(NewTower nt) {
         newTower = nt;
@@ -148,7 +125,6 @@ public class GameThread extends Thread {
             Config.readSaveData(newTower, 1);
 
             GameRenderer.lastCheckTime = System.currentTimeMillis();
-            cheatFlag = false;
             GameRenderer.loadCount_GAME_PRE_IMAGE_LOAD = 0;
             return;
         }
@@ -201,74 +177,6 @@ public class GameThread extends Thread {
             return 0;
         }
         return i2 % i;
-    }
-
-    public boolean enableAddUnit() {
-        CGPoint firstLastActionTouch = TouchManager.getFirstLastActionTouch();
-        if (firstLastActionTouch.x < 62.0f || firstLastActionTouch.y - 25.0f < 30.0f || firstLastActionTouch.x >= 737.0f || firstLastActionTouch.y - 25.0f >= 480.0f) {
-            return false;
-        }
-        int i = (int) ((firstLastActionTouch.x - 62.0f) / 45.0f);
-        int i2 = (int) (((firstLastActionTouch.y - 25.0f) - 30.0f) / 45.0f);
-        if (mapTileData[i][i2] != -1) {
-            return false;
-        }
-        for (int i3 = 0; i3 < towerUnitCount; i3++) {
-            if (towerUnit[i3].towerType != -1 && towerUnit[i3].blockX == i && towerUnit[i3].blockY == i2) {
-                return false;
-            }
-        }
-        for (int i4 = 0; i4 < objectUnitCount; i4++) {
-            if (objectUnit[i4].type != -1 && objectUnit[i4].type != -2) {
-                int i5 = objectUnit[i4].blockSize;
-                if (i5 == 0) {
-                    int i6 = (objectUnit[i4].posX / 50) / 45;
-                    int i7 = (objectUnit[i4].posY / 50) / 45;
-                    if (i == i6 && i2 == i7) {
-                        return false;
-                    }
-                } else if (i5 == 1) {
-                    int i8 = (objectUnit[i4].posX / 50) / 45;
-                    int i9 = (objectUnit[i4].posY / 50) / 45;
-                    int i10 = i9 - 1;
-                    if (i == i8 && i2 >= i10 && i2 <= i9) {
-                        return false;
-                    }
-                } else if (i5 == 2) {
-                    int i11 = (objectUnit[i4].posX / 50) / 45;
-                    int i12 = (objectUnit[i4].posY / 50) / 45;
-                    int i13 = i12 - 1;
-                    if (i >= i11 - 1 && i <= i11 && i2 >= i13 && i2 <= i12) {
-                        return false;
-                    }
-                } else if (i5 == 3) {
-                    int i14 = (objectUnit[i4].posX / 50) / 45;
-                    int i15 = ((objectUnit[i4].posY / 50) / 45) - 1;
-                    int i16 = i14 + 1;
-                    int i17 = i15 + 2;
-                    if (i >= i14 && i <= i16 && i2 >= i15 && i2 <= i17) {
-                        return false;
-                    }
-                } else if (i5 == 4) {
-                    int i18 = ((objectUnit[i4].posX / 50) / 45) - 1;
-                    int i19 = ((objectUnit[i4].posY / 50) / 45) - 1;
-                    int i20 = i18 + 1;
-                    int i21 = i19 + 2;
-                    if (i >= i18 && i <= i20 && i2 >= i19 && i2 <= i21) {
-                        return false;
-                    }
-                } else if (i5 == 5) {
-                    int i22 = ((objectUnit[i4].posX / 50) / 45) - 1;
-                    int i23 = ((objectUnit[i4].posY / 50) / 45) - 1;
-                    int i24 = i22 + 2;
-                    int i25 = i23 + 1;
-                    if (i >= i22 && i <= i24 && i2 >= i23 && i2 <= i25) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     public static void playSound(int i) {

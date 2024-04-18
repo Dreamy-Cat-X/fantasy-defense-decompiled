@@ -1208,53 +1208,44 @@ public class Texture2D {
         gl.glPopMatrix();
     }
 
-    public void fillRect(float f, float f2, float f3, float f4) {
-        if (this.name == -1) {
+    public void fillRect(float x, float y, float w, float h) {
+        if (this.name == -1)
             return;
-        }
-        float[] fArr = coordinates;
-        fArr[0] = 0.0f;
-        float f5 = this._maxT;
-        fArr[1] = f5;
-        float f6 = this._maxS;
-        fArr[2] = f6;
-        fArr[3] = f5;
-        fArr[4] = 0.0f;
-        fArr[5] = 0.0f;
-        fArr[6] = f6;
-        fArr[7] = 0.0f;
-        width = f3;
-        height = f4;
-        pointX = f;
-        pointY = f2;
-        float f7 = VIEW_SCRHEIGHT;
-        float f8 = (f7 - f2) - f4;
-        pointY = f8;
-        if (f3 <= 0.0f || f4 <= 0.0f || f + f3 <= 0.0f || f >= VIEW_SCRWIDTH || f8 + f4 <= 0.0f || f8 >= f7) {
+
+        coordinates[0] = 0;
+        coordinates[1] = _maxT;
+        coordinates[2] = _maxS;
+        coordinates[3] = _maxT;
+        coordinates[4] = 0;
+        coordinates[5] = 0;
+        coordinates[6] = _maxS;
+        coordinates[7] = 0;
+        width = w;
+        height = h;
+        pointX = x;
+        pointY = (VIEW_SCRHEIGHT - y) - h;
+        if (w <= 0 || h <= 0 || x + w <= 0 || x >= VIEW_SCRWIDTH || pointY + h <= 0 || pointY >= VIEW_SCRHEIGHT)
             return;
-        }
-        float f9 = f + DRAW_ADJUST_X_MOVE;
-        pointX = f9;
-        float f10 = f8 + DRAW_ADJUST_Y_MOVE;
-        pointY = f10;
-        float[] fArr2 = vertices;
-        fArr2[0] = f9 - TEXTURE_DRAW_MARGIN;
-        fArr2[1] = f10 - TEXTURE_DRAW_MARGIN;
-        fArr2[2] = 0.0f;
-        fArr2[3] = f9 + f3;
-        fArr2[4] = f10 - TEXTURE_DRAW_MARGIN;
-        fArr2[5] = 0.0f;
-        fArr2[6] = f9 - TEXTURE_DRAW_MARGIN;
-        fArr2[7] = f10 + f4;
-        fArr2[8] = 0.0f;
-        fArr2[9] = f9 + f3;
-        fArr2[10] = f10 + f4;
-        fArr2[11] = 0.0f;
-        mVertexBuffer.put(fArr2);
+
+        pointX += DRAW_ADJUST_X_MOVE;
+        pointY += DRAW_ADJUST_Y_MOVE;
+        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[2] = 0.0f;
+        vertices[3] = pointX + w;
+        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[5] = 0.0f;
+        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[7] = pointY + h;
+        vertices[8] = 0.0f;
+        vertices[9] = pointX + w;
+        vertices[10] = pointY + h;
+        vertices[11] = 0.0f;
+        mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
         coordinatesBuffer.put(coordinates);
         coordinatesBuffer.position(0);
-        gl.glBindTexture(3553, this.name);
+        gl.glBindTexture(3553, name);
         gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
         gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
         gl.glDrawArrays(5, 0, 4);

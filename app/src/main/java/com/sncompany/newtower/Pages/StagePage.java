@@ -21,6 +21,7 @@ import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Pages.stage.StageBase;
+import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
@@ -92,7 +93,11 @@ public class StagePage extends StageBase {
         SOFTPAUSE, //This one is just st.waveManager.waveRunF's replacement
         PAUSE
     }
-    
+    private static final int[] specialSwordResource = {R.drawable.special_sword_blade0, R.drawable.special_sword_blade1, R.drawable.special_sword_blade2, R.drawable.special_sword_blade3, R.drawable.special_sword_body, R.drawable.special_sword_background, R.drawable.special_sword_lineb, R.drawable.special_sword_linem, R.drawable.special_sword_lines, R.drawable.special_sword_wind0, R.drawable.special_sword_wind1, R.drawable.special_sword_wind2};
+    private static final int[] specialArrowResource = {R.drawable.special_arrow_arrow_center1, R.drawable.special_arrow_arrow_center2, R.drawable.special_arrow_arrow_center3, R.drawable.special_arrow_arrow_center4, R.drawable.special_arrow_arrow_left1, R.drawable.special_arrow_arrow_left2, R.drawable.special_arrow_arrow_left3, R.drawable.special_arrow_arrow_left4, R.drawable.special_arrow_arrow_right1, R.drawable.special_arrow_arrow_right2, R.drawable.special_arrow_arrow_right3, R.drawable.special_arrow_arrow_right4, R.drawable.special_arrow_land, R.drawable.special_arrow_body, R.drawable.special_arrow_body2, R.drawable.special_arrow_background, R.drawable.special_arrow_lineb, R.drawable.special_arrow_linem, R.drawable.special_arrow_lines, R.drawable.special_arrow_unit};
+    private static final int[] specialIceResource = {R.drawable.special_ice_body, R.drawable.special_ice_background, R.drawable.special_ice_unit, R.drawable.special_ice_1, R.drawable.special_ice_2, R.drawable.special_ice_3, R.drawable.special_ice_4, R.drawable.special_ice_5, R.drawable.special_ice_6, R.drawable.special_ice_7, R.drawable.special_ice_8, R.drawable.special_ice_9, R.drawable.special_ice_10, R.drawable.special_ice_11, R.drawable.special_ice_12, R.drawable.special_ice_13, R.drawable.special_ice_14, R.drawable.special_ice_lineb, R.drawable.special_ice_linem, R.drawable.special_ice_lines};
+
+    public final Texture2D[] specialArrowImage = new Texture2D[specialArrowResource.length], specialIceImage = new Texture2D[specialIceResource.length], specialSwordImage = new Texture2D[specialSwordResource.length];
     private int startViewCount, rewardShowOrder;
     public int upgradeCount = 0, specialBlinkCount = 0, characterMenuMonsterViewCount, characterMenuMonsterStartViewCount;
     private STATE state = STATE.START;
@@ -1797,7 +1802,7 @@ public class StagePage extends StageBase {
                             break;
                         case 1:
                             characterMenuSelectFlag = 0;
-                            if (NewTower.gameThread.enableAddUnit()) {
+                            if (enableAddUnit()) {
                                 GameThread.playSound(14);
                                 getAddSettingPosition();
                                 st.addUnit(GameThread.characterAddNumber, (int) ((characterAddPosX - 62.0f) / 45.0f), (int) ((characterAddPosY - 30.0f) / 45.0f));
@@ -1838,7 +1843,7 @@ public class StagePage extends StageBase {
                             }
                         case 4:
                             characterMenuSelectFlag = 0;
-                            if (NewTower.gameThread.enableAddUnit()) {
+                            if (enableAddUnit()) {
                                 GameThread.playSound(14);
                                 getAddSettingPosition();
                                 st.selectedUnit = st.addHero(GameThread.characterAddOrder, (int) ((characterAddPosX - 62.0f) / 45.0f), (int) ((characterAddPosY - 30.0f) / 45.0f), true);
@@ -2396,20 +2401,19 @@ public class StagePage extends StageBase {
                     uiCharButtonImage[i26 + 16].drawAtPointOption(708.0f, 401.0f, 17);
                     uiCharButtonImage[i26 + 18].drawAtPointOption(764.0f, 401.0f, 17);
                 }
-                drawStringM(String.valueOf(levelUpPrice), 756.0f, 423.0f, 20);
+                GameRenderer.drawStringM(String.valueOf(levelUpPrice), 756.0f, 423.0f, 20);
                 if (z2) {
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                    Texture2D.setAlpha(0.5f);
                     fillBlackImage.fillRect(670.0f, 350.0f, 115.0f, 115.0f);
-                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                    Texture2D.setAlpha(1);
                 }
                 if (levelUpCount > 0) {
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    GL10 gl102 = Texture2D.gl;
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                     int i27 = levelUpCount;
-                    gl102.glColor4f(i27 * 0.1f, i27 * 0.1f, i27 * 0.1f, i27 * 0.1f);
+                    Texture2D.setAlpha(i27 * 0.1f);
                     fillWhiteImage.fillRect(670.0f, 350.0f, 115.0f, 115.0f);
-                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                    Texture2D.setAlpha(1);
                 }
             }
         }
@@ -2429,13 +2433,6 @@ public class StagePage extends StageBase {
         }
     }
 
-    public static int getTowerLevelOrder(int i, int i2) {
-        if (i2 == 1) {
-            return i % GameThread.TOWER_MAX_LEVEL_HERO;
-        }
-        return i % GameThread.TOWER_MAX_LEVEL_NORMAL;
-    }
-
     public static int getTowerMaxLevel(boolean isHero) {
         if (isHero)
             return GameThread.TOWER_MAX_LEVEL_HERO;
@@ -2443,194 +2440,136 @@ public class StagePage extends StageBase {
     }
 
     public void drawPlayingUi(boolean init) {
-        TouchManager.clearTouchMap();
-        TouchManager.addTouchRectListData(11, CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
-        TouchManager.addTouchRectListData(12, CGRectMake(0.0f, 344.0f, 43.0f, 39.0f));
-        TouchManager.addTouchRectListData(13, CGRectMake(0.0f, 393.0f, 43.0f, 39.0f));
-        int i = characterMenuSelectFlag;
-        if (i == 0) {
-            TouchManager.addTouchRectListData(7, CGRectMake(742.0f, 12.0f, 56.0f, 56.0f));
-        } else if (i == 3) {
-            int heroPos = GameThread.SPECIAL_ATTACK_ARROW_LEG_POS_Y;
-            for (int i3 = 0; i3 < 3; i3++)
-                if (!DataStage.heroAvail[i3])
-                    heroPos += 60;
-            for (int i4 = 0; i4 < 3; i4++)
-                if (DataStage.heroAvail[i4]) {
-                    if (checkEnableHeroBuyUnit(i4))
-                        TouchManager.addTouchRectListData(i4 + 8, CGRectMake(heroPos, 12.0f, 56.0f, 56.0f));
-                    heroPos += 60;
-                }
+        if (init) {
+            TouchManager.clearTouchMap();
+            TouchManager.addTouchRectListData(10, GameRenderer.CGRectMake(0, 437, 43, 39));
+            TouchManager.addTouchRectListData(11, GameRenderer.CGRectMake(0, 344, 43, 39));
+            TouchManager.addTouchRectListData(12, GameRenderer.CGRectMake(0, 393, 43, 39));
+            if (characterMenuSelectFlag == 0) {
+                TouchManager.addTouchRectListData(6, GameRenderer.CGRectMake(742, 12, 56, 56));
+            } else if (characterMenuSelectFlag == 3) {
+                int heroPos = GameThread.SPECIAL_ATTACK_ARROW_LEG_POS_Y;
+                for (int i3 = 0; i3 < 3; i3++)
+                    if (!DataStage.heroAvail[i3])
+                        heroPos += 60;
+                for (int i4 = 0; i4 < 3; i4++)
+                    if (DataStage.heroAvail[i4]) {
+                        if (checkEnableHeroBuyUnit(i4))
+                            TouchManager.addTouchRectListData(i4 + 7, GameRenderer.CGRectMake(heroPos, 12, 56, 56));
+                        heroPos += 60;
+                    }
+            }
+            for (int i = 0; i < 6; i++)
+                TouchManager.addTouchRectListData(i, GameRenderer.CGRectMake(742, 12 + (65 * i), 56, 56));
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 13;
         }
-        TouchManager.addTouchRectListData(0, CGRectMake(742.0f, 77.0f, 56.0f, 56.0f));
-        TouchManager.addTouchRectListData(1, CGRectMake(742.0f, 142.0f, 56.0f, 56.0f));
-        TouchManager.addTouchRectListData(2, CGRectMake(742.0f, 207.0f, 56.0f, 56.0f));
-        TouchManager.addTouchRectListData(3, CGRectMake(742.0f, 272.0f, 56.0f, 56.0f));
-        TouchManager.addTouchRectListData(4, CGRectMake(742.0f, 337.0f, 56.0f, 56.0f));
-        TouchManager.addTouchRectListData(5, CGRectMake(742.0f, 402.0f, 56.0f, 56.0f));
-        TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 14;
 
         drawUpperUI();
-        boolean sele = characterMenuSelectFlag == 3 || characterMenuSelectFlag == 4 || characterMenuSelectFlag == 6;
-        uiButtonImage[((sele || !checkEnableBuyUnit(0)) ? 9 : 0)].drawAtPointOption(myOscillator[0].getCurrentPosition() + 770, 77.0f, 17);
-        drawNumberBlock(TowerUnit.getBuyPrice(0), numberUnitBuyImage, myOscillator[0].getCurrentPosition() + 770, 114.0f, -2, 17, 1);
-        uiButtonImage[((sele || !checkEnableBuyUnit(1)) ? 9 : 0) + 1].drawAtPointOption(myOscillator[1].getCurrentPosition() + 770, 142.0f, 17);
-        drawNumberBlock(TowerUnit.getBuyPrice(1), numberUnitBuyImage, myOscillator[1].getCurrentPosition() + 770, 179.0f, -2, 17, 1);
-        uiButtonImage[((sele || !checkEnableBuyUnit(4)) ? 9 : 0) + 2].drawAtPointOption(myOscillator[2].getCurrentPosition() + 770, 207.0f, 17);
-        drawNumberBlock(TowerUnit.getBuyPrice(4), numberUnitBuyImage, myOscillator[2].getCurrentPosition() + 770, 244.0f, -2, 17, 1);
-        uiButtonImage[((sele || !checkEnableBuyUnit(5)) ? 9 : 0) + 3].drawAtPointOption(myOscillator[3].getCurrentPosition() + 770, 272.0f, 17);
-        drawNumberBlock(TowerUnit.getBuyPrice(5), numberUnitBuyImage, myOscillator[3].getCurrentPosition() + 770, 309.0f, -2, 17, 1);
-        uiButtonImage[((sele || !checkEnableBuyUnit(8)) ? 9 : 0) + 4].drawAtPointOption(myOscillator[4].getCurrentPosition() + 770, 337.0f, 17);
-        drawNumberBlock(TowerUnit.getBuyPrice(8), numberUnitBuyImage, myOscillator[4].getCurrentPosition() + 770, 374.0f, -2, 17, 1);
-        uiButtonImage[((sele || !checkEnableBuyUnit(9)) ? 9 : 0) + 5].drawAtPointOption(myOscillator[5].getCurrentPosition() + 770, 402.0f, 17);
-        drawNumberBlock(TowerUnit.getBuyPrice(9), numberUnitBuyImage, myOscillator[5].getCurrentPosition() + 770, 439.0f, -2, 17, 1);
+        boolean sele = characterMenuSelectFlag >= 3;
+        for (int i = 0; i < 6; i++) {
+            int v = 65 * i, ty = (i * 2) - (i % 2);
+            uiButtonImage[((sele || !checkEnableBuyUnit(ty)) ? 9 : 0) + i].drawAtPointOption(myOscillator[i].getCurrentPosition() + 770, 12 + v, 17);
+            GameRenderer.drawNumberBlock(TowerUnit.getBuyPrice(ty), numberUnitBuyImage, myOscillator[i].getCurrentPosition() + 770, 49 + v, -2, 17, 1);
+        }
         if (characterMenuSelectFlag == 3 && myOscillator[8].currentCount < 10) {
             float f = myOscillator[8].currentCount * 0.1f;
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(f, f, f, f);
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+            Texture2D.setAlpha(f);
         }
-        int i8 = 586;
-        for (int i9 = 0; i9 < 3; i9++) {
-            if (GameThread.heroUnitType[i9] == -1) {
-                i8 += 60;
+        int heroX = 586;
+        for (int i = 0; i < 3; i++)
+            if (!DataStage.heroAvail[i])
+                heroX += 60;
+        for (int i = 0; i < 3; i++)
+            if (DataStage.heroAvail[i]) {
+                int heroBuyPrice = HeroUnit.getHeroBuyPrice(i);
+                int cpos = myOscillator[i + 8].getCurrentPosition();
+                uiButtonImage[i + 6 + (checkEnableHeroBuyUnit(i) ? 0 : 9)].drawAtPointOption(cpos + heroX, 12, 17);
+                GameRenderer.drawNumberBlock(heroBuyPrice, numberHeroBuyImage, heroX + 5 + cpos, 49, -2, 17, 1);
+                uiUpperImage[upper_hero].drawAtPointOption((heroX - 17) + cpos, 49, 17);
+                heroX += 60;
             }
-        }
-        for (int i10 = 0; i10 < 3; i10++) {
-            if (GameThread.heroUnitType[i10] != -1) {
-                int heroBuyPrice = HeroUnit.getHeroBuyPrice(i10);
-                int i11 = GameThread.heroUnitType[i10];
-                int i12 = i10 + 8;
-                uiButtonImage[(i11 != 0 ? i11 != 5 ? i11 != 10 ? 0 : 8 : 7 : 6) + (checkEnableHeroBuyUnit(i10) ? 0 : 9)].drawAtPointOption(myOscillator[i12].getCurrentPosition() + i8, 12.0f, 17);
-                drawNumberBlock(heroBuyPrice, numberHeroBuyImage, i8 + 5 + myOscillator[i12].getCurrentPosition(), 49.0f, -2, 17, 1);
-                uiUpperImage[upper_hero].drawAtPointOption((i8 - 17) + myOscillator[i12].getCurrentPosition(), 49.0f, 17);
-                i8 += 60;
-            }
-        }
-        if (characterMenuSelectFlag == 3 && myOscillator[8].currentCount < 10) {
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-        uiButtonImage[18].drawAtPointOption(770.0f, 12.0f, 17);
-        int i13 = characterMenuSelectFlag;
-        if (i13 == 2 || i13 == 5 || i13 == 6) {
+        if (characterMenuSelectFlag == 3 && myOscillator[8].currentCount < 10)
+            Texture2D.setAlpha(1);
+        uiButtonImage[18].drawAtPointOption(770, 12, 17);
+
+        if (characterMenuSelectFlag >= 3) {
             drawCharMenu();
-        } else if (i13 == 12) {
-            drawCharMenu();
-            TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(20, CGRectMake(162.0f, 290.0f, 236.0f, 43.0f));
-            TouchManager.addTouchRectListData(21, CGRectMake(402.0f, 290.0f, 236.0f, 43.0f));
-            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 22;
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
-            fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
-            uiPopupImage[4].drawAtPointOption(392.0f, 160.0f, 18);
-            int i14 = GameThread.towerUnit[GameThread.characterSelectNumber].towerType;
-            int upgradeType = st.selectedUnit.getUpgradeType();
-            if (upgradeType != -1) {
-                int upgradePrice = st.selectedUnit.getUpgradePrice();
-                int towerImageOrder = getTowerImageOrder(upgradeType, 0);
-                int towerBoxImageOrder = getTowerBoxImageOrder(upgradeType);
-                uiCharButtonImage[0].drawAtPointOption(161.0f, 154.0f, 18);
-                uiCharUpFaceImage[towerBoxImageOrder].drawAtPointOption(240.0f, 168.0f, 18);
-                uiCharNameImage[towerImageOrder].drawAtPointOptionSize(379.0f, 253.0f, 36, 0.4f);
-                drawStringM(String.valueOf(upgradePrice), 229.0f, 225.0f, 20);
-                setFontSize(16);
-                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("Do you want to change this unit's class?", CX, 270.0f, 17);
-                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].getHitPower()), 540.0f, 162.0f, 20); //temp
-                if (GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax == 1) {
-                    drawStringDoubleM("MAX", 540.0f, 189.0f, 20);
-                } else {
-                    drawStringDoubleM(String.valueOf(GameThread.getAttackSpeed(GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax)), 540.0f, 189.0f, 20);
+            if (characterMenuSelectFlag >= 5) {
+                TouchManager.clearTouchMap();
+                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(162, 290, 236, 43));
+                TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(402, 290, 236, 43));
+                TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 2;
+                Texture2D.setAlpha(0.5f);
+                fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                Texture2D.setAlpha(1);
+
+                uiPopupImage[popup_background].drawAtPointOption(152, 144, 18);
+                if (characterMenuSelectFlag == 5) {
+                    uiPopupImage[popup_stat].drawAtPointOption(392, 160, 18);
+                    int upgradeType = st.selectedUnit.getUpgradeType();
+                    if (upgradeType != -1) {
+                        int upgradePrice = st.selectedUnit.getUpgradePrice();
+
+                        int boxImg = TowerUnit.getTowerBoxImageOrder(upgradeType);
+                        uiCharButtonImage[0].drawAtPointOption(161, 154, 18);
+                        uiCharUpFaceImage[boxImg].drawAtPointOption(240, 168, 18);
+                        uiCharNameImage[upgradeType].drawAtPointOptionSize(379, 253f, 36, 0.4f);
+                        GameRenderer.drawStringM(String.valueOf(upgradePrice), 229, 225, 20);
+                        GameRenderer.setFontSize(16);
+                        GameRenderer.setFontDoubleColor(-1, -16777216);
+
+                        GameRenderer.drawStringDoubleM("Do you want to change this unit's class?", GameRenderer.CX, 270, 17);
+                        GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getHitPower()), 540, 162, 20);
+                        if (st.selectedUnit.towerCoolTimeMax == 1) {
+                            GameRenderer.drawStringDoubleM("MAX", 540, 189, 20);
+                        } else
+                            GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getAttackSpeed()), 540, 189, 20);
+                        GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.attackRange), 540, 217, 20);
+                        GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(st.selectedUnit.effectType), 540, 243, 20);
+
+                        TowerUnit nextFrm = new TowerUnit(st.selectedUnit, upgradeType, 0);
+                        GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.getHitPower()), 625, 162, 20);
+                        if (nextFrm.towerCoolTimeMax == 1) {
+                            GameRenderer.drawStringDoubleM("MAX", 625, 189, 20);
+                        } else
+                            GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.getAttackSpeed()), 625, 189, 20);
+                        GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.attackRange), 625, 217, 20);
+                        GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(nextFrm.effectType), 625, 243, 20);
+                    }
+                } else if (characterMenuSelectFlag == 6) {
+                    uiPopupImage[popup_levelup].drawAtPointOption(170, 160, 18);
+                    if (st.selectedUnit.level < getTowerMaxLevel(st.selectedUnit instanceof HeroUnit) - 1) {
+                        GameRenderer.setFontSize(16);
+                        GameRenderer.setFontDoubleColor(-1, -16777216);
+
+                        GameRenderer.drawStringDoubleM("Do you want to Level Up?", GameRenderer.CX, 270, 17);
+                        GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getHitPower()), 430, 162, 20);
+                        if (st.selectedUnit.towerCoolTimeMax == 1) {
+                            GameRenderer.drawStringDoubleM("MAX", 430, 189, 20);
+                        } else
+                            GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getAttackSpeed()), 430, 189, 20);
+                        GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.attackRange), 430, 217, 20);
+                        GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(st.selectedUnit.effectType), 430, 243, 20);
+
+                        int tp = st.selectedUnit.type, plv = st.selectedUnit.level + 1;
+                        TowerUnit nextFrm = st.selectedUnit instanceof HeroUnit ? new HeroUnit(st.selectedUnit, tp, plv) : new TowerUnit(st.selectedUnit, tp, plv);
+                        GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.getHitPower()), 526, 162, 20);
+                        if (nextFrm.towerCoolTimeMax == 1) {
+                            GameRenderer.drawStringDoubleM("MAX", 526, 189, 20);
+                        } else
+                            GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.getAttackSpeed()), 526, 189, 20);
+                        GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.attackRange), 526, 217, 20);
+                        GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(nextFrm.effectType), 526, 243, 20);
+                    }
                 }
-                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].attackRange), 540.0f, 217.0f, 20);
-                drawStringDoubleM(getEffectTypeString(GameThread.towerUnit[GameThread.characterSelectNumber].effectType), 540.0f, 243.0f, 20);
-                GameThread.compareTowerUnit.towerType = upgradeType;
-                GameThread.compareTowerUnit.heroFlag = false;
-                GameThread.compareTowerUnit.restatTowerUnit(false);
-                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.getHitPower()), 625.0f, 162.0f, 20);
-                if (GameThread.compareTowerUnit.towerCoolTimeMax == 1) {
-                    drawStringDoubleM("MAX", 625.0f, 189.0f, 20);
-                } else {
-                    drawStringDoubleM(String.valueOf(GameThread.getAttackSpeed(GameThread.compareTowerUnit.towerCoolTimeMax)), 625.0f, 189.0f, 20);
-                }
-                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.attackRange), 625.0f, 217.0f, 20);
-                drawStringDoubleM(getEffectTypeString(GameThread.compareTowerUnit.effectType), 625.0f, 243.0f, 20);
-                int checkTouchListStatus = TouchManager.checkTouchListStatus();
-                if (checkTouchListStatus == 20) {
-                    uiPopupImage[6].drawAtPointOption(162.0f, 290.0f, 18);
-                } else {
-                    uiPopupImage[5].drawAtPointOption(162.0f, 290.0f, 18);
-                }
-                if (checkTouchListStatus == 21) {
-                    uiPopupImage[3].drawAtPointOption(402.0f, 290.0f, 18);
-                } else {
-                    uiPopupImage[2].drawAtPointOption(402.0f, 290.0f, 18);
-                }
-            }
-        } else if (i13 == 13) {
-            drawCharMenu();
-            int i15 = GameThread.towerUnit[GameThread.characterSelectNumber].towerType;
-            TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(20, CGRectMake(162.0f, 290.0f, 236.0f, 43.0f));
-            TouchManager.addTouchRectListData(21, CGRectMake(402.0f, 290.0f, 236.0f, 43.0f));
-            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 22;
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
-            fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH_SMALL, SCRHEIGHT_SMALL);
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            uiPopupImage[0].drawAtPointOption(152.0f, 144.0f, 18);
-            uiPopupImage[1].drawAtPointOption(170.0f, 160.0f, 18);
-            if (getTowerLevelOrder(i15, GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag) < getTowerMaxLevel(GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag) - 1) {
-                setFontSize(16);
-                setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
-                drawStringDoubleM("Do you want to Level Up?", CX, 270.0f, 17);
-                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].getHitPower()), 430.0f, 162.0f, 20);
-                if (GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax == 1) {
-                    drawStringDoubleM("MAX", 430.0f, 189.0f, 20);
-                } else {
-                    drawStringDoubleM(String.valueOf(GameThread.getAttackSpeed(GameThread.towerUnit[GameThread.characterSelectNumber].towerCoolTimeMax)), 430.0f, 189.0f, 20);
-                }
-                drawStringDoubleM(String.valueOf(GameThread.towerUnit[GameThread.characterSelectNumber].attackRange), 430.0f, 217.0f, 20);
-                drawStringDoubleM(getEffectTypeString(GameThread.towerUnit[GameThread.characterSelectNumber].effectType), 430.0f, 243.0f, 20);
-                GameThread.compareTowerUnit.towerType = i15 + 1;
-                GameThread.compareTowerUnit.heroFlag = GameThread.towerUnit[GameThread.characterSelectNumber].heroFlag;
-                GameThread.compareTowerUnit.restatTowerUnit(false);
-                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.getHitPower()), 526.0f, 162.0f, 20);
-                if (GameThread.compareTowerUnit.towerCoolTimeMax == 1) {
-                    drawStringDoubleM("MAX", 526.0f, 189.0f, 20);
-                } else {
-                    drawStringDoubleM(String.valueOf(GameThread.getAttackSpeed(GameThread.compareTowerUnit.towerCoolTimeMax)), 526.0f, 189.0f, 20);
-                }
-                drawStringDoubleM(String.valueOf(GameThread.compareTowerUnit.attackRange), 526.0f, 217.0f, 20);
-                drawStringDoubleM(getEffectTypeString(GameThread.compareTowerUnit.effectType), 526.0f, 243.0f, 20);
-                int checkTouchListStatus2 = TouchManager.checkTouchListStatus();
-                if (checkTouchListStatus2 == 20) {
-                    uiPopupImage[6].drawAtPointOption(162.0f, 290.0f, 18);
-                } else {
-                    uiPopupImage[5].drawAtPointOption(162.0f, 290.0f, 18);
-                }
-                if (checkTouchListStatus2 == 21) {
-                    uiPopupImage[3].drawAtPointOption(402.0f, 290.0f, 18);
-                } else {
-                    uiPopupImage[2].drawAtPointOption(402.0f, 290.0f, 18);
-                }
+                int cTLS = TouchManager.checkTouchListStatus();
+                uiPopupImage[cTLS == 0 ? popup_yeson : popup_yesoff].drawAtPointOption(162, 290, 18);
+                uiPopupImage[cTLS == 1 ? popup_noon : popup_nooff].drawAtPointOption(402, 290, 18);
             }
         }
-        if (init) {
+        if (init)
             TouchManager.swapTouchMap();
-        }
-    }
-
-    public static int getTowerImageOrder(int i, int i2) {
-        if (i == -1)
-            return 0;
-
-        if (i2 == 1)
-            return DataHero.heroData[i][13] + 12;
-        //TODO - Bruh
-        return DataCharacter.charData[i][12];
     }
 
     public boolean checkEnableBuyUnit(int i) {

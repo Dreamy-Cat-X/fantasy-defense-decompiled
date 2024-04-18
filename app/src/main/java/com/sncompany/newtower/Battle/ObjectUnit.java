@@ -27,9 +27,10 @@ public class ObjectUnit extends EnemyUnit {
         super(null);
         for (int ODataI = 0; ODataI < 34; ODataI++)
             if (oType == DataObject.objectData[ODataI][0]) {
-                oType = type = ODataI;
+                type = ODataI;
                 break;
             }
+        this.oType = type;
         objectVanishCount = 0;
         destroyEnableFlag = DataObject.objectData[type][1];
         unitHP = unitMaxHP = DataObject.objectData[type][2];
@@ -65,7 +66,7 @@ public class ObjectUnit extends EnemyUnit {
     public ObjectUnit(DataStage sta, ObjectUnit ori) {
         super(sta);
 
-        type = ori.type;
+        type = oType = ori.oType;
         objectVanishCount = ori.objectVanishCount;
         destroyEnableFlag = ori.destroyEnableFlag;
         unitHP = ori.unitHP;
@@ -77,8 +78,6 @@ public class ObjectUnit extends EnemyUnit {
         blockY = ori.blockY;
         posX = ori.posX;
         posY = ori.posY;
-
-        //TODO - Load Images
     }
 
     @Override
@@ -133,7 +132,7 @@ public class ObjectUnit extends EnemyUnit {
 
         if (type == -2) {
             float f3 = objectVanishCount < OBJECT_VANISHING_HALF_COUNT ? 1 : 1 - (objectVanishCount * OBJECT_VANISHING_ALPHA_DEGREE);
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
             Texture2D.setAlpha(f3);
             int i2 = rewardType;
             if (i2 == 0) {
@@ -175,122 +174,81 @@ public class ObjectUnit extends EnemyUnit {
                 i4 = 0;
                 break;
         }
-        if (type != 28 && type != 29 && type != 32 && destroyEnableFlag == 0) {
-            int i5 = blockSize;
-            if (i5 == 0 || i5 == 1) {
-                st.page.shadowImage[0].drawAtPointOption(x, 27.0f + y, 33);
-            } else if (i5 == 2 || i5 == 3 || i5 == 4 || i5 == 5) {
-                st.page.shadowImage[1].drawAtPointOption(x, y + 27.0f, 33);
-            }
-        }
-        float f4 = i4 + x;
-        float f5 = y + 22.0f + i3;
-        st.map.backObjectImage[type].drawAtPointOption(f4, f5, 33);
+        if (type != 28 && type != 29 && type != 32 && destroyEnableFlag == 0)
+            if (blockSize <= 1) {
+                st.page.shadowImage[0].drawAtPointOption(x, 27 + y, 33);
+            } else
+                st.page.shadowImage[1].drawAtPointOption(x, y + 27, 33);
+        float bx = i4 + x;
+        float by = y + 22 + i3;
+        st.map.backObjectImage[type].drawAtPointOption(bx, by, 33);
         if (st.selectedTarget == this) {
             st.page.targetImage.drawAtPointOption(x, y, 9);
-            int i6 = blockSize;
-            int i7 = i6 != 0 ? (i6 == 1 || i6 == 2 || i6 == 3 || i6 == 4 || i6 == 5) ? -67 : -45 : -22;
-            if (unitMaxHP > 0) {
+            int i7 = blockSize != 0 ? blockSize <= 5 ? -67 : -45 : -22;
+            if (unitMaxHP > 0)
                 drawHealthBar(x, y + i7, unitMaxHP, unitHP);
-            }
         }
         if (st.waveManager.monsterOpenTime > 0) {
+            int ind = (st.waveManager.monsterOpenTime / 2) % 2;
             if (type == 28) {
-                int i8 = (st.waveManager.monsterOpenTime / 2) % 2;
-                if (i8 == 0) {
-                    gatefireImage[8].drawAtPointOption(f4 - 43.0f, f5 - 83.0f, 18);
-                } else if (i8 == 1) {
-                    gatefireImage[9].drawAtPointOption(f4 - 47.0f, f5 - 87.0f, 18);
-                }
+                int py = 43 + (ind * 4);
+                st.page.gatefireImage[8 + ind].drawAtPointOption(bx - py, by - 40 - py, 18);
             } else if (type == 29) {
-                int i9 = (st.waveManager.monsterOpenTime / 2) % 2;
-                if (i9 == 0) {
-                    gatefireImage[4].drawAtPointOption(f4 - 35.0f, f5 - 98.0f, 18);
-                } else if (i9 == 1) {
-                    gatefireImage[5].drawAtPointOption(f4 - 40.0f, f5 - 103.0f, 18);
-                }
-            } else if (type == 32) {
-                int i10 = (st.waveManager.monsterOpenTime / 2) % 2;
-                if (i10 == 0) {
-                    gatefireImage[6].drawAtPointOption(7.0f + f4, f5 - 98.0f, 18);
-                } else if (i10 == 1) {
-                    gatefireImage[7].drawAtPointOption(f4 + 2.0f, f5 - 103.0f, 18);
-                }
-            }
+                int py = 35 + (ind * 5);
+                st.page.gatefireImage[4 + ind].drawAtPointOption(bx - py, by - 63 - py, 18);
+            } else if (type == 32)
+                st.page.gatefireImage[6 + ind].drawAtPointOption((ind * 5) + 2 + bx, by - 98 - (ind * 5), 18);
         }
         if (type == 30) {
-            int i11 = GameThread.gameTimeCount % 4;
-            if (i11 == 0) {
-                float f6 = f5 - 40.0f;
-                gatefireImage[0].drawAtPointOption(f4 - 51.0f, f6, 18);
-                gatefireImage[0].drawAtPointOption(f4 + 30.0f, f6, 18);
-                return;
-            }
-            if (i11 == 1) {
-                float f7 = f5 - 42.0f;
-                gatefireImage[1].drawAtPointOption(f4 - 52.0f, f7, 18);
-                gatefireImage[1].drawAtPointOption(f4 + 29.0f, f7, 18);
-                return;
-            } else if (i11 == 2) {
-                float f8 = f5 - 40.0f;
-                gatefireImage[2].drawAtPointOption(f4 - 53.0f, f8, 18);
-                gatefireImage[2].drawAtPointOption(f4 + 28.0f, f8, 18);
-                return;
+            int time = GameThread.gameTimeCount % 4;
+            if (time == 0) {
+                float fy = by - 40;
+                st.page.gatefireImage[0].drawAtPointOption(bx - 51, fy, 18);
+                st.page.gatefireImage[0].drawAtPointOption(bx + 30, fy, 18);
+            } else if (time == 1) {
+                float fy = by - 42;
+                st.page.gatefireImage[1].drawAtPointOption(bx - 52, fy, 18);
+                st.page.gatefireImage[1].drawAtPointOption(bx + 29, fy, 18);
+            } else if (time == 2) {
+                float fy = by - 40;
+                st.page.gatefireImage[2].drawAtPointOption(bx - 53, fy, 18);
+                st.page.gatefireImage[2].drawAtPointOption(bx + 28, fy, 18);
             } else {
-                if (i11 != 3) {
-                    return;
-                }
-                float f9 = f5 - 39.0f;
-                gatefireImage[3].drawAtPointOption(f4 - 52.0f, f9, 18);
-                gatefireImage[3].drawAtPointOption(f4 + 29.0f, f9, 18);
-                return;
+                float fy = by - 39;
+                st.page.gatefireImage[3].drawAtPointOption(bx - 52, fy, 18);
+                st.page.gatefireImage[3].drawAtPointOption(bx + 29, fy, 18);
             }
-        }
-        if (type == 31) {
-            int i12 = GameThread.gameTimeCount % 4;
-            if (i12 == 0) {
-                gatefireImage[0].drawAtPointOption(f4 - 20.0f, f5 - 45.0f, 18);
-                gatefireImage[0].drawAtPointOption(f4 - 33.0f, f5 - 128.0f, 18);
-                return;
-            }
-            if (i12 == 1) {
-                gatefireImage[1].drawAtPointOption(f4 - 21.0f, f5 - 47.0f, 18);
-                gatefireImage[1].drawAtPointOption(f4 - 34.0f, f5 - 130.0f, 18);
-                return;
-            } else if (i12 == 2) {
-                gatefireImage[2].drawAtPointOption(f4 - 22.0f, f5 - 45.0f, 18);
-                gatefireImage[2].drawAtPointOption(f4 - 35.0f, f5 - 128.0f, 18);
-                return;
+        } else if (type == 31) {
+            int time = GameThread.gameTimeCount % 4;
+            if (time == 0) {
+                st.page.gatefireImage[0].drawAtPointOption(bx - 20, by - 45, 18);
+                st.page.gatefireImage[0].drawAtPointOption(bx - 33, by - 128, 18);
+            } else if (time == 1) {
+                st.page.gatefireImage[1].drawAtPointOption(bx - 21, by - 47, 18);
+                st.page.gatefireImage[1].drawAtPointOption(bx - 34, by - 130, 18);
+            } else if (time == 2) {
+                st.page.gatefireImage[2].drawAtPointOption(bx - 22, by - 45, 18);
+                st.page.gatefireImage[2].drawAtPointOption(bx - 35, by - 128, 18);
             } else {
-                if (i12 != 3) {
-                    return;
-                }
-                gatefireImage[3].drawAtPointOption(f4 - 21.0f, f5 - 44.0f, 18);
-                gatefireImage[3].drawAtPointOption(f4 - 34.0f, f5 - 127.0f, 18);
-                return;
+                st.page.gatefireImage[3].drawAtPointOption(bx - 21, by - 44, 18);
+                st.page.gatefireImage[3].drawAtPointOption(bx - 34, by - 127, 18);
             }
         }
-        if (type != 33) {
+        if (type != 33)
             return;
-        }
-        int i13 = GameThread.gameTimeCount % 4;
-        if (i13 == 0) {
-            gatefireImage[0].drawAtPointOption(f4 + 2.0f, f5 - 45.0f, 18);
-            gatefireImage[0].drawAtPointOption(f4 + 15.0f, f5 - 128.0f, 18);
-            return;
-        }
-        if (i13 == 1) {
-            gatefireImage[1].drawAtPointOption(f4 + 1.0f, f5 - 47.0f, 18);
-            gatefireImage[1].drawAtPointOption(f4 + 14.0f, f5 - 130.0f, 18);
-        } else if (i13 == 2) {
-            gatefireImage[2].drawAtPointOption(f4, f5 - 45.0f, 18);
-            gatefireImage[2].drawAtPointOption(f4 + DRAW_SCALE_X_SMALL_DEGREE, f5 - 128.0f, 18);
+        int time = GameThread.gameTimeCount % 4;
+        if (time == 0) {
+            st.page.gatefireImage[0].drawAtPointOption(bx + 2, by - 45, 18);
+            st.page.gatefireImage[0].drawAtPointOption(bx + 15, by - 128, 18);
+        } else if (time == 1) {
+            st.page.gatefireImage[1].drawAtPointOption(bx + 1, by - 47, 18);
+            st.page.gatefireImage[1].drawAtPointOption(bx + 14, by - 130, 18);
+        } else if (time == 2) {
+            st.page.gatefireImage[2].drawAtPointOption(bx, by - 45, 18);
+            st.page.gatefireImage[2].drawAtPointOption(bx + 13, by - 128, 18);
         } else {
-            if (i13 != 3) {
-                return;
-            }
-            gatefireImage[3].drawAtPointOption(f4 + 1.0f, f5 - 44.0f, 18);
-            gatefireImage[3].drawAtPointOption(f4 + 14.0f, f5 - 127.0f, 18);
+            st.page.gatefireImage[3].drawAtPointOption(bx + 1, by - 44, 18);
+            st.page.gatefireImage[3].drawAtPointOption(bx + 14, by - 127, 18);
         }
     }
 }

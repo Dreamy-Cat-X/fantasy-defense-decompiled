@@ -103,13 +103,14 @@ public class DataStage {
             au.updateArrowUnit();
     }
 
-    public int addSpecialArrowUnit(int type, int eX, int eY, int moveNum) {
-        ArrowUnit arr = new ArrowUnit(this, type, eX, eY, moveNum);
-        return 1488;
+    public ArrowUnit addSpecialArrowUnit(int type, HeroUnit hero, int eX, int eY, int moveNum) {
+        ArrowUnit arr = new ArrowUnit(type, hero, eX, eY, moveNum);
+        arrowUnit.add(arr);
+        return arr;
     }
 
     public void clearSpecialArrowUnit() {
-        arrowUnit.removeIf(a -> a.type >= 15 && a.type <= 35);
+        arrowUnit.removeIf(a -> a.type >= 15 && a.type <= 36);
     }
 
     public void setReverseSpecialIce() {

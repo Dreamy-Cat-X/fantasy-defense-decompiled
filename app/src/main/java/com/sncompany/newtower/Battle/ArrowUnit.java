@@ -4,6 +4,7 @@ import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
+import com.sncompany.newtower.Pages.StagePage;
 import com.sncompany.newtower.Texture2D;
 
 import java.util.LinkedList;
@@ -40,11 +41,8 @@ public class ArrowUnit extends StageEntity {
     public int endY;
     public int moveCount = 1;
     public int moveMaxCount = 5;
-    public int moveRate;
     public float moveRotateDegree;
     public int moveSpeed;
-
-    public int shootNumber; //Index of the entity shooting the arrow. replace with entity itself
 
     public int startX;
     public int startY;
@@ -53,9 +51,6 @@ public class ArrowUnit extends StageEntity {
     public final EnemyUnit target;
     private final DataStage st;
 
-    public int targetNumber; //Index of the entity to be hit by the arrow. replace with entity itself
-
-    public int targetType;
     public static final int[] SPLASH_RANGE_DEGREE_DISTANCE = {6074, 2278, 1139, 0};
     public static final int[] ARROW_MOVE_UP_HEIGHT = {0, -20, -45, -45, -20};
     public final int[][] moveHistory = new int[5][2];
@@ -63,13 +58,13 @@ public class ArrowUnit extends StageEntity {
 
     /**
      * Special Arrow constructor
-     * @param sta
-     * @param tType
+     * @param tType arrow type
+     * @param hero user of the special skill
      */
-    public ArrowUnit(DataStage sta, int tType, int eX, int eY, int moveNum) {
-        st = sta;
+    public ArrowUnit(int tType, HeroUnit hero, int eX, int eY, int moveNum) {
+        st = hero.st;
         type = tType;
-        shooter = null;
+        shooter = hero;
         target = null;
         startX = endX = eX;
         startY = endY = eY;
@@ -99,6 +94,14 @@ public class ArrowUnit extends StageEntity {
                 moveSpeed += 250;
             startX -= moveNum * moveSpeed;
         }
+
+        StagePage stp = (StagePage)st.page;
+        if (type <= 18)
+            drawTexture = stp.specialSwordImage;
+        else if (type <= 32)
+            drawTexture = stp.specialIceImage;
+        else
+            drawTexture = stp.specialArrowImage;
     }
 
     public ArrowUnit(DataStage sta, TowerUnit shtr, EnemyUnit targ, int tType) {
@@ -116,6 +119,27 @@ public class ArrowUnit extends StageEntity {
                 moveHistory[h][0] = startX;
                 moveHistory[h][1] = startY;
             }
+        }
+
+        StagePage stp = (StagePage)st.page;
+        switch (type) {
+            case 0:
+                drawTexture = stp.arrowImage4;
+                break;
+            case 2:
+                drawTexture = stp.arrowImage2;
+                break;
+            case 3:
+                drawTexture = stp.arrowImage3;
+                break;
+            case 5:
+                drawTexture = stp.arrowImage1;
+                break;
+            case 12:
+                drawTexture = stp.arrowImage9;
+                break;
+            default: //This also includes case 10
+                drawTexture = stp.arrowImage0;
         }
     }
 
@@ -221,194 +245,51 @@ public class ArrowUnit extends StageEntity {
     }
 
     public void drawArrowUnit() {
-        Texture2D[] arrowTexture;
-        ArrowUnit arrow = st.arrowUnit.get(i);
-        int i3 = arrow.type;
-        float f = arrow.target.posX;
-        int i2 = arrow.target.posY;
-
-        if (i3 == 0) {
-            arrowTexture = arrowImage4;
-        } else if (i3 == 5) {
-            arrowTexture = arrowImage1;
-        } else if (i3 == 10) {
-            arrowTexture = arrowImage0;
-        } else if (i3 != 12) {
-            if (i3 != 2) {
-                if (i3 == 3) {
-                    arrowTexture = arrowImage3;
-                } else {
-                    switch (i3) {
-                        case 15:
-                        case 16:
-                        case 17:
-                        case 18:
-                            arrowTexture = specialSwordImage;
-                            break;
-                        case 19:
-                        case 20:
-                        case 21:
-                        case 22:
-                        case 23:
-                        case 24:
-                        case 25:
-                        case 26:
-                        case 27:
-                        case 28:
-                        case 29:
-                        case 30:
-                        case 31:
-                        case 32:
-                            arrowTexture = specialIceImage;
-                            break;
-                        case 33:
-                        case 34:
-                        case 35:
-                            arrowTexture = specialArrowImage;
-                            break;
-                        case 36:
-                            break;
-                        default:
-                            arrowTexture = arrowImage0;
-                            break;
-                    }
-                }
+        if (target != null) {
+            float tX = target.posX;
+            int tY = target.posY;
+            switch (type) {
+                case 0:
+                    for (int i = 4; i >= 0; i--)
+                        if (i + 1 < drawTexture.length)
+                            drawTexture[i + 1].drawAtPointOption((moveHistory[i][0] / 50) + 62, (float) (((moveHistory[i][1] / 50) + 30) - 15), 9);
+                    drawTexture[0].drawAtPointOption((startX / 50) + 62, (float) (((startY / 50) + 30) - 15), 9);
+                    break;
+                case 5:
+                    drawTexture[0].drawLineWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
+                    drawTexture[1].drawArrowWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
+                case 2, 3, 12:
+                    drawTexture[3].drawAtPointOption((startX / 50) + 62, (float) (((startY / 50) + 30) - 15), 9);
+                    break;
+                default:
+                    drawTexture[0].drawLineWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
+                    break;
             }
-            arrowTexture = arrowImage2;
+        } else if (type <= 18) {
+            drawTexture[type - 15].drawAtPointOption((startX / 50f) + 62, (float) (((startY / 50) + 30) - 15), 9);
+        } else if (type <= 32) {
+            if (moveCount >= 0) {
+                drawTexture[(type + 3) - 19].drawAtPointOption((startX / 50) + 62, (startY / 50) + 30, 9);
+            } else if (moveCount > -10) {
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.setAlpha((moveCount * (-0.05f)) + 0.5f);
+                drawTexture[(type + 3) - 19].drawAtPointOptionSize((startX / 50) + 62, (startY / 50) + 30, 9, 1f - (moveCount * 0.5f));
+                Texture2D.setAlpha(1);
+            }
         } else {
-            arrowTexture = arrowImage9;
-        }
-        if (i3 != 0) {
-            if (i3 != 5) {
-                if (i3 == 10) {
-                    arrowTexture[0].drawLineWithImage((arrow.shooter.posX / 50f) + 62, (float) (((arrow.shooter.posY / 50) + 30) - 15), (f - arrow.shooter.posX) / 50, ((float) arrow.target.posY - arrow.shooter.posY) / 50, (arrow.moveCount * 1f) / arrow.moveMaxCount);
-                    return;
-                }
-                if (i3 != 12 && i3 != 2 && i3 != 3) {
-                    switch (i3) {
-                        case 15:
-                            arrowTexture[0].drawAtPointOption((arrow.startX / 50f) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
-                            return;
-                        case 16:
-                            arrowTexture[1].drawAtPointOption((arrow.startX / 50f) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
-                            return;
-                        case 17:
-                            arrowTexture[2].drawAtPointOption((arrow.startX / 50f) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
-                            break;
-                        case 18:
-                            break;
-                        case 19:
-                        case 20:
-                        case 21:
-                        case 22:
-                        case 23:
-                        case 24:
-                        case 25:
-                        case 26:
-                        case 27:
-                        case 28:
-                        case 29:
-                        case 30:
-                        case 31:
-                        case 32:
-                            if (arrow.moveCount >= 0) {
-                                arrowTexture[(i3 + 3) - 19].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 9);
-                                return;
-                            } else {
-                                if (arrow.moveCount > -10) {
-                                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                                    Texture2D.gl.glColor4f((arrow.moveCount * (-0.05f)) + 0.5f, (arrow.moveCount * (-0.05f)) + 0.5f, (arrow.moveCount * (-0.05f)) + 0.5f, (arrow.moveCount * (-0.05f)) + 0.5f);
-                                    arrowTexture[(i3 + 3) - 19].drawAtPointOptionSize((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 9, 1.0f - (arrow.moveCount * 0.5f));
-                                    Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                                    return;
-                                }
-                                return;
-                            }
-                        case 33:
-                            if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
-                                int i4 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
-                                if (i4 == 0) {
-                                    arrowTexture[6].drawAtPointOption((arrow.startX / 50) + 57, (arrow.startY / 50) + 54, 33);
-                                    return;
-                                } else {
-                                    if (i4 != 1) {
-                                        return;
-                                    }
-                                    arrowTexture[7].drawAtPointOption((arrow.startX / 50) + 57, (arrow.startY / 50) + 30, 33);
-                                    return;
-                                }
-                            }
-                            if (arrow.moveCount >= 0) {
-                                arrowTexture[5].drawAtPointOption((arrow.startX / 50) + 57, (arrow.startY / 50) + 30, 33);
-                                arrowTexture[12].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
-                                return;
-                            } else {
-                                arrowTexture[4].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
-                                return;
-                            }
-                        case 34:
-                            if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
-                                int i5 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
-                                if (i5 == 0) {
-                                    arrowTexture[2].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 54, 33);
-                                    return;
-                                } else {
-                                    if (i5 != 1) {
-                                        return;
-                                    }
-                                    arrowTexture[3].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
-                                    return;
-                                }
-                            }
-                            if (arrow.moveCount >= 0) {
-                                arrowTexture[1].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
-                                arrowTexture[12].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
-                                return;
-                            } else {
-                                arrowTexture[0].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
-                                return;
-                            }
-                        case 35:
-                            if (GameThread.specialAttackFrameCount >= 135 && GameThread.specialAttackFrameCount < 165) {
-                                int i6 = ((GameThread.specialAttackFrameCount - 135) / 5) % 2;
-                                if (i6 == 0) {
-                                    arrowTexture[10].drawAtPointOption((arrow.startX / 50) + 66, (arrow.startY / 50) + 54, 33);
-                                    return;
-                                } else {
-                                    if (i6 != 1) {
-                                        return;
-                                    }
-                                    arrowTexture[11].drawAtPointOption((arrow.startX / 50) + 67, (arrow.startY / 50) + 30, 33);
-                                    return;
-                                }
-                            }
-                            if (arrow.moveCount >= 0) {
-                                arrowTexture[9].drawAtPointOption((arrow.startX / 50) + 67, (arrow.startY / 50) + 30, 33);
-                                arrowTexture[12].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
-                                return;
-                            } else {
-                                arrowTexture[8].drawAtPointOption((arrow.startX / 50) + 62, (arrow.startY / 50) + 30, 33);
-                                return;
-                            }
-                        case 36:
-                            break;
-                        default:
-                            arrowTexture[0].drawLineWithImage((GameThread.towerUnit[arrow.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[arrow.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[arrow.shootNumber].posX) / 50.0f, ((float) i2 - GameThread.towerUnit[arrow.shootNumber].posY) / 50.0f, (arrow.moveCount * 1.0f) / arrow.moveMaxCount);
-                            return;
-                    }
-                    arrowTexture[3].drawAtPointOption((arrow.startX / 50) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
-                    return;
-                }
+            int rInd = type - 33, sum = 4 * (rInd <= 1 ? 1 - rInd : rInd);
+            HeroUnit sHero = (HeroUnit)shooter;
+            if (sHero.specialAttackFrameCount >= 135 && sHero.specialAttackFrameCount < 165) {
+                int cN = ((sHero.specialAttackFrameCount - 135) / 5) % 2;
+                int sY = 57 + (rInd * 5) - (rInd == 2 ? 1 - cN : 0);
+                drawTexture[sum + 2 + cN].drawAtPointOption((startX / 50) + sY, (startY / 50) + 54 - (24 * cN), 33);
+                return;
             }
-            arrowTexture[0].drawLineWithImage((GameThread.towerUnit[arrow.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[arrow.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[arrow.shootNumber].posX) / 50.0f, ((float) i2 - GameThread.towerUnit[arrow.shootNumber].posY) / 50.0f, (arrow.moveCount * 1.0f) / arrow.moveMaxCount);
-            arrowTexture[1].drawArrowWithImage((GameThread.towerUnit[arrow.shootNumber].posX / 50) + 62, (float) (((GameThread.towerUnit[arrow.shootNumber].posY / 50) + 30) - 15), (f - GameThread.towerUnit[arrow.shootNumber].posX) / 50.0f, ((float) i2 - GameThread.towerUnit[arrow.shootNumber].posY) / 50.0f, (arrow.moveCount * 1.0f) / arrow.moveMaxCount);
-            return;
+            if (moveCount >= 0) {
+                drawTexture[sum + 1].drawAtPointOption((startX / 50) + 57 + (rInd * 5), (startY / 50) + 30, 33);
+                drawTexture[12].drawAtPointOption((startX / 50) + 62, (startY / 50) + 30, 33);
+            } else
+                drawTexture[sum].drawAtPointOption((startX / 50) + 62, (startY / 50) + 30, 33);
         }
-        for (int i7 = 4; i7 >= 0; i7--) {
-            int i8 = i7 + 1;
-            if (i8 < arrowTexture.length)
-                arrowTexture[i8].drawAtPointOption((arrow.moveHistory[i7][0] / 50) + 62, (float) (((arrow.moveHistory[i7][1] / 50) + 30) - 15), 9);
-        }
-        arrowTexture[0].drawAtPointOption((arrow.startX / 50) + 62, (float) (((arrow.startY / 50) + 30) - 15), 9);
     }
 }

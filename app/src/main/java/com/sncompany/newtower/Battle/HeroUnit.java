@@ -15,6 +15,8 @@ import com.sncompany.newtower.Pages.StagePage;
 import com.sncompany.newtower.Pages.stage.StageBase;
 import com.sncompany.newtower.Texture2D;
 
+import java.lang.reflect.Array;
+
 public class HeroUnit extends TowerUnit {
 
     public static final int SPECIAL_ATTACK_ARROW_ANIM_START_FRAME = 135;
@@ -65,13 +67,14 @@ public class HeroUnit extends TowerUnit {
     public static final int SPECIAL_ATTACK_ICE_WHITE_START_FRAME = 150;
     private static final int[] hitPoint = {150, 195, 170};
     public int specialAttackFrameCount = -1;
-    public int specialAttCount;
+    public int specialAttCount = 0;
     public int specialAttPower;
     public int specialCooltime = 0;
     public int specialMana;
     public int specialMaxCooltime;
     public int specialShowCount = 0;
     public int specialType;
+    public final int[][] specialDataValue = new int[20][4];
 
     public static String getUnlock(int h) {
         return "Clear Stage " + (h == 0 ? 1 : h == 1 ? 10 : 25);
@@ -79,6 +82,10 @@ public class HeroUnit extends TowerUnit {
 
     public HeroUnit(DataStage s, int tType, int bX, int bY) {
         super(s, tType, bX, bY);
+    }
+
+    public HeroUnit(TowerUnit twu, int tType, int lvl) {
+        super(twu, tType, lvl);
     }
 
     private byte[][] getEquipment() {
@@ -227,6 +234,7 @@ public class HeroUnit extends TowerUnit {
 
             if (specialAttackFrameCount >= hitPoint[type]) {
                 specialAttackFrameCount = -1;
+                st.clearSpecialArrowUnit();
                 hitSpecialAttack();
                 specialCooltime = specialMaxCooltime;
                 st.selectedUnit = null;
@@ -266,7 +274,7 @@ public class HeroUnit extends TowerUnit {
         switch (type) {
             case 0:
                 for (int i4 = 0; i4 < 60; i4++)
-                    st.addSpecialArrowUnit(NewTower.getRandom(4) + 15, 33750, NewTower.getRandom(450) * 50, -(i4 + 65));
+                    st.addSpecialArrowUnit(NewTower.getRandom(4) + 15, this, 33750, NewTower.getRandom(450) * 50, -(i4 + 65));
 
                 for (int i5 = 0; i5 < 20; i5++) {
                     int i6 = i5 % 3;
@@ -277,20 +285,19 @@ public class HeroUnit extends TowerUnit {
                         specialDataValue[i5][3] = 100;
                     } else if (i6 == 1) {
                         specialDataValue[i5][3] = 160;
-                    } else {
+                    } else
                         specialDataValue[i5][3] = 200;
-                    }
                 }
-                return;
+                break;
             case 1:
                 while (arrowC < 75) {
-                    st.addSpecialArrowUnit(NewTower.getRandom(3) + 33, NewTower.getRandom(675) * 50, NewTower.getRandom(450) * 50, -(arrowC + 60));
+                    st.addSpecialArrowUnit(NewTower.getRandom(3) + 33, this, NewTower.getRandom(675) * 50, NewTower.getRandom(450) * 50, -(arrowC + 60));
                     arrowC++;
                 }
-                return;
+                break;
             case 2:
                 while (arrowC < 60) {
-                    st.addSpecialArrowUnit(NewTower.getRandom(14) + 19, (NewTower.getRandom(337) + GameRenderer.GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS) * 50, (NewTower.getRandom(225) + 112) * 50, -(arrowC + 65));
+                    st.addSpecialArrowUnit(NewTower.getRandom(14) + 19, this, (NewTower.getRandom(337) + GameRenderer.GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS) * 50, (NewTower.getRandom(225) + 112) * 50, -(arrowC + 65));
                     arrowC++;
                 }
                 break;
@@ -343,61 +350,6 @@ public class HeroUnit extends TowerUnit {
             }
         if (i >= 5)
             Config.awardValues[DataAward.AWARD_Swords_Banquet + type] = true;
-    }
-
-    //HitSpecialAttack replaces all 3 functions below. Kept for hidden usages
-    public void hitSpecialBladeAttack() {
-        if (st.selectedUnit != this)
-            return;
-
-        int i = 0;
-        for (MonsterUnit mon : st.monsterUnit)
-            if (!mon.dead()) {
-                GameThread.playSound(1);
-                st.addEffectUnit(15, mon.posX, mon.posY);
-                for (int i3 = 0; i3 < specialAttCount; i3++)
-                    if (hitSpecialAttackUnit(mon))
-                        i++;
-            }
-        if (i >= 5)
-            Config.awardValues[DataAward.AWARD_Swords_Banquet] = true;
-    }
-
-    public void hitSpecialArrowAttack() {
-        if (st.selectedUnit != this)
-            return;
-
-        int i = 0;
-        for (MonsterUnit mon : st.monsterUnit)
-            if (!mon.dead()) {
-                GameThread.playSound(4);
-                st.addEffectUnit(15, mon.posX, mon.posY);
-                for (int i3 = 0; i3 < specialAttCount; i3++)
-                    if (hitSpecialAttackUnit(mon))
-                        i++;
-                mon.dotHolyDamage = getSpecialHitDamage(mon) / 20;
-                mon.dotHolyCount = DataCharacter.charData[17][8];
-            }
-        if (i >= 5)
-            Config.awardValues[DataAward.AWARD_Rain_Of_Death] = true;
-    }
-
-    public void hitSpecialIceAttack() {
-        if (st.selectedUnit != this)
-            return;
-
-        int i = 0;
-        for (MonsterUnit mon : st.monsterUnit)
-            if (!mon.dead()) {
-                GameThread.playSound(7);
-                st.addEffectUnit(15, mon.posX, mon.posY);
-                for (int i3 = 0; i3 < specialAttCount; i3++)
-                    if (hitSpecialAttackUnit(mon))
-                        i++;
-                mon.slowRate = DataHero.heroData[i][10];
-            }
-        if (i >= 5)
-            Config.awardValues[DataAward.AWARD_Frozen_Heart] = true;
     }
 
     public void draw() {
