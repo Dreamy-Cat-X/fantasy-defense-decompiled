@@ -2,6 +2,7 @@ package com.sncompany.newtower.Pages;
 
 import java.util.function.Consumer;
 
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
@@ -48,9 +49,9 @@ public class ListPage extends TPage { //This class' parent will be a MenuPage al
         if (init) {
             parent.paint(gl10, false);
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(1.0f, 412.0f, 68.0f, 58.0f));
-            TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(300.0f, 158.0f, 199.0f, 65.0f));
-            TouchManager.addTouchRectListData(2, GameRenderer.CGRectMake(300.0f, 258.0f, 199.0f, 65.0f));
+            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(1.0f, 412.0f, 68.0f, 58.0f));
+            TouchManager.addTouchRectListData(1, CGRect.CGRectMake(300.0f, 158.0f, 199.0f, 65.0f));
+            TouchManager.addTouchRectListData(2, CGRect.CGRectMake(300.0f, 258.0f, 199.0f, 65.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 3;
             i = TouchManager.checkTouchListStatus();
 

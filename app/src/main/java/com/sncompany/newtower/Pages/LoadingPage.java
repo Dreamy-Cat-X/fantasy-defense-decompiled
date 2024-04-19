@@ -2,6 +2,7 @@ package com.sncompany.newtower.Pages;
 
 import java.util.function.Consumer;
 
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
@@ -135,13 +136,13 @@ public class LoadingPage extends TPage {
             for (int i = 0; i < 4; i++) {
                 int uin = uiname + i;
                 int px = (GameRenderer.SCRHEIGHT_SMALL / 4) * i;
-                uiCharFaceImage[uin].drawAtPointOptionGuide(loadingUnitAdjustPos[uin] + px, 328.0f, 34, GameRenderer.CGRectMake(px, 0.0f, 200.0f, 328.0f));
+                uiCharFaceImage[uin].drawAtPointOptionGuide(loadingUnitAdjustPos[uin] + px, 328.0f, 34, CGRect.CGRectMake(px, 0.0f, 200.0f, 328.0f));
                 uiCharNameImage[uin].drawAtPointOption(px + 100, 335.0f, 17);
             }
         }
         uiLoadingImage[0].drawAtPointOption(7.0f, 428.0f, 18);
         uiLoadingImage[1].drawAtPointOption(10.0f, 460.0f, 18);
-        uiLoadingImage[2].drawAtPointOptionGuide(10.0f, 460.0f, 18, GameRenderer.CGRectMake(10.0f, 460.0f, prog * 780, 10.0f));
+        uiLoadingImage[2].drawAtPointOptionGuide(10.0f, 460.0f, 18, CGRect.CGRectMake(10.0f, 460.0f, prog * 780, 10.0f));
         GameRenderer.setFontColor(-1);
         GameRenderer.setFontSize(17);
         String[] split = TIP_TEXT[loadTipNumber].split("_");

@@ -6,9 +6,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.util.Log;
 
-import com.sncompany.newtower.DataClasses.CGPoint;
 import com.sncompany.newtower.DataClasses.CGRect;
-import com.sncompany.newtower.DataClasses.DataAnim;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -30,34 +28,11 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static int SCRHEIGHT_SMALL = 0;
     public static int SCRWIDTH = 0;
     public static int SCRWIDTH_SMALL = 0;
-    public static CGPoint _CGPoint = null;
-    public static CGRect _CGRect = null;
-    public static Texture2D[] arrowImage0 = null;
-    public static Texture2D[] arrowImage1 = null;
-    public static Texture2D[] arrowImage2 = null;
-    public static Texture2D[] arrowImage3 = null;
-    public static Texture2D[] arrowImage4 = null;
-    public static Texture2D[] arrowImage9 = null;
     public static int darkViewCount = 0;
     public static Paint drawFont = null;
     public static Texture2D drawStringBuffer = null;
-    public static Texture2D[] effectImage_500 = null;
-    public static Texture2D[] effectImage_502 = null;
-    public static Texture2D[] effectImage_503 = null;
-    public static Texture2D[] effectImage_504 = null;
-    public static Texture2D[] effectImage_505 = null;
-    public static Texture2D[] effectImage_509 = null;
-    public static Texture2D[] effectImage_510 = null;
-    public static Texture2D[] effectImage_512 = null;
-    public static Texture2D[] effectImage_513 = null;
-    public static Texture2D[] effectImage_514 = null;
-    public static Texture2D[] effectImage_532 = null;
-    public static Texture2D[] effectImage_533 = null;
-    public static Texture2D[] effectImage_534 = null;
-    public static Texture2D[] effectImage_535 = null;
     public static int fontColor = 0;
     public static int fontSize = 0;
-    public static CircleItemDraw inventoryItemListDraw = null;
     public static boolean isPaused = false;
     public static long lastCheckTime;
     public static String lastFontName;
@@ -92,12 +67,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int[] uiStageResource = {R.drawable.ui_stage_leftwindow, R.drawable.ui_stage_rightwindow, R.drawable.ui_stage_effect1, R.drawable.ui_stage_effect2, R.drawable.ui_stage_effect3, R.drawable.ui_stage_effect4, R.drawable.ui_stage_effect5, R.drawable.ui_stage_back_off, R.drawable.ui_stage_back_on, R.drawable.ui_stage_chapterleft_off, R.drawable.ui_stage_chapterleft_on, R.drawable.ui_stage_chapterright_off, R.drawable.ui_stage_chapterright_on, R.drawable.ui_stage_stageleft_off, R.drawable.ui_stage_stageleft_on, R.drawable.ui_stage_stageright_off, R.drawable.ui_stage_stageright_on, R.drawable.ui_stage_chapter, R.drawable.ui_stage_1, R.drawable.ui_stage_2, R.drawable.ui_stage_3, R.drawable.ui_stage_4, R.drawable.ui_stage_5, R.drawable.ui_stage_name1, R.drawable.ui_stage_name2, R.drawable.ui_stage_name3, R.drawable.ui_stage_name4, R.drawable.ui_stage_name5, R.drawable.ui_stage_wave, R.drawable.ui_stage_highscore, R.drawable.ui_stage_stagebox, R.drawable.ui_stage_stageselect, R.drawable.ui_stage_engage_off, R.drawable.ui_stage_engage_on, R.drawable.ui_stage_mapline, R.drawable.ui_stage_normal_off, R.drawable.ui_stage_normal_on, R.drawable.ui_stage_infinity_off, R.drawable.ui_stage_infinity_on, R.drawable.ui_stage_gatebreaker_off, R.drawable.ui_stage_gatebreaker_on, R.drawable.ui_stage_infinity_noselect, R.drawable.ui_stage_gatebreaker_noselect, R.drawable.ui_stage_new, R.drawable.ui_stage_stage, R.drawable.ui_stage_lock, R.drawable.ui_stage_perfect};
     public static final int[] uiStageBossResource = {R.drawable.ui_stage_boss1, R.drawable.ui_stage_boss2, R.drawable.ui_stage_boss3, R.drawable.ui_stage_boss4, R.drawable.ui_stage_boss5};
     public static final int[] uiThemeclearResource = {R.drawable.ui_themeclear_background, R.drawable.ui_themeclear_map1, R.drawable.ui_themeclear_map2, R.drawable.ui_themeclear_icon, R.drawable.ui_themeclear_glow, R.drawable.ui_themeclear_arrow, R.drawable.ui_themeclear_iconblack};
-    public static final int[] arrowResource0 = {R.drawable.arrow_0_0};
-    public static final int[] arrowResource1 = {R.drawable.arrow_1_0, R.drawable.arrow_1_1};
-    public static final int[] arrowResource2 = {R.drawable.arrow_2_0, R.drawable.arrow_2_1};
-    public static final int[] arrowResource3 = {R.drawable.arrow_3_0, R.drawable.arrow_3_1};
-    public static final int[] arrowResource4 = {R.drawable.arrow_4_0, R.drawable.arrow_4_1, R.drawable.arrow_4_2, R.drawable.arrow_4_3, R.drawable.arrow_4_4, R.drawable.arrow_4_5};
-    public static final int[] arrowResource9 = {R.drawable.arrow_9_0, R.drawable.arrow_9_1};
 
     public GameRenderer(NewTower newTower2) {
         newTower = newTower2;
@@ -210,26 +179,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         drawFont.setTextSize(i);
     }
 
-    public static CGRect CGRectMake(float x, float y, float w, float h) {
-        if (_CGRect == null)
-            _CGRect = new CGRect();
-
-        _CGRect.originX = x;
-        _CGRect.originY = y;
-        _CGRect.sizeWidth = w;
-        _CGRect.sizeHeight = h;
-        return _CGRect;
-    }
-
-    public static CGPoint CGPointMake(float f, float f2) {
-        if (_CGPoint == null) {
-            _CGPoint = new CGPoint();
-        }
-        _CGPoint.x = f;
-        _CGPoint.y = f2;
-        return _CGPoint;
-    }
-
     private synchronized void drawFrame(GL10 gl10) {
         gl10.glClear(16384);
         gl10.glEnable(3042);
@@ -284,26 +233,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         uiThemeclearImage = makeTextureArray(uiThemeclearResource.length);
         uiStageImage = makeTextureArray(uiStageResource.length);
         uiStageBossImage = makeTextureArray(uiStageBossResource.length);
-        effectImage_500 = makeTextureArray(DataAnim.unitImageResource_500.length);
-        effectImage_502 = makeTextureArray(DataAnim.unitImageResource_502.length);
-        effectImage_503 = makeTextureArray(DataAnim.unitImageResource_503.length);
-        effectImage_504 = makeTextureArray(DataAnim.unitImageResource_504.length);
-        effectImage_505 = makeTextureArray(DataAnim.unitImageResource_505.length);
-        effectImage_509 = makeTextureArray(DataAnim.unitImageResource_509.length);
-        effectImage_510 = makeTextureArray(DataAnim.unitImageResource_510.length);
-        effectImage_533 = makeTextureArray(DataAnim.unitImageResource_533.length);
-        effectImage_534 = makeTextureArray(DataAnim.unitImageResource_534.length);
-        effectImage_512 = makeTextureArray(DataAnim.unitImageResource_512.length);
-        effectImage_513 = makeTextureArray(DataAnim.unitImageResource_513.length);
-        effectImage_514 = makeTextureArray(DataAnim.unitImageResource_514.length);
-        effectImage_532 = makeTextureArray(DataAnim.unitImageResource_532.length);
-        effectImage_535 = makeTextureArray(DataAnim.unitImageResource_535.length);
-        arrowImage0 = makeTextureArray(arrowResource0.length);
-        arrowImage1 = makeTextureArray(arrowResource1.length);
-        arrowImage2 = makeTextureArray(arrowResource2.length);
-        arrowImage3 = makeTextureArray(arrowResource3.length);
-        arrowImage4 = makeTextureArray(arrowResource4.length);
-        arrowImage9 = makeTextureArray(arrowResource9.length);
         return true;
     }
 
@@ -409,10 +338,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         int bX = bound - testboxCoord[1][2], cX = (bound - testboxCoord[2][2]) / 2;
         int dX = cX - testboxCoord[0][2], eX = cX + testboxCoord[2][2];
 
-        testboxImage.drawAtPointOptionClip(x + 0, y, 18, CGRectMake(testboxCoord[0][0], testboxCoord[0][1], testboxCoord[0][2], testboxCoord[0][3]));
-        testboxImage.drawAtPointOptionClip(x + bX, y, 18, CGRectMake(testboxCoord[1][0], testboxCoord[1][1], testboxCoord[1][2], testboxCoord[1][3]));
-        testboxImage.drawAtPointOptionClip(x + cX, y, 18, CGRectMake(testboxCoord[2][0], testboxCoord[2][1], testboxCoord[2][2], testboxCoord[2][3]));
-        testboxImage.drawAtPointOptionClipPixel(x + testboxCoord[0][2], y, 18, CGRectMake(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), dX, testboxCoord[3][3]);
-        testboxImage.drawAtPointOptionClipPixel(x + eX, y, 18, CGRectMake(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), bX - eX, testboxCoord[3][3]);
+        testboxImage.drawAtPointOptionClip(x + 0, y, 18, CGRect.CGRectMake(testboxCoord[0][0], testboxCoord[0][1], testboxCoord[0][2], testboxCoord[0][3]));
+        testboxImage.drawAtPointOptionClip(x + bX, y, 18, CGRect.CGRectMake(testboxCoord[1][0], testboxCoord[1][1], testboxCoord[1][2], testboxCoord[1][3]));
+        testboxImage.drawAtPointOptionClip(x + cX, y, 18, CGRect.CGRectMake(testboxCoord[2][0], testboxCoord[2][1], testboxCoord[2][2], testboxCoord[2][3]));
+        testboxImage.drawAtPointOptionClipPixel(x + testboxCoord[0][2], y, 18, CGRect.CGRectMake(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), dX, testboxCoord[3][3]);
+        testboxImage.drawAtPointOptionClipPixel(x + eX, y, 18, CGRect.CGRectMake(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), bX - eX, testboxCoord[3][3]);
     }
 }

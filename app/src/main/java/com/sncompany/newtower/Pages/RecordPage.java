@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import com.sncompany.newtower.CircleItemDraw;
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
@@ -88,11 +89,11 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
         int TLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(BACK, GameRenderer.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
-            TouchManager.addTouchRectListData(SCORE, GameRenderer.CGRectMake(30.0f, 90.0f, 40.0f, 155.0f));
-            TouchManager.addTouchRectListData(AWARD, GameRenderer.CGRectMake(30.0f, 245.0f, 40.0f, 155.0f));
-            TouchManager.addTouchRectListData(BODY, GameRenderer.CGRectMake(70.0f, 100.0f, 660.0f, 290.0f));
-            TouchManager.addTouchRectListData(SIDEBAR, GameRenderer.CGRectMake(730.0f, 90.0f, 40.0f, 310.0f));
+            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
+            TouchManager.addTouchRectListData(SCORE, CGRect.CGRectMake(30.0f, 90.0f, 40.0f, 155.0f));
+            TouchManager.addTouchRectListData(AWARD, CGRect.CGRectMake(30.0f, 245.0f, 40.0f, 155.0f));
+            TouchManager.addTouchRectListData(BODY, CGRect.CGRectMake(70.0f, 100.0f, 660.0f, 290.0f));
+            TouchManager.addTouchRectListData(SIDEBAR, CGRect.CGRectMake(730.0f, 90.0f, 40.0f, 310.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;
             TLS = TouchManager.checkTouchListStatus();
         }
@@ -110,26 +111,26 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     int BLA = i < rankListDraw.totalHalfBlockSize ? -rankListDraw.blockLengthArray[abs] : rankListDraw.blockLengthArray[abs];
                     int CorrectedBLA = BLA + rankListDraw.blockCorrectionPixel;
 
-                    GameRenderer.CGRectMake(70f, 100.0f, 660.0f, 290.0f);
-                    uiRecordImage[rec_scoreback].drawAtPointOptionGuide(70f, CorrectedBLA + 100, 18, GameRenderer._CGRect);
+                    CGRect rect = CGRect.CGRectMake(70f, 100.0f, 660.0f, 290.0f);
+                    uiRecordImage[rec_scoreback].drawAtPointOptionGuide(70f, CorrectedBLA + 100, 18, rect);
                     GameRenderer.setFontDoubleColor(-1, -16107151);
                     GameRenderer.setFontSize(27);
-                    GameRenderer.drawStringDoubleGuideM(String.format("Theme %d. %s", bit + 1, GameThread.chapterName[bit]), 79.0f, CorrectedBLA + 108, 18, GameRenderer._CGRect);
+                    GameRenderer.drawStringDoubleGuideM(String.format("Theme %d. %s", bit + 1, GameThread.chapterName[bit]), 79.0f, CorrectedBLA + 108, 18, rect);
                     GameRenderer.setFontSize(16);
                     GameRenderer.setFontDoubleColor(-84043, -8835532);
                     float y = CorrectedBLA + 142;
-                    GameRenderer.drawStringDoubleGuideM("Normal", 245.0f, y, 17, GameRenderer._CGRect);
+                    GameRenderer.drawStringDoubleGuideM("Normal", 245.0f, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-3223, -10065378);
-                    GameRenderer.drawStringDoubleGuideM("Infinite", 435.0f, y, 17, GameRenderer._CGRect);
+                    GameRenderer.drawStringDoubleGuideM("Infinite", 435.0f, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-10030377, -16031651);
-                    GameRenderer.drawStringDoubleGuideM("Destroy the Moon", 625.0f, y, 17, GameRenderer._CGRect);
+                    GameRenderer.drawStringDoubleGuideM("Destroy the Moon", 625.0f, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-1, -11106408);
                     for (int j = 0; j < 10; j++) {
                         int stInd = (bit * 10) + j;
                         float f5 = CorrectedBLA + 162 + (j * 20);
-                        GameRenderer.drawStringDoubleGuideM(String.format("Stage %d", stInd + 1), 80.0f, f5, 18, GameRenderer._CGRect);
+                        GameRenderer.drawStringDoubleGuideM(String.format("Stage %d", stInd + 1), 80.0f, f5, 18, rect);
                         for (int k = 0; k < 3; k++)
-                            GameRenderer.drawStringDoubleGuideM(String.valueOf(Math.max(0, Config.highScores[stInd][k])), (k * 190) + 245, f5, 17, GameRenderer._CGRect);
+                            GameRenderer.drawStringDoubleGuideM(String.valueOf(Math.max(0, Config.highScores[stInd][k])), (k * 190) + 245, f5, 17, rect);
                     }
                     px = CorrectedBLA;
                 }
@@ -147,21 +148,21 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     int abs = Math.abs(j - awardListDraw.totalHalfBlockSize);
                     int blen = j < awardListDraw.totalHalfBlockSize ? -awardListDraw.blockLengthArray[abs] : awardListDraw.blockLengthArray[abs];
 
-                    GameRenderer.CGRectMake(70.0f, 100.0f, 660.0f, 240.0f);
+                    CGRect rect = CGRect.CGRectMake(70.0f, 100.0f, 660.0f, 240.0f);
                     int ay = awd * 100;
-                    uiRecordImage[rec_awardbar].drawAtPointOptionGuide(70.0f, ay + 100, 18, GameRenderer._CGRect);
+                    uiRecordImage[rec_awardbar].drawAtPointOptionGuide(70.0f, ay + 100, 18, rect);
                     float y = blen + awardListDraw.blockCorrectionPixel + 104;
-                    uiAwardImage[awd].drawAtPointOptionGuide(74.0f, y, 18, GameRenderer._CGRect);
+                    uiAwardImage[awd].drawAtPointOptionGuide(74.0f, y, 18, rect);
                     GameRenderer.setFontDoubleColor(-1, -11106408);
                     GameRenderer.setFontSize(22);
-                    GameRenderer.drawStringDoubleGuideM(DataAward.awardTitle[awd], 149.0f, ay + 110, 18, GameRenderer._CGRect);
+                    GameRenderer.drawStringDoubleGuideM(DataAward.awardTitle[awd], 149.0f, ay + 110, 18, rect);
                     GameRenderer.setFontSize(12);
-                    GameRenderer.drawStringDoubleGuideM(DataAward.awardDescription[awd], 150.0f, ay + 140, 18, GameRenderer._CGRect);
+                    GameRenderer.drawStringDoubleGuideM(DataAward.awardDescription[awd], 150.0f, ay + 140, 18, rect);
 
                     if (!Config.awardValues[awd])
-                        uiRecordImage[rec_lock].drawAtPointOptionGuide(669.0f, y, 18, GameRenderer._CGRect);
+                        uiRecordImage[rec_lock].drawAtPointOptionGuide(669.0f, y, 18, rect);
                     else
-                        uiRecordImage[rec_cup].drawAtPointOptionGuide(672.0f, ay + 112, 18, GameRenderer._CGRect);
+                        uiRecordImage[rec_cup].drawAtPointOptionGuide(672.0f, ay + 112, 18, rect);
                 }
             uiEtcImage[etc_scrollbutton].drawAtPointOption(731.0f, (((awardListDraw.blockCurrentArray[awardListDraw.totalHalfBlockSize] * 250) / 58f) + 120) - (((awardListDraw.blockCorrectionPixel * 250) / 58f) / 250f), 10);
             GameRenderer.setFontColor(-16777216);

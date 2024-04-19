@@ -7,6 +7,7 @@ import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGPoint;
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
@@ -58,7 +59,6 @@ public class EquipPage extends TPage {
 
     @Override
     public void update() {
-        GameRenderer.inventoryItemListDraw.correctDistance();
     }
 
     @Override
@@ -66,19 +66,19 @@ public class EquipPage extends TPage {
         int cTLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(BACK, GameRenderer.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
+            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
             if (inventory.shopShopInventorySelectPos >= 0)
-                TouchManager.addTouchRectListData(SELL, GameRenderer.CGRectMake(711.0f, 381.0f, 68.0f, 78.0f)); //sell
-            TouchManager.addTouchRectListData(SHOP, GameRenderer.CGRectMake(16.0f, 8.0f, 46.0f, 49.0f));
-            TouchManager.addTouchRectListData(L_ARROW, GameRenderer.CGRectMake(81.0f, 397.0f, 47.0f, 48.0f));
-            TouchManager.addTouchRectListData(R_ARROW, GameRenderer.CGRectMake(672.0f, 397.0f, 47.0f, 48.0f));
+                TouchManager.addTouchRectListData(SELL, CGRect.CGRectMake(711.0f, 381.0f, 68.0f, 78.0f)); //sell
+            TouchManager.addTouchRectListData(SHOP, CGRect.CGRectMake(16.0f, 8.0f, 46.0f, 49.0f));
+            TouchManager.addTouchRectListData(L_ARROW, CGRect.CGRectMake(81.0f, 397.0f, 47.0f, 48.0f));
+            TouchManager.addTouchRectListData(R_ARROW, CGRect.CGRectMake(672.0f, 397.0f, 47.0f, 48.0f));
             for (int j = 0; j < heroes.length * 2; j += 2) {
                 if (Config.rewardValues[j]) {
                     float jd = 203 + (j * 127.5f); //The distance per block is 255 and 127.5 if half of that. 203 is initial value
-                    TouchManager.addTouchRectListData(MIN_HERO + j, GameRenderer.CGRectMake(jd, 224.0f, 60f, 60f));
-                    TouchManager.addTouchRectListData(MIN_HERO + 1 + j, GameRenderer.CGRectMake(jd, 293.0f, 60f, 60f));
+                    TouchManager.addTouchRectListData(MIN_HERO + j, CGRect.CGRectMake(jd, 224.0f, 60f, 60f));
+                    TouchManager.addTouchRectListData(MIN_HERO + 1 + j, CGRect.CGRectMake(jd, 293.0f, 60f, 60f));
                 } else
-                    TouchManager.addTouchRectListData(MIN_LOCK + (j / 2), GameRenderer.CGRectMake(109.0f, 174.0f, 100.0f, 120.0f));
+                    TouchManager.addTouchRectListData(MIN_LOCK + (j / 2), CGRect.CGRectMake(109.0f, 174.0f, 100.0f, 120.0f));
             }
             inventory.addTouch();
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;

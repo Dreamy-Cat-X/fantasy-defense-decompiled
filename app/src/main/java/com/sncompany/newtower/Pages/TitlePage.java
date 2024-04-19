@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGPoint;
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.MyScrollbar;
@@ -109,13 +110,13 @@ public class TitlePage extends TPage {
         if (mode == MENUMODE.TITLE) {
             float f = GameThread.gameTimeCount % 40 <= 20 ? (GameThread.gameTimeCount % 40) * GLOW_MOVE_DG : 1.0f - (((GameThread.gameTimeCount % 40) - 20) * GLOW_MOVE_DG);
             if (gameSubStatus == 12) {
-                TouchManager.addTouchRectListData(START, GameRenderer.CGRectMake(296.0f, 337.0f, 208.0f, 48.0f));
-                TouchManager.addTouchRectListData(CONFIG, GameRenderer.CGRectMake(326.0f, 412.0f, 148.0f, 36.0f));
-                TouchManager.addTouchRectListData(ABOUT, GameRenderer.CGRectMake(9.0f, 429.0f, 42.0f, 42.0f));
-                TouchManager.addTouchRectListData(TWITTER, GameRenderer.CGRectMake(56.0f, 429.0f, 42.0f, 42.0f));
-                TouchManager.addTouchRectListData(FACEBOOK, GameRenderer.CGRectMake(104.0f, 429.0f, 42.0f, 42.0f));
+                TouchManager.addTouchRectListData(START, CGRect.CGRectMake(296.0f, 337.0f, 208.0f, 48.0f));
+                TouchManager.addTouchRectListData(CONFIG, CGRect.CGRectMake(326.0f, 412.0f, 148.0f, 36.0f));
+                TouchManager.addTouchRectListData(ABOUT, CGRect.CGRectMake(9.0f, 429.0f, 42.0f, 42.0f));
+                TouchManager.addTouchRectListData(TWITTER, CGRect.CGRectMake(56.0f, 429.0f, 42.0f, 42.0f));
+                TouchManager.addTouchRectListData(FACEBOOK, CGRect.CGRectMake(104.0f, 429.0f, 42.0f, 42.0f));
             } else
-                TouchManager.addTouchRectListData(START, GameRenderer.CGRectMake(0.0f, 0.0f, 800.0f, 480.0f));
+                TouchManager.addTouchRectListData(START, CGRect.CGRectMake(0.0f, 0.0f, 800.0f, 480.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TITLE_TOTAL;
 
             switch (gameSubStatus) {
@@ -223,11 +224,11 @@ public class TitlePage extends TPage {
                     break;
             }
         } else if (mode == MENUMODE.OPTION) {
-            TouchManager.addTouchRectListData(BACK, GameRenderer.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
-            TouchManager.addTouchRectListData(BGM, GameRenderer.CGRectMake(310.0f, 140.0f, 390.0f, 40.0f));
-            TouchManager.addTouchRectListData(SFX, GameRenderer.CGRectMake(310.0f, 225.0f, 390.0f, 40.0f));
-            TouchManager.addTouchRectListData(INTRO, GameRenderer.CGRectMake(218.0f, 307.0f, 118.0f, 46.0f));
-            TouchManager.addTouchRectListData(VIBRATE, GameRenderer.CGRectMake(583.0f, 307.0f, 118.0f, 46.0f));
+            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
+            TouchManager.addTouchRectListData(BGM, CGRect.CGRectMake(310.0f, 140.0f, 390.0f, 40.0f));
+            TouchManager.addTouchRectListData(SFX, CGRect.CGRectMake(310.0f, 225.0f, 390.0f, 40.0f));
+            TouchManager.addTouchRectListData(INTRO, CGRect.CGRectMake(218.0f, 307.0f, 118.0f, 46.0f));
+            TouchManager.addTouchRectListData(VIBRATE, CGRect.CGRectMake(583.0f, 307.0f, 118.0f, 46.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = CONFIG_TOTAL;
 
             alwaysImage[ALWAYS_R_BG].drawAtPointOption(0.0f, 0.0f, 18);
@@ -241,8 +242,8 @@ public class TitlePage extends TPage {
             uiEtcImage[etc_scrollbutton].drawAtPointOption(soundBars[1].BarLastPosition, 244.0f, 9);
             uiEtcImage[cTLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
         } else {
-            TouchManager.addTouchRectListData(BACK, GameRenderer.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
-            TouchManager.addTouchRectListData(DEVELOPER, GameRenderer.CGRectMake(340.0f, 130.0f, 260.0f, 50.0f));
+            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
+            TouchManager.addTouchRectListData(DEVELOPER, CGRect.CGRectMake(340.0f, 130.0f, 260.0f, 50.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = ABOUT_TOTAL;
 
             alwaysImage[ALWAYS_R_BG].drawAtPointOption(0.0f, 0.0f, 18);

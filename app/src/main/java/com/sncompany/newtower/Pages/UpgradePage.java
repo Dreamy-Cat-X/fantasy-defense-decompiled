@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeHero;
@@ -112,14 +113,14 @@ public class UpgradePage extends TPage {
         int cTLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(25, GameRenderer.CGRectMake(680.0f, 367.0f, 100.0f, 100.0f));
-            TouchManager.addTouchRectListData(24, GameRenderer.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
-            TouchManager.addTouchRectListData(27, GameRenderer.CGRectMake(21.0f, 8.0f, 38.0f, 48.0f));
+            TouchManager.addTouchRectListData(25, CGRect.CGRectMake(680.0f, 367.0f, 100.0f, 100.0f));
+            TouchManager.addTouchRectListData(24, CGRect.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
+            TouchManager.addTouchRectListData(27, CGRect.CGRectMake(21.0f, 8.0f, 38.0f, 48.0f));
             for (int i = 0; i < 18; i++) {
                 if (hero && !DataStage.heroAvail[i / 6])
                     break;
                 int perc = i % 6, xpos = (perc % 3) * 70, ypos = perc < 3 ? 0 : 70;
-                TouchManager.addTouchRectListData(i, GameRenderer.CGRectMake(((i / 6) * 255) + 45 + xpos, ypos + GAME_UPGRADE_HERO_SKILL_START_Y, 60.0f, 60.0f));
+                TouchManager.addTouchRectListData(i, CGRect.CGRectMake(((i / 6) * 255) + 45 + xpos, ypos + GAME_UPGRADE_HERO_SKILL_START_Y, 60.0f, 60.0f));
             }
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 32;
             cTLS = TouchManager.checkTouchListStatus();
@@ -219,10 +220,10 @@ public class UpgradePage extends TPage {
         uiUpgradeImage[upgrade_iconselectn].drawAtPointOption(x - 11.0f, (-11.0f) + y, 18);
         float xw = x - 2f;
         float ty = (GameThread.gameTimeCount % 109) + y - 49f;
-        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y - 2f, 64f, 2f));
-        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y + 60f, 64f, 2f));
-        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y, 2f, 60f));
-        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(x + 60f, y, 2f, 60f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y - 2f, 64f, 2f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y + 60f, 64f, 2f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y, 2f, 60f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(x + 60f, y, 2f, 60f));
     }
 
     public void drawUpgradeDescription(float x, float y, int unI, int upgI) {

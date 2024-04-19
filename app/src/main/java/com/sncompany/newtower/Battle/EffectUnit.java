@@ -1,7 +1,9 @@
 package com.sncompany.newtower.Battle;
 
 import com.sncompany.newtower.DataClasses.DataAnim;
+import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.Pages.StagePage;
 import com.sncompany.newtower.Texture2D;
 
 /* loaded from: D:\decomp\classes.dex */
@@ -48,135 +50,71 @@ public class EffectUnit extends StageEntity {
 
     public int effectCount = 0;
     public int effectCountMax;
-    public int effectType;
     public int lastGameUpdateCount;
     public int posX;
     public int posY;
 
-    public EffectUnit(int type, int x, int y) {
-        effectType = type;
+    public EffectUnit(DataStage st, int type, int x, int y) {
+        this.type = type;
         posX = x;
         posY = y;
         effectCountMax = type == 14 ? 15 : 7;
+
+        StagePage stp = (StagePage)st.page;
+        int ind = 0;
+        if (type >= 37)
+            ind = type - 25;
+        else if (type == 36)
+            ind = 1; //effectImage_502
+        else if (type == 33)
+            ind = 10; //effectImage_532
+        else if (type >= 13)
+            ind = type - 6;
+        else if (type == 12)
+            ind = 11; //effectImage_533
+        else if (type >= 9)
+            ind = type - 4;
+        else if (type > 0)
+            ind = type - 1;
+        drawData = DataAnim.effectDrawData[ind];
+        drawTexture = stp.effectImages[ind];
     }
 
     public void drawEffectUnit() {
-        int[] iArr;
-        Texture2D[] texture2DArr;
-        int i2;
-        float f;
-        int i3 = GameThread.effectUnit[i].effectType;
-        if (i3 == -1) {
+        if (type == -1)
             return;
-        }
-        if (i3 != 0) {
-            if (i3 != 33) {
-                if (i3 != 2) {
-                    if (i3 != 3) {
-                        if (i3 != 4) {
-                            if (i3 != 5) {
-                                if (i3 != 9) {
-                                    if (i3 == 10) {
-                                        iArr = DataAnim.unitDrawData_510;
-                                        texture2DArr = effectImage_510;
-                                    } else {
-                                        switch (i3) {
-                                            case 12:
-                                                iArr = DataAnim.unitDrawData_533;
-                                                texture2DArr = effectImage_533;
-                                                break;
-                                            case 13:
-                                                iArr = DataAnim.unitDrawData_512;
-                                                texture2DArr = effectImage_512;
-                                                break;
-                                            case 14:
-                                                iArr = DataAnim.unitDrawData_513;
-                                                texture2DArr = effectImage_513;
-                                                break;
-                                            case 15:
-                                                iArr = DataAnim.unitDrawData_514;
-                                                texture2DArr = effectImage_514;
-                                                break;
-                                            default:
-                                                switch (i3) {
-                                                    case 36:
-                                                        iArr = DataAnim.unitDrawData_502;
-                                                        texture2DArr = effectImage_502;
-                                                        break;
-                                                    case 37:
-                                                        iArr = DataAnim.unitDrawData_534;
-                                                        texture2DArr = effectImage_534;
-                                                        break;
-                                                    case 38:
-                                                        iArr = DataAnim.unitDrawData_535;
-                                                        texture2DArr = effectImage_535;
-                                                        break;
-                                                    default:
-                                                        iArr = DataAnim.unitDrawData_500;
-                                                        texture2DArr = effectImage_500;
-                                                        break;
-                                                }
-                                        }
-                                    }
-                                } else {
-                                    iArr = DataAnim.unitDrawData_509;
-                                    texture2DArr = effectImage_509;
-                                }
-                            } else {
-                                iArr = DataAnim.unitDrawData_505;
-                                texture2DArr = effectImage_505;
-                            }
-                        } else {
-                            iArr = DataAnim.unitDrawData_504;
-                            texture2DArr = effectImage_504;
-                        }
-                    } else {
-                        iArr = DataAnim.unitDrawData_503;
-                        texture2DArr = effectImage_503;
-                    }
-                } else {
-                    iArr = DataAnim.unitDrawData_502;
-                    texture2DArr = effectImage_502;
-                }
-            } else {
-                iArr = DataAnim.unitDrawData_532;
-                texture2DArr = effectImage_532;
-            }
+
+        int ybn = type != 14 ? -15 : 10;
+        int start = drawData[drawData[1]];
+        int count = drawData[start];
+        float opa;
+        int curr;
+        if (effectCount >= count) {
+            curr = drawData[(start + 1 + count) - 1];
+            opa = 1 - ((effectCount - count) * 0.1f);
         } else {
-            iArr = DataAnim.unitDrawData_500;
-            texture2DArr = effectImage_500;
+            curr = drawData[start + 1 + effectCount];
+            opa = 1;
         }
-        int i4 = i3 != 14 ? -15 : 10;
-        int i5 = iArr[iArr[1] + 0];
-        int i6 = iArr[i5];
-        int i7 = i5 + 1;
-        if (GameThread.effectUnit[i].effectCount >= i6 * 1) {
-            i2 = iArr[(i7 + i6) - 1];
-            f = 1.0f - ((GameThread.effectUnit[i].effectCount - r8) * 0.1f);
-        } else {
-            i2 = iArr[i7 + (GameThread.effectUnit[i].effectCount / 1)];
-            f = 1.0f;
-        }
-        int i8 = iArr[iArr[0] + i2];
-        int i9 = iArr[i8];
-        int i10 = i8 + 1;
-        if (f != 1.0f && f > 0.0f) {
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(f, f, f, f);
-        }
-        if (f > 0.0f) {
-            for (int i11 = 0; i11 < i9; i11++) {
-                int i12 = (i11 * 5) + i10;
-                if (iArr[i12 + 4] == 0) {
-                    texture2DArr[iArr[i12]].drawAtPointOption((GameThread.effectUnit[i].posX / 50) + 62 + iArr[i12 + 1], (GameThread.effectUnit[i].posY / 50) + 30 + iArr[i12 + 2] + i4, 18);
-                } else {
-                    texture2DArr[iArr[i12]].drawAtPointOptionFlip((GameThread.effectUnit[i].posX / 50) + 62 + iArr[i12 + 1], (GameThread.effectUnit[i].posY / 50) + 30 + iArr[i12 + 2] + i4, 18);
-                }
-            }
-        }
-        if (f == 1.0f || f <= 0.0f) {
+        int sta = drawData[drawData[0] + curr];
+        int end = drawData[sta];
+
+        int i10 = sta + 1;
+        if (opa <= 0)
             return;
+        if (opa != 1) {
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+            Texture2D.setAlpha(opa);
         }
-        Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        for (int i = 0; i < end; i++) {
+            int coords = (i * 5) + i10;
+            if (drawData[coords + 4] == 0) {
+                drawTexture[drawData[coords]].drawAtPointOption((posX / 50) + 62 + drawData[coords + 1], (posY / 50) + 30 + drawData[coords + 2] + ybn, 18);
+            } else
+                drawTexture[drawData[coords]].drawAtPointOptionFlip((posX / 50) + 62 + drawData[coords + 1], (posY / 50) + 30 + drawData[coords + 2] + ybn, 18);
+        }
+
+        if (opa < 1)
+            Texture2D.setAlpha(1);
     }
 }

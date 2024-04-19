@@ -2,6 +2,7 @@ package com.sncompany.newtower.Pages;
 
 import java.util.function.Consumer;
 
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
@@ -47,10 +48,10 @@ public class HelpPage extends TPage {
         int i = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_0_BACK, GameRenderer.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_1_TUTORIAL, GameRenderer.CGRectMake(650.0f, 18.0f, 130.0f, 44.0f));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_2_LEFTARROW, GameRenderer.CGRectMake(628.0f, 417.0f, 45.0f, 50.0f));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_3_RIGHTARROW, GameRenderer.CGRectMake(738.0f, 417.0f, 45.0f, 50.0f));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_0_BACK, CGRect.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_1_TUTORIAL, CGRect.CGRectMake(650.0f, 18.0f, 130.0f, 44.0f));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_2_LEFTARROW, CGRect.CGRectMake(628.0f, 417.0f, 45.0f, 50.0f));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_3_RIGHTARROW, CGRect.CGRectMake(738.0f, 417.0f, 45.0f, 50.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 4;
             i = TouchManager.checkTouchListStatus();
         }

@@ -3,6 +3,7 @@ package com.sncompany.newtower.Pages;
 import java.util.function.Consumer;
 
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
@@ -103,12 +104,12 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             TouchManager.clearTouchMap();
         mainmenuImage[0].drawAtPointOption(0.0f, 0.0f, 18);
         if (child == null) {
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_0_START, GameRenderer.CGRectMake(535.0f, 0.0f, 265.0f, 206.0f)); //Stage Select
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_1_HELP, GameRenderer.CGRectMake(227.0f, 2.0f, 225.0f, 159.0f));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_2_RECORD, GameRenderer.CGRectMake(5.0f, 23.0f, 190.0f, 207.0f));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_3_UPGRADE, GameRenderer.CGRectMake(398.0f, 205.0f, 324.0f, 247.0f));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_4_SHOP, GameRenderer.CGRectMake(98.0f, 258.0f, 236.0f, 203.0f));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_5_BACK, GameRenderer.CGRectMake(0.0f, 333.0f, 92.0f, 129.0f));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_0_START, CGRect.CGRectMake(535.0f, 0.0f, 265.0f, 206.0f)); //Stage Select
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_1_HELP, CGRect.CGRectMake(227.0f, 2.0f, 225.0f, 159.0f));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_2_RECORD, CGRect.CGRectMake(5.0f, 23.0f, 190.0f, 207.0f));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_3_UPGRADE, CGRect.CGRectMake(398.0f, 205.0f, 324.0f, 247.0f));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_4_SHOP, CGRect.CGRectMake(98.0f, 258.0f, 236.0f, 203.0f));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_5_BACK, CGRect.CGRectMake(0.0f, 333.0f, 92.0f, 129.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_MAINMENU_TOUCH_LIST_TOTAL_COUNT;
 
             TouchManager.swapTouchMap();

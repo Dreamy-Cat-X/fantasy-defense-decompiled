@@ -5,15 +5,12 @@ Note: This code doesn't build smoothly due to compilation issues and WIP restruc
 
 PROGRESS:
 All pages except StagePage done
-StagePage - 440 errors
+StagePage - 327 errors
 
 All achievements done
 
 Other TODO:
-- Fix Draw on EffectUnit class
-- Fix Special skills on Hero Unit
-- Restructure type to merely identifying the class used instead of being [(class * 3) + lv]
 - Static variables for resource array locations for more mod-ability
 - Removing ID-Style resource gathering for a decompiled one
-- PC Port
 - Get rid of the androidx folder entirely
+- PC Port

@@ -17,26 +17,18 @@ public class GameThread extends Thread {
     public static final int SPECIAL_ATTACK_ARROW_LEG_POS_X = 403;
     public static final int SPECIAL_ATTACK_ARROW_LEG_POS_Y = 558;
     public static final MediaManager[] bgmMedia = new MediaManager[3];
-    public static boolean characterAddHeroFlag;
-    public static int characterAddNumber;
-    public static int characterAddOrder;
-    public static int characterAddType;
-    public static int characterMenuSelectFlag;
-    public static int characterSelectNumber;
     public static long currentDate;
     public static long currentDrawDate;
     public static int currentFrameCount;
     public static float destroyScore;
     public static final int total_SFX = 31;
     public static final MediaManager2 effectMedia = new MediaManager2(total_SFX);
-    public static EffectUnit[] effectUnit;
 
     public static int gameHelpViewNum;
     public static int gameLoadFlag;
     public static int gameStatus;
     public static int gameSubStatus;
     public static int gameTitleViewCount;
-    public static int[] heroUnitType;
     public static int[][] highScoreValue;
     public static int lastDrawCount;
     public static int lastFrameCount;
@@ -57,12 +49,11 @@ public class GameThread extends Thread {
     public static final boolean[] soundPlayCheckFlag = new boolean[total_SFX];
     public static int[] soundPlayDelayCount = new int[total_SFX];
     public static int specialAttackFrameCount;
-    public static boolean specialAttackSkipFlag;
     public static int[][] specialDataValue;
     public static int stageClearViewHeroism;
     public static long startDate;
     public static long startDrawDate;
-    public static TowerUnit[] towerUnit;
+
     public static int gameTimeCount = 0;
     public static final String[] chapterName = {"Dark Forest", "Swamp of Despair", "Eternal Wasteland", "Infernal Volcano", "Nightmarish Demon World"};
     public static int TOWER_MAX_LEVEL_NORMAL = 3;
@@ -116,7 +107,6 @@ public class GameThread extends Thread {
             startDrawDate = System.currentTimeMillis();
             realDrawCount = 0;
             lastDrawCount = 0;
-            characterMenuSelectFlag = 0;
             GameRenderer.setFontColor(SupportMenu.CATEGORY_MASK);
             GameRenderer.setFontSize(50);
             GameRenderer.textTombstone.removeAllTombstones();
@@ -170,12 +160,10 @@ public class GameThread extends Thread {
 
     public static int getRandom(int i) {
         int currentTimeMillis = (int) ((((randomNumber & SupportMenu.USER_MASK) * 93217) + 1 + (System.currentTimeMillis() & 65535)) & 65535);
-        randomNumber = currentTimeMillis;
         int i2 = currentTimeMillis >> 1;
         randomNumber = i2;
-        if (i == 0) {
+        if (i == 0)
             return 0;
-        }
         return i2 % i;
     }
 

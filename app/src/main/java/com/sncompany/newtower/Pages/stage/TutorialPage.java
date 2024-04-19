@@ -3,6 +3,7 @@ package com.sncompany.newtower.Pages.stage;
 import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataMap;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameRenderer;
@@ -36,6 +37,7 @@ public class TutorialPage extends StageBase {
     public void load(Consumer<Float> prog) {
         loadP(tutorialImage, tutorialResource, prog, 1, tutorialImage.length);
         super.load(prog);
+        loaded = true;
     }
 
     @Override
@@ -103,7 +105,7 @@ public class TutorialPage extends StageBase {
         drawMapTile(gl10);
         drawAllUnit(gl10);
         TouchManager.clearTouchMap();
-        TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
+        TouchManager.addTouchRectListData(1, CGRect.CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
         if (tutorStep <= 2) {
             int sta = 0, end = 5;
             if (tutorStep == 2) {
@@ -111,28 +113,28 @@ public class TutorialPage extends StageBase {
                 end = 8;
             }
             for (int i = sta; i < end; i++)
-                TouchManager.addTouchRectListData(i - sta, GameRenderer.CGRectMake(tutorialBoxLinePos[i][4], tutorialBoxLinePos[i][5], tutorialBoxLinePos[i][6], tutorialBoxLinePos[i][7]));
+                TouchManager.addTouchRectListData(i - sta, CGRect.CGRectMake(tutorialBoxLinePos[i][4], tutorialBoxLinePos[i][5], tutorialBoxLinePos[i][6], tutorialBoxLinePos[i][7]));
         } else if (tutorStep % 2 == 0 && tutorStep <= 16) {
             int[] BoxPos = tutorialBoxLinePos[6 + (tutorStep / 2)];
-            TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(BoxPos[4], BoxPos[5], BoxPos[6], BoxPos[7]));
+            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(BoxPos[4], BoxPos[5], BoxPos[6], BoxPos[7]));
         } else if (tutorStep < 15) {
             int ind = 77 + (65 * (tutorStep - 3) / 2);
-            TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742, ind, 56, 56));
+            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(742, ind, 56, 56));
         } else switch (tutorStep) {
             case 15:
                 if (characterMenuSelectFlag == 2) {
-                    TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(558, 12, 56, 56));
-                    TouchManager.addTouchRectListData(1, GameRenderer.CGRectMake(618, 12, 56, 56));
-                    TouchManager.addTouchRectListData(2, GameRenderer.CGRectMake(678, 12, 56, 56));
+                    TouchManager.addTouchRectListData(0, CGRect.CGRectMake(558, 12, 56, 56));
+                    TouchManager.addTouchRectListData(1, CGRect.CGRectMake(618, 12, 56, 56));
+                    TouchManager.addTouchRectListData(2, CGRect.CGRectMake(678, 12, 56, 56));
                 } else if (characterMenuSelectFlag == 0)
-                    TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(742, 12, 56, 56));
+                    TouchManager.addTouchRectListData(0, CGRect.CGRectMake(742, 12, 56, 56));
                 break;
             case 17, 18:
                 int[] aStep = tutorialBoxLinePos[tutorStep - 2];
-                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(aStep[4], aStep[5], aStep[6], aStep[7]));
+                TouchManager.addTouchRectListData(0, CGRect.CGRectMake(aStep[4], aStep[5], aStep[6], aStep[7]));
                 break;
             default:
-                TouchManager.addTouchRectListData(0, GameRenderer.CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
+                TouchManager.addTouchRectListData(0, CGRect.CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
                 break;
         }
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 31;

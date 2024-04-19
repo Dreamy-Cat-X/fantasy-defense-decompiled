@@ -48,7 +48,7 @@ public class InventoryTable { //Probably useless, but only one way to tell
 
     public void addTouch() {
         for (int i = 0; i < 8; i++)
-            TouchManager.addTouchRectListData(i, GameRenderer.CGRectMake(((i % 8) * 70) + 125, 390.0f, 60.0f, 60.0f));
+            TouchManager.addTouchRectListData(i, CGRect.CGRectMake(((i % 8) * 70) + 125, 390.0f, 60.0f, 60.0f));
     }
 
     public int getPage() {
@@ -157,10 +157,10 @@ public class InventoryTable { //Probably useless, but only one way to tell
         selectOutline[0].drawAtPointOption(x - 11.0f, (-11.0f) + y, 18);
         float xw = x - 2f;
         float ty = (GameThread.gameTimeCount % 109) + y - 49f;
-        selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y - 2f, 64f, 2f));
-        selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y + 60f, 64f, 2f));
-        selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(xw, y, 2f, 60f));
-        selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, GameRenderer.CGRectMake(x + 60f, y, 2f, 60f));
+        selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y - 2f, 64f, 2f));
+        selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y + 60f, 64f, 2f));
+        selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y, 2f, 60f));
+        selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(x + 60f, y, 2f, 60f));
     }
 
     public int getItemID(byte[] ind) {

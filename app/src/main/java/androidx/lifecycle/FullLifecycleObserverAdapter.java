@@ -1,7 +1,5 @@
 package androidx.lifecycle;
 
-import androidx.lifecycle.Lifecycle;
-
 /* JADX INFO: Access modifiers changed from: package-private */
 /* loaded from: D:\decomp\classes.dex */
 public class FullLifecycleObserverAdapter implements GenericLifecycleObserver {
@@ -74,8 +72,6 @@ public class FullLifecycleObserverAdapter implements GenericLifecycleObserver {
                 return;
             case 7:
                 throw new IllegalArgumentException("ON_ANY must not been send by anybody");
-            default:
-                return;
         }
     }
 }

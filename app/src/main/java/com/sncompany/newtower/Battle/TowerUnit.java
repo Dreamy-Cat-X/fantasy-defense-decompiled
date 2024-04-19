@@ -53,7 +53,6 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public int targetMaxNum;
     public int towerCoolTime = 0;
     public int towerCoolTimeMax;
-    public int towerType; //deprecated, replace with [type] and [level], use oldType() when needed for data arrays
     public int level = 0;
     public int unitPower;
     /**

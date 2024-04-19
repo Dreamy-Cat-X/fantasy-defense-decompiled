@@ -87,7 +87,7 @@ public class DataStage {
         map.mapStartPositionLoop = (map.mapStartPositionLoop + 1) % map.mapStartPositionCount;
     }
     public void addEffectUnit(int effType, float x, float y) {
-        EffectUnit efu = new EffectUnit(effType, (int) x, (int) y);
+        EffectUnit efu = new EffectUnit(this, effType, (int) x, (int) y);
         efu.lastGameUpdateCount = GameThread.gameTimeCount;
         effectUnit.add(efu);
     }
@@ -145,7 +145,7 @@ public class DataStage {
     public void updateEffects(boolean z) {
         effectUnit.removeIf(e -> e.effectCount >= e.effectCountMax);
         for (EffectUnit eff : effectUnit)
-            if ((!z || (eff.effectType == 14 && eff.lastGameUpdateCount != GameThread.gameTimeCount)) && !(eff.lastGameUpdateCount == GameThread.gameTimeCount && eff.effectType == 36)) {
+            if ((!z || (eff.type == 14 && eff.lastGameUpdateCount != GameThread.gameTimeCount)) && !(eff.lastGameUpdateCount == GameThread.gameTimeCount && eff.type == 36)) {
                 eff.lastGameUpdateCount = GameThread.gameTimeCount;
                 eff.effectCount++;
             }

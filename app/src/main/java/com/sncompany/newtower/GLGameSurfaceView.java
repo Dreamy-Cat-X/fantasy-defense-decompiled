@@ -3,6 +3,8 @@ package com.sncompany.newtower;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
+import com.sncompany.newtower.DataClasses.CGPoint;
+
 /* loaded from: D:\decomp\classes.dex */
 public class GLGameSurfaceView extends GLSurfaceView {
     public static final int GAME_DRAW_DRAWING = 1;
@@ -43,7 +45,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
         int y = (int) motionEvent.getY();
         int action = motionEvent.getAction();
         if (action >= 0 && action <= 2) {
-            touchManager.addLastInputPoint(1, 0, GameRenderer.CGPointMake((int) ((x / GameRenderer.DRAW_SCALE_SIZE) - GameRenderer.DRAW_SCALE_X_MOVE), (int) ((y / GameRenderer.DRAW_SCALE_SIZE) - GameRenderer.DRAW_SCALE_Y_MOVE)), 1);
+            touchManager.addLastInputPoint(1, 0, CGPoint.CGPointMake((int) ((x / GameRenderer.DRAW_SCALE_SIZE) - GameRenderer.DRAW_SCALE_X_MOVE), (int) ((y / GameRenderer.DRAW_SCALE_SIZE) - GameRenderer.DRAW_SCALE_Y_MOVE)), 1);
             if (action == 0)
                 touchManager.processTouchEvent(0);
             else

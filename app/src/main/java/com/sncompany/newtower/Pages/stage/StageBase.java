@@ -59,7 +59,7 @@ public abstract class StageBase extends TPage {
     public final DataMap tmap;
     public final DataStage st;
     public float characterAddPosX, characterAddPosY;
-    public int characterAddNumber, characterMenuSelectFlag; //restructure so 1 is unit selected, 2 is hero menu, 3 is hero confirmation, 4 is check menu, 5 is promotion, 6 is leveling up, 7 is confirmation to sell an unit. Also used as the button for menus lol
+    public int characterAddNumber, characterMenuSelectFlag; //restructure so 1 is unit selected, 2 is hero menu, 3 is hero confirmation, 4 is check menu, 5 is promotion, 6 is leveling up, 7 is confirmation to sell an unit, 8 is hero deploy confirmation. Also used as the button for menus lol
     public TowerUnit tempChara;
     protected boolean inGamePause = false;
 
@@ -144,7 +144,6 @@ public abstract class StageBase extends TPage {
         lod = loadP(numberUnitBuyImage, numberUnitBuyResource, prog, lod, tot);
         lod = loadP(numberHeroBuyImage, numberHeroBuyResource, prog, lod, tot);
         lod = loadP(gatefireImage, gatefireResource, prog, lod, tot);
-        loaded = true;
     }
 
     @Override
@@ -299,7 +298,7 @@ public abstract class StageBase extends TPage {
             if (st.arrowUnit.get(i2).type != -1)
                 st.arrowUnit.get(i2).drawArrowUnit();
         for (i = 0; i < st.effectUnit.size(); i++)
-            if (st.effectUnit.get(i).effectType != -1)
+            if (st.effectUnit.get(i).type != -1)
                 st.effectUnit.get(i).drawEffectUnit();
     }
 
