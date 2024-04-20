@@ -5,7 +5,7 @@ Note: This code doesn't build smoothly due to compilation issues and WIP restruc
 
 PROGRESS:
 All pages except StagePage done
-StagePage - 327 errors
+StagePage - 225 errors
 
 All achievements done
 

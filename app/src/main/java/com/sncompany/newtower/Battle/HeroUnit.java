@@ -165,6 +165,11 @@ public class HeroUnit extends TowerUnit {
     }
 
     @Override
+    public int getSellPrice() {
+        return 0;
+    }
+
+    @Override
     public void levelUpUnit() {
         if (level == 4)
             return;
@@ -205,6 +210,10 @@ public class HeroUnit extends TowerUnit {
             if (e != null && e[0] == type)
                 eff += DataUpgradeItem.equipData[type][e[1]];
         return -1;
+    }
+
+    public int getUpgradePrice() {
+        return 0;
     }
 
     @Override

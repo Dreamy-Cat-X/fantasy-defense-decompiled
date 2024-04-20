@@ -42,31 +42,13 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static int loadingViewType;
     public static int monsterGoalBlinkCount;
     public static NewTower newTower;
-    public static Texture2D[] numberClearImage;
-    public static Texture2D[] numberStagePointImage;
-    public static Texture2D[] numberTotalImage;
-    public static Texture2D[] numberUpgradeImage;
     public static Texture2D[] outBorderImage;
-    public static Texture2D[] stageClearImage;
     public static int strokeColor;
     public static final Texture2D testboxImage = new Texture2D(R.drawable.etc_testbox);
     public static Tombstone textTombstone;
     public static int titlePressed;
-    public static Texture2D[] uiIngameImage;
-    public static Texture2D[] uiStageBossImage;
-    public static Texture2D[] uiStageImage;
-    public static Texture2D[] uiThemeclearImage;
     public static boolean loadViewFlag = false;
     public static final int[][] testboxCoord = {new int[]{0, 0, 20, 85}, new int[]{138, 0, 20, 85}, new int[]{59, 0, 40, 85}, new int[]{20, 0, 40, 85}};
-    public static final int[] numberStagePointResource = {R.drawable.num_stage_point_0, R.drawable.num_stage_point_1, R.drawable.num_stage_point_2, R.drawable.num_stage_point_3, R.drawable.num_stage_point_4, R.drawable.num_stage_point_5, R.drawable.num_stage_point_6, R.drawable.num_stage_point_7, R.drawable.num_stage_point_8, R.drawable.num_stage_point_9};
-    public static final int[] numberUpgradeResource = {R.drawable.num_upgrade_0, R.drawable.num_upgrade_1, R.drawable.num_upgrade_2, R.drawable.num_upgrade_3, R.drawable.num_upgrade_4, R.drawable.num_upgrade_5, R.drawable.num_upgrade_6, R.drawable.num_upgrade_7, R.drawable.num_upgrade_8, R.drawable.num_upgrade_9, R.drawable.num_upgrade_slash};
-    public static final int[] numberClearResource = {R.drawable.num_clear_0, R.drawable.num_clear_1, R.drawable.num_clear_2, R.drawable.num_clear_3, R.drawable.num_clear_4, R.drawable.num_clear_5, R.drawable.num_clear_6, R.drawable.num_clear_7, R.drawable.num_clear_8, R.drawable.num_clear_9};
-    public static final int[] numberTotalResource = {R.drawable.num_total_0, R.drawable.num_total_1, R.drawable.num_total_2, R.drawable.num_total_3, R.drawable.num_total_4, R.drawable.num_total_5, R.drawable.num_total_6, R.drawable.num_total_7, R.drawable.num_total_8, R.drawable.num_total_9};
-    public static final int[] stageClearResource = {R.drawable.ui_clear_background, R.drawable.ui_clear_clear, R.drawable.ui_clear_fail, R.drawable.ui_clear_totalscore, R.drawable.ui_clear_heroism, R.drawable.ui_clear_nextstageoff, R.drawable.ui_clear_nextstageon, R.drawable.ui_clear_upgradeoff, R.drawable.ui_clear_upgradeon, R.drawable.ui_clear_stageselectoff, R.drawable.ui_clear_stageselecton, R.drawable.ui_clear_retryoff, R.drawable.ui_clear_retryon, R.drawable.ui_clear_perfect, R.drawable.ui_clear_bonus, R.drawable.ui_clear_iconskill, R.drawable.ui_clear_iconspe, R.drawable.ui_clear_iconitem, R.drawable.ui_clear_iconheroism, R.drawable.ui_clear_iconhero1, R.drawable.ui_clear_iconhero2, R.drawable.ui_clear_iconhero3, R.drawable.ui_clear_iconattup, R.drawable.ui_clear_p, R.drawable.ui_clear_e, R.drawable.ui_clear_r, R.drawable.ui_clear_f, R.drawable.ui_clear_c, R.drawable.ui_clear_t, R.drawable.ui_clear_1};
-    public static final int[] ingameResource = {R.drawable.ui_ingame_paused, R.drawable.ui_ingame_resumeoff, R.drawable.ui_ingame_resumeon, R.drawable.ui_ingame_restartoff, R.drawable.ui_ingame_restarton, R.drawable.ui_ingame_stageoff, R.drawable.ui_ingame_stageon};
-    public static final int[] uiStageResource = {R.drawable.ui_stage_leftwindow, R.drawable.ui_stage_rightwindow, R.drawable.ui_stage_effect1, R.drawable.ui_stage_effect2, R.drawable.ui_stage_effect3, R.drawable.ui_stage_effect4, R.drawable.ui_stage_effect5, R.drawable.ui_stage_back_off, R.drawable.ui_stage_back_on, R.drawable.ui_stage_chapterleft_off, R.drawable.ui_stage_chapterleft_on, R.drawable.ui_stage_chapterright_off, R.drawable.ui_stage_chapterright_on, R.drawable.ui_stage_stageleft_off, R.drawable.ui_stage_stageleft_on, R.drawable.ui_stage_stageright_off, R.drawable.ui_stage_stageright_on, R.drawable.ui_stage_chapter, R.drawable.ui_stage_1, R.drawable.ui_stage_2, R.drawable.ui_stage_3, R.drawable.ui_stage_4, R.drawable.ui_stage_5, R.drawable.ui_stage_name1, R.drawable.ui_stage_name2, R.drawable.ui_stage_name3, R.drawable.ui_stage_name4, R.drawable.ui_stage_name5, R.drawable.ui_stage_wave, R.drawable.ui_stage_highscore, R.drawable.ui_stage_stagebox, R.drawable.ui_stage_stageselect, R.drawable.ui_stage_engage_off, R.drawable.ui_stage_engage_on, R.drawable.ui_stage_mapline, R.drawable.ui_stage_normal_off, R.drawable.ui_stage_normal_on, R.drawable.ui_stage_infinity_off, R.drawable.ui_stage_infinity_on, R.drawable.ui_stage_gatebreaker_off, R.drawable.ui_stage_gatebreaker_on, R.drawable.ui_stage_infinity_noselect, R.drawable.ui_stage_gatebreaker_noselect, R.drawable.ui_stage_new, R.drawable.ui_stage_stage, R.drawable.ui_stage_lock, R.drawable.ui_stage_perfect};
-    public static final int[] uiStageBossResource = {R.drawable.ui_stage_boss1, R.drawable.ui_stage_boss2, R.drawable.ui_stage_boss3, R.drawable.ui_stage_boss4, R.drawable.ui_stage_boss5};
-    public static final int[] uiThemeclearResource = {R.drawable.ui_themeclear_background, R.drawable.ui_themeclear_map1, R.drawable.ui_themeclear_map2, R.drawable.ui_themeclear_icon, R.drawable.ui_themeclear_glow, R.drawable.ui_themeclear_arrow, R.drawable.ui_themeclear_iconblack};
 
     public GameRenderer(NewTower newTower2) {
         newTower = newTower2;
@@ -222,33 +204,12 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    public static boolean makeBaseStruct() {
-        outBorderImage = makeTextureArray(4);
-        numberStagePointImage = makeTextureArray(numberStagePointResource.length);
-        numberUpgradeImage = makeTextureArray(numberUpgradeResource.length);
-        numberClearImage = makeTextureArray(numberClearResource.length);
-        numberTotalImage = makeTextureArray(numberTotalResource.length);
-        stageClearImage = makeTextureArray(stageClearResource.length);
-        uiIngameImage = makeTextureArray(ingameResource.length);
-        uiThemeclearImage = makeTextureArray(uiThemeclearResource.length);
-        uiStageImage = makeTextureArray(uiStageResource.length);
-        uiStageBossImage = makeTextureArray(uiStageBossResource.length);
-        return true;
-    }
-
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    public static boolean load_GAME_PRE_TOTAL_IMAGE_LOAD(int i, boolean z) {
-        Log.d("LOADING", String.format("load_GAME_PRE_TOTAL_IMAGE_LOAD!!! %d", i));
-        if (i == 14) {
-            outBorderImage[0].initWithImageName(R.drawable.etc_out);
-            outBorderImage[1].initWithImageName(R.drawable.etc_outl);
-            outBorderImage[2].initWithImageName(R.drawable.etc_outr);
-            outBorderImage[3].initWithImageName(R.drawable.etc_outu);
-            if (!z) {
-                loadViewFlag = true;
-            }
-        }
-        return true;
+    public static void makeBaseStruct() {
+        outBorderImage = new Texture2D[4];
+        outBorderImage[0] = new Texture2D(R.drawable.etc_out);
+        outBorderImage[1] = new Texture2D(R.drawable.etc_outl);
+        outBorderImage[2] = new Texture2D(R.drawable.etc_outr);
+        outBorderImage[3] = new Texture2D(R.drawable.etc_outu);
     }
 
     public static float drawNumberBlock(int number, Texture2D[] texture2DArr, float x, float y, int extW, int pivot, int maxCount) {
@@ -324,14 +285,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         }
         drawStringBuffer = textTombstone.getTombstone(search);
         return true;
-    }
-
-    public static Texture2D[] makeTextureArray(int i) {
-        Texture2D[] texture2DArr = new Texture2D[i];
-        for (int i2 = 0; i2 < i; i2++)
-            texture2DArr[i2] = new Texture2D();
-
-        return texture2DArr;
     }
 
     public static void drawLeftRightBox(float x, float y, int bound) {

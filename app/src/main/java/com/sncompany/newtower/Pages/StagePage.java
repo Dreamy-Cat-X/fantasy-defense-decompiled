@@ -105,9 +105,17 @@ public class StagePage extends StageBase {
     public static final int[] arrowResource3 = {R.drawable.arrow_3_0, R.drawable.arrow_3_1};
     public static final int[] arrowResource4 = {R.drawable.arrow_4_0, R.drawable.arrow_4_1, R.drawable.arrow_4_2, R.drawable.arrow_4_3, R.drawable.arrow_4_4, R.drawable.arrow_4_5};
     public static final int[] arrowResource9 = {R.drawable.arrow_9_0, R.drawable.arrow_9_1};
+    public static final int[] numberClearResource = {R.drawable.num_clear_0, R.drawable.num_clear_1, R.drawable.num_clear_2, R.drawable.num_clear_3, R.drawable.num_clear_4, R.drawable.num_clear_5, R.drawable.num_clear_6, R.drawable.num_clear_7, R.drawable.num_clear_8, R.drawable.num_clear_9};
+    public static final int[] numberTotalResource = {R.drawable.num_total_0, R.drawable.num_total_1, R.drawable.num_total_2, R.drawable.num_total_3, R.drawable.num_total_4, R.drawable.num_total_5, R.drawable.num_total_6, R.drawable.num_total_7, R.drawable.num_total_8, R.drawable.num_total_9};
+    public static final int[] stageClearResource = {R.drawable.ui_clear_background, R.drawable.ui_clear_clear, R.drawable.ui_clear_fail, R.drawable.ui_clear_totalscore, R.drawable.ui_clear_heroism, R.drawable.ui_clear_nextstageoff, R.drawable.ui_clear_nextstageon, R.drawable.ui_clear_upgradeoff, R.drawable.ui_clear_upgradeon, R.drawable.ui_clear_stageselectoff, R.drawable.ui_clear_stageselecton, R.drawable.ui_clear_retryoff, R.drawable.ui_clear_retryon, R.drawable.ui_clear_perfect, R.drawable.ui_clear_bonus, R.drawable.ui_clear_iconskill, R.drawable.ui_clear_iconspe, R.drawable.ui_clear_iconitem, R.drawable.ui_clear_iconheroism, R.drawable.ui_clear_iconhero1, R.drawable.ui_clear_iconhero2, R.drawable.ui_clear_iconhero3, R.drawable.ui_clear_iconattup, R.drawable.ui_clear_p, R.drawable.ui_clear_e, R.drawable.ui_clear_r, R.drawable.ui_clear_f, R.drawable.ui_clear_c, R.drawable.ui_clear_t, R.drawable.ui_clear_1};
+    public static final int[] ingameResource = {R.drawable.ui_ingame_paused, R.drawable.ui_ingame_resumeoff, R.drawable.ui_ingame_resumeon, R.drawable.ui_ingame_restartoff, R.drawable.ui_ingame_restarton, R.drawable.ui_ingame_stageoff, R.drawable.ui_ingame_stageon};
+    public static final int[] uiThemeclearResource = {R.drawable.ui_themeclear_background, R.drawable.ui_themeclear_map1, R.drawable.ui_themeclear_map2, R.drawable.ui_themeclear_icon, R.drawable.ui_themeclear_glow, R.drawable.ui_themeclear_arrow, R.drawable.ui_themeclear_iconblack};
 
     public final Texture2D[] specialArrowImage = new Texture2D[specialArrowResource.length], specialIceImage = new Texture2D[specialIceResource.length], specialSwordImage = new Texture2D[specialSwordResource.length];
     public final Texture2D[] arrowImage0 = new Texture2D[arrowResource0.length], arrowImage1 = new Texture2D[arrowResource1.length], arrowImage2 = new Texture2D[arrowResource2.length], arrowImage3 = new Texture2D[arrowResource3.length], arrowImage4 = new Texture2D[arrowResource4.length], arrowImage9 = new Texture2D[arrowResource9.length];
+    public static final Texture2D[] uiIngameImage = new Texture2D[ingameResource.length], uiThemeclearImage = new Texture2D[uiThemeclearResource.length], numberClearImage = new Texture2D[numberClearResource.length],
+            numberTotalImage = new Texture2D[numberTotalResource.length], stageClearImage = new Texture2D[stageClearResource.length];
+
     public final Texture2D[][] effectImages = new Texture2D[DataAnim.effectDrawResource.length][];
     private int startViewCount, rewardShowOrder;
     public int upgradeCount = 0, specialBlinkCount = 0, characterMenuMonsterViewCount, characterMenuMonsterStartViewCount, levelUpCount;
@@ -129,7 +137,7 @@ public class StagePage extends StageBase {
     public void load(Consumer<Float> prog) {
         super.load(prog);
         int tot2 = specialArrowImage.length + specialIceImage.length + specialSwordImage.length + arrowImage0.length + arrowImage1.length + arrowImage2.length + arrowImage3.length + arrowImage4.length +
-                arrowImage9.length + effectImages.length;
+                arrowImage9.length + effectImages.length + uiIngameImage.length + uiThemeclearImage.length + numberClearImage.length + numberTotalImage.length + stageClearImage.length;
         int lod = loadP(specialArrowImage, specialArrowResource, prog, 0, tot2);
         lod = loadP(specialIceImage, specialIceResource, prog, lod, tot2);
         lod = loadP(specialSwordImage, specialSwordResource, prog, lod, tot2);
@@ -146,7 +154,48 @@ public class StagePage extends StageBase {
             if (prog != null)
                 prog.accept((lod++ + 1f) / tot2);
         }
+        lod = loadP(uiIngameImage, ingameResource, prog, lod, tot2);
+        lod = loadP(uiThemeclearImage, uiThemeclearResource, prog, lod, tot2);
+        lod = loadP(numberClearImage, numberClearResource, prog, lod, tot2);
+        lod = loadP(numberTotalImage, numberTotalResource, prog, lod, tot2);
+        lod = loadP(stageClearImage, stageClearResource, prog, lod, tot2);
         loaded = true;
+    }
+
+    @Override
+    public void unload() {
+        for (Texture2D img : specialArrowImage)
+            img.dealloc();
+        for (Texture2D img : specialIceImage)
+            img.dealloc();
+        for (Texture2D img : specialSwordImage)
+            img.dealloc();
+        for (Texture2D img : arrowImage0)
+            img.dealloc();
+        for (Texture2D img : arrowImage1)
+            img.dealloc();
+        for (Texture2D img : arrowImage2)
+            img.dealloc();
+        for (Texture2D img : arrowImage3)
+            img.dealloc();
+        for (Texture2D img : arrowImage4)
+            img.dealloc();
+        for (Texture2D img : arrowImage9)
+            img.dealloc();
+        for (Texture2D img : uiIngameImage)
+            img.dealloc();
+        for (Texture2D img : uiThemeclearImage)
+            img.dealloc();
+        for (Texture2D img : numberClearImage)
+            img.dealloc();
+        for (Texture2D img : numberTotalImage)
+            img.dealloc();
+        for (Texture2D img : stageClearImage)
+            img.dealloc();
+        for (Texture2D[] imgs : effectImages)
+            for (Texture2D img : imgs)
+                img.dealloc();
+        loaded = false;
     }
 
     @Override
@@ -356,9 +405,6 @@ public class StagePage extends StageBase {
                     st.updateEffects(true);
                 break;
         }
-    }
-
-    public void update_GAME_PLAYING() {
     }
 
     public boolean getItem(int id) {
@@ -2096,92 +2142,48 @@ public class StagePage extends StageBase {
         }
     }
 
-
-
-    /* JADX WARN: Code restructure failed: missing block: B:193:0x00aa, code lost:
-
-        r15 = true;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:199:0x00a8, code lost:
-
-        if (st.Mana < r13) goto L33;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:19:0x009c, code lost:
-
-        if (st.Money < r13) goto L33;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:20:0x00ac, code lost:
-
-        r15 = false;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:144:0x0584  */
-    /* JADX WARN: Removed duplicated region for block: B:147:0x05d7  */
-    /* JADX WARN: Removed duplicated region for block: B:150:0x05fa  */
-    /* JADX WARN: Removed duplicated region for block: B:151:0x05a5  */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x031e  */
-    /* JADX WARN: Removed duplicated region for block: B:82:0x035c  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public void drawCharMenu() {
-        int specialType;
+        if (st.selectedUnit == null)
+            return;
         int buyPrice;
-        int levelUpPrice;
-        int upType;
         int towerImg;
         int towerBox;
         int downgradeImg;
-        int sellPrice;
         int upgradePrice;
-        boolean affordable;
-        boolean z2 = false;
-        int i11;
-        int i12;
-        int i13;
-        int i14;
-        if (st.selectedUnit == null)
-            return;
+        boolean affordable = false;
 
         int towerImageOrder = st.selectedUnit.type;
         if (!(st.selectedUnit instanceof HeroUnit hero)) {
-            upType = st.selectedUnit.getUpgradeType();
-            levelUpPrice = st.selectedUnit.getLevelupPrice();
             upgradePrice = st.selectedUnit.getUpgradePrice();
-            sellPrice = st.selectedUnit.getSellPrice();
             buyPrice = TowerUnit.getBuyPrice(st.selectedUnit.type);
             downgradeImg = st.selectedUnit.getDowngradeType();
-            towerBox = TowerUnit.getTowerBoxImageOrder(upType);
-            towerImg = upType;
-            specialType = 0;
+            towerImg = st.selectedUnit.getUpgradeType();
+            towerBox = TowerUnit.getTowerBoxImageOrder(towerImg);
             affordable = st.money < upgradePrice;
         } else {
-            specialType = hero.specialType;
             buyPrice = HeroUnit.getHeroBuyPrice(hero.type);
-            levelUpPrice = hero.getLevelupPrice();
-            upType = towerImg = towerBox = downgradeImg = -1;
-            sellPrice = upgradePrice = 0;
-            affordable = st.mana < upgradePrice;
+            towerImg = towerBox = downgradeImg = -1;
         }
         TouchManager.clearTouchMap();
-        Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-        Texture2D.gl.glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
-        fillBlackImage.fillRect(0.0f, 0.0f, SCRWIDTH, 343.0f);
-        Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        uiCharEtcImage[0].drawAtPointOption(0.0f, 343.0f, 18);
-        int i22 = upgradeCount;
-        if (i22 > 0) {
-            if (i22 > 5) {
+        Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+
+        Texture2D.setAlpha(0.2f);
+        fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH, 343);
+        Texture2D.setAlpha(1);
+        uiCharEtcImage[0].drawAtPointOption(0.0f, 343, 18);
+        if (upgradeCount > 0) {
+            if (upgradeCount > 5) {
                 if (downgradeImg != -1) {
-                    uiCharFaceImage[downgradeImg].drawAtPointOption(0 - ((10 - i22) * 80), SCRHEIGHT_SMALL, 34);
-                    uiCharNameImage[downgradeImg].drawAtPointOptionHorizonSize(287.0f, 321.0f, 10, (upgradeCount - 5) * 0.2f);
+                    uiCharFaceImage[downgradeImg].drawAtPointOption(-((10 - upgradeCount) * 80), GameRenderer.SCRHEIGHT_SMALL, 34);
+                    uiCharNameImage[downgradeImg].drawAtPointOptionHorizonSize(287, 321, 10, (upgradeCount - 5) * 0.2f);
                 }
             } else if (towerImageOrder != -1) {
-                uiCharFaceImage[towerImageOrder].drawAtPointOption((-i22) * 80, SCRHEIGHT_SMALL, 34);
-                uiCharNameImage[towerImageOrder].drawAtPointOptionHorizonSize(287.0f, 321.0f, 10, (5 - upgradeCount) * 0.2f);
+                uiCharFaceImage[towerImageOrder].drawAtPointOption((-upgradeCount) * 80, GameRenderer.SCRHEIGHT_SMALL, 34);
+                uiCharNameImage[towerImageOrder].drawAtPointOptionHorizonSize(287, 321, 10, (5 - upgradeCount) * 0.2f);
             }
-        } else {
-            uiCharFaceImage[towerImageOrder].drawAtPointOption(0.0f, SCRHEIGHT_SMALL, 34);
-            uiCharNameImage[towerImageOrder].drawAtPointOption(287.0f, 305.0f, 18);
+        } else if (towerImageOrder != -1) {
+            uiCharFaceImage[towerImageOrder].drawAtPointOption(0, GameRenderer.SCRHEIGHT_SMALL, 34);
+            uiCharNameImage[towerImageOrder].drawAtPointOption(287, 305, 18);
         }
         if (st.selectedUnit instanceof HeroUnit)
             uiCharEtcImage[8].drawAtPointOption(287.0f, 288.0f, 18);
@@ -2190,99 +2192,62 @@ public class StagePage extends StageBase {
         uiCharEtcImage[1].drawAtPointOption(288.0f, 359.0f, 18);
         uiCharEtcImage[2].drawAtPointOption(486.0f, 314.0f, 18);
         uiCharEtcImage[st.selectedUnit.level + 3].drawAtPointOption(519.0f, 314.0f, 18);
-        setFontSize(14);
-        setFontColor(-8128317);
-        drawStringM(String.valueOf(st.selectedUnit.getHitPower()), 420.0f, 360.0f, 20);
+        GameRenderer.setFontSize(14);
+        GameRenderer.setFontColor(-8128317);
+        GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getHitPower()), 420.0f, 360.0f, 20);
         if (st.selectedUnit.towerCoolTimeMax == 1) {
-            drawStringM("MAX", 420.0f, 388.0f, 20);
+            GameRenderer.drawStringM("MAX", 420.0f, 388.0f, 20);
         } else
-            drawStringM(String.valueOf(st.selectedUnit.getAttackSpeed()), 420.0f, 388.0f, 20);
+            GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getAttackSpeed()), 420.0f, 388.0f, 20);
 
-        drawStringM(String.valueOf(st.selectedUnit.attackRange), 420.0f, 416.0f, 20);
-        drawStringM(getEffectTypeString(st.selectedUnit.effectType), 420.0f, 442.0f, 20);
+        GameRenderer.drawStringM(String.valueOf(st.selectedUnit.attackRange), 420.0f, 416.0f, 20);
+        GameRenderer.drawStringM(TowerUnit.getEffectTypeString(st.selectedUnit.effectType), 420.0f, 442.0f, 20);
         int i23 = characterMenuSelectFlag;
         if (i23 != 2) {
             if (i23 == 5 || i23 == 6) {
-                TouchManager.addTouchRectListData(17, CGRectMake(670.0f, 350.0f, 115.0f, 115.0f));
-                TouchManager.addTouchRectListData(19, CGRectMake(0.0f, 343.0f, SCRWIDTH, 137.0f));
+                TouchManager.addTouchRectListData(17, CGRect.CGRectMake(670.0f, 350.0f, 115.0f, 115.0f));
+                TouchManager.addTouchRectListData(19, CGRect.CGRectMake(0.0f, 343.0f, GameRenderer.SCRWIDTH, 137.0f));
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 20;
                 int checkTouchListStatus = TouchManager.checkTouchListStatus();
-                if (!(st.selectedUnit instanceof HeroUnit hero)) {
-                } else if (hero.specialType == 0) {
-                    uiCharEtcImage[9].drawAtPointOption(440.0f, 400.0f, 18);
-                } else if (hero.specialType == 1) {
-                    uiCharEtcImage[10].drawAtPointOption(440.0f, 400.0f, 18);
-                } else {
-                    if (specialType != 2) {
-                        i14 = 17;
-                        i13 = 18;
-                        if (checkTouchListStatus != i14) {
-                            setFontColor(-1);
-                            uiCharButtonImage[5].drawAtPointOption(670.0f, 350.0f, i13);
-                            if (st.selectedUnit instanceof HeroUnit) {
-                                uiUpperImage[upper_mana].drawAtPointOption(696.0f, 428.0f, i13);
-                            } else {
-                                uiUpperImage[upper_money].drawAtPointOption(696.0f, 427.0f, i13);
-                            }
-                            drawStringM(String.valueOf(buyPrice), 755.0f, 430.0f, 20);
-                            return;
-                        }
-                        setFontColor(-1);
-                        uiCharButtonImage[4].drawAtPointOption(670.0f, 350.0f, i13);
-                        if (st.selectedUnit instanceof HeroUnit) {
-                            uiUpperImage[upper_mana].drawAtPointOption(696.0f, 428.0f, i13);
-                        } else {
-                            uiUpperImage[upper_money].drawAtPointOption(696.0f, 427.0f, i13);
-                        }
-                        drawStringM(String.valueOf(buyPrice), 755.0f, 430.0f, 20);
-                        return;
-                    }
-                    uiCharEtcImage[11].drawAtPointOption(440.0f, 400.0f, 18);
-                }
-                i14 = 17;
-                if (checkTouchListStatus != i14) {
-                }
-            } else if (i23 != 12 && i23 != 13) {
-                return;
-            }
-        }
-        if (!(st.selectedUnit instanceof HeroUnit)) {
-            TouchManager.addTouchRectListData(14, CGRectMake(15.0f, 390.0f, 75.0f, 75.0f));
-        }
-        if (upType != -1 && !affordable) {
-            TouchManager.addTouchRectListData(15, CGRectMake(435.0f, 350.0f, 235.0f, 115.0f));
-        }
-        if (st.selectedUnit.level < getTowerMaxLevel(st.selectedUnit instanceof HeroUnit) - 1 && !z2) {
-            TouchManager.addTouchRectListData(16, CGRectMake(670.0f, 350.0f, 115.0f, 115.0f));
-        }
-        if (st.selectedUnit instanceof HeroUnit hero && Config.rewardValues[3] && hero.specialCooltime <= 0 && st.mana >= hero.specialMana)
-            TouchManager.addTouchRectListData(18, CGRectMake(625.0f, 272.0f, 160.0f, 69.0f));
+                if (st.selectedUnit instanceof HeroUnit hero)
+                    uiCharEtcImage[9 + hero.specialType].drawAtPointOption(440.0f, 400.0f, 18);
 
-        TouchManager.addTouchRectListData(19, CGRectMake(0.0f, 343.0f, SCRWIDTH, 137.0f));
+                GameRenderer.setFontColor(-1);
+                uiCharButtonImage[checkTouchListStatus != 17 ? 5 : 4].drawAtPointOption(670.0f, 350.0f, 18);
+                if (st.selectedUnit instanceof HeroUnit)
+                    uiUpperImage[upper_mana].drawAtPointOption(696.0f, 428.0f, 18);
+                else
+                    uiUpperImage[upper_money].drawAtPointOption(696.0f, 427.0f, 18);
+                GameRenderer.drawStringM(String.valueOf(buyPrice), 755.0f, 430.0f, 20);
+            } else if (i23 != 12 && i23 != 13)
+                return;
+        }
+        if (!(st.selectedUnit instanceof HeroUnit))
+            TouchManager.addTouchRectListData(14, CGRect.CGRectMake(15, 390, 75, 75));
+        if (st.selectedUnit.getUpgradeType() != -1 && !affordable)
+            TouchManager.addTouchRectListData(15, CGRect.CGRectMake(435, 350, 235, 115));
+        if (st.selectedUnit.level < getTowerMaxLevel(st.selectedUnit instanceof HeroUnit) - 1)
+            TouchManager.addTouchRectListData(16, CGRect.CGRectMake(670, 350, 115, 115));
+        if (st.selectedUnit instanceof HeroUnit hero && Config.rewardValues[3] && hero.specialCooltime <= 0 && st.mana >= hero.specialMana)
+            TouchManager.addTouchRectListData(18, CGRect.CGRectMake(625, 272, 160, 69));
+
+        TouchManager.addTouchRectListData(19, CGRect.CGRectMake(0, 343, GameRenderer.SCRWIDTH, 137));
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 20;
         int checkTouchListStatus2 = TouchManager.checkTouchListStatus();
         if (!(st.selectedUnit instanceof HeroUnit)) {
-            if (checkTouchListStatus2 == 14) {
-                uiCharButtonImage[7].drawAtPointOption(15.0f, 390.0f, 18);
-            } else {
-                uiCharButtonImage[6].drawAtPointOption(15.0f, 390.0f, 18);
-            }
-            i11 = -1;
-            setFontColor(-1);
-            drawStringM(String.valueOf(sellPrice), 80.0f, 430.0f, 20);
-        } else {
-            i11 = -1;
+            uiCharButtonImage[checkTouchListStatus2 == 14 ? 7 : 6].drawAtPointOption(15, 390, 18);
+            GameRenderer.setFontColor(-1);
+            GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getSellPrice()), 80, 430, 20);
         }
-        if (upType != i11) {
-            i12 = 18;
+        if (st.selectedUnit.getUpgradeType() != -1) {
             if (checkTouchListStatus2 == 15) {
                 uiCharButtonImage[1].drawAtPointOption(435.0f, 350.0f, 18);
             } else {
                 uiCharButtonImage[0].drawAtPointOption(435.0f, 350.0f, 18);
             }
-            uiCharUpFaceImage[towerBox].drawAtPointOption(514.0f, 364.0f, i12);
+            uiCharUpFaceImage[towerBox].drawAtPointOption(514.0f, 364.0f, 18);
             uiCharNameImage[towerImg].drawAtPointOptionSize(653.0f, 449.0f, 36, 0.4f);
-            drawStringM(String.valueOf(upgradePrice), 503.0f, 421.0f, 20);
+            GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getUpgradePrice()), 503.0f, 421.0f, 20);
             if (affordable) {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                 Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
@@ -2312,13 +2277,7 @@ public class StagePage extends StageBase {
                     uiCharButtonImage[i26 + 16].drawAtPointOption(708.0f, 401.0f, 17);
                     uiCharButtonImage[i26 + 18].drawAtPointOption(764.0f, 401.0f, 17);
                 }
-                GameRenderer.drawStringM(String.valueOf(levelUpPrice), 756.0f, 423.0f, 20);
-                if (z2) {
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(0.5f);
-                    fillBlackImage.fillRect(670.0f, 350.0f, 115.0f, 115.0f);
-                    Texture2D.setAlpha(1);
-                }
+                GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getLevelupPrice()), 756.0f, 423.0f, 20);
                 if (levelUpCount > 0) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                     Texture2D.setAlpha(levelUpCount * 0.1f);
