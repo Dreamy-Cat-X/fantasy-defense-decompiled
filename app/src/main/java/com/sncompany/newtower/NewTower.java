@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.internal.view.SupportMenu;
 
 import com.sncompany.newtower.Pages.CinematicPage;
 import com.sncompany.newtower.Pages.LoadingPage;
@@ -141,6 +140,7 @@ public class NewTower extends AppCompatActivity {
             return;
         }
         GameThread.newTower = this;
+        NewTower.switchPage(new CinematicPage(null), false);
     }
 
     @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
@@ -245,10 +245,11 @@ public class NewTower extends AppCompatActivity {
      * @param i The upper limit for the number (exclusive).
      */
     public static int getRandom(int i) {
-        int currentTimeMillis = (int) ((((randomNumber & SupportMenu.USER_MASK) * 93217) + 1 + (System.currentTimeMillis() & 65535)) & 65535);
+        return (int)(Math.random() * i);
+        /*int currentTimeMillis = (int) ((((randomNumber & SupportMenu.USER_MASK) * 93217) + 1 + (System.currentTimeMillis() & 65535)) & 65535);
         randomNumber = currentTimeMillis >> 1;
         if (i == 0)
             return 0;
-        return randomNumber % i;
+        return randomNumber % i;*/
     }
 }

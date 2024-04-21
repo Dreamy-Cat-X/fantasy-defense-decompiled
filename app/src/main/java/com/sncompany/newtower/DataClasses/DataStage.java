@@ -189,7 +189,6 @@ public class DataStage {
         map.objectUnit.sort(null);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
     public TowerUnit addUnit(int type, int bX, int bY) {
         TowerUnit twu = new TowerUnit(this, type, bX, bY);
         twu.restatTowerUnit(false);
@@ -203,5 +202,19 @@ public class DataStage {
             twu.restatTowerUnit(false);
         towerUnit.add(twu);
         return twu;
+    }
+
+    public void restart() {
+        monsterUnit.clear();
+        towerUnit.clear();
+        effectUnit.clear();
+        arrowUnit.clear();
+        life = maxLife;
+
+        map.objectUnit.clear();
+        map.objectUnit.addAll(map.defaultObjs);
+        for (ObjectUnit obj : map.objectUnit)
+            obj.type = obj.oType;
+        waveManager.current = 0;
     }
 }

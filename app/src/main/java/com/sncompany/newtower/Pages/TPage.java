@@ -63,13 +63,6 @@ public abstract class TPage {
             T2Darr[i].initWithImageName(ress[i]);
     }
 
-    public static void removeImageResourceArray(Texture2D[] TArr) {
-        if (TArr == null)
-            return;
-        for (Texture2D T2 : TArr)
-            T2.dealloc();
-    }
-
     public abstract void load(Consumer<Float> prog);
 
     public abstract void update();

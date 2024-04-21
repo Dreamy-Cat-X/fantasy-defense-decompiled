@@ -28,7 +28,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static int SCRHEIGHT_SMALL = 0;
     public static int SCRWIDTH = 0;
     public static int SCRWIDTH_SMALL = 0;
-    public static int darkViewCount = 0;
     public static Paint drawFont = null;
     public static Texture2D drawStringBuffer = null;
     public static int fontColor = 0;
@@ -37,9 +36,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static long lastCheckTime;
     public static String lastFontName;
     public static int levelUpCount;
-    public static int loadCount_GAME_MENU_IMAGE_LOAD;
     public static int loadCount_GAME_PRE_IMAGE_LOAD;
-    public static int loadingViewType;
     public static int monsterGoalBlinkCount;
     public static NewTower newTower;
     public static Texture2D[] outBorderImage;
@@ -60,14 +57,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         textTombstone.connectGL(gl10);
         gl10.glClearDepthf(1.0f);
         gl10.glDisable(2929);
-    }
-
-    public void onPause() {
-        isPaused = true;
-    }
-
-    public void onResume() {
-        isPaused = false;
     }
 
     @Override // android.opengl.GLSurfaceView.Renderer
