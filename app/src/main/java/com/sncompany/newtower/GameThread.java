@@ -5,52 +5,33 @@ import android.util.Log;
 
 import androidx.core.internal.view.SupportMenu;
 
-import com.sncompany.newtower.Battle.EffectUnit;
-import com.sncompany.newtower.Battle.ObjectUnit;
-import com.sncompany.newtower.Battle.TowerUnit;
-import com.sncompany.newtower.DataClasses.CGPoint;
-
-import java.lang.reflect.Array;
-
 /* loaded from: D:\decomp\classes.dex */
 public class GameThread extends Thread {
-    public static final int SPECIAL_ATTACK_ARROW_LEG_POS_X = 403;
-    public static final int SPECIAL_ATTACK_ARROW_LEG_POS_Y = 558;
     public static final MediaManager[] bgmMedia = new MediaManager[3];
     public static long currentDate;
     public static long currentDrawDate;
     public static int currentFrameCount;
-    public static float destroyScore;
     public static final int total_SFX = 31;
     public static final MediaManager2 effectMedia = new MediaManager2(total_SFX);
 
     public static int gameHelpViewNum;
     public static int gameLoadFlag;
-    public static int gameStatus;
     public static int gameSubStatus;
     public static int gameTitleViewCount;
-    public static int[][] highScoreValue;
     public static int lastDrawCount;
     public static int lastFrameCount;
     public static int loadingStatus;
     public static boolean m_bStop;
-    public static int mapAttackType;
     public static final int[] mapEndDirection = new int[10];
     public static final int[][] mapEndPosition = new int[10][2];
-    public static int mapNumber;
     public static AudioManager mgr;
     public static NewTower newTower;
     public static boolean pauseFlag;
     public static long playTimeStartValue;
-    public static int randomNumber;
     public static int realDrawCount;
-    public static int rewardShowOrder = -1;
     public static final boolean soundFlag = true;
     public static final boolean[] soundPlayCheckFlag = new boolean[total_SFX];
     public static int[] soundPlayDelayCount = new int[total_SFX];
-    public static int specialAttackFrameCount;
-    public static int[][] specialDataValue;
-    public static int stageClearViewHeroism;
     public static long startDate;
     public static long startDrawDate;
 
@@ -96,8 +77,6 @@ public class GameThread extends Thread {
             Config.musicMaxVolume = streamMaxVolume;
             Config.musicVolume = streamMaxVolume / 2;
             Config.effectVolume = streamMaxVolume / 2;
-
-            specialDataValue = (int[][]) Array.newInstance(int.class, 20, 4);
 
             loadSounds();
             gameTimeCount = 0;
@@ -156,15 +135,6 @@ public class GameThread extends Thread {
         effectMedia.setMediaFile(28, newTower, R.raw.voice_8);
         effectMedia.setMediaFile(29, newTower, R.raw.voice_9);
         effectMedia.setMediaFile(30, newTower, R.raw.spebladehit);
-    }
-
-    public static int getRandom(int i) {
-        int currentTimeMillis = (int) ((((randomNumber & SupportMenu.USER_MASK) * 93217) + 1 + (System.currentTimeMillis() & 65535)) & 65535);
-        int i2 = currentTimeMillis >> 1;
-        randomNumber = i2;
-        if (i == 0)
-            return 0;
-        return i2 % i;
     }
 
     public static void playSound(int i) {

@@ -4,8 +4,8 @@
 Note: This code doesn't build smoothly due to compilation issues and WIP restructuring
 
 PROGRESS:
-All pages except StagePage done
-StagePage - 107 errors
+All pages done
+StagePage code still WIP and terrible but everything else has to be tested first
 
 All achievements done
 

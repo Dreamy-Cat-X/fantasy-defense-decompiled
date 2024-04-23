@@ -35,9 +35,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static boolean isPaused = false;
     public static long lastCheckTime;
     public static String lastFontName;
-    public static int levelUpCount;
     public static int loadCount_GAME_PRE_IMAGE_LOAD;
-    public static int monsterGoalBlinkCount;
     public static NewTower newTower;
     public static Texture2D[] outBorderImage;
     public static int strokeColor;

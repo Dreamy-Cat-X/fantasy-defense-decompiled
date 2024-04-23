@@ -10,6 +10,7 @@ import com.sncompany.newtower.Battle.EffectUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.Battle.MonsterUnit;
+import com.sncompany.newtower.Pages.StagePage;
 import com.sncompany.newtower.Pages.stage.StageBase;
 
 import java.util.ArrayList;
@@ -55,8 +56,8 @@ public class DataStage {
         money = DataStage.stageData[SID][DATA_STAGE_START_MONEY];
         mana = DataStage.stageData[SID][DATA_STAGE_START_MANA];
 
-        GameRenderer.levelUpCount = 0;
-        GameRenderer.monsterGoalBlinkCount = 0;
+        ((StagePage)page).levelUpCount = 0;
+        ((StagePage)page).monsterGoalBlinkCount = 0;
         map = m;
         waveManager = m.wav;
 

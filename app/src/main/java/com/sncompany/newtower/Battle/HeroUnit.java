@@ -185,7 +185,7 @@ public class HeroUnit extends TowerUnit {
         st.addEffectUnit(14, posX, posY);
         GameThread.playSound(13);
         restatTowerUnit(false);
-        GameRenderer.levelUpCount = 10;
+        ((StagePage)st.page).levelUpCount = 10;
     }
 
     @Override

@@ -205,7 +205,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         restatTowerUnit(false);
         st.addEffectUnit(14, posX, posY);
         GameThread.playSound(13);
-        GameRenderer.levelUpCount = 10;
+        ((StagePage)st.page).levelUpCount = 10;
     }
 
     public int getLevelupPrice() {

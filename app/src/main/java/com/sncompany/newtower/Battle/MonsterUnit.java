@@ -12,6 +12,7 @@ import com.sncompany.newtower.DataClasses.DataWave;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
+import com.sncompany.newtower.Pages.StagePage;
 import com.sncompany.newtower.Texture2D;
 
 /* loaded from: D:\decomp\classes.dex */
@@ -192,7 +193,7 @@ public class MonsterUnit extends EnemyUnit {
                 GameThread.playSound(12);
                 type = -1;
                 unitHP = 0;
-                GameRenderer.monsterGoalBlinkCount = 6;
+                ((StagePage)st.page).monsterGoalBlinkCount = 6;
                 if (st.life > 0) {
                     int i10 = st.waveManager.wavePattern;
                     if (i10 == 2)
@@ -203,7 +204,7 @@ public class MonsterUnit extends EnemyUnit {
                         st.life--;
                 }
                 if (st.life <= 0) {
-                    GameRenderer.monsterGoalBlinkCount = 0;
+                    ((StagePage)st.page).monsterGoalBlinkCount = 0;
                     return true;
                 }
             }
