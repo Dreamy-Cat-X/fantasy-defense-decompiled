@@ -1,4 +1,4 @@
-package com.sncompany.newtower.Pages;
+package com.sncompany.newtower.Pages.stage;
 
 import com.sncompany.newtower.Battle.EnemyUnit;
 import com.sncompany.newtower.Battle.HeroUnit;
@@ -16,7 +16,8 @@ import com.sncompany.newtower.DataClasses.DataWave;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
-import com.sncompany.newtower.Pages.stage.StageBase;
+import com.sncompany.newtower.Pages.CinematicPage;
+import com.sncompany.newtower.Pages.TPage;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -72,9 +73,9 @@ public class StagePage extends StageBase {
      * Contains all the dialog for reward attaining.
      */
     static final String[] rewardDataString = {
-            "You've acquired a Hero.", "Hero: Champion acquired.", "Check for more info under the Item> Equipment menu.",
+            "You've acquired a Hero.", "Hero: Champion acquired.", "Check for more info under the Item > Equipment menu.",
             "Hero Points obtained.", "You obtained 1,500 Hero Points.", " ",
-            "You've acquired a Hero.", "Hero: Bow Master acquired.", "Check for more info under the Item> Equipment menu.",
+            "You've acquired a Hero.", "Hero: Bow Master acquired.", "Check for more info under the Item > Equipment menu.",
             "You acquired special skills.", "You can now use the special skill for all of your Heroes.", "Select a Hero character while playing.",
             "You've acquired a Hero.", "Hero: Archmage acquired.", "Check for more info under the Item> Equipment menu.",
             "The upgrade limit is now uncapped.", "The upgrade limit of your Hero units has increased.(+5)", " ",

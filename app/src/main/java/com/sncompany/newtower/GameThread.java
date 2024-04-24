@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.util.Log;
 
+import com.sncompany.newtower.Pages.LoadingPage;
+
 /* loaded from: D:\decomp\classes.dex */
 public class GameThread extends Thread {
     public static final MediaManager[] bgmMedia = new MediaManager[3];
@@ -51,14 +53,12 @@ public class GameThread extends Thread {
             try {
                 if (!pauseFlag && newTower.hasWindowFocus()) {
                     NewTower.glGameSurfaceView.requestRender();
-                    int i = gameLoadFlag;
-                    if (i == 0 && loadingStatus >= 1000 && loadingStatus <= 1008) {
+                    if (NewTower.currentPage instanceof LoadingPage) {
                         sleep(12L); //Loading
-                        break;
-                    } else if (i == 1)
+                    } else
                         sleep(24L);
                 } else
-                    sleep(1000L);
+                    sleep(500L);
             } catch (Exception ignored) {
             }
     }

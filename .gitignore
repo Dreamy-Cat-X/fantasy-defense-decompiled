@@ -1,3 +1,5 @@
 app/build
 .gradle
 java_pid9719.hprof
+
+local.properties

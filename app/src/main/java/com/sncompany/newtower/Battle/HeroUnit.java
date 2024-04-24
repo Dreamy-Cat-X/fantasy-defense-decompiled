@@ -10,12 +10,10 @@ import com.sncompany.newtower.DataClasses.DataUpgradeHero;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
-import com.sncompany.newtower.NewTower;
-import com.sncompany.newtower.Pages.StagePage;
+import com.sncompany.newtower.Pages.stage.StagePage;
 import com.sncompany.newtower.Pages.stage.StageBase;
 import com.sncompany.newtower.Texture2D;
-
-import java.lang.reflect.Array;
+import com.sncompany.newtower.core.CoreStatic;
 
 public class HeroUnit extends TowerUnit {
 
@@ -283,13 +281,13 @@ public class HeroUnit extends TowerUnit {
         switch (type) {
             case 0:
                 for (int i4 = 0; i4 < 60; i4++)
-                    st.addSpecialArrowUnit(NewTower.getRandom(4) + 15, this, 33750, NewTower.getRandom(450) * 50, -(i4 + 65));
+                    st.addSpecialArrowUnit(CoreStatic.getRandom(4) + 15, this, 33750, CoreStatic.getRandom(450) * 50, -(i4 + 65));
 
                 for (int i5 = 0; i5 < 20; i5++) {
                     int i6 = i5 % 3;
                     specialDataValue[i5][0] = i6;
-                    specialDataValue[i5][1] = NewTower.getRandom(GameRenderer.SCRWIDTH_SMALL);
-                    specialDataValue[i5][2] = NewTower.getRandom(GameRenderer.SCRHEIGHT_SMALL);
+                    specialDataValue[i5][1] = CoreStatic.getRandom(GameRenderer.SCRWIDTH_SMALL);
+                    specialDataValue[i5][2] = CoreStatic.getRandom(GameRenderer.SCRHEIGHT_SMALL);
                     if (i6 == 0) {
                         specialDataValue[i5][3] = 100;
                     } else if (i6 == 1) {
@@ -300,13 +298,13 @@ public class HeroUnit extends TowerUnit {
                 break;
             case 1:
                 while (arrowC < 75) {
-                    st.addSpecialArrowUnit(NewTower.getRandom(3) + 33, this, NewTower.getRandom(675) * 50, NewTower.getRandom(450) * 50, -(arrowC + 60));
+                    st.addSpecialArrowUnit(CoreStatic.getRandom(3) + 33, this, CoreStatic.getRandom(675) * 50, CoreStatic.getRandom(450) * 50, -(arrowC + 60));
                     arrowC++;
                 }
                 break;
             case 2:
                 while (arrowC < 60) {
-                    st.addSpecialArrowUnit(NewTower.getRandom(14) + 19, this, (NewTower.getRandom(337) + GameRenderer.GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS) * 50, (NewTower.getRandom(225) + 112) * 50, -(arrowC + 65));
+                    st.addSpecialArrowUnit(CoreStatic.getRandom(14) + 19, this, (CoreStatic.getRandom(337) + GameRenderer.GAME_STAGE_CLEAR_THEME_ARROW_BLINK_END_POS) * 50, (CoreStatic.getRandom(225) + 112) * 50, -(arrowC + 65));
                     arrowC++;
                 }
                 break;

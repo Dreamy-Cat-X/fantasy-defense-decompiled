@@ -7,10 +7,9 @@ import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.Battle.EffectUnit;
-import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.Battle.MonsterUnit;
-import com.sncompany.newtower.Pages.StagePage;
+import com.sncompany.newtower.Pages.stage.StagePage;
 import com.sncompany.newtower.Pages.stage.StageBase;
 
 import java.util.ArrayList;

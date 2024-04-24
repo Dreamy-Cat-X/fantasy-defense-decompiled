@@ -7,6 +7,7 @@ import android.opengl.GLU;
 import android.util.Log;
 
 import com.sncompany.newtower.DataClasses.CGRect;
+import com.sncompany.newtower.Pages.CinematicPage;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -39,14 +40,14 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static NewTower newTower;
     public static Texture2D[] outBorderImage;
     public static int strokeColor;
-    public static final Texture2D testboxImage = new Texture2D(R.drawable.etc_testbox);
+    private static final Texture2D testboxImage = new Texture2D();
     public static Tombstone textTombstone;
     public static int titlePressed;
     public static boolean loadViewFlag = false;
     public static final int[][] testboxCoord = {new int[]{0, 0, 20, 85}, new int[]{138, 0, 20, 85}, new int[]{59, 0, 40, 85}, new int[]{20, 0, 40, 85}};
 
-    public GameRenderer(NewTower newTower2) {
-        newTower = newTower2;
+    public GameRenderer(NewTower tower) {
+        newTower = tower;
     }
 
     @Override // android.opengl.GLSurfaceView.Renderer
@@ -55,6 +56,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         textTombstone.connectGL(gl10);
         gl10.glClearDepthf(1.0f);
         gl10.glDisable(2929);
+        NewTower.switchPage(new CinematicPage(null), false);
     }
 
     @Override // android.opengl.GLSurfaceView.Renderer
@@ -113,7 +115,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         gl10.glTexParameterf(3553, 10240, 9728.0f);
     }
 
-    @Override // android.opengl.GLSurfaceView.Renderer
+    @Override
     public void onDrawFrame(GL10 gl10) {
         if (isPaused)
             return;
@@ -197,6 +199,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         outBorderImage[1] = new Texture2D(R.drawable.etc_outl);
         outBorderImage[2] = new Texture2D(R.drawable.etc_outr);
         outBorderImage[3] = new Texture2D(R.drawable.etc_outu);
+        testboxImage.initWithImageName(R.drawable.etc_testbox);
     }
 
     public static float drawNumberBlock(int number, Texture2D[] texture2DArr, float x, float y, int extW, int pivot, int maxCount) {

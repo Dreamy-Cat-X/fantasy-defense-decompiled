@@ -8,14 +8,16 @@ import android.graphics.Rect;
 import android.opengl.GLUtils;
 
 import com.sncompany.newtower.DataClasses.CGRect;
+import com.sncompany.newtower.core.GameImage;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
 import javax.microedition.khronos.opengles.GL10;
 
 /* loaded from: D:\decomp\classes.dex */
-public class Texture2D {
+public class Texture2D implements GameImage {
     public static final int COORDINATES_LENGTH = 8;
     public static final int COORDINATES_LENGTH_X_4 = 32;
     public static float DRAW_ADJUST_X_MOVE = 0.0f;
@@ -151,24 +153,24 @@ public class Texture2D {
         createBitmap.recycle();
     }
 
-    public void initWithImageName(int i) {
+    public void initWithImageName(int id) {
         if (name != -1)
             dealloc();
 
         gl.glGenTextures(1, _name, 0);
         name = _name[0];
-        Bitmap decodeResource = BitmapFactory.decodeResource(newTower.getResources(), i);
-        int width2 = decodeResource.getWidth();
-        int height2 = decodeResource.getHeight();
+        Bitmap decodeResource = BitmapFactory.decodeResource(newTower.getResources(), id);
+        int resW = decodeResource.getWidth();
+        int resH = decodeResource.getHeight();
         int hPow = 2;
         int wPow = 2;
-        while (wPow < width2)
+        while (wPow < resW)
             wPow *= 2;
-        while (hPow < height2)
+        while (hPow < resH)
             hPow *= 2;
 
         Bitmap createBitmap = Bitmap.createBitmap(wPow, hPow, Bitmap.Config.ARGB_8888);
-        new Canvas(createBitmap).drawBitmap(decodeResource, new Rect(0, 0, width2, height2), new Rect(0, 0, width2, height2), GameRenderer.drawFont);
+        new Canvas(createBitmap).drawBitmap(decodeResource, new Rect(0, 0, resW, resH), new Rect(0, 0, resW, resH), GameRenderer.drawFont);
         gl.glBindTexture(3553, this.name);
         gl.glTexEnvx(8960, 8704, 7681);
         gl.glTexEnvx(8960, 8705, 6408);
@@ -177,10 +179,10 @@ public class Texture2D {
         GLUtils.texImage2D(3553, 0, createBitmap, 0);
         _width = wPow;
         _height = hPow;
-        _sizeX = (float) width2;
-        _sizeY = (float) height2;
-        _maxS = Math.min((float) width2 / wPow, 1f);
-        _maxT = Math.min((float) height2 / hPow, 1f);
+        _sizeX = (float) resW;
+        _sizeY = (float) resH;
+        _maxS = Math.min((float) resW / wPow, 1f);
+        _maxT = Math.min((float) resH / hPow, 1f);
 
         decodeResource.recycle();
         createBitmap.recycle();

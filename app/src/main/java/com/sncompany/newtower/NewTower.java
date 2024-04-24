@@ -15,43 +15,34 @@ import com.sncompany.newtower.Pages.LoadingPage;
 import com.sncompany.newtower.Pages.MenuPage;
 import com.sncompany.newtower.Pages.TPage;
 import com.sncompany.newtower.Pages.TitlePage;
+import com.sncompany.newtower.core.CoreStatic;
+import com.sncompany.newtower.core.GameImage;
 
 import java.util.Arrays;
 
 /* loaded from: D:\decomp\classes.dex */
 public class NewTower extends Activity {
-    public static int LAST_PURCHASE_POS = 0;
-    static final int PID_DATA_TYPE_1100 = 2;
-    static final int PID_DATA_TYPE_13000 = 1;
-    static final int PID_DATA_TYPE_27500 = 3;
-    static final int PID_DATA_TYPE_40000 = 4;
-    static final int PID_DATA_TYPE_6000 = 0;
-    static final int PID_DATA_TYPE_HERO_SPE0 = 13;
-    static final int PID_DATA_TYPE_HERO_SPE1 = 14;
-    static final int PID_DATA_TYPE_HERO_SPE2 = 15;
-    static final int PID_DATA_TYPE_HERO_SPE3 = 16;
-    static final int PID_DATA_TYPE_LIMIT0 = 5;
-    static final int PID_DATA_TYPE_RESET = 6;
-    static final int PID_DATA_TYPE_SPE_ATT15 = 12;
-    static final int PID_DATA_TYPE_SPE_ATT3 = 11;
-    static final int PID_DATA_TYPE_UNIT_11 = 9;
-    static final int PID_DATA_TYPE_UNIT_15 = 10;
-    static final int PID_DATA_TYPE_UNIT_3 = 7;
-    static final int PID_DATA_TYPE_UNIT_7 = 8;
-    private static final int PURCHASE_ERROR_DIALOG = 0;
+
+    private static class TImageCreator extends CoreStatic.ImageCreator {
+        @Override
+        public GameImage create() {
+            return new Texture2D();
+        }
+
+        @Override
+        public GameImage create(int id) {
+            return new Texture2D(id);
+        }
+    }
+
     public static GameRenderer gameRenderer = null;
     public static GameThread gameThread = null;
     public static GLGameSurfaceView glGameSurfaceView = null;
     public static boolean initActivityFirstFlag = false;
     public static Vibrator vibe;
     public static PowerManager.WakeLock wl;
-    public static String[] PID_DATA = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"};
-    public static String[] CID_DATA = {"51200006591694", "51200006591695", "51200006591703", "51200006591704", "51200006591705", "51200006591706", "51200006591707", "51200006591708", "51200006591709", "51200006591710", "51200006591696", "51200006591697", "51200006591698", "51200006591699", "51200006591700", "51200006591701", "51200006591702"};
     private String ErrorTitle = "";
     private String ErrorMessage = "";
-    private String rewardID = "ca-app-pub-1943198298123931/5668542964";
-    private String bannerID = "ca-app-pub-1943198298123931/5313319745";
-    public static int randomNumber;
 
     public static TPage currentPage;
 
@@ -59,6 +50,7 @@ public class NewTower extends Activity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         doFullScreen();
+        CoreStatic.creator = new TImageCreator();
         initActivity();
     }
 
@@ -142,7 +134,6 @@ public class NewTower extends Activity {
             return;
         }
         GameThread.newTower = this;
-        NewTower.switchPage(new CinematicPage(null), false);
     }
 
     @Override
@@ -248,10 +239,5 @@ public class NewTower extends Activity {
      */
     public static int getRandom(int i) {
         return (int)(Math.random() * i);
-        /*int currentTimeMillis = (int) ((((randomNumber & SupportMenu.USER_MASK) * 93217) + 1 + (System.currentTimeMillis() & 65535)) & 65535);
-        randomNumber = currentTimeMillis >> 1;
-        if (i == 0)
-            return 0;
-        return randomNumber % i;*/
     }
 }

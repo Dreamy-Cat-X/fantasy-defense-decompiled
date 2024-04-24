@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<table version="0.0.2">
+   <packages index="1" count="1">
+        <package index="0" id="127" name="com.sncompany.newtower">
+            <specs index="2" count="2">
+               <spec index="0" id="0" entryCount="1530" name="drawable">
+                 <types index="1" count="9">
+                    <type index="0" id="0" configFlags="-hdpi-v4" configFlagsSize="64" entryCount="1405"/>
+                    <type index="1" id="0" configFlags="-ldrtl-xxhdpi" configFlagsSize="64" entryCount="1405"/>
+                    <type index="2" id="0" configFlags="-nodpi" configFlagsSize="64" entryCount="1405"/>
+                 </types>
+               </spec>
+               <spec index="1" id="1" entryCount="135" name="raw">
+                 <types index="1" count="1">
+                    <type index="0" id="1" configFlags="" configFlagsSize="64" entryCount="135"/>
+                 </types>
+               </spec>
+            </specs>
+        </package>
+   </packages>
+</table>

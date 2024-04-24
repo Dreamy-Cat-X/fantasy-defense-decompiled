@@ -2,8 +2,7 @@ package com.sncompany.newtower.Battle;
 
 import com.sncompany.newtower.DataClasses.DataAnim;
 import com.sncompany.newtower.DataClasses.DataStage;
-import com.sncompany.newtower.GameThread;
-import com.sncompany.newtower.Pages.StagePage;
+import com.sncompany.newtower.Pages.stage.StagePage;
 import com.sncompany.newtower.Texture2D;
 
 /* loaded from: D:\decomp\classes.dex */

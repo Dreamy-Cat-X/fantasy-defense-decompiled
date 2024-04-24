@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StringBlock type="TYPE" format="UTF-16LE" index="0">
+      <strings index="2" count="2">
+          <string index="0">drawable</string>
+          <string index="1">raw</string>
+      </strings>
+</StringBlock>
