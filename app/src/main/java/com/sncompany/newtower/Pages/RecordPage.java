@@ -1,5 +1,7 @@
 package com.sncompany.newtower.Pages;
 
+import android.annotation.SuppressLint;
+
 import java.util.function.Consumer;
 
 import com.sncompany.newtower.CircleItemDraw;
@@ -81,6 +83,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
         awardListDraw.correctDistance();
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void paint(GL10 gl10, boolean init) {
         rankListDraw.getArrayAndCorrection();
@@ -211,7 +214,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     par.back(true);
                     NewTower.switchPage(par, false);
                     break;
-                case SCORE, AWARD:
+                case SCORE: case AWARD:
                     GameThread.playSound(14);
                     Dscore = !Dscore;
                     break;
@@ -250,7 +253,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                 par.back(true);
                 NewTower.switchPage(par, false);
                 break;
-            case SCORE, AWARD:
+            case SCORE: case AWARD:
                 GameThread.playSound(14);
                 Dscore = !Dscore;
                 break;

@@ -40,7 +40,7 @@ public class ObjectUnit extends EnemyUnit {
         blockX = bX;
         blockY = bY;
         switch (blockSize) {
-            case 0, 3, 4, 5:
+            case 0: case 3: case 4: case 5:
                 posX = ((bX * 45) + 22) * 50;
                 posY = ((bY * 45) + 22) * 50;
                 break;

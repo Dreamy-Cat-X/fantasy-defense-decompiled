@@ -1,7 +1,5 @@
 package com.sncompany.newtower.Pages;
 
-import androidx.core.view.ViewCompat;
-
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
@@ -114,7 +112,7 @@ public class InventoryTable { //Probably useless, but only one way to tell
             return;
         }
         GameRenderer.setFontSize(11);
-        GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+        GameRenderer.setFontDoubleColor(-1, -16777216);
         GameRenderer.drawStringDoubleGuideM(String.format("%dP", DataUpgradeItem.upgradeItemData[id][2]), x + 30, y + 43, 17, cGRect);
     }
 

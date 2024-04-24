@@ -1,7 +1,5 @@
 package com.sncompany.newtower.Pages;
 
-import androidx.core.view.ViewCompat;
-
 import com.sncompany.newtower.Battle.EnemyUnit;
 import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.MonsterUnit;
@@ -199,7 +197,7 @@ public class StagePage extends StageBase {
     @Override
     public void update() {
         switch (state) {
-            case STATE.START:
+            case START:
                 myOscillator[11].updatePosition();
                 if (startViewCount != 15) {
                     startViewCount++;
@@ -207,7 +205,7 @@ public class StagePage extends StageBase {
                         state = STATE.PLAYING;
                 }
                 break;
-            case STATE.PLAYING:
+            case PLAYING:
                 for (int i = 0; i < 11; i++)
                     myOscillator[i].updatePosition();
 
@@ -229,7 +227,7 @@ public class StagePage extends StageBase {
                 if (st.waveManager.monsterOpenTime > 0)
                     st.waveManager.monsterOpenTime--;
 
-                HeroUnit spe = st.selectedUnit instanceof HeroUnit hero ? hero : null;
+                HeroUnit spe = st.selectedUnit instanceof HeroUnit ? (HeroUnit)st.selectedUnit : null;
                 if (spe == null || spe.updateSpecial()) {
                     if (st.waveManager.waveRunF) {
                         if (st.waveManager.waveStartT > 0) {
@@ -397,7 +395,7 @@ public class StagePage extends StageBase {
                 for (int i = 12; i < myOscillator.length; i++)
                     myOscillator[i].initWithTwoWayStartPosition(300, 0, 30, -50, 10);
                 break;
-            case STATE.CLEAR:
+            case CLEAR:
                 st.updateEffects(false);
                 st.sortEntities();
                 if (substate == 0) {
@@ -447,7 +445,7 @@ public class StagePage extends StageBase {
                         NewTower.switchPage(new StagePage(parent, new DataStage(DataMap.loadMap(Config.lastPlayed, true), st.mapType)), true);
                 }
                 break;
-            case STATE.GAMEOVER: //Not done
+            case GAMEOVER: //Not done
                 st.updateEffects(false);
                 st.sortEntities();
                 if (substate == 0) {
@@ -474,7 +472,7 @@ public class StagePage extends StageBase {
                     }
                 }
                 break;
-            case STATE.PAUSE:
+            case PAUSE:
                 st.sortEntities();
                 if (substate < 1)
                     return;
@@ -595,7 +593,8 @@ public class StagePage extends StageBase {
         tmap.backBaseImageArray[tmap.lastShowBackBase].drawAtPointOption(0, 0, 18);
         backShadowImage.drawAtPointOption(0, 0, 18);
         drawMapTile(gl10);
-        if (st.selectedUnit != null && !(st.selectedUnit instanceof HeroUnit hero && hero.specialShowCount >= 0)) {
+        HeroUnit hero = st.selectedUnit instanceof HeroUnit ? (HeroUnit)st.selectedUnit : null;
+        if (st.selectedUnit != null && !(hero != null && hero.specialShowCount >= 0)) {
             drawAddGridBlock();
             st.selectedUnit.drawUnitRangeCircle();
         }
@@ -609,7 +608,7 @@ public class StagePage extends StageBase {
             drawAddGridBlock();
             drawAddRangeCircle(characterAddNumber, characterAddPosX, characterAddPosY, addable);
         }
-        if (st.selectedUnit instanceof HeroUnit hero && hero.specialAttackFrameCount != -1) {
+        if (hero != null && hero.specialAttackFrameCount != -1) {
             if (hero.type == 0) {
                 if (hero.specialAttackFrameCount < 60) {
                     float alpha;
@@ -859,7 +858,7 @@ public class StagePage extends StageBase {
         drawPlayingUi(false);
         TouchManager.clearTouchMap();
         switch (substate) {
-            case 0, 3, 5:
+            case 0: case 3: case 5:
                 TouchManager.addTouchRectListData(3, CGRect.CGRectMake(0.0f, 0.0f, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
                 z = false;
                 break;
@@ -888,7 +887,7 @@ public class StagePage extends StageBase {
                 }
                 z = false;
                 break;
-            case 4, 6, 7, 8:
+            case 4: case 6: case 7: case 8:
                 TouchManager.addTouchRectListData(5, CGRect.CGRectMake(213.0f, 289.0f, 381.0f, 65.0f));
                 z = false;
                 break;
@@ -1062,7 +1061,7 @@ public class StagePage extends StageBase {
                     case 1:
                         stageClearImage[18].drawAtPointOption(365.0f, 169.0f, 18);
                         GameRenderer.setFontSize(11);
-                        GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+                        GameRenderer.setFontDoubleColor(-1, -16777216);
                         GameRenderer.drawStringDoubleM("1500", 400.0f, 220.0f, 17);
                         break;
                     case 2:
@@ -1083,7 +1082,7 @@ public class StagePage extends StageBase {
                     case 7:
                         stageClearImage[18].drawAtPointOption(365.0f, 169.0f, 18);
                         GameRenderer.setFontSize(11);
-                        GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+                        GameRenderer.setFontDoubleColor(-1, -16777216);
                         GameRenderer.drawStringDoubleM("1000", 400.0f, 220.0f, 17);
                         break;
                     case 8:
@@ -1092,7 +1091,7 @@ public class StagePage extends StageBase {
                     case 9:
                         stageClearImage[18].drawAtPointOption(365.0f, 169.0f, 18);
                         GameRenderer.setFontSize(11);
-                        GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+                        GameRenderer.setFontDoubleColor(-1, -16777216);
                         GameRenderer.drawStringDoubleM("2500", 400.0f, 220.0f, 17);
                         break;
                 }
@@ -1101,10 +1100,10 @@ public class StagePage extends StageBase {
                 } else {
                     uiPopupImage[12].drawAtPointOption(213.0f, 289.0f, 18);
                 }
-                GameRenderer.setFontDoubleColor(ViewCompat.MEASURED_STATE_MASK, ViewCompat.MEASURED_STATE_MASK);
+                GameRenderer.setFontDoubleColor(-16777216, -16777216);
                 GameRenderer.setFontSize(15);
                 GameRenderer.drawStringDoubleM(rewardDataString[substate * 3], GameRenderer.CX, 153.0f, 17);
-                GameRenderer.setFontColor(ViewCompat.MEASURED_STATE_MASK);
+                GameRenderer.setFontColor(-16777216);
                 GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 1], GameRenderer.CX, 243.0f, 17);
                 GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 2], GameRenderer.CX, 262.0f, 17);
                 break;
@@ -1127,10 +1126,10 @@ public class StagePage extends StageBase {
                 } else {
                     uiPopupImage[12].drawAtPointOption(213.0f, 289.0f, 18);
                 }
-                GameRenderer.setFontDoubleColor(ViewCompat.MEASURED_STATE_MASK, ViewCompat.MEASURED_STATE_MASK);
+                GameRenderer.setFontDoubleColor(-16777216, -16777216);
                 GameRenderer.setFontSize(15);
                 GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153.0f, 17);
-                GameRenderer.setFontColor(ViewCompat.MEASURED_STATE_MASK);
+                GameRenderer.setFontColor(-16777216);
                 GameRenderer.drawStringM("Champion: Splashed damage", GameRenderer.CX, 243.0f, 17);
                 break;
             case 7:
@@ -1142,10 +1141,10 @@ public class StagePage extends StageBase {
                 } else {
                     uiPopupImage[12].drawAtPointOption(213.0f, 289.0f, 18);
                 }
-                GameRenderer.setFontDoubleColor(ViewCompat.MEASURED_STATE_MASK, ViewCompat.MEASURED_STATE_MASK);
+                GameRenderer.setFontDoubleColor(-16777216, -16777216);
                 GameRenderer.setFontSize(15);
                 GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153.0f, 17);
-                GameRenderer.setFontColor(ViewCompat.MEASURED_STATE_MASK);
+                GameRenderer.setFontColor(-16777216);
                 GameRenderer.drawStringM("Bow Master: Double Shot", GameRenderer.CX, 243.0f, 17);
                 break;
             case 8:
@@ -1157,10 +1156,10 @@ public class StagePage extends StageBase {
                 } else {
                     uiPopupImage[12].drawAtPointOption(213.0f, 289.0f, 18);
                 }
-                GameRenderer.setFontDoubleColor(ViewCompat.MEASURED_STATE_MASK, ViewCompat.MEASURED_STATE_MASK);
+                GameRenderer.setFontDoubleColor(-16777216, -16777216);
                 GameRenderer.setFontSize(15);
                 GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153.0f, 17);
-                GameRenderer.setFontColor(ViewCompat.MEASURED_STATE_MASK);
+                GameRenderer.setFontColor(-16777216);
                 GameRenderer.drawStringM("Archmage: Splashed damage", GameRenderer.CX, 243.0f, 17);
                 break;
         }
@@ -1499,7 +1498,8 @@ public class StagePage extends StageBase {
                 myOscillator[i].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
             return;
         }
-        if (st.selectedUnit instanceof HeroUnit hero && hero.specialAttackFrameCount >= 0) {
+        HeroUnit hero = st.selectedUnit instanceof HeroUnit ? (HeroUnit)st.selectedUnit : null;
+        if (hero != null && hero.specialAttackFrameCount >= 0) {
             hero.specialAttackFrameCount = 999;
             GameThread.killSound(19);
             GameThread.killSound(hero.type + 16);
@@ -1550,7 +1550,7 @@ public class StagePage extends StageBase {
                             st.addUnit(characterAddNumber, (int) ((characterAddPosX - 62.0f) / 45.0f), (int) ((characterAddPosY - 30.0f) / 45.0f));
                             st.money -= TowerUnit.getBuyPrice(characterAddNumber);
                         }
-                        int num = (num + (num % 2)) / 2;
+                        int num = (characterAddNumber / 2) + (characterAddNumber % 2);
                         for (int i = 0; i < 7; i++)
                             if (i != num)
                                 myOscillator[i].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
@@ -1884,7 +1884,8 @@ public class StagePage extends StageBase {
         boolean affordable = false;
 
         int towerImageOrder = st.selectedUnit.type;
-        if (!(st.selectedUnit instanceof HeroUnit hero)) {
+        HeroUnit hero = st.selectedUnit instanceof HeroUnit ? (HeroUnit)st.selectedUnit : null;
+        if (hero == null) {
             upgradePrice = st.selectedUnit.getUpgradePrice();
             buyPrice = TowerUnit.getBuyPrice(st.selectedUnit.type);
             downgradeImg = st.selectedUnit.getDowngradeType();
@@ -1940,7 +1941,7 @@ public class StagePage extends StageBase {
                 TouchManager.addTouchRectListData(19, CGRect.CGRectMake(0.0f, 343.0f, GameRenderer.SCRWIDTH, 137.0f));
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 20;
                 int checkTouchListStatus = TouchManager.checkTouchListStatus();
-                if (st.selectedUnit instanceof HeroUnit hero)
+                if (hero != null)
                     uiCharEtcImage[9 + hero.specialType].drawAtPointOption(440.0f, 400.0f, 18);
 
                 GameRenderer.setFontColor(-1);
@@ -1959,7 +1960,7 @@ public class StagePage extends StageBase {
             TouchManager.addTouchRectListData(15, CGRect.CGRectMake(435, 350, 235, 115));
         if (st.selectedUnit.level < getTowerMaxLevel(st.selectedUnit instanceof HeroUnit) - 1)
             TouchManager.addTouchRectListData(16, CGRect.CGRectMake(670, 350, 115, 115));
-        if (st.selectedUnit instanceof HeroUnit hero && Config.rewardValues[3] && hero.specialCooltime <= 0 && st.mana >= hero.specialMana)
+        if (hero != null && Config.rewardValues[3] && hero.specialCooltime <= 0 && st.mana >= hero.specialMana)
             TouchManager.addTouchRectListData(18, CGRect.CGRectMake(625, 272, 160, 69));
 
         TouchManager.addTouchRectListData(19, CGRect.CGRectMake(0, 343, GameRenderer.SCRWIDTH, 137));
@@ -2017,7 +2018,7 @@ public class StagePage extends StageBase {
                 }
             }
         }
-        if (st.selectedUnit instanceof HeroUnit hero && Config.rewardValues[3]) {
+        if (hero != null && Config.rewardValues[3]) {
             int dInd = (hero.type * 2) + 8;
             if (checkTouchListStatus2 == 18)
                 dInd++;

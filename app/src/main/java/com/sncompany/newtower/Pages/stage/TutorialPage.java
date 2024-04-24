@@ -129,7 +129,7 @@ public class TutorialPage extends StageBase {
                 } else if (characterMenuSelectFlag == 0)
                     TouchManager.addTouchRectListData(0, CGRect.CGRectMake(742, 12, 56, 56));
                 break;
-            case 17, 18:
+            case 17: case 18:
                 int[] aStep = tutorialBoxLinePos[tutorStep - 2];
                 TouchManager.addTouchRectListData(0, CGRect.CGRectMake(aStep[4], aStep[5], aStep[6], aStep[7]));
                 break;

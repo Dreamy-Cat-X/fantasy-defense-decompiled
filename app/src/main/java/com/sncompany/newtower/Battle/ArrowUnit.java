@@ -192,7 +192,7 @@ public class ArrowUnit extends StageEntity {
             }
         } else {
             switch (type) {
-                case 15, 16, 17:
+                case 15: case 16: case 17:
                     startX -= moveSpeed;
                     break;
                 case 18:
@@ -232,7 +232,8 @@ public class ArrowUnit extends StageEntity {
                         else
                             st.addEffectUnit(shooter.attackEffect, target.posX, target.posY);
                         target.hit(3, shooter);
-                        if (target instanceof MonsterUnit mon) {
+                        if (target instanceof MonsterUnit) {
+                            MonsterUnit mon = (MonsterUnit)target;
                             hitMons.add(mon);
                             if (shooter.effectType == 4)
                                 mon.hitUnitFierce(this, shooter);
@@ -258,7 +259,7 @@ public class ArrowUnit extends StageEntity {
                 case 5:
                     drawTexture[0].drawLineWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
                     drawTexture[1].drawArrowWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
-                case 2, 3, 12:
+                case 2: case 3: case 12:
                     drawTexture[3].drawAtPointOption((startX / 50) + 62, (float) (((startY / 50) + 30) - 15), 9);
                     break;
                 default:

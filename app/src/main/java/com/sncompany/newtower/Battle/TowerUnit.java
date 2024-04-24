@@ -161,20 +161,20 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
 
     public int getUpgradeType() {
         int tier = getTier();
-        return switch (tier) {
-            case 0 -> type + 2;
-            case 2 -> type + 1;
-            default -> -1;
-        };
+        if (tier == 0)
+            return type + 2;
+        else if (tier == 2)
+            return type + 1;
+        return -1;
     }
 
     public int getDowngradeType() {
         int tier = getTier();
-        return switch (tier) {
-            case 2 -> type - 2;
-            case 3 -> type - 1;
-            default -> -1;
-        };
+        if (tier == 2)
+            return type - 2;
+        else if (tier == 3)
+            return type - 1;
+        return -1;
     }
 
     public static int getBuyPrice(int type) {
@@ -225,19 +225,6 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
 
     public int getUpgradePrice() {
         return DataCharacter.charData[oldType()][1];
-    }
-
-    public int getSoundHitType() {
-        return switch (type) {
-            case 0, 2, 3 -> 1; //Warrior, Knight, Warlord
-            case 1 -> 2; //Brandisher
-            case 4, 6, 7 -> 3; //Archer, Sharpshooter, Sky Arrow
-            case 5 -> 4; //Holy Eye
-            case 8 -> 5; //Mage
-            case 9 -> 7; //IceMage
-            case 10, 11 -> 6; //Sorceress, Blaster
-            default -> -1;
-        };
     }
 
     public void update() {
@@ -312,19 +299,32 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         }
     }
 
+    public int getSoundHitType() {
+        switch (type) {
+            case 0: case 2: case 3: return 1; //Warrior, Knight, Warlord
+            case 1: return 2; //Brandisher
+            case 4: case 6: case 7: return 3; //Archer, Sharpshooter, Sky Arrow
+            case 5: return 4; //Holy Eye
+            case 8: return 5; //Mage
+            case 9: return 7; //IceMage
+            case 10: case 11: return 6; //Sorceress, Blaster
+            default: return -1;
+        }
+    }
+
     public int getSoundAttackType() {
-        return switch (type) {
-            case 0, 2 -> 21;
-            case 1 -> 23;
-            case 3 -> 22;
-            case 4, 6 -> 24;
-            case 5 -> 26;
-            case 7 -> 25;
-            case 8 -> 27;
-            case 9 -> 29;
-            case 10, 11 -> 28;
-            default -> -1;
-        };
+        switch (type) {
+            case 0: case 2: return 21;
+            case 1: return 23;
+            case 3: return 22;
+            case 4: case 6: return 24;
+            case 5: return 26;
+            case 7: return 25;
+            case 8: return 27;
+            case 9: return 29;
+            case 10: case 11: return 28;
+            default: return -1;
+        }
     }
 
     void addArrowUnit(int type, int tInd) {

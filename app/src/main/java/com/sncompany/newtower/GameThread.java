@@ -1,9 +1,8 @@
 package com.sncompany.newtower;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.util.Log;
-
-import androidx.core.internal.view.SupportMenu;
 
 /* loaded from: D:\decomp\classes.dex */
 public class GameThread extends Thread {
@@ -72,7 +71,7 @@ public class GameThread extends Thread {
 
     public static void update_GAME_PRE_LOAD() {
         if (Texture2D.gl != null) {
-            mgr = (AudioManager) newTower.getSystemService("audio");
+            mgr = (AudioManager) newTower.getSystemService(Context.AUDIO_SERVICE);
             int streamMaxVolume = mgr.getStreamMaxVolume(3);
             Config.musicMaxVolume = streamMaxVolume;
             Config.musicVolume = streamMaxVolume / 2;
@@ -86,7 +85,7 @@ public class GameThread extends Thread {
             startDrawDate = System.currentTimeMillis();
             realDrawCount = 0;
             lastDrawCount = 0;
-            GameRenderer.setFontColor(SupportMenu.CATEGORY_MASK);
+            GameRenderer.setFontColor(-65536);
             GameRenderer.setFontSize(50);
             GameRenderer.textTombstone.removeAllTombstones();
             GameRenderer.lastFontName = null;

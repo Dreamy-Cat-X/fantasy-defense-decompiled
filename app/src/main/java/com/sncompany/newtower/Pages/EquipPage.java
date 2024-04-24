@@ -1,8 +1,5 @@
 package com.sncompany.newtower.Pages;
 
-import androidx.core.internal.view.SupportMenu;
-import java.util.function.Consumer;
-
 import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
@@ -15,6 +12,8 @@ import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
+
+import java.util.function.Consumer;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -108,20 +107,20 @@ public class EquipPage extends TPage {
                 shopP.uiShopImage[ShopPage.shop_heroslot].drawAtPointOption(25f + pDis, 222f, 18);
                 boolean avail = selectedHero == j && i2 != null;
                 if (avail && i2[0] == DataUpgradeItem.EQ_RING)
-                    GameRenderer.setFontColor(SupportMenu.CATEGORY_MASK);
+                    GameRenderer.setFontColor(-65536);
                 else
                     GameRenderer.setFontColor(-8519745);
                 int i5 = heroes[j].unitPower;
                 GameRenderer.drawStringDoubleM(String.valueOf(i5 + (((heroes[j].getUpgradeRate( 7) + heroes[j].getEquipEffect(DataUpgradeItem.EQ_RING, 0)) * i5) / 100)), 167.0f, 257.0f, 20);
 
                 if (avail && i2[0] == DataUpgradeItem.EQ_BOOT) {
-                    GameRenderer.setFontColor(SupportMenu.CATEGORY_MASK);
+                    GameRenderer.setFontColor(-65536);
                 } else
                     GameRenderer.setFontColor(-8519745);
                 GameRenderer.drawStringDoubleM(heroes[j].towerCoolTimeMax <= 1 ? "MAX" : String.valueOf(heroes[j].getAttackSpeed()), 167.0f, 284.0f, 20);
 
                 if (avail && i2[0] == DataUpgradeItem.EQ_AMLT) {
-                    GameRenderer.setFontColor(SupportMenu.CATEGORY_MASK);
+                    GameRenderer.setFontColor(-65536);
                 } else
                     GameRenderer.setFontColor(-8519745);
                 GameRenderer.drawStringDoubleM(String.valueOf(heroes[j].attackRange), 167.0f, 311.0f, 20);

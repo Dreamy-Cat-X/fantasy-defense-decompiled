@@ -119,17 +119,7 @@ public class TitlePage extends TPage {
                 TouchManager.addTouchRectListData(START, CGRect.CGRectMake(0.0f, 0.0f, 800.0f, 480.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TITLE_TOTAL;
 
-            switch (gameSubStatus) {
-                case 0, 2, 4, 6:
-                    titleImage[title_bg].drawAtPointOption(0.0f, 0.0f, 18);
-                    titleImage[title_mob0].drawAtPointOption(0.0f, 9, 18);
-                    titleImage[title_mobeye].drawAtPointOption(64.0f, 38, 18);
-                    break;
-                case 1, 3, 5, 7:
-                    fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                    titleImage[title_mob1].drawAtPointOption(0.0f, 9, 18);
-                    titleImage[title_mobeye].drawAtPointOption(64.0f, 38, 18);
-                    break;
+            if (gameSubStatus >= 8) switch (gameSubStatus) {
                 case 8: {
                     float bPos = (((GAME_TITLE_BOSS_VIEW_POS - ((int) titleBossImage[0]._sizeY)) - ((int) titleBossImage[1]._sizeY)) - ((int) titleBossImage[2]._sizeY)) - ((int) titleBossImage[3]._sizeY);
                     float alpha = 1.0f - (gameTitleViewCount * 0.066f);
@@ -222,6 +212,14 @@ public class TitlePage extends TPage {
                     titleImage[title_twitter].drawAtPointOption(56.0f, 429.0f, 18);
                     titleImage[title_facebook].drawAtPointOption(104.0f, 429.0f, 18);
                     break;
+            } else if (gameSubStatus % 2 == 0) {
+                titleImage[title_bg].drawAtPointOption(0.0f, 0.0f, 18);
+                titleImage[title_mob0].drawAtPointOption(0.0f, 9, 18);
+                titleImage[title_mobeye].drawAtPointOption(64.0f, 38, 18);
+            } else {
+                fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                titleImage[title_mob1].drawAtPointOption(0.0f, 9, 18);
+                titleImage[title_mobeye].drawAtPointOption(64.0f, 38, 18);
             }
         } else if (mode == MENUMODE.OPTION) {
             TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));

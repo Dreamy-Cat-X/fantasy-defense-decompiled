@@ -122,14 +122,14 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     public static void setDefaultFont() {
         lastFontName = null;
-        drawFont.setTypeface(Typeface.create(Typeface.SERIF, 1));
+        drawFont.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD));
     }
 
     public static void setFontName(String str) {
         String str2 = lastFontName;
         if (str2 == null || !str2.equals(str)) {
             lastFontName = str;
-            drawFont.setTypeface(Typeface.create(Typeface.SERIF, 1));
+            drawFont.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD));
         }
     }
 

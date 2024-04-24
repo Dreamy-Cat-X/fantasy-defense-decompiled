@@ -223,7 +223,8 @@ public class MonsterUnit extends EnemyUnit {
             GameThread.playSound(soundHitType);
 
         damaged(unit.getHitDamage(this), unit);
-        if (unit instanceof HeroUnit hero) {
+        if (unit instanceof HeroUnit) {
+            HeroUnit hero = (HeroUnit)unit;
             int itemBuff = hero.getEquipEffect(DataUpgradeItem.EQ_MISC, 0);
             if (itemBuff > 0 && NewTower.getRandom(100) < itemBuff) {
                 dotHolyDamage = (unit.getHitDamage(this) * 3) / 100;

@@ -1,8 +1,5 @@
 package com.sncompany.newtower.Pages;
 
-import java.util.function.Consumer;
-import androidx.core.view.ViewCompat;
-
 import com.sncompany.newtower.CircleItemDraw;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGRect;
@@ -15,6 +12,8 @@ import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
+
+import java.util.function.Consumer;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -168,7 +167,7 @@ public class ShopPage extends TPage {
         if (buyFail > 0) {
             uiPopupImage[popup_background].drawAtPointOption(152, 144, 18);
             GameRenderer.setFontSize(32);
-            GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+            GameRenderer.setFontDoubleColor(-1, -16777216);
             String fail = buyFail == 1 ? "Insufficient Hero Points." : buyFail == 2 ? "Inventory is full!" : "Can't buy any more of these";
             GameRenderer.drawStringDoubleM(fail, GameRenderer.CX, 180, 17);
             uiPopupImage[cTLS == 53 ? popup_okon2 : popup_okoff2].drawAtPointOption(213, 259, 18);

@@ -1,14 +1,14 @@
 package com.sncompany.newtower;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Paint;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.sncompany.newtower.Pages.CinematicPage;
 import com.sncompany.newtower.Pages.LoadingPage;
@@ -16,8 +16,10 @@ import com.sncompany.newtower.Pages.MenuPage;
 import com.sncompany.newtower.Pages.TPage;
 import com.sncompany.newtower.Pages.TitlePage;
 
+import java.util.Arrays;
+
 /* loaded from: D:\decomp\classes.dex */
-public class NewTower extends AppCompatActivity {
+public class NewTower extends Activity {
     public static int LAST_PURCHASE_POS = 0;
     static final int PID_DATA_TYPE_1100 = 2;
     static final int PID_DATA_TYPE_13000 = 1;
@@ -53,7 +55,7 @@ public class NewTower extends AppCompatActivity {
 
     public static TPage currentPage;
 
-    @Override // androidx.appcompat.app.AppCompatActivity, androidx.fragment.app.FragmentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         doFullScreen();
@@ -130,10 +132,10 @@ public class NewTower extends AppCompatActivity {
             GameRenderer.textTombstone = new Tombstone(this);
             GameRenderer.isPaused = false;
             gameThread.start();
-            PowerManager powerManager = (PowerManager) getSystemService("power");
-            wl = powerManager.newWakeLock(536870922, "Def Tag");
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            wl = powerManager.newWakeLock(536870922, "Def:Tag");
             wl.acquire();
-            vibe = (Vibrator) getSystemService("vibrator");
+            vibe = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             GameThread.gameLoadFlag = 0;
             GameThread.loadingStatus = 1000;
             initActivityFirstFlag = true;
@@ -143,7 +145,7 @@ public class NewTower extends AppCompatActivity {
         NewTower.switchPage(new CinematicPage(null), false);
     }
 
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    @Override
     public void onPause() {
         Log.d("PAUSE", "NEWTOWER PAUSE");
         GameRenderer.loadViewFlag = false;
@@ -151,7 +153,7 @@ public class NewTower extends AppCompatActivity {
         glGameSurfaceView.onPause();
     }
 
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    @Override
     public void onResume() {
         Log.d("RESUME", "NEWTOWER RESUME");
         super.onResume();
@@ -160,7 +162,7 @@ public class NewTower extends AppCompatActivity {
             glView.onResume();
     }
 
-    @Override // androidx.appcompat.app.AppCompatActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
+    @Override
     public void onDestroy() {
         try {
             if (wl != null)
@@ -171,21 +173,21 @@ public class NewTower extends AppCompatActivity {
             super.onDestroy();
         } catch (Exception unused) {
             Log.d("DESTROY TRY", "DESTROY ERROR 1");
-            Log.d("STACK TRACE", unused.getStackTrace().toString());
+            Log.d("STACK TRACE", Arrays.toString(unused.getStackTrace()));
         }
     }
 
-    @Override // androidx.appcompat.app.AppCompatActivity, android.app.Activity, android.view.KeyEvent.Callback
+    @Override
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
         if (i == 82 && keyEvent.isLongPress()) {
             return true;
         }
         if (i == 24) {
-            GameThread.mgr.adjustStreamVolume(3, 1, 1);
+            GameThread.mgr.adjustStreamVolume(3, 1, AudioManager.FLAG_SHOW_UI);
             return true;
         }
         if (i == 25) {
-            GameThread.mgr.adjustStreamVolume(3, -1, 1);
+            GameThread.mgr.adjustStreamVolume(3, -1, AudioManager.FLAG_SHOW_UI);
             return true;
         }
         if (i == 4) {

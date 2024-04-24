@@ -1,9 +1,5 @@
 package com.sncompany.newtower.Pages;
 
-
-import androidx.core.internal.view.SupportMenu;
-import androidx.core.view.ViewCompat;
-
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
@@ -294,9 +290,9 @@ public class CinematicPage extends TPage {
                     }
                     GameRenderer.setFontSize(32);
                     if (gameSubStatus != 1)
-                        GameRenderer.setFontDoubleColor(SupportMenu.CATEGORY_MASK, ViewCompat.MEASURED_STATE_MASK);
+                        GameRenderer.setFontDoubleColor(-65536, -16777216);
                     else
-                        GameRenderer.setFontDoubleColor(-1, ViewCompat.MEASURED_STATE_MASK);
+                        GameRenderer.setFontDoubleColor(-1, -16777216);
 
                     String[] split = story2Text[story2DrawDataBlock[8]].split("_");
                     int length = story2DrawDataBlock[4] != 1 ? GameRenderer.CY - ((split.length * 35) / 2) : 415 - ((split.length - 1) * 35);
