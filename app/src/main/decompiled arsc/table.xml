@@ -3,7 +3,7 @@
    <packages index="1" count="1">
         <package index="0" id="127" name="com.sncompany.newtower">
             <specs index="2" count="2">
-               <spec index="0" id="0" entryCount="1530" name="drawable">
+               <spec index="0" id="0" entryCount="1571" name="drawable">
                  <types index="1" count="9">
                     <type index="0" id="0" configFlags="-hdpi-v4" configFlagsSize="64" entryCount="1405"/>
                     <type index="1" id="0" configFlags="-ldrtl-xxhdpi" configFlagsSize="64" entryCount="1405"/>
