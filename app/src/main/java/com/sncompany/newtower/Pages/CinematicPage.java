@@ -63,12 +63,14 @@ public class CinematicPage extends TPage {
 
     @Override
     public void unload() {
-        for (Texture2D img : logoImage)
-            img.dealloc();
-        for (Texture2D img : storyImage)
-            img.dealloc();
-        for (Texture2D img : story2Image)
-            img.dealloc();
+        if (mode != RunMode.ENDING) {
+            for (Texture2D img : logoImage)
+                img.dealloc();
+            for (Texture2D img : storyImage)
+                img.dealloc();
+        } else
+            for (Texture2D img : story2Image)
+                img.dealloc();
         loaded = false;
     }
 
