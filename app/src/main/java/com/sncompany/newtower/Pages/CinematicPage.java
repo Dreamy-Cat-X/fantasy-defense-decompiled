@@ -99,7 +99,7 @@ public class CinematicPage extends TPage {
                         gameSubStatus = 0;
                         setOpeningData();
                         GameThread.playLoopSound(2);
-                        mode = RunMode.USE12;
+                        mode = RunMode.OPENING;
                     } else
                         NewTower.switchPage(root, true);
                 }

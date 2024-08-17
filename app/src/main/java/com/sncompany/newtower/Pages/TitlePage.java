@@ -122,6 +122,7 @@ public class TitlePage extends TPage {
             if (gameSubStatus >= 8) switch (gameSubStatus) {
                 case 8: {
                     float bPos = (((GAME_TITLE_BOSS_VIEW_POS - ((int) titleBossImage[0]._sizeY)) - ((int) titleBossImage[1]._sizeY)) - ((int) titleBossImage[2]._sizeY)) - ((int) titleBossImage[3]._sizeY);
+
                     float alpha = 1.0f - (gameTitleViewCount * 0.066f);
                     titleImage[title_bg].drawAtPointOption(0.0f, 0.0f, 18);
                     titleBossImage[2].drawAtPointOption(0.0f, ((int) titleBossImage[0]._sizeY) + bPos + ((int) titleBossImage[1]._sizeY), 18);
@@ -136,7 +137,7 @@ public class TitlePage extends TPage {
                     titleImage[title_mobeye].drawAtPointOption(64.0f, 38, 18);
                     break;
                 } case 9: {
-                    float bPos = Math.min(GAME_TITLE_BOSS_VIEW_POS, ((((GAME_TITLE_BOSS_VIEW_POS - ((int) titleBossImage[0]._sizeY)) - ((int) titleBossImage[1]._sizeY)) - ((int) titleBossImage[2]._sizeY)) - ((int) titleBossImage[3]._sizeY)) + (GameThread.gameTitleViewCount * 54));
+                    float bPos = Math.min(GAME_TITLE_BOSS_VIEW_POS, ((((GAME_TITLE_BOSS_VIEW_POS - ((int) titleBossImage[0]._sizeY)) - ((int) titleBossImage[1]._sizeY)) - ((int) titleBossImage[2]._sizeY)) - ((int) titleBossImage[3]._sizeY)) + (gameTitleViewCount * 54));
 
                     titleImage[title_bg].drawAtPointOption(0.0f, 0.0f, 18);
                     titleBossImage[0].drawAtPointOption(0.0f, bPos, 18);
@@ -181,7 +182,7 @@ public class TitlePage extends TPage {
                     Texture2D.setAlpha(f);
                     titleImage[title_titleglow].drawAtPointOption(24.0f, 6.0f, 18);
                     Texture2D.setAlpha(1f);
-                    float alp = GameThread.gameTitleViewCount * 0.1f;
+                    float alp = gameTitleViewCount * 0.1f;
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                     Texture2D.setColors(alp);
                     titleImage[title_startoff].drawAtPointOption(296.0f, 337.0f, 18);

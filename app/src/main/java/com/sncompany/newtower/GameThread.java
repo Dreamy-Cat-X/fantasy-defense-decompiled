@@ -18,7 +18,6 @@ public class GameThread extends Thread {
     public static int gameHelpViewNum;
     public static int gameLoadFlag;
     public static int gameSubStatus;
-    public static int gameTitleViewCount;
     public static int lastDrawCount;
     public static int lastFrameCount;
     public static int loadingStatus;
@@ -143,8 +142,8 @@ public class GameThread extends Thread {
     public static void playSound2() {
         int ind = 0;
         for (int i = 0; i < 31; i++) {
-            soundPlayDelayCount[i]++;
             if (soundPlayCheckFlag[i]) {
+                soundPlayDelayCount[i]++;
                 if (soundPlayDelayCount[i] >= 12) {
                     if (soundFlag) {
                         try {
@@ -156,8 +155,7 @@ public class GameThread extends Thread {
                     }
                     soundPlayCheckFlag[i] = false;
                     soundPlayDelayCount[i] = 0;
-                } else
-                    soundPlayCheckFlag[i] = false;
+                }
             }
             if (ind >= 5) {
                 return;

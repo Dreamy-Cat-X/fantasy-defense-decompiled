@@ -14,7 +14,7 @@ public class MediaManager {
     }
 
     public void setVolume(int i, int i2) {
-        float f = i / i2;
+        float f = (float)i / i2;
         this.mPlayer.setVolume(f, f);
     }
 

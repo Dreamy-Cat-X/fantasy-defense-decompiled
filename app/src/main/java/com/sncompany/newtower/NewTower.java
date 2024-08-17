@@ -59,14 +59,15 @@ public class NewTower extends Activity {
     }
 
     public static void switchPage(TPage p, boolean unload) {
+        if (!p.loaded)
+            p.load(null);
+        else
+            p.onReload();
+
         TPage par = currentPage;
         currentPage = p;
         if (unload)
             unloadRec(par);
-        if (!currentPage.loaded)
-            currentPage.load(null);
-        else
-            currentPage.onReload();
     }
 
     private static boolean checkAncestry(TPage p, TPage targ) {

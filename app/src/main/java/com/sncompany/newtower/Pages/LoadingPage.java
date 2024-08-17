@@ -89,13 +89,12 @@ public class LoadingPage extends TPage {
                 uiCharNameImage[cat] = new Texture2D(uiCharNameResource[cat]);
             }
         }
-        loaded = true;
     }
 
     @Override
     public void load(Consumer<Float> prog) {
+        loaded = true;
         parent.load(con);
-        NewTower.switchPage(parent, true);
     }
 
     @Override
@@ -119,6 +118,8 @@ public class LoadingPage extends TPage {
 
     @Override
     public void update() {
+        if (prog >= 1f)
+            NewTower.switchPage(parent, true);
     }
 
     @Override

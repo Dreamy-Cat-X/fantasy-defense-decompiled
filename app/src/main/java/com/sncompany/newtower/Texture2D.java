@@ -156,6 +156,7 @@ public class Texture2D implements GameImage {
     public void initWithImageName(int id) {
         if (name != -1)
             dealloc();
+        System.out.println(_name[0]);
 
         gl.glGenTextures(1, _name, 0);
         name = _name[0];
@@ -204,22 +205,21 @@ public class Texture2D implements GameImage {
         setPivot(x, y, pivot);
 
         pointY = VIEW_SCRHEIGHT - pointY - height;
-        float f11 = width;
-        if (f11 <= 0.0f || height <= 0.0f || pointX + f11 <= 0.0f || pointX >= VIEW_SCRWIDTH || pointY + height <= 0.0f || pointY >= VIEW_SCRHEIGHT)
+        if (width <= 0.0f || height <= 0.0f || pointX + width <= 0.0f || pointX >= VIEW_SCRWIDTH || pointY + height <= 0.0f || pointY >= VIEW_SCRHEIGHT)
             return;
 
         pointX += DRAW_ADJUST_X_MOVE;
         pointY += DRAW_ADJUST_Y_MOVE;
         vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
         vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0.0f;
-        vertices[3] = pointX + f11;
+        vertices[2] = 0;
+        vertices[3] = pointX + width;
         vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
         vertices[5] = 0.0f;
         vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
         vertices[7] = pointY + height;
         vertices[8] = 0.0f;
-        vertices[9] = pointX + f11;
+        vertices[9] = pointX + width;
         vertices[10] = pointY + height;
         vertices[11] = 0.0f;
         mVertexBuffer.put(vertices);
@@ -410,22 +410,22 @@ public class Texture2D implements GameImage {
 
     private void setPivot(float dX, float dY, int pivot) {
         if (pivot == 9) {
-            pointX = dX - (width / 2.0f);
-            pointY = dY - (height / 2.0f);
+            pointX = dX - (width / 2f);
+            pointY = dY - (height / 2f);
         } else if (pivot == 10) {
-            pointY = dY - (height / 2.0f);
+            pointY = dY - (height / 2f);
         } else if (pivot == 12) {
             pointX = dX - width;
-            pointY = dY - (height / 2.0f);
+            pointY = dY - (height / 2f);
         } else if (pivot == 17) {
-            pointX = dX - (width / 2.0f);
+            pointX = dX - (width / 2f);
         } else if (pivot == 20) {
             pointX = dX - width;
         } else if (pivot == 36) {
             pointX = dX - width;
             pointY = dY - height;
         } else if (pivot == 33) {
-            pointX = dX - (width / 2.0f);
+            pointX = dX - (width / 2f);
             pointY = dY - height;
         } else if (pivot == 34)
             pointY = dY - height;

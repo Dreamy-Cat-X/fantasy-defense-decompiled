@@ -241,7 +241,9 @@ public class Config {
             heroAvail[0] = rewardValues[0];
             heroAvail[1] = rewardValues[2];
             heroAvail[2] = rewardValues[4];
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
+            newGame();
         }
     }
 

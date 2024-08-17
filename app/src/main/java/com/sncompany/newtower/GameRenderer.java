@@ -77,8 +77,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         DRAW_SCALE_Y_MOVE = 0.0f;
         Texture2D.DRAW_ADJUST_X_MOVE = 0.0f;
         Texture2D.DRAW_ADJUST_Y_MOVE = 0.0f;
-        float dw = SCRWIDTH != SCRWIDTH_SMALL ? SCRWIDTH / SCRWIDTH_SMALL : 1;
-        float dh = SCRHEIGHT != SCRHEIGHT_SMALL ? SCRHEIGHT / SCRHEIGHT_SMALL : 1;
+        float dw = SCRWIDTH != SCRWIDTH_SMALL ? (float)SCRWIDTH / SCRWIDTH_SMALL : 1;
+        float dh = SCRHEIGHT != SCRHEIGHT_SMALL ? (float)SCRHEIGHT / SCRHEIGHT_SMALL : 1;
         Log.d("WINDOW SIZE", "WINDOW SIZE " + SCRWIDTH + "," + SCRHEIGHT + "," + SCRWIDTH_SMALL + "," + SCRHEIGHT_SMALL + "," + dw + "," + dh);
         if (dw != 1.0f || dh != 1.0f) {
             float f3;
