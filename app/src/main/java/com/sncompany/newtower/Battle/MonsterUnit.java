@@ -134,11 +134,11 @@ public class MonsterUnit extends EnemyUnit {
             espd = unitMinSpeed;
 
         while (espd > 0) {
-            int i4 = ((targetBlockX * 45) + 22) * 50;
-            int i5 = ((targetBlockY * 45) + 22) * 50;
-            if (i4 != posX) {
-                if (Math.abs(i4 - posX) >= espd) {
-                    if (i4 > posX) {
+            int tdx = ((targetBlockX * 45) + 22) * 50;
+            int tdy = ((targetBlockY * 45) + 22) * 50;
+            if (tdx != posX) {
+                if (Math.abs(tdx - posX) >= espd) {
+                    if (tdx > posX) {
                         posX += espd;
                         lastViewDirection = 2;
                     } else {
@@ -146,29 +146,28 @@ public class MonsterUnit extends EnemyUnit {
                         lastViewDirection = 6;
                     }
                     espd = 0;
-                } else if (i4 > posX) {
-                    espd -= i4 - posX;
-                    posX = i4;
+                } else if (tdx > posX) {
+                    espd -= tdx - posX;
+                    posX = tdx;
                     lastViewDirection = 2;
                 } else {
-                    espd -= -(i4 - posX);
-                    posX = i4;
+                    espd -= -(tdx - posX);
+                    posX = tdx;
                     lastViewDirection = 6;
                 }
-            } else if (i5 != posY) {
-                if (Math.abs(i5 - posY) >= espd) {
-                    if (i5 > posY) {
+            } else if (tdy != posY) {
+                if (Math.abs(tdy - posY) >= espd) {
+                    if (tdy > posY) {
                         posY += espd;
-                    } else {
+                    } else
                         posY -= espd;
-                    }
                     espd = 0;
-                } else if (i5 > posY) {
-                    espd -= i5 - posY;
-                    posY = i5;
+                } else if (tdy > posY) {
+                    espd -= tdy - posY;
+                    posY = tdy;
                 } else {
-                    espd -= -(i5 - posY);
-                    posY = i5;
+                    espd -= -(tdy - posY);
+                    posY = tdy;
                 }
             } else {
                 int randomMapDirection = st.map.getRandomMapDirection(targetBlockX, targetBlockY, -1);
@@ -176,8 +175,8 @@ public class MonsterUnit extends EnemyUnit {
                 if (randomMapDirection == -1)
                     break;
 
-                targetBlockX = fromBlockX + DataMap.DIR_MOVE_POS[randomMapDirection][0];
-                targetBlockY = fromBlockY + DataMap.DIR_MOVE_POS[randomMapDirection][1];
+                targetBlockX += DataMap.DIR_MOVE_POS[randomMapDirection][0];
+                targetBlockY += DataMap.DIR_MOVE_POS[randomMapDirection][1];
             }
         }
         for (int i6 = 0; i6 < st.map.mapEndPositionCount; i6++) {
@@ -353,39 +352,40 @@ public class MonsterUnit extends EnemyUnit {
 
     public void draw() {
         float x = posX / 50f + 62, y = posY / 50f + 30;
-        float size = bodySize / 100.0f;
+        float size = bodySize / 100f;
 
-        int i = lastViewDirection == 2 ? 1 : 0;
+        int dire = lastViewDirection == 2 ? 1 : 0;
         if (direction == 0)
-            i += 2;
+            dire += 2;
+        int sprSpd = 3;
+        if (st.turbo > 0)
+            sprSpd /= st.turbo;
 
-        int i2 = drawData[drawData[1] + i];
-        int i3 = drawData[drawData[0] + drawData[i2 + 1 + ((unitStatusCount / 3) % drawData[i2])]];
-        int i4 = drawData[i3];
-        int i5 = i3 + 1;
-        st.page.shadowImage[0].drawAtPointOption(x, y + 10.0f, 9);
-        for (int i6 = 0; i6 < i4; i6++) {
-            float a = unitStatus == 1 ? (10 - unitStatusCount) * 0.1f : 1.0f;
+        int spLen = drawData[drawData[1] + dire];
+        int sCur = drawData[drawData[0] + drawData[spLen + 1 + ((unitStatusCount / sprSpd) % drawData[spLen])]];
+        st.page.shadowImage[0].drawAtPointOption(x, y + 10, 9);
+        for (int i = 0; i < drawData[sCur]; i++) {
+            float a = unitStatus == 1 ? (10 - unitStatusCount) * 0.1f : 1f;
             if (unitStatus == 0 && unitStatusCount < 16)
                 a = unitStatusCount * 0.0625f;
 
-            int txtr = (i6 * 5) + i5;
-            if (drawData[txtr + 3] != 1000)
-                a = (a * drawData[txtr + 3]) / 1000.0f;
-
+            int coord = (i * 5) + (sCur + 1);
+            if (drawData[coord + 3] != 1000)
+                a = (a * drawData[coord + 3]) / 1000.0f;
             if (a != 1.0f) {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
                 Texture2D.gl.glColor4f(a, a, a, a);
             }
-            if (drawData[txtr + 4] == 0) {
+            if (drawData[coord + 4] == 0) {
                 if (size == 1)
-                    drawTexture[drawData[txtr]].drawAtPointOption(drawData[txtr + 1] + x, drawData[txtr + 2] + y + 10.0f, 18);
+                    drawTexture[drawData[coord]].drawAtPointOption(drawData[coord + 1] + x, drawData[coord + 2] + y + 10f, 18);
                 else
-                    drawTexture[drawData[txtr]].drawAtPointOptionSize((drawData[txtr + 1] * size) + x, (drawData[txtr + 2] * size) + y + 10.0f, 18, size);
+                    drawTexture[drawData[coord]].drawAtPointOptionSize((drawData[coord + 1] * size) + x, (drawData[coord+2] * size) + y + 10f, 18, size);
             } else if (size == 1)
-                drawTexture[drawData[txtr]].drawAtPointOptionFlip(drawData[txtr + 1] + x, drawData[txtr + 2] + y + 10.0f, 18);
+                drawTexture[drawData[coord]].drawAtPointOptionFlip(drawData[coord + 1] + x, drawData[coord + 2] + y + 10f, 18);//prob
             else
-                drawTexture[drawData[txtr]].drawAtPointOptionFlipSize((drawData[txtr + 1] * size) + x, (drawData[txtr + 2] * size) + y + 10.0f, 18, size);
+                drawTexture[drawData[coord]].drawAtPointOptionFlipSize((drawData[coord + 1] * size) + x, (drawData[coord+2] * size) + y + 10f, 18, size);
+
             if (a != 1.0f)
                 Texture2D.gl.glColor4f(1, 1, 1, 1);
         }

@@ -30,14 +30,15 @@ public class TutorialPage extends StageBase {
     public int tutorStep = 1, tutorialViewCount = 0; //max TutorStep is 22;
 
     public TutorialPage(TPage par) {
-        super(par, new DataStage(DataMap.loadMap(50, false), -1));
+        super(par, new DataStage(DataMap.loadMap(50), -1));
     }
 
     @Override
     public void load(Consumer<Float> prog) {
-        loadP(tutorialImage, tutorialResource, prog, 1, tutorialImage.length);
         super.load(prog);
+        loadP(tutorialImage, tutorialResource, prog, 1, tutorialImage.length);
         loaded = true;
+        GameThread.stopLoopSound(1);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class TutorialPage extends StageBase {
                 tutorStep++;
         } else if (tutorStep % 2 == 1 && tutorStep <= 15) {
             byte c = (byte)Math.min(((tutorStep - 3) / 2), 6);
-            int type = (c % 2) + ((c / 2) * 4);
+            int type = tutorStep == 15 ? 0 : (c % 2) + ((c / 2) * 4);
 
             if (TouchManager.getPressedCount() == 0)
                 tutorialViewCount++;
@@ -100,12 +101,12 @@ public class TutorialPage extends StageBase {
     @Override
     public void paint(GL10 gl10, boolean init) {
         tmap.checkBackBase();
-        tmap.backBaseImageArray[tmap.lastShowBackBase].drawAtPointOption(0.0f, 0.0f, 18);
-        backShadowImage.drawAtPointOption(0.0f, 0.0f, 18);
+        tmap.backBaseImageArray[tmap.lastShowBackBase].drawAtPointOption(0, 0, 18);
+        backShadowImage.drawAtPointOption(0, 0, 18);
         drawMapTile(gl10);
         drawAllUnit(gl10);
         TouchManager.clearTouchMap();
-        TouchManager.addTouchRectListData(1, CGRect.CGRectMake(0.0f, 437.0f, 43.0f, 39.0f));
+        TouchManager.addTouchRectListData(1, CGRect.CGRectMake(0, 437, 43, 39));
         if (tutorStep <= 2) {
             int sta = 0, end = 5;
             if (tutorStep == 2) {
@@ -113,7 +114,7 @@ public class TutorialPage extends StageBase {
                 end = 8;
             }
             for (int i = sta; i < end; i++)
-                TouchManager.addTouchRectListData(i - sta, CGRect.CGRectMake(tutorialBoxLinePos[i][4], tutorialBoxLinePos[i][5], tutorialBoxLinePos[i][6], tutorialBoxLinePos[i][7]));
+                TouchManager.addTouchRectListData(i, CGRect.CGRectMake(tutorialBoxLinePos[i][4], tutorialBoxLinePos[i][5], tutorialBoxLinePos[i][6], tutorialBoxLinePos[i][7]));
         } else if (tutorStep % 2 == 0 && tutorStep <= 16) {
             int[] BoxPos = tutorialBoxLinePos[6 + (tutorStep / 2)];
             TouchManager.addTouchRectListData(0, CGRect.CGRectMake(BoxPos[4], BoxPos[5], BoxPos[6], BoxPos[7]));
@@ -134,7 +135,7 @@ public class TutorialPage extends StageBase {
                 TouchManager.addTouchRectListData(0, CGRect.CGRectMake(aStep[4], aStep[5], aStep[6], aStep[7]));
                 break;
             default:
-                TouchManager.addTouchRectListData(0, CGRect.CGRectMake(209.0f, 289.0f, 381.0f, 65.0f));
+                TouchManager.addTouchRectListData(0, CGRect.CGRectMake(209, 289, 381, 65));
                 break;
         }
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 31;
@@ -143,16 +144,16 @@ public class TutorialPage extends StageBase {
 
         for (int i = 0; i < 6; i++) {
             uiButtonImage[i].drawAtPointOption(myOscillator[i].getCurrentPosition() + 770, 77f + (65 * i), 17);
-            GameRenderer.drawNumberBlock(TowerUnit.getBuyPrice((i * 2) - (i % 2)), numberUnitBuyImage, myOscillator[i].getCurrentPosition() + 770, 114.0f + (65 * i), -2, 17, 1);
+            GameRenderer.drawNumberBlock(TowerUnit.getBuyPrice((i * 2) - (i % 2)), numberUnitBuyImage, myOscillator[i].getCurrentPosition() + 770, 114 + (65 * i), -2, 17, 1);
         }
         int i8 = 586;
         for (int i9 = 0; i9 < 3; i9++) {
-            uiButtonImage[6].drawAtPointOption(myOscillator[i9 + 8].getCurrentPosition() + i8, 12.0f, 17);
-            GameRenderer.drawNumberBlock(250, numberHeroBuyImage, i8 + 5 + myOscillator[i9 + 8].getCurrentPosition(), 49.0f, -2, 17, 1);
-            uiUpperImage[13].drawAtPointOption((i8 - 17) + myOscillator[i9 + 8].getCurrentPosition(), 49.0f, 17);
+            uiButtonImage[6].drawAtPointOption(myOscillator[i9 + 8].getCurrentPosition() + i8, 12, 17);
+            GameRenderer.drawNumberBlock(250, numberHeroBuyImage, i8 + 5 + myOscillator[i9 + 8].getCurrentPosition(), 49, -2, 17, 1);
+            uiUpperImage[13].drawAtPointOption((i8 - 17) + myOscillator[i9 + 8].getCurrentPosition(), 49, 17);
             i8 += 60;
         }
-        uiButtonImage[18].drawAtPointOption(770.0f, 12.0f, 17);
+        uiButtonImage[18].drawAtPointOption(770, 12, 17);
         if (characterMenuSelectFlag == 1 || characterMenuSelectFlag == 3) {
             boolean addable = getAddSettingPosition();
             drawAddGridBlock();
@@ -168,10 +169,15 @@ public class TutorialPage extends StageBase {
                 if (tutorialBoxTouchFlag[i] != 10) {
                     float alpha = 1 - (tutorialBoxTouchFlag[i] * 0.1f);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(alpha);
+                    Texture2D.setColors(alpha);
                     fillWhiteImage.fillRect(tutorialBoxLinePos[i][0], tutorialBoxLinePos[i][1], tutorialBoxLinePos[i][2], tutorialBoxLinePos[i][3]);
                     tutorialImage[i + 20].drawAtPointOption(tutorialBoxLinePos[i][4], tutorialBoxLinePos[i][5], 18);
-                    Texture2D.setAlpha(1);
+                    Texture2D.setColors(alpha * 0.4f);
+                    if (i == 3)
+                        fillWhiteImage.fillRect(0, 330, 45, 150);
+                    if (i == 4)
+                        fillWhiteImage.fillRect(730, 0, 70, GameRenderer.SCRHEIGHT_SMALL);
+                    Texture2D.setColors(1);
                 }
             }
         } else if (tutorStep % 2 == 1 && tutorStep <= 15) {
@@ -181,11 +187,11 @@ public class TutorialPage extends StageBase {
             int timeInterval = (tutorialViewCount % 30);
             int div = (tutorialViewCount % 210) / 30;
 
-            tutorialImage[17].drawAtPointOption(17.0f, 41.0f, 18);
+            tutorialImage[17].drawAtPointOption(17, 41, 18);
             if (div == 2) {
                 float a = timeInterval * 0.1f;
                 if (a < 1) {
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                     Texture2D.setAlpha(a);
                 }
                 tutorialImage[tutorialUnitPos[pInd][2]].drawAtPointOption(tutorialUnitPos[pInd][3], tutorialUnitPos[pInd][4], 18);
@@ -222,51 +228,51 @@ public class TutorialPage extends StageBase {
             tutorialImage[img].drawAtPointOption(tutorialBoxLinePos[img+1][4], tutorialBoxLinePos[img+1][5], 18);
         } else switch (tutorStep) {
             case 17:
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                 Texture2D.setColors(0.2f);
                 fillWhiteImage.fillRect(tutorialRectPos[2][0], tutorialRectPos[2][1], tutorialRectPos[2][2], tutorialRectPos[2][3]);
                 Texture2D.setColors(1);
                 tutorialImage[14].drawAtPointOption(tutorialBoxLinePos[15][4], tutorialBoxLinePos[15][5], 18);
                 break;
             case 18:
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                 Texture2D.setColors(0.2f);
                 fillWhiteImage.fillRect(tutorialRectPos[3][0], tutorialRectPos[3][1], tutorialRectPos[3][2], tutorialRectPos[3][3]);
                 Texture2D.setColors(1);
                 tutorialImage[15].drawAtPointOption(tutorialBoxLinePos[16][4], tutorialBoxLinePos[16][5], 18);
                 break;
             case 19:
-                uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
+                uiPopupImage[7].drawAtPointOption(201, 101, 18);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 156.0f, 17);
-                GameRenderer.drawStringDoubleM("You have obtained 300 Hero Points.", GameRenderer.CX, 206.0f, 17);
-                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
+                GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 156, 17);
+                GameRenderer.drawStringDoubleM("You have obtained 300 Hero Points.", GameRenderer.CX, 206, 17);
+                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209, 289, 18);
                 break;
             case 20:
-                uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
+                uiPopupImage[7].drawAtPointOption(201, 101, 18);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                GameRenderer.drawStringDoubleM("Use Hero Points to buy items ", GameRenderer.CX, 156.0f, 17);
-                GameRenderer.drawStringDoubleM("or upgrade your units.", GameRenderer.CX, 206.0f, 17);
-                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
+                GameRenderer.drawStringDoubleM("Use Hero Points to buy items ", GameRenderer.CX, 156, 17);
+                GameRenderer.drawStringDoubleM("or upgrade your units.", GameRenderer.CX, 206, 17);
+                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209, 289, 18);
                 break;
             case 21:
-                uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
+                uiPopupImage[7].drawAtPointOption(201, 101, 18);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                GameRenderer.drawStringDoubleM("Use Help if you want ", GameRenderer.CX, 122.0f, 17);
-                GameRenderer.drawStringDoubleM("to replay the Tutorial.", GameRenderer.CX, 162.0f, 17);
-                GameRenderer.drawStringDoubleM("(No Hero Points will be rewarded", GameRenderer.CX, 202.0f, 17);
-                GameRenderer.drawStringDoubleM("when replaying the Tutorial.)", GameRenderer.CX, 242.0f, 17);
-                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
+                GameRenderer.drawStringDoubleM("Use Help if you want ", GameRenderer.CX, 122, 17);
+                GameRenderer.drawStringDoubleM("to replay the Tutorial.", GameRenderer.CX, 162, 17);
+                GameRenderer.drawStringDoubleM("(No Hero Points will be rewarded", GameRenderer.CX, 202, 17);
+                GameRenderer.drawStringDoubleM("when replaying the Tutorial.)", GameRenderer.CX, 242, 17);
+                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209, 289, 18);
                 break;
             case 22:
-                uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
+                uiPopupImage[7].drawAtPointOption(201, 101, 18);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 182.0f, 17);
-                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209.0f, 289.0f, 18);
+                GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 182, 17);
+                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209, 289, 18);
                 break;
         }
         TouchManager.swapTouchMap();
@@ -280,7 +286,7 @@ public class TutorialPage extends StageBase {
                 tutorialBoxTouchFlag[cTLS] = 1;
         } else if (tutorStep % 2 == 1 && tutorStep <= 15) {
             if (TouchManager.lastActionStatus == 0) {
-                int heroF = tutorStep == 15 ? 0 : 2;
+                int heroF = tutorStep < 15 ? 0 : 2;
                 if (characterMenuSelectFlag != heroF || cTLS == -1)
                     return;
                 tutorialViewCount = 0;
@@ -298,13 +304,10 @@ public class TutorialPage extends StageBase {
             if (TouchManager.lastActionStatus != 2)
                 return;
             tempChara = null;
-            if (cTLS == -1)
-                return;
-
             if (characterMenuSelectFlag % 2 != 0) {
                 int tp = (tutorStep - 3) / 2;
-                int pX = (int) ((characterAddPosX - 62.0f) / 45.0f);
-                int pY = (int) ((characterAddPosY - 30.0f) / 45.0f);
+                int pX = (int) ((characterAddPosX - 62f) / 45f);
+                int pY = (int) ((characterAddPosY - 30f) / 45f);
                 if (pX == tutorialUnitPos[tp][0] && pY == tutorialUnitPos[tp][1]) {
                     characterMenuSelectFlag = 0;
                     GameThread.playSound(14);
@@ -314,13 +317,12 @@ public class TutorialPage extends StageBase {
                         st.money -= TowerUnit.getBuyPrice(characterAddNumber);
                         for (byte i = 0; i < 7; i++)
                             if (i != tp)
-                                myOscillator[i].initWithTwoWayStartPosition(0, 200, 10, 210, 5);
+                                myOscillator[i].initWithTwoWayStartPosition(200, 0, 10, 210, 5);
                     } else {
                         st.addHero(characterAddNumber - 12, pX, pY, false);
                         st.mana -= HeroUnit.getBuyPrice(characterAddNumber - 12);
-                        myOscillator[8].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                        myOscillator[9].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                        myOscillator[10].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
+                        for (byte i = 8; i <= 10; i++)
+                            myOscillator[i].initWithTwoWayStartPosition(300, 0, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
                     }
                     characterAddNumber = 0;
                 } else
@@ -334,30 +336,23 @@ public class TutorialPage extends StageBase {
                 for (int i = 8; i <= 10; i++)
                     myOscillator[i].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
             }
-        } else switch (tutorStep) {
-            case 18:
-                if (TouchManager.lastActionStatus == 2 && cTLS == 0) {
-                    if (!Config.tutorial)
-                        tutorStep++;
-                    else
-                        tutorStep = 22;
-                }
-                break;
-            case 21:
-                if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 30) {
-                    Config.tutorial = true;
-                    Config.heroPoints += 300;
-                    Config.saveAll();
-                    NewTower.switchPage(parent, true);
-                }
-            case 22:
-                if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 30) {
-                    GameThread.playSound(14);
-                    Config.lastPlayed = 0;
-                    NewTower.switchPage(parent, true);
-                }
-                TouchManager.processTouchStatus();
-                break;
+        } else if (tutorStep == 18) {
+            if (TouchManager.lastActionStatus == 2 && cTLS == 0) {
+                if (!Config.tutorial)
+                    tutorStep++;
+                else
+                    tutorStep = 22;
+            }
+        } else if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 0) {
+            GameThread.playLoopSound(1);
+            if (tutorStep == 21) {
+                Config.tutorial = true;
+                Config.heroPoints += 300;
+                Config.saveAll();
+            }
+            GameThread.playSound(14);
+            Config.lastPlayed = 0;
+            NewTower.switchPage(parent, true);
         }
     }
 }

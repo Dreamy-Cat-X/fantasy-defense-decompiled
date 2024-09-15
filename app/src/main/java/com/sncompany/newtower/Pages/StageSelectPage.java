@@ -55,7 +55,7 @@ public class StageSelectPage extends TPage {
         for (int i = 0; i < uiStageImage.length; i++)
             uiStageImage[i] = new Texture2D(uiStageResource[i]);
         uiStageBossImage.initWithImageName(uiStageBossResource[0]);
-        map = DataMap.loadMap(getStageIndex(), true);
+        map = DataMap.loadMap(getStageIndex());
         if (prog != null)
             prog.accept(1f);
         loaded = true;
@@ -127,7 +127,7 @@ public class StageSelectPage extends TPage {
         uiStageImage[stageSelectChapterNumber + 23].drawAtPointOption(600f, 38f, 17);
 
         uiStageImage[44].drawAtPointOption(470f, 96f, 18);
-        GameRenderer.drawNumberBlock(getStageIndex() + 1, numberStagePointImage, 581f, 97f, 0, 20, 2);
+        GameRenderer.drawNumberBlock(getStageIndex() + 1, numberStagePointImage, 581f, 97f, 0, 20, 1);
         uiStageImage[28].drawAtPointOption(624f, 96f, 18);
         GameRenderer.drawNumberBlock(DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[getStageIndex()], numberStagePointImage, 705f, 97f, 0, 18, 2);
         uiStageImage[29].drawAtPointOption(469f, 124f, 18);
@@ -217,7 +217,7 @@ public class StageSelectPage extends TPage {
             GameThread.playSound(14);
             int ol = stageSelectChapterNumber;
             stageSelectChapterNumber = touch - MIN_CHAPTER;
-            map = DataMap.loadMap(getStageIndex(), true);
+            map = DataMap.loadMap(getStageIndex());
             mapAttackType = 0;
 
             if (ol != stageSelectChapterNumber) {
@@ -228,14 +228,13 @@ public class StageSelectPage extends TPage {
             switch (TouchManager.checkTouchListStatus()) {
                 case BACK:
                     GameThread.playSound(15);
-                    GameThread.stopLoopSound(1);
                     NewTower.switchPage(parent, true);
                     break;
                 case ARROW_L:
                     if (stageSelectStageNumber > 0) {
                         GameThread.playSound(14);
                         stageSelectStageNumber--;
-                        map = DataMap.loadMap(getStageIndex(), true);
+                        map = DataMap.loadMap(getStageIndex());
                         mapAttackType = 0;
                     }
                     break;
@@ -243,7 +242,7 @@ public class StageSelectPage extends TPage {
                     if (stageSelectStageNumber < 9) {
                         GameThread.playSound(14);
                         stageSelectStageNumber++;
-                        map = DataMap.loadMap(getStageIndex(), true);
+                        map = DataMap.loadMap(getStageIndex());
                         mapAttackType = 0;
                     }
                     break;
@@ -261,12 +260,12 @@ public class StageSelectPage extends TPage {
             if (TouchManager.lastMoveCheckDistance.y > 0f) {
                 if (stageSelectStageNumber < 9) {
                     stageSelectStageNumber++;
-                    map = DataMap.loadMap(getStageIndex(), true);
+                    map = DataMap.loadMap(getStageIndex());
                     mapAttackType = 0;
                 }
             } else if (TouchManager.lastMoveCheckDistance.y < 0f && stageSelectStageNumber > 0) {
                 stageSelectStageNumber--;
-                map = DataMap.loadMap(getStageIndex(), true);
+                map = DataMap.loadMap(getStageIndex());
                 mapAttackType = 0;
             }
         }
@@ -336,7 +335,7 @@ public class StageSelectPage extends TPage {
         stageSelectStageNumber = Config.lastPlayed % 10;
         mapNumber = -1;
 
-        map = DataMap.loadMap(getStageIndex(), true);
+        map = DataMap.loadMap(getStageIndex());
     }
 
     private int getStageIndex() {

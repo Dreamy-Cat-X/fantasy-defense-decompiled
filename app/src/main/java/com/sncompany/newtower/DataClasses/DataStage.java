@@ -52,22 +52,24 @@ public class DataStage {
     public DataStage(DataMap m, int type) {
         SID = m.SID;
         mapType = type;
-        money = DataStage.stageData[SID][DATA_STAGE_START_MONEY];
-        mana = DataStage.stageData[SID][DATA_STAGE_START_MANA];
-
-        ((StagePage)page).levelUpCount = 0;
-        ((StagePage)page).monsterGoalBlinkCount = 0;
         map = m;
-        waveManager = m.wav;
-
+        if (SID >= DataStage.stageData.length) {
+            money = 3000;
+            mana = 1000;
+            waveManager = new DataWave(map);
+        } else {
+            money = DataStage.stageData[SID][DATA_STAGE_START_MONEY];
+            mana = DataStage.stageData[SID][DATA_STAGE_START_MANA];
+            waveManager = DataWave.loadWave(map, SID);
+        }
+        waveManager.st = this;
         if (mapType == 2)
             for (ObjectUnit o : map.objectUnit)
                 if (o.type == 28 || o.type == 29 || o.type == 32) {
                     o.unitHP = DataWaveMob.DATA_WAVE_GATE_HP[SID] / map.mapStartPositionCount;
                     o.unitMaxHP = o.unitHP / map.mapStartPositionCount;
-                    o.destroyEnableFlag = 0;
+                    o.destroyEnableFlag = true;
                 }
-
         map.objectUnit.replaceAll(ori -> new ObjectUnit(this, ori)); //Albeit stupid, it's needed to update stage variable on objects
         setCurrentWave();
     }

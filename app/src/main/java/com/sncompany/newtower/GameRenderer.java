@@ -212,8 +212,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         number = Math.abs(number);
         int numSiz = 0;
         int textureSiz = (int)texture2DArr[number % 10]._sizeX;
-        while (Math.pow(10, ++numSiz) < number)
-            textureSiz += (int) (texture2DArr[(int)(number / Math.pow(10, ++numSiz)) % 10]._sizeX);
+        while (Math.pow(10, ++numSiz) <= number)
+            textureSiz += (int) (texture2DArr[(int)(number / Math.pow(10, numSiz)) % 10]._sizeX);
         int nwidth = textureSiz + (numSiz * extW);
 
         if (numSiz < maxCount) {

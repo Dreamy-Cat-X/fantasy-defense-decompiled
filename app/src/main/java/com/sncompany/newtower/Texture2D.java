@@ -205,7 +205,7 @@ public class Texture2D {
         setPivot(x, y, pivot);
 
         pointY = VIEW_SCRHEIGHT - pointY - height;
-        if (width <= 0.0f || height <= 0.0f || pointX + width <= 0.0f || pointX >= VIEW_SCRWIDTH || pointY + height <= 0.0f || pointY >= VIEW_SCRHEIGHT)
+        if (width <= 0 || height <= 0 || pointX + width <= 0 || pointX >= VIEW_SCRWIDTH || pointY + height <= 0 || pointY >= VIEW_SCRHEIGHT)
             return;
 
         pointX += DRAW_ADJUST_X_MOVE;
@@ -319,7 +319,6 @@ public class Texture2D {
     public void drawAtPointOptionFlip(float dX, float dY, int pivot) {
         if (this.name == -1)
             return;
-
         coordinates[0] = _maxS;
         coordinates[1] = _maxT;
         coordinates[2] = 0f;
@@ -333,22 +332,22 @@ public class Texture2D {
         setPivot(dX, dY, pivot);
 
         pointY = VIEW_SCRHEIGHT - pointY - height;
-        if (width <= 0.0f || height <= 0.0f || pointX + width <= 0.0f || pointX >= VIEW_SCRWIDTH || pointY + height <= 0.0f || pointY >= VIEW_SCRHEIGHT)
+        if (width <= 0 || height <= 0 || pointX + width <= 0 || pointX >= VIEW_SCRWIDTH || pointY + height <= 0 || pointY >= VIEW_SCRHEIGHT)
             return;
 
         pointX += DRAW_ADJUST_X_MOVE;
         pointY += DRAW_ADJUST_Y_MOVE;
         vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[1] = DRAW_ADJUST_Y_MOVE - TEXTURE_DRAW_MARGIN;
+        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
         vertices[2] = 0.0f;
         vertices[3] = pointX + width;
-        vertices[4] = DRAW_ADJUST_Y_MOVE - TEXTURE_DRAW_MARGIN;
+        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
         vertices[5] = 0.0f;
         vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[7] = DRAW_ADJUST_Y_MOVE + height;
+        vertices[7] = pointY + height;
         vertices[8] = 0.0f;
         vertices[9] = pointX + width;
-        vertices[10] = DRAW_ADJUST_Y_MOVE + height;
+        vertices[10] = pointY + height;
         vertices[11] = 0.0f;
         mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);

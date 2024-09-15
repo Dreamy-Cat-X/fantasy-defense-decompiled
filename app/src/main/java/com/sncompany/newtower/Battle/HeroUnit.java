@@ -80,6 +80,8 @@ public class HeroUnit extends TowerUnit {
 
     public HeroUnit(DataStage s, int tType, int bX, int bY) {
         super(s, tType, bX, bY);
+        drawData = DataAnim.heroDrawData[type];
+        drawTexture = st.page.heroImages[type];
     }
 
     public HeroUnit(TowerUnit twu, int tType, int lvl) {

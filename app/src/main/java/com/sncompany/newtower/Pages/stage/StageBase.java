@@ -12,7 +12,6 @@ import com.sncompany.newtower.DataClasses.DataMap;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
-import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.MyOscillator;
 import com.sncompany.newtower.Pages.TPage;
 import com.sncompany.newtower.R;
@@ -61,7 +60,7 @@ public abstract class StageBase extends TPage {
     public float characterAddPosX, characterAddPosY;
     public int characterAddNumber, characterMenuSelectFlag; //restructure so 1 is unit selected, 2 is hero menu, 3 is hero confirmation, 4 is check menu, 5 is promotion, 6 is leveling up, 7 is confirmation to sell an unit, 8 is hero deploy confirmation. Also used as the button for menus lol
     public TowerUnit tempChara;
-    protected boolean inGamePause = false;
+    protected boolean softPause = false, inGamePause = false;
 
     public StageBase(TPage par, DataStage stage) {
         super(par);
@@ -87,7 +86,7 @@ public abstract class StageBase extends TPage {
         int tot = numberMoneyImage.length + enemyImages.length + debuffImages.length + heroImages.length + towerImages.length + uiUpperResource.length + numberManaImage.length +
                 numberLifeImage.length + numberWaveImage.length + uiButtonImage.length + uiCharButtonImage.length + uiCharEtcImage.length + uiCharFaceImage.length + uiCharNameImage.length +
                 uiCharUpFaceImage.length + uiMonsterEtcImage.length + uiMonsterFaceImage.length + uiMonsterNameImage.length + numberUnitBuyImage.length + numberHeroBuyImage.length +
-                gatefireImage.length + 10;
+                gatefireImage.length;
         shadowImage[0] = new Texture2D(R.drawable.etc_sha34);
         shadowImage[1] = new Texture2D(R.drawable.etc_sha63);
         whiteCircleImage[0] = new Texture2D(R.drawable.etc_whitecircle1);
@@ -133,14 +132,14 @@ public abstract class StageBase extends TPage {
         lod = loadP(numberLifeImage, numberLifeResource, prog, lod, tot);
         lod = loadP(numberWaveImage, numberWaveResource, prog, lod, tot);
         lod = loadP(uiButtonImage, uiButtonResource, prog, lod, tot);
-        lod = loadP(uiCharButtonImage, uiUpperResource, prog, lod, tot);
-        lod = loadP(uiCharEtcImage, numberMoneyResource, prog, lod, tot);
-        lod = loadP(uiCharFaceImage, numberManaResource, prog, lod, tot);
-        lod = loadP(uiCharNameImage, numberManaResource, prog, lod, tot);
-        lod = loadP(uiCharUpFaceImage, numberWaveResource, prog, lod, tot);
-        lod = loadP(uiMonsterEtcImage, uiButtonResource, prog, lod, tot);
-        lod = loadP(uiMonsterFaceImage, numberWaveResource, prog, lod, tot);
-        lod = loadP(uiMonsterNameImage, uiButtonResource, prog, lod, tot);
+        lod = loadP(uiCharButtonImage, uiCharButtonResource, prog, lod, tot);
+        lod = loadP(uiCharEtcImage, uiCharEtcResource, prog, lod, tot);
+        lod = loadP(uiCharFaceImage, uiCharFaceResource, prog, lod, tot);
+        lod = loadP(uiCharNameImage, uiCharNameResource, prog, lod, tot);
+        lod = loadP(uiCharUpFaceImage, uiCharUpFaceResource, prog, lod, tot);
+        lod = loadP(uiMonsterEtcImage, uiMonsterEtcResource, prog, lod, tot);
+        lod = loadP(uiMonsterFaceImage, uiMonsterFaceResource, prog, lod, tot);
+        lod = loadP(uiMonsterNameImage, uiMonsterNameResource, prog, lod, tot);
         lod = loadP(numberUnitBuyImage, numberUnitBuyResource, prog, lod, tot);
         lod = loadP(numberHeroBuyImage, numberHeroBuyResource, prog, lod, tot);
         lod = loadP(gatefireImage, gatefireResource, prog, lod, tot);
@@ -240,7 +239,7 @@ public abstract class StageBase extends TPage {
             return false;
 
         for (TowerUnit twu : st.towerUnit)
-            if (twu.blockX == bX || twu.blockY == bY)
+            if (twu.blockX == bX && twu.blockY == bY)
                 return false;
         return searchObjectTouch(bX, bY) == null;
     }
@@ -270,10 +269,10 @@ public abstract class StageBase extends TPage {
                     if (bX >= sX && bX <= sX + 1 && bY >= sY - 1 && bY <= sY + 1)
                         return obj;
                 } else if (obj.blockSize == 4) {
-                    if (bX >= sX + 1 && bX <= sX + 2 && bY >= sY + 1 && bY <= sY + 3)
+                    if (bX >= sX - 1 && bX <= sX && bY >= sY - 1 && bY <= sY + 1)
                         return obj;
                 } else if (obj.blockSize == 5) {
-                    if (bX >= sX + 1 && bX <= sX + 3 && bY >= sY + 1 && bY <= sY + 2)
+                    if (bX >= sX - 1 && bX <= sX + 1 && bY >= sY - 1 && bY <= sY)
                         return obj;
                 }
             }
@@ -308,11 +307,11 @@ public abstract class StageBase extends TPage {
             high = 2;
             poS = tmap.objectUnit.get(oInd).posY;
         }
-        if (uInd < st.towerUnit.size() && st.towerUnit.get(uInd).posY >= poS) {
+        if (uInd < st.towerUnit.size() && st.towerUnit.get(uInd).posY < poS) {
             high = 1;
             poS = st.towerUnit.get(uInd).posY;
         }
-        if (mInd < st.monsterUnit.size() && st.monsterUnit.get(mInd).posY >= poS)
+        if (mInd < st.monsterUnit.size() && st.monsterUnit.get(mInd).posY < poS)
             high = 0;
         return high;
     }
@@ -339,7 +338,7 @@ public abstract class StageBase extends TPage {
             uiUpperImage[upper_speed0].drawAtPointOption(1, 391, 18);
         }
         uiUpperImage[inGamePause ? upper_ingameon : upper_ingameoff].drawAtPointOption(5.0f, 437.0f, 18);
-        uiUpperImage[st.waveManager.waveRunF ? upper_pauseoff : upper_pauseon].drawAtPointOption(6.0f, 344.0f, 18);
+        uiUpperImage[softPause ? upper_pauseon : upper_pauseoff].drawAtPointOption(6.0f, 344.0f, 18);
         GameRenderer.drawNumberBlock(st.money, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
         GameRenderer.drawNumberBlock(st.mana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
         int wavInd = st.waveManager.current;
@@ -357,23 +356,24 @@ public abstract class StageBase extends TPage {
     protected void drawBaseHealth() {
         int x;
         int y;
-        if (GameThread.mapEndDirection[0] == 203)
-            x = (GameThread.mapEndPosition[0][0] * 45) + 62 + 45;
-        else if (GameThread.mapEndDirection[0] == 208)
-            x = (GameThread.mapEndPosition[0][0] * 45) + 62 + 22;
+        if (tmap.mapEndDirection[0] == 203)
+            x = (tmap.mapEndPosition[0][0] * 45) + 62 + 45;
+        else if (tmap.mapEndDirection[0] == 208)
+            x = (tmap.mapEndPosition[0][0] * 45) + 62 + 22;
         else {
-            x = (GameThread.mapEndPosition[0][0] * 45) + 62 + 22;
-            y = (GameThread.mapEndPosition[0][1] * 45) + 30;
+            x = (tmap.mapEndPosition[0][0] * 45) + 62 + 22;
+            y = (tmap.mapEndPosition[0][1] * 45) + 30;
             uiUpperImage[upper_slash].drawAtPointOption(x, (float) (y - 1), 17);
             uiUpperImage[upper_heart].drawAtPointOption((float) (x - 37), y, 18);
-            GameRenderer.drawNumberBlock(st.life, numberLifeImage, (float) (x - 2), y, -1, 20, 2);
+            GameRenderer.drawNumberBlock(st.life, numberLifeImage, (float) (x - 12), y, -1, 20, 2);
             GameRenderer.drawNumberBlock(DataStage.maxLife, numberLifeImage, x + 2, y, -1, 18, 2);
+            return;
         }
-        y = ((GameThread.mapEndPosition[0][1] * 45) + 30) - 22;
+        y = ((tmap.mapEndPosition[0][1] * 45) + 30) - 22;
         uiUpperImage[upper_slash].drawAtPointOption(x, (float) (y - 1), 17);
         float f2 = y;
         uiUpperImage[upper_heart].drawAtPointOption((float) (x - 37), f2, 18);
-        GameRenderer.drawNumberBlock(st.life, numberLifeImage, (float) (x - 2), f2, -1, 20, 2);
+        GameRenderer.drawNumberBlock(st.life, numberLifeImage, (float) (x - 12), f2, -1, 20, 2);
         GameRenderer.drawNumberBlock(DataStage.maxLife, numberLifeImage, x + 2, f2, -1, 18, 2);
     }
 
@@ -385,11 +385,11 @@ public abstract class StageBase extends TPage {
         Texture2D[] textures;
         if (type >= 12) {
             type -= 12;
-            drawData = DataAnim.towerDrawData[type];
-            textures = st.page.towerImages[type];
-        } else {
             drawData = DataAnim.heroDrawData[type];
             textures = st.page.heroImages[type];
+        } else {
+            drawData = DataAnim.towerDrawData[type];
+            textures = st.page.towerImages[type];
         }
 
         int main = drawData[drawData[0]];

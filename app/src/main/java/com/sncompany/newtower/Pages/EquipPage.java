@@ -9,7 +9,6 @@ import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
-import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
@@ -23,7 +22,7 @@ public class EquipPage extends TPage {
     public static final int GAME_SHOP_EQUIP_SKILL_START_Y = 224;
     static final float GAME_SHOP_EQUIP_MOVING_ALPHA = 0.8f;
     protected final InventoryTable inventory;
-    private final ShopPage shopP;
+    public final ShopPage shopP;
     private final HeroUnit[] heroes = new HeroUnit[Config.heroEquips.length];
     public int selectedHero = -1, selectedHeroEquip = -1;
     public static int touchStart_GAME_SHOP_EQUIP_NUM;
@@ -35,8 +34,8 @@ public class EquipPage extends TPage {
 
     public EquipPage(TPage par, ShopPage shop) {
         super(par);
+        inventory = shop == null ? new InventoryTable(this) : shop.inventory;
         shopP = shop == null ? new ShopPage(par, this) : shop;
-        inventory = shop == null ? new InventoryTable(shopP) : shop.inventory;
         setEquipHeroSetting();
     }
 
@@ -58,6 +57,8 @@ public class EquipPage extends TPage {
 
     @Override
     public void update() {
+        if (!loaded)
+            load(null);//Can't be set to constructor because shopPage
     }
 
     @Override
@@ -82,7 +83,6 @@ public class EquipPage extends TPage {
             inventory.addTouch();
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;
             cTLS = TouchManager.checkTouchListStatus();
-            parent.parent.paint(gl10, false);
         }
         shopP.uiShopImage[ShopPage.shop_titleequip].drawAtPointOption(66f, 5f, 18);
         shopP.uiShopImage[cTLS == SHOP ? ShopPage.shop_tabshopon : ShopPage.shop_tabshopoff].drawAtPointOption(40f, 9f, 17);
@@ -102,7 +102,7 @@ public class EquipPage extends TPage {
         GameRenderer.setFontSize(13);
         for (int j = 0; j < heroes.length; j++) {
             int pDis = (255 * j);
-            shopP.uiShopImage[ShopPage.shop_warriorbody + (j * 3)].drawAtPointOption(20f + pDis, 75f, 18);
+            shopP.uiShopImage[ShopPage.shop_warriorbody + (j * 3)].drawAtPointOption(20f + pDis, 75f + (285 - shopP.uiShopImage[ShopPage.shop_warriorbody+(j*3)]._sizeY), 18);
             if (Config.rewardValues[j * 2]) {
                 shopP.uiShopImage[ShopPage.shop_heroslot].drawAtPointOption(25f + pDis, 222f, 18);
                 boolean avail = selectedHero == j && i2 != null;
@@ -127,8 +127,8 @@ public class EquipPage extends TPage {
                 GameRenderer.setFontColor(-8519745);
                 GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(heroes[j].effectType), 167.0f, 338.0f, 20);
             } else {
-                shopP.uiShopImage[ShopPage.shop_warriorshadow + (j * 3)].drawAtPointOption(19f + pDis, 74.0f, 18);
-                shopP.uiShopImage[ShopPage.shop_lock].drawAtPointOption(109f, 174f, 18);
+                shopP.uiShopImage[ShopPage.shop_warriorshadow + (j * 3)].drawAtPointOption(19f + pDis, 74.0f + (287 - shopP.uiShopImage[ShopPage.shop_warriorshadow+(j*3)]._sizeY), 18);
+                shopP.uiShopImage[ShopPage.shop_lock].drawAtPointOption(109f + pDis, 174f, 18);
                 GameRenderer.setFontColor(-1);
                 GameRenderer.drawStringDoubleM(HeroUnit.getUnlock(j), 149f + pDis, 284f, 17);
             }
@@ -235,16 +235,18 @@ public class EquipPage extends TPage {
             }
         } else switch (cTLS) {
             case BACK:
-                NewTower.switchPage(parent, true);
+                ((MenuPage)parent.parent).child = parent;
+                unload();
+                shopP.unload();
                 GameThread.playSound(15);
                 break;
             case SHOP:
-                NewTower.switchPage(shopP, false);
+                ((MenuPage)parent.parent).child = shopP;
                 GameThread.playSound(14);
                 break;
             case L_ARROW:
                 GameThread.playSound(14);
-                inventory.shopShopInventorySelectPos = (inventory.shopShopInventorySelectPos - 8) % 24;
+                inventory.shopShopInventorySelectPos = inventory.shopShopInventorySelectPos >= 8 ? (inventory.shopShopInventorySelectPos - 8) % 24 : 16;
                 break;
             case R_ARROW:
                 GameThread.playSound(14);
@@ -265,7 +267,7 @@ public class EquipPage extends TPage {
             selectedHeroEquip = pPos % 2;
             inventory.shopShopInventorySelectPos -= inventory.getSelectedInd();
             equipItem();
-        } else {
+        } else if (selectedHero != -1 && selectedHeroEquip != -1) {
             unequipItem();
             selectedHero = -1;
             selectedHeroEquip = -1;

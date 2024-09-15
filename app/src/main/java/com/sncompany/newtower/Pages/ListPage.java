@@ -69,9 +69,9 @@ public class ListPage extends TPage { //This class' parent will be a MenuPage al
     public void touchCheck() {
         if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
             return;
-
         int cTLS = TouchManager.checkTouchListStatus();
-
+        if (cTLS == -1)
+            return;
         if (cTLS == 0) {
             GameThread.playSound(14);
             MenuPage par = (MenuPage)parent;

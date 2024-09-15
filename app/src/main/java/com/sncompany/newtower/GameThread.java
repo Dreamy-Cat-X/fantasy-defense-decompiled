@@ -20,8 +20,6 @@ public class GameThread extends Thread {
     public static int lastFrameCount;
     public static int loadingStatus;
     public static boolean m_bStop;
-    public static final int[] mapEndDirection = new int[10];
-    public static final int[][] mapEndPosition = new int[10][2];
     public static AudioManager mgr;
     public static NewTower newTower;
     public static boolean pauseFlag, touchFlag;
@@ -178,7 +176,7 @@ public class GameThread extends Thread {
     }
 
     public static void playLoopSound(int i) {
-        if (soundFlag && Config.musicVolume > 0) {
+        if (soundFlag) {
             try {
                 bgmMedia[i].setVolume(Config.musicVolume, Config.musicMaxVolume);
                 bgmMedia[i].play();

@@ -19,20 +19,20 @@ public class ObjectUnit extends EnemyUnit {
     public final int rewardType;
     public final int rewardValue;
     public final int oType;
-    public int destroyEnableFlag;
+    public boolean destroyEnableFlag;
     public int objectLastVanishTime;
     public int objectVanishCount;
 
     public ObjectUnit(int oType, int bX, int bY) {
         super(null);
-        for (int ODataI = 0; ODataI < 34; ODataI++)
+        for (int ODataI = 0; ODataI < DataObject.objectData.length; ODataI++)
             if (oType == DataObject.objectData[ODataI][0]) {
                 type = ODataI;
                 break;
             }
         this.oType = type;
         objectVanishCount = 0;
-        destroyEnableFlag = DataObject.objectData[type][1];
+        destroyEnableFlag = DataObject.objectData[type][1] == 0;
         unitHP = unitMaxHP = DataObject.objectData[type][2];
         rewardType = DataObject.objectData[type][3];
         rewardValue = DataObject.objectData[type][4];
@@ -111,6 +111,11 @@ public class ObjectUnit extends EnemyUnit {
     }
 
     @Override
+    public boolean dead() {
+        return destroyEnableFlag && super.dead();
+    }
+
+    @Override
     public void kill(TowerUnit uni) {
         if (rewardType != 0) {
             if (rewardType != 1)
@@ -174,7 +179,7 @@ public class ObjectUnit extends EnemyUnit {
                 i4 = 0;
                 break;
         }
-        if (type != 28 && type != 29 && type != 32 && destroyEnableFlag == 0)
+        if (type != 28 && type != 29 && type != 32 && destroyEnableFlag)
             if (blockSize <= 1) {
                 st.page.shadowImage[0].drawAtPointOption(x, 27 + y, 33);
             } else

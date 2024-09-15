@@ -215,7 +215,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                     Consumer<Integer> c1 = (in -> child = new ShopPage(child));
                     Consumer<Integer> c2 = (in -> child = new EquipPage(child));
                     int imi = ShopPage.MIN_U;
-                    child = new ListPage(this, new Consumer[]{c1, c2}, new int[]{ShopPage.uiShopResource[imi], ShopPage.uiShopResource[imi + 1], ShopPage.uiShopResource[imi + 2], ShopPage.uiShopResource[imi + 3]});
+                    child = new ListPage(this, new Consumer[]{c1, c2}, new int[]{ShopPage.uiShopResource[imi + 2], ShopPage.uiShopResource[imi + 3], ShopPage.uiShopResource[imi], ShopPage.uiShopResource[imi + 1]});
                     GameThread.playSound(14);
                     break;
                 } case GAME_MAINMENU_TOUCH_LIST_5_BACK:

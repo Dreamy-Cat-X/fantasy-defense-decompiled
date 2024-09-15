@@ -1,7 +1,5 @@
 package com.sncompany.newtower.DataClasses;
 
-import android.util.Log;
-
 import com.sncompany.newtower.Battle.ObjectUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.GameThread;
@@ -38,7 +36,7 @@ public class DataWave {
     public final DataMap map;
 
     public final int waveCount, wcc;
-    public boolean waveRunF = true, perfectWave = true, waveMonsterOutPos = false; //WaveRunF is literally just pause, btw
+    public boolean perfectWave = true, waveMonsterOutPos = false;
     public int waveStartT = 90, current = 0, monsterOpenTime = 0;
     public int wavePattern, gatePattern;
     public final int[] waveMonsterType = new int[2], waveMonsterRemainCount = new int[2], waveMonsterShowTime = new int[2], waveMonsterShowCurrent = new int[2];
@@ -64,14 +62,23 @@ public class DataWave {
         return new DataWave(map, bArr);
     }
 
-    public DataWave(DataMap m, byte[] data) {
+    /**
+     * Used exclusively for Tutorial
+     * @param m Tutorial map
+     */
+    public DataWave(DataMap m) {
+       map = m;
+       waveCount = wcc = 1;
+        for (int i = 0; i < 8; i++)
+            waveMobData[0][i] = 0;
+    }
+    private DataWave(DataMap m, byte[] data) {
         map = m;
         waveCount = Config.ByteArrayToInt(data, 0);
-        for (int i3 = 0; i3 < waveCount; i3++)
-            for (int i4 = 0; i4 < 8; i4++)
-                waveMobData[i3][i4] = Config.ByteArrayToInt(data, (i3 * 32) + 4 + (i4 * 4));
-        wcc = DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[m.SID];
-        Log.d("Check", "The " + (wcc == waveCount) + " check");
+        for (int i = 0; i < waveCount; i++)
+            for (int j = 0; j < 8; j++)
+                waveMobData[i][j] = Config.ByteArrayToInt(data, (i * 32) + 4 + (j * 4));
+        wcc = DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[m.SID];//Log.d("Check", "The " + (wcc == waveCount) + " check");
     }
 
     /**

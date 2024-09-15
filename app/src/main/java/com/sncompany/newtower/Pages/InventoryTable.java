@@ -17,12 +17,12 @@ public class InventoryTable { //Probably useless, but only one way to tell
 
     private final Texture2D[] selectOutline = new Texture2D[2], uiUpitemImage = new Texture2D[uiUpitemResource.length];
     public int shopShopInventorySelectPos = 0;
-    private final ShopPage sh;
+    private final TPage imgref;
     private boolean loaded;
 
 
-    public InventoryTable(ShopPage shop) {
-        sh = shop;
+    public InventoryTable(TPage ref) {
+        imgref = ref;
     }
 
     public void load(Consumer<Float> prog) {
@@ -58,14 +58,19 @@ public class InventoryTable { //Probably useless, but only one way to tell
             return 0;
         return shopShopInventorySelectPos - getSelectedInd();
     }
-
     public int getSelectedInd() {
         if (shopShopInventorySelectPos == -1)
             return -1;
         return shopShopInventorySelectPos % 8;
     }
+    private ShopPage getShop() {
+        if (imgref instanceof EquipPage)
+            return ((EquipPage)imgref).shopP;
+        return (ShopPage)imgref;
+    }
 
     public void drawInventoryWindow(int x, int y, int touch, boolean drawSell) {
+        ShopPage sh = getShop();
         sh.uiShopImage[ShopPage.shop_underbar].drawAtPointOption(x, y, 18);
         for (int i = 0; i < 8; i++) {
             int i10 = getFirstInPage() + i;
@@ -108,9 +113,9 @@ public class InventoryTable { //Probably useless, but only one way to tell
             return;
 
         uiUpitemImage[id].drawAtPointOptionGuide(x, y, 18, cGRect);
-        if (DataUpgradeItem.upgradeItemData[id][0] != 0) {
+        if (DataUpgradeItem.upgradeItemData[id][0] != 0)
             return;
-        }
+
         GameRenderer.setFontSize(11);
         GameRenderer.setFontDoubleColor(-1, -16777216);
         GameRenderer.drawStringDoubleGuideM(String.format("%dP", DataUpgradeItem.upgradeItemData[id][2]), x + 30, y + 43, 17, cGRect);
@@ -147,7 +152,7 @@ public class InventoryTable { //Probably useless, but only one way to tell
         GameRenderer.setFontSize(12);
 
         float f7 = bX + bnd;
-        sh.heroismImage.drawAtPointOption((f7 - bound2) - 40.0f, bY + 12.0f, 18);
+        getShop().heroismImage.drawAtPointOption((f7 - bound2) - 40.0f, bY + 12.0f, 18);
         GameRenderer.drawStringM(String.format("%d", (DataUpgradeItem.upgradeItemData[idm][4] * 50) / 100), f7 - 17.0f, bY + 18.0f, 20);
     }
 

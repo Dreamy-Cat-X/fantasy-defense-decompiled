@@ -430,18 +430,18 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         int sCur = drawData[drawData[0] + drawData[sCount + 1 + ((unitStatusCount / sprSpd) % drawData[sCount])]];
         st.page.shadowImage[0].drawAtPointOption(x, y + 10, 9);
         for (int i = 0; i < drawData[sCur]; i++) {
-            int i15 = (i * 5) + (sCur + 1);
-            int i16 = i15 + 3;
-            if (drawData[i16] != 1000) {
+            int coords = (i * 5) + (sCur + 1);
+            int nexc = coords + 3;
+            if (drawData[nexc] != 1000) {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                Texture2D.setColors(drawData[i16] / 1000f);
+                Texture2D.setColors(drawData[nexc] / 1000f);
             }
-            if (drawData[i15 + 4] == 0)
-                drawTexture[drawData[i15]].drawAtPointOption(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10.0f, 18);
+            if (drawData[coords + 4] == 0)
+                drawTexture[drawData[coords]].drawAtPointOption(drawData[coords + 1] + x, y + drawData[coords + 2] + 10f, 18);
             else
-                drawTexture[drawData[i15]].drawAtPointOptionFlip(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10.0f, 18);
+                drawTexture[drawData[coords]].drawAtPointOptionFlip(drawData[coords + 1] + x, y + drawData[coords + 2] + 10f, 18);
 
-            if (drawData[i16] != 1000)
+            if (drawData[nexc] != 1000)
                 Texture2D.setColors(1);
         }
         float starX = x - (7.5f * (level));

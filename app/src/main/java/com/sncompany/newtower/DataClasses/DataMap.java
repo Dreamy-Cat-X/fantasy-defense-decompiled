@@ -8,7 +8,6 @@ import com.sncompany.newtower.Texture2D;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class DataMap {
     public static final int LOAD_MAP_START_COUNT = 450;
@@ -61,15 +60,13 @@ public class DataMap {
     public final int[][] mapEndPosition = new int[10][2];
     public final int[][] mapMoveData = new int[15][10];
     public final int[][] mapTileData = new int[15][10];
-    public DataWave wav;
 
     /**
      * Loads a map based on its SID ((chapter * 10) + 10). Also the only way to make a DataMap.
      * @param SID Stage Index
-     * @param play Loads the Wave data if true
-     * @return
+     * @return Loaded map
      */
-    public static DataMap loadMap(int SID, boolean play) {
+    public static DataMap loadMap(int SID) {
         int chap = SID / 10;
         if (current != null) {
             if (SID == current.SID)
@@ -96,12 +93,8 @@ public class DataMap {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        DataMap map = new DataMap(SID, mdata, current == null || chap != current.SID / 10);
-        current = map;
-
-        if (play)
-            map.wav = DataWave.loadWave(map, SID);
-        return map;
+        current = new DataMap(SID, mdata, current == null || chap != current.SID / 10);
+        return current;
     }
 
     private DataMap(int stage, byte[] mdata, boolean relo) {

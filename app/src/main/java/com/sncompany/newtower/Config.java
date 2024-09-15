@@ -23,7 +23,7 @@ public class Config {
     public static int musicVolume, effectVolume, musicMaxVolume;
     public static byte lastPlayed = 0, limitBreak;
     public static int heroPoints, killCount, top_money;
-    public static long curPlaytime = 0, totalPlaytime;
+    public static long curPlaytime = 0, totalPlaytime = 0;
     public static boolean movie, tutorial, vibration;
     /**
      * Indicates if a given story reward has been claimed
@@ -40,8 +40,8 @@ public class Config {
     public static final byte[][] stageProg = new byte[50][3]; //-1 = locked, 0 = uncleared, 1 = clear, 2 = perfect
     public static final byte[][] unitUpgrades = new byte[3][6];
     public static final byte[][] heroUpgrades = new byte[3][6];
-    public static final byte[][][] heroEquips = new byte[3][2][2]; //[i][0] stores type, [i][1] effect degree
-    public static final byte[][] inventory = new byte[24][2]; //same as heroEquips
+    public static final byte[][][] heroEquips = new byte[3][2][]; //[i][0] stores type, [i][1] effect degree. Length is 2, but not stored so it inits as null
+    public static final byte[][] inventory = new byte[24][]; //same as heroEquips
 
 
     public static int getAwardCount() {
