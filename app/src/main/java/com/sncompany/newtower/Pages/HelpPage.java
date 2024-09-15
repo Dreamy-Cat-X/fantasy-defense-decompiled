@@ -55,7 +55,6 @@ public class HelpPage extends TPage {
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 4;
             i = TouchManager.checkTouchListStatus();
         }
-        parent.paint(gl10, false);
 
         uiHelpImage[0].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
         uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
@@ -67,10 +66,9 @@ public class HelpPage extends TPage {
 
         GameRenderer.setFontDoubleColor(-1, -1);
         GameRenderer.setFontSize(19);
-        GameRenderer.drawStringDoubleM(String.format("%d/%d", GameThread.gameHelpViewNum + 1, 15), 705.0f, 431.0f, 17);
+        GameRenderer.drawStringDoubleM(String.format("%d/%d", gameHelpViewNum + 1, uiHelpShotResource.length), 705.0f, 431.0f, 17);
 
         uiEtcImage[i == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
-
         if (init)
             TouchManager.swapTouchMap();
     }
@@ -86,21 +84,20 @@ public class HelpPage extends TPage {
                 GameThread.playSound(14);
                 MenuPage par = (MenuPage)parent;
                 par.back(true);
-                NewTower.switchPage(par, false);
                 break;
             case GAME_HELP_TOUCH_LIST_1_TUTORIAL:
                 GameThread.stopLoopSound(0);
-                NewTower.switchPage(new LoadingPage(new TutorialPage(new StageSelectPage(parent))), true);
+                NewTower.switchPage(new TutorialPage(new StageSelectPage(parent)), true);
                 break;
             case GAME_HELP_TOUCH_LIST_2_LEFTARROW:
-                gameHelpViewNum = (byte)((gameHelpViewNum - 1) % 15);
-
+                gameHelpViewNum--;
+                if (gameHelpViewNum == -1)
+                    gameHelpViewNum = (byte)(uiHelpShotResource.length - 1);
                 uiHelpShotImage.dealloc();
                 uiHelpShotImage.initWithImageName(uiHelpShotResource[gameHelpViewNum]);
                 break;
             case GAME_HELP_TOUCH_LIST_3_RIGHTARROW:
-                gameHelpViewNum = (byte)((gameHelpViewNum + 1) % 15);
-
+                gameHelpViewNum = (byte)((gameHelpViewNum + 1) % uiHelpShotResource.length);
                 uiHelpShotImage.dealloc();
                 uiHelpShotImage.initWithImageName(uiHelpShotResource[gameHelpViewNum]);
                 break;

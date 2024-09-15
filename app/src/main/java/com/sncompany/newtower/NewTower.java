@@ -15,25 +15,11 @@ import com.sncompany.newtower.Pages.LoadingPage;
 import com.sncompany.newtower.Pages.MenuPage;
 import com.sncompany.newtower.Pages.TPage;
 import com.sncompany.newtower.Pages.TitlePage;
-import com.sncompany.newtower.core.CoreStatic;
-import com.sncompany.newtower.core.GameImage;
 
 import java.util.Arrays;
 
 /* loaded from: D:\decomp\classes.dex */
 public class NewTower extends Activity {
-
-    private static class TImageCreator extends CoreStatic.ImageCreator {
-        @Override
-        public GameImage create() {
-            return new Texture2D();
-        }
-
-        @Override
-        public GameImage create(int id) {
-            return new Texture2D(id);
-        }
-    }
 
     public static GameRenderer gameRenderer = null;
     public static GameThread gameThread = null;
@@ -50,7 +36,6 @@ public class NewTower extends Activity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         doFullScreen();
-        CoreStatic.creator = new TImageCreator();
         initActivity();
     }
 
@@ -59,9 +44,12 @@ public class NewTower extends Activity {
     }
 
     public static void switchPage(TPage p, boolean unload) {
-        if (!p.loaded)
-            p.load(null);
-        else
+        if (!p.loaded) {
+            LoadingPage lp = new LoadingPage(p);
+            lp.load(null);
+            switchPage(lp, unload);
+            return;
+        } else
             p.onReload();
 
         TPage par = currentPage;
@@ -129,7 +117,6 @@ public class NewTower extends Activity {
             wl = powerManager.newWakeLock(536870922, "Def:Tag");
             wl.acquire();
             vibe = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            GameThread.gameLoadFlag = 0;
             GameThread.loadingStatus = 1000;
             initActivityFirstFlag = true;
             return;
@@ -213,7 +200,7 @@ public class NewTower extends Activity {
             while (!(p instanceof MenuPage) && p != null)
                 p = p.parent;
 
-            switchPage(new LoadingPage(p), true);
+            switchPage(p, true);
             GameThread.stopLoopSound(2);
         });
         builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());

@@ -145,13 +145,14 @@ public class Config {
         //cbit = 877
         saveTotalBuffer[cbit++] = lastPlayed;
         saveTotalBuffer[cbit++] = limitBreak;
-        saveTotalBuffer[cbit] = BooleansToByte(movie, tutorial, vibration);
+        saveTotalBuffer[cbit] = BooleansToByte(tutorial, movie, vibration);
         //cbit = 880
         try {
             openFileOutput = context.openFileOutput(file2 ? SAVEFILE_NAME2 : SAVEFILE_NAME, 0);
             openFileOutput.write(saveTotalBuffer);
             openFileOutput.close();
-        } catch (Exception unused) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -234,8 +235,8 @@ public class Config {
             limitBreak = saveTotalBuffer[cbit++];
             boolean[] lbs = ByteToBooleans(saveTotalBuffer[cbit]);
             //cbit = 880
-            movie = lbs[0];
-            tutorial = lbs[1];
+            tutorial = lbs[0];
+            movie = lbs[1];
             vibration = lbs[2];
 
             heroAvail[0] = rewardValues[0];
@@ -271,7 +272,7 @@ public class Config {
     public static boolean[] ByteToBooleans(byte b) {
         boolean[] bs = new boolean[8];
         for (byte i = 0; i < 8; i++)
-            bs[i] = (b & i) > 0;
+            bs[i] = (b & (1 << i)) != 0;
         return bs;
     }
     public static int ByteArrayToInt(byte[] bArr, int i) {

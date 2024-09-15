@@ -8,6 +8,7 @@ import com.sncompany.newtower.Texture2D;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DataMap {
     public static final int LOAD_MAP_START_COUNT = 450;
@@ -49,7 +50,7 @@ public class DataMap {
     private static final Texture2D[][] backTileImages = {backTileImage0, backTileImage1, backTileImage2, backTileImage3, backTileImage4};
     private static DataMap current = null;
 
-    public final int mapEndPositionCount, mapBackgroundType, lastShowBackBase, SID;
+    public final int mapEndPositionCount, lastShowBackBase, SID;
     public int mapStartPositionLoop = 0, mapStartPositionCount, gatePattern;
     public final ArrayList<ObjectUnit> objectUnit = new ArrayList<>(50), defaultObjs = new ArrayList<>(50);
     public final Texture2D[] backObjectImage = new Texture2D[DataObject.objectImageResource.length];
@@ -69,10 +70,12 @@ public class DataMap {
      * @return
      */
     public static DataMap loadMap(int SID, boolean play) {
+        int chap = SID / 10;
         if (current != null) {
             if (SID == current.SID)
                 return current;
-            current.unload();
+            if (chap != current.SID / 10)
+                current.unload();
         } //Prevents unecessary overusage of resources by ridding of pointless loads
 
         byte[] mdata = null;
@@ -90,9 +93,10 @@ public class DataMap {
 
             } while (ibit < available);
             openRawResource.close();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        DataMap map = new DataMap(SID, mdata);
+        DataMap map = new DataMap(SID, mdata, current == null || chap != current.SID / 10);
         current = map;
 
         if (play)
@@ -100,8 +104,25 @@ public class DataMap {
         return map;
     }
 
-    private DataMap(int stage, byte[] mdata) {
+    private DataMap(int stage, byte[] mdata, boolean relo) {
         SID = stage;
+        int chap = SID / 10;
+        lastShowBackBase = chap >= 5 || chap < 0 ? 0 : chap;
+
+        if (relo) {
+            backTileOldImage = backTileImages[lastShowBackBase];
+            for (int i = 0; i < backTileOldImage.length; i++)
+                backTileOldImage[i] = new Texture2D(tileTileResource[lastShowBackBase][i]);
+            for (int i = 0; i < backObjectImage.length; i++)
+                backObjectImage[i] = new Texture2D(DataObject.objectImageResource[i]);
+            for (int i = 0; i < backBaseImageArray.length; i++)
+                backBaseImageArray[i] = new Texture2D(tileBaseResource[lastShowBackBase]);
+        } else {
+            backTileOldImage = current.backTileOldImage;
+            System.arraycopy(current.backObjectImage, 0, backObjectImage, 0, backObjectImage.length);
+            System.arraycopy(current.backBaseImageArray, 0, backBaseImageArray, 0, backBaseImageArray.length);
+        }
+
         for (int j = 0; j < 10; j++)
             for (int k = 0; k < 15; k++)
                 mapTileData[k][j] = mdata[(j * 15) + k];
@@ -123,17 +144,15 @@ public class DataMap {
             mapStartPosition[sPos][1] = mdata[pcor + 1];
         }
 
-        for (int i13 = mapStartPositionCount - 1; i13 > 0; i13--) {
-            int i14 = i13 - 1;
-            while (true) {
-                if (i14 >= 0) {
-                    int[][] iArr2 = mapStartPosition;
-                    if (iArr2[i14][0] == iArr2[i13][0] && iArr2[i14][1] == iArr2[i13][1]) {
-                        mapStartPositionCount--;
-                        break;
-                    }
-                    i14--;
+        for (int i = mapStartPositionCount - 1; i > 0; i--) {
+            int j = i - 1;
+            while (j >= 0) {
+                int[][] iArr2 = mapStartPosition;
+                if (iArr2[j][0] == iArr2[i][0] && iArr2[j][1] == iArr2[i][1]) {
+                    mapStartPositionCount--;
+                    break;
                 }
+                j--;
             }
         }
         for (int i15 = 0; i15 < mapStartPositionCount; i15++) {
@@ -172,13 +191,6 @@ public class DataMap {
                 }
             }
         }
-        int chap = SID / 10;
-        mapBackgroundType = chap;
-        lastShowBackBase = chap >= 5 || chap < 0 ? 0 : chap;
-
-        backTileOldImage = backTileImages[lastShowBackBase];
-        for (int i = 0; i < backObjectImage.length; i++)
-            backObjectImage[i] = new Texture2D(DataObject.objectImageResource.length);
     }
 
     public void checkBackBase() {

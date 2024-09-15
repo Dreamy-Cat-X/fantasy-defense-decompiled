@@ -148,13 +148,13 @@ public class EquipPage extends TPage {
                 alpha = 1.0f - ((GameThread.gameTimeCount % 10) * 0.1f);
 
             Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.gl.glColor4f(1, 1, 1, alpha);
+            Texture2D.setAlpha(alpha);
             for (int j = 0; j < 3; j++) {
                 if (Config.rewardValues[j * 2])
                     for (int i12 = 0; i12 < 2; i12++)
                         shopP.uiShopImage[ShopPage.shop_glow].drawAtPointOption(((j * 255) + GAME_SHOP_EQUIP_SKILL_START_X) - 7, ((i12 * 69) + GAME_SHOP_EQUIP_SKILL_START_Y) - 7, 18);
             }
-            Texture2D.gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            Texture2D.setAlpha(1);
             inventory.drawInventoryWindow(72, 362, i8, true);
         } else
             inventory.drawInventoryWindow(72, 362, i8, false);
@@ -163,9 +163,9 @@ public class EquipPage extends TPage {
         if (i2 != null) {
             if (t != TouchManager.emptyPosition) {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(1f, 1f, 1f, GAME_SHOP_EQUIP_MOVING_ALPHA);
+                Texture2D.setAlpha(GAME_SHOP_EQUIP_MOVING_ALPHA);
                 inventory.drawUpItemImage(i2, t.x, t.y - 25.0f, 9);
-                Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                Texture2D.setAlpha(1f);
             } else
                 inventory.drawInvenItemDescription((selectedHero * 255) + GAME_SHOP_EQUIP_SKILL_START_X + 30, (selectedHeroEquip * 69) + GAME_SHOP_EQUIP_SKILL_START_Y, i2);
         }

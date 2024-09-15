@@ -453,21 +453,16 @@ public class TouchManager {
     public static int checkTouchListStatus() {
         int checkTouchListPressed;
         int firstValidTouch = getFirstValidTouch();
-        if (firstValidTouch == -1) {
+        if (firstValidTouch == -1)
             return -1;
-        }
         int i = touchInputStatus[firstValidTouch];
-        if ((i != 1 && i != 3) || (checkTouchListPressed = checkTouchListPressed(touchStartPosition[firstValidTouch])) == -1) {
+        if ((i != 1 && i != 3) || (checkTouchListPressed = checkTouchListPressed(touchStartPosition[firstValidTouch])) == -1)
             return -1;
-        }
-        for (int i2 = 0; i2 < touchMovedUsedCount[firstValidTouch]; i2++) {
-            if (checkTouchListPressed != checkTouchListPressed(touchMovedPosition[firstValidTouch][i2])) {
+        for (int i2 = 0; i2 < touchMovedUsedCount[firstValidTouch]; i2++)
+            if (checkTouchListPressed != checkTouchListPressed(touchMovedPosition[firstValidTouch][i2]))
                 return -1;
-            }
-        }
-        if (touchInputStatus[firstValidTouch] != 3 || checkTouchListPressed == checkTouchListPressed(touchEndPosition[firstValidTouch])) {
+        if (touchInputStatus[firstValidTouch] != 3 || checkTouchListPressed == checkTouchListPressed(touchEndPosition[firstValidTouch]))
             return checkTouchListPressed;
-        }
         return -1;
     }
 

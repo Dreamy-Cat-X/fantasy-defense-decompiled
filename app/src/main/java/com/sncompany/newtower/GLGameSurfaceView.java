@@ -44,21 +44,15 @@ public class GLGameSurfaceView extends GLSurfaceView {
         int x = (int) motionEvent.getX();
         int y = (int) motionEvent.getY();
         int action = motionEvent.getAction();
-        if (action >= 0 && action <= 2) {
+        if (MotionEvent.ACTION_DOWN >= 0 && action <= MotionEvent.ACTION_MOVE) {
             touchManager.addLastInputPoint(1, 0, CGPoint.CGPointMake((int) ((x / GameRenderer.DRAW_SCALE_SIZE) - GameRenderer.DRAW_SCALE_X_MOVE), (int) ((y / GameRenderer.DRAW_SCALE_SIZE) - GameRenderer.DRAW_SCALE_Y_MOVE)), 1);
-            if (action == 0)
-                touchManager.processTouchEvent(0);
+            if (action == MotionEvent.ACTION_DOWN)
+                touchManager.processTouchEvent(MotionEvent.ACTION_DOWN);
             else
-                touchManager.processTouchEvent(action == 1 ? 2 : 1);
-            touchCheckTOTAL();
-            return true;
-        }
-        return super.onTouchEvent(motionEvent);
-    }
-
-    public void touchCheckTOTAL() {
-        if (NewTower.currentPage != null)
-            NewTower.currentPage.touchCheck();
-        TouchManager.processTouchStatus();
+                touchManager.processTouchEvent(action == MotionEvent.ACTION_UP ? MotionEvent.ACTION_MOVE : MotionEvent.ACTION_UP);
+            GameThread.touchFlag = true;
+        } else
+            TouchManager.clearTouchStatus();
+        return true;
     }
 }

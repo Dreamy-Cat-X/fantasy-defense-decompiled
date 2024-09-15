@@ -15,8 +15,6 @@ public class GameThread extends Thread {
     public static final int total_SFX = 31;
     public static final MediaManager2 effectMedia = new MediaManager2(total_SFX);
 
-    public static int gameHelpViewNum;
-    public static int gameLoadFlag;
     public static int gameSubStatus;
     public static int lastDrawCount;
     public static int lastFrameCount;
@@ -26,7 +24,7 @@ public class GameThread extends Thread {
     public static final int[][] mapEndPosition = new int[10][2];
     public static AudioManager mgr;
     public static NewTower newTower;
-    public static boolean pauseFlag;
+    public static boolean pauseFlag, touchFlag;
     public static long playTimeStartValue;
     public static int realDrawCount;
     public static final boolean soundFlag = true;
@@ -63,9 +61,17 @@ public class GameThread extends Thread {
     }
 
     public void updateGame() {
+        if (touchFlag)
+            touchCheckTOTAL();
         if (NewTower.currentPage != null)
             NewTower.currentPage.update();
         playSound2();
+    }
+    public void touchCheckTOTAL() {
+        if (NewTower.currentPage != null)
+            NewTower.currentPage.touchCheck();
+        TouchManager.processTouchStatus();
+        touchFlag = false;
     }
 
     public static void update_GAME_PRE_LOAD() {
@@ -136,7 +142,8 @@ public class GameThread extends Thread {
     }
 
     public static void playSound(int i) {
-        soundPlayCheckFlag[i] = true;
+        if (Config.effectVolume > 0)
+            soundPlayCheckFlag[i] = true;
     }
 
     public static void playSound2() {
@@ -171,7 +178,7 @@ public class GameThread extends Thread {
     }
 
     public static void playLoopSound(int i) {
-        if (soundFlag) {
+        if (soundFlag && Config.musicVolume > 0) {
             try {
                 bgmMedia[i].setVolume(Config.musicVolume, Config.musicMaxVolume);
                 bgmMedia[i].play();

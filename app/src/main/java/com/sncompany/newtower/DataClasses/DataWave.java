@@ -70,7 +70,7 @@ public class DataWave {
         for (int i3 = 0; i3 < waveCount; i3++)
             for (int i4 = 0; i4 < 8; i4++)
                 waveMobData[i3][i4] = Config.ByteArrayToInt(data, (i3 * 32) + 4 + (i4 * 4));
-        wcc = DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[st.SID];
+        wcc = DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[m.SID];
         Log.d("Check", "The " + (wcc == waveCount) + " check");
     }
 

@@ -65,6 +65,7 @@ public class UpgradePage extends TPage {
     public UpgradePage(TPage par, int isHero) {
         super(par);
         hero = isHero == 1;
+        load(null);
     }
 
     @Override
@@ -125,7 +126,6 @@ public class UpgradePage extends TPage {
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 32;
             cTLS = TouchManager.checkTouchListStatus();
         }
-        parent.parent.paint(gl10, false);
 
         shopImages[cTLS == 24 ? 2 : 1].drawAtPointOption(11.0f, 356.0f, 18);
         uiUpgradeImage[hero ? cTLS == 27 ? upgrade_tabuniton : upgrade_tabunitoff :
@@ -170,7 +170,7 @@ public class UpgradePage extends TPage {
             fillWhiteImage.fillRect(rX, rY, 60.0f, 60.0f);
             Texture2D.setColors(1);
         }
-        int sPos = hero ? upgradeUnitSelectPos % 6 : upgradeUnitSelectPos;
+        int sPos = upgradeUnitSelectPos % 6;
         float boxX = ((upgradeUnitSelectPos / 6) * 255) + 45 + ((sPos % 3) * 70);
         float boxY = (sPos % 6 < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y;
         drawSelectRedBox(boxX, boxY);
@@ -270,7 +270,7 @@ public class UpgradePage extends TPage {
         }
         if (Config.unitUpgrades[i][j] >= getUpgradeMax())
             return -1;
-        return DataUpgradeUnit.upgradeUnitData[i][1] * (Config.unitUpgrades[i][2] + 1);
+        return DataUpgradeUnit.upgradeUnitData[(i * 6) + j][1] * (Config.unitUpgrades[i][j] + 1);
     }
 
     @Override
@@ -287,13 +287,14 @@ public class UpgradePage extends TPage {
             switch (checkTouchListStatus) {
                 case 24:
                     GameThread.playSound(15);
-                    NewTower.switchPage(parent, true);
+                    ((MenuPage)parent.parent).child = parent;
+                    unload();
                     break;
                 case 25:
                     byte[] upgrades = hero ? Config.heroUpgrades[upgradeUnitSelectPos / 6] : Config.unitUpgrades[upgradeUnitSelectPos / 6];
                     int pos = upgradeUnitSelectPos % 6;
                     int price = getUpgradeCost(upgradeUnitSelectPos / 6, pos);
-                    if (Config.heroPoints > price) {
+                    if (price != -1 && Config.heroPoints > price) {
                         Config.heroPoints -= price;
                         upgrades[pos]++;
                         GameThread.playSound(13);

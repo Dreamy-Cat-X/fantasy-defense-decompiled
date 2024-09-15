@@ -3,9 +3,9 @@ package com.sncompany.newtower.Battle;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Pages.stage.StagePage;
 import com.sncompany.newtower.Texture2D;
-import com.sncompany.newtower.core.CoreStatic;
 
 import java.util.LinkedList;
 
@@ -73,7 +73,7 @@ public class ArrowUnit extends StageEntity {
         if (type >= 19) {
             if (type <= 32) {
                 moveSpeed = 3500;
-                moveRotateDegree = CoreStatic.getRandom(360);
+                moveRotateDegree = NewTower.getRandom(360);
             } else {
                 moveSpeed = 7000;
                 moveRotateDegree = 165 + ((type - 32) * 15);

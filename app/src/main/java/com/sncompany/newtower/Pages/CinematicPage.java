@@ -42,7 +42,7 @@ public class CinematicPage extends TPage {
     public final Texture2D[] logoImage = new Texture2D[logoResource.length]; //all temp
     public final Texture2D[] storyImage = new Texture2D[storyDataResource.length]; //also temp
     public final Texture2D[] story2Image = new Texture2D[story2DataResource.length]; //temp
-    private LoadingPage root;
+    private TitlePage root;
 
     public CinematicPage(TPage p) {
         super(p);
@@ -87,9 +87,8 @@ public class CinematicPage extends TPage {
                 if (i > 40) {
                     logoSoundPlayFlag = false;
                     lastCheckTime = System.currentTimeMillis();
-                    GameThread.update_GAME_PRE_LOAD();
                     mode = RunMode.USE12;
-                    root = new LoadingPage(new TitlePage(null));
+                    root = new TitlePage(null);
                 }
                 break;
             case USE12:
@@ -116,8 +115,10 @@ public class CinematicPage extends TPage {
                         if (gameSubStatus < 25) {
                             gameSubStatus++;
                             setOpeningData();
-                        } else if (gameSubStatus == 25)
+                        } else if (gameSubStatus == 25) {
+                            GameThread.stopLoopSound(2);
                             NewTower.switchPage(root, true);
+                        }
                         return;
                     }
                     storyDrawDataBlock[26]++;
@@ -164,7 +165,7 @@ public class CinematicPage extends TPage {
                 if (i > 0 && i < 16) {
                     float[] cords = logoDrawCoords[i - 1];
                     for (int j = 0; j < cords.length; j += 3)
-                        logoImage[(int) cords[j]].drawAtPointOptionSize(GameRenderer.CX + cords[j + 1], GameRenderer.CX + cords[j + 2], 18, 1.5f);
+                        logoImage[(int) cords[j]].drawAtPointOptionSize(GameRenderer.CX + cords[j + 1], GameRenderer.CY + cords[j + 2], 18, 1.5f);
                 } else if (i >= 16) {
                     logoImage[14].drawAtPointOptionSize(GameRenderer.CX - 118.5f, GameRenderer.CY - 129f, 18, 1.5f);
                     if (i >= 17 && i <= 23) {
@@ -203,9 +204,9 @@ public class CinematicPage extends TPage {
                 }
                 if (storyDrawDataBlock[9] == 1) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-                    Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                    Texture2D.setColors(0.5f);
                     storyImage[10].drawAtPointOption(0f, 0f, 18);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    Texture2D.setColors(1f);
                 }
                 if (storyDrawDataBlock[10] == 1)
                     storyImage[7].drawAtPointOption(0f, 200f, 18);
@@ -214,7 +215,7 @@ public class CinematicPage extends TPage {
 
                 float moonAlpha = (storyDrawDataBlock[23] + (((storyDrawDataBlock[24] - storyDrawDataBlock[23]) * storyDrawDataBlock[27]) / (float) storyDrawDataBlock[18])) / 100f;
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-                Texture2D.gl.glColor4f(moonAlpha, moonAlpha, moonAlpha, moonAlpha);
+                Texture2D.setColors(moonAlpha);
                 int i3 = storyDrawDataBlock[12];
                 if (i3 == 7)
                     storyImage[7].drawAtPointOption(0f, 200f, 18);
@@ -233,7 +234,7 @@ public class CinematicPage extends TPage {
                     if (storyDrawDataBlock[li] == 1)
                         storyImage[imgi].drawAtPointOption(crds[0], crds[1], 18);
                 }
-                Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                Texture2D.setColors(1f);
 
                 if (storyDrawDataBlock[18] == storyDrawDataBlock[27] && storyDrawDataBlock[19] == 0 && storyDrawDataBlock[26] != -1) {
                     int i = 10;
@@ -246,7 +247,7 @@ public class CinematicPage extends TPage {
 
                     if (f2 < 1f) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-                        Texture2D.gl.glColor4f(f2, f2, f2, f2);
+                        Texture2D.setColors(f2);
                     }
                     GameRenderer.setFontSize(28);
                     GameRenderer.setFontDoubleColor(-1, -16777216);
@@ -259,7 +260,7 @@ public class CinematicPage extends TPage {
                             GameRenderer.drawStringDoubleM(split[i5], GameRenderer.CX, (i5 * 35) + 390, 17);
                     }
                     if (f2 < 1f) {
-                        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                        Texture2D.setColors(1f);
                     }
                 }
                 break;
@@ -273,9 +274,9 @@ public class CinematicPage extends TPage {
 
                 if (ia != 1f) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-                    Texture2D.gl.glColor4f(ia, ia, ia, ia);
+                    Texture2D.setColors(ia);
                     fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    Texture2D.setColors(1f);
                 }
                 if (story2DrawDataBlock[0] == story2DrawDataBlock[9] && story2DrawDataBlock[1] == 0 && story2DrawDataBlock[8] != -1) {
                     int i = 10;
@@ -288,7 +289,7 @@ public class CinematicPage extends TPage {
 
                     if (a < 1f) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-                        Texture2D.gl.glColor4f(a, a, a, a);
+                        Texture2D.setColors(a);
                     }
                     GameRenderer.setFontSize(32);
                     if (gameSubStatus != 1)
@@ -302,7 +303,7 @@ public class CinematicPage extends TPage {
                     for (int i3 = 0; i3 < split.length; i3++)
                         GameRenderer.drawStringDoubleM(split[i3], GameRenderer.CX, (i3 * 35) + length, 17);
                     if (a < 1f)
-                        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                        Texture2D.setColors(1f);
                 }
                 break;
             }

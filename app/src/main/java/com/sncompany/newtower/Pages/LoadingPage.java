@@ -99,7 +99,6 @@ public class LoadingPage extends TPage {
 
     @Override
     public void unload() {
-        alwaysImage[ALWAYS_R_BG].dealloc();
         for (Texture2D t2d : uiLoadingImage)
             t2d.dealloc();
 
@@ -124,7 +123,7 @@ public class LoadingPage extends TPage {
 
     @Override
     public void paint(GL10 gl10, boolean init) {
-        if (alwaysImage[0].name == -1 || uiLoadingImage[0].name == -1 || uiLoadingImage[1].name == -1 || uiLoadingImage[2].name == -1)
+        if (alwaysImage[ALWAYS_R_BG].name == -1 || uiLoadingImage[0].name == -1 || uiLoadingImage[1].name == -1 || uiLoadingImage[2].name == -1)
             return;
         int uiname = loadingViewType < 3 ? 12 + loadingViewType : (loadingViewType - 3) * 4;
 
@@ -136,7 +135,7 @@ public class LoadingPage extends TPage {
             uiLoadingImage[3].drawAtPointOption(0.0f, 329.0f, 18);
             for (int i = 0; i < 4; i++) {
                 int uin = uiname + i;
-                int px = (GameRenderer.SCRHEIGHT_SMALL / 4) * i;
+                int px = (GameRenderer.SCRWIDTH_SMALL / 4) * i;
                 uiCharFaceImage[uin].drawAtPointOptionGuide(loadingUnitAdjustPos[uin] + px, 328.0f, 34, CGRect.CGRectMake(px, 0.0f, 200.0f, 328.0f));
                 uiCharNameImage[uin].drawAtPointOption(px + 100, 335.0f, 17);
             }

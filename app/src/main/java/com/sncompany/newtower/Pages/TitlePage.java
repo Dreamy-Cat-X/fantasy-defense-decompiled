@@ -81,6 +81,12 @@ public class TitlePage extends TPage {
     }
 
     @Override
+    public void onReload() {
+        gameSubStatus = gameTitleViewCount = 0;
+        reloadBoss(null, 0);
+    }
+
+    @Override
     public void unload() {
         for (Texture2D timg : titleImage)
             timg.dealloc();
@@ -91,7 +97,7 @@ public class TitlePage extends TPage {
 
     @Override
     public void update() {
-        if (gameSubStatus == countLimit.length) //countLimit length is 12
+        if (gameSubStatus == countLimit.length || mode != MENUMODE.TITLE) //countLimit length is 12
             return;
         gameTitleViewCount++;
         if (gameTitleViewCount >= countLimit[gameSubStatus]) {

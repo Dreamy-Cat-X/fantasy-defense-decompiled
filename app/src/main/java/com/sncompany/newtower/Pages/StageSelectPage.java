@@ -55,7 +55,10 @@ public class StageSelectPage extends TPage {
         for (int i = 0; i < uiStageImage.length; i++)
             uiStageImage[i] = new Texture2D(uiStageResource[i]);
         uiStageBossImage.initWithImageName(uiStageBossResource[0]);
-        map = DataMap.loadMap(0, true);
+        map = DataMap.loadMap(getStageIndex(), true);
+        if (prog != null)
+            prog.accept(1f);
+        loaded = true;
     }
 
     @Override
@@ -86,7 +89,7 @@ public class StageSelectPage extends TPage {
         DataStage nst = new DataStage(map, mapAttackType);
 
         GameThread.playLoopSound(2);
-        NewTower.switchPage(new LoadingPage(new StagePage(this, nst)), true); //End of update_GAME_STAGE_START_LOADING
+        NewTower.switchPage(new StagePage(this, nst), true); //End of update_GAME_STAGE_START_LOADING
     }
 
     private static final float[][] uiStageCoords = {{0f, 286f},{169f, 252f},{0f, 49f},{189f, 0f},{0f, 0f}};
@@ -95,11 +98,11 @@ public class StageSelectPage extends TPage {
         TouchManager.clearTouchMap();
 
         TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(0f, 392f, 75f, 88f));
-        TouchManager.addTouchRectListData(START, CGRect.CGRectMake(429f, 180f, 54f, 82f));
+        TouchManager.addTouchRectListData(START, CGRect.CGRectMake(519f, 286f, 161f, 53f));
         if (stageSelectStageNumber > 0)
-            TouchManager.addTouchRectListData(ARROW_L, CGRect.CGRectMake(717f, 180f, 54f, 82f));
+            TouchManager.addTouchRectListData(ARROW_L, CGRect.CGRectMake(429f, 180f, 54f, 82f));
         if (stageSelectStageNumber < 9)
-            TouchManager.addTouchRectListData(ARROW_R, CGRect.CGRectMake(519f, 286f, 161f, 53f));
+            TouchManager.addTouchRectListData(ARROW_R, CGRect.CGRectMake(717f, 180f, 54f, 82f));
         if (Config.stageProg[getStageIndex()][0] != -1)
             TouchManager.addTouchRectListData(MIN_MAPMODE, CGRect.CGRectMake(409f, 368f, 130f, 44f));
         if (Config.stageProg[getStageIndex()][0] >= 1)
@@ -124,7 +127,7 @@ public class StageSelectPage extends TPage {
         uiStageImage[stageSelectChapterNumber + 23].drawAtPointOption(600f, 38f, 17);
 
         uiStageImage[44].drawAtPointOption(470f, 96f, 18);
-        GameRenderer.drawNumberBlock(getStageIndex() + 1, numberStagePointImage, 581f, 97f, 0, 20, 1);
+        GameRenderer.drawNumberBlock(getStageIndex() + 1, numberStagePointImage, 581f, 97f, 0, 20, 2);
         uiStageImage[28].drawAtPointOption(624f, 96f, 18);
         GameRenderer.drawNumberBlock(DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[getStageIndex()], numberStagePointImage, 705f, 97f, 0, 18, 2);
         uiStageImage[29].drawAtPointOption(469f, 124f, 18);
@@ -203,7 +206,7 @@ public class StageSelectPage extends TPage {
 
     @Override
     public void touchCheck() {
-        if (mapNumber != -1)
+        if (mapNumber != -1 || TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
             return;
         int touch = TouchManager.checkTouchListStatus();
 
@@ -212,41 +215,39 @@ public class StageSelectPage extends TPage {
             mapAttackType = touch - MIN_MAPMODE;
         } else if (touch >= MIN_CHAPTER && touch <= MAX_CHAPTER) {
             GameThread.playSound(14);
-            int ol = stageSelectStageNumber;
-            stageSelectStageNumber = touch - MIN_CHAPTER;
+            int ol = stageSelectChapterNumber;
+            stageSelectChapterNumber = touch - MIN_CHAPTER;
             map = DataMap.loadMap(getStageIndex(), true);
             mapAttackType = 0;
 
-            if (ol != stageSelectStageNumber) {
+            if (ol != stageSelectChapterNumber) {
                 uiStageBossImage.dealloc();
-                uiStageBossImage.initWithImageName(uiStageBossResource[stageSelectStageNumber]);
+                uiStageBossImage.initWithImageName(uiStageBossResource[stageSelectChapterNumber]);
             }
         } else {
             switch (TouchManager.checkTouchListStatus()) {
-                case 0:
+                case BACK:
                     GameThread.playSound(15);
                     GameThread.stopLoopSound(1);
-                    NewTower.switchPage(new LoadingPage(parent), true);
+                    NewTower.switchPage(parent, true);
                     break;
-                case 1:
+                case ARROW_L:
                     if (stageSelectStageNumber > 0) {
                         GameThread.playSound(14);
                         stageSelectStageNumber--;
-
                         map = DataMap.loadMap(getStageIndex(), true);
                         mapAttackType = 0;
                     }
                     break;
-                case 2:
+                case ARROW_R:
                     if (stageSelectStageNumber < 9) {
                         GameThread.playSound(14);
                         stageSelectStageNumber++;
-
-                        DataMap.loadMap(getStageIndex(), true);
+                        map = DataMap.loadMap(getStageIndex(), true);
                         mapAttackType = 0;
                     }
                     break;
-                case 3:
+                case START:
                     GameThread.playSound(14);
                     if (Config.stageProg[getStageIndex()][mapAttackType] >= 0) {
                         mapNumber = getStageIndex();
@@ -260,13 +261,11 @@ public class StageSelectPage extends TPage {
             if (TouchManager.lastMoveCheckDistance.y > 0f) {
                 if (stageSelectStageNumber < 9) {
                     stageSelectStageNumber++;
-
                     map = DataMap.loadMap(getStageIndex(), true);
                     mapAttackType = 0;
                 }
             } else if (TouchManager.lastMoveCheckDistance.y < 0f && stageSelectStageNumber > 0) {
                 stageSelectStageNumber--;
-
                 map = DataMap.loadMap(getStageIndex(), true);
                 mapAttackType = 0;
             }
@@ -281,13 +280,12 @@ public class StageSelectPage extends TPage {
     /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
     /* JADX WARN: Failed to find 'out' block for switch in B:29:0x005a. Please report as an issue. */
     public void drawMapTileSize(float f, float f2, float f3) {
-        if (map.backTileOldImage != null)
-            for (int i = 0; i < 15; i++)
-                for (int j = 0; j < 10; j++) {
-                    int tid = map.mapTileData[i][j];
-                    if (tid != -1 && map.backTileOldImage[tid] != null)
-                        map.backTileOldImage[tid].drawAtPointOptionSize((f3 * 62f) + f + (i * 45 * f3), (f3 * 30f) + f2 + (j * 45 * f3), 18, f3);
-                }
+        for (int i = 0; i < 15; i++)
+            for (int j = 0; j < 10; j++) {
+                int tid = map.mapTileData[i][j];
+                if (tid != -1 && map.backTileOldImage[tid] != null)
+                    map.backTileOldImage[tid].drawAtPointOptionSize((f3 * 62f) + f + (i * 45 * f3), (f3 * 30f) + f2 + (j * 45 * f3), 18, f3);
+            }
         float f4 = 0f;
         float f5 = 0f;
         for (int i4 = 0; i4 < map.objectUnit.size(); i4++) {
@@ -329,6 +327,7 @@ public class StageSelectPage extends TPage {
         for (Texture2D img : uiStageImage) img.dealloc();
         if (uiStageBossImage.name != -1)
             uiStageBossImage.dealloc();
+        loaded = false;
     }
 
     @Override

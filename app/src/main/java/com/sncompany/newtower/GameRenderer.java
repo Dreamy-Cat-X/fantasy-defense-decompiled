@@ -56,6 +56,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         textTombstone.connectGL(gl10);
         gl10.glClearDepthf(1.0f);
         gl10.glDisable(2929);
+        GameThread.update_GAME_PRE_LOAD();
         NewTower.switchPage(new CinematicPage(null), false);
     }
 

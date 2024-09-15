@@ -1,5 +1,7 @@
 package com.sncompany.newtower;
 
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,7 +10,6 @@ import android.graphics.Rect;
 import android.opengl.GLUtils;
 
 import com.sncompany.newtower.DataClasses.CGRect;
-import com.sncompany.newtower.core.GameImage;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -17,9 +18,9 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
 /* loaded from: D:\decomp\classes.dex */
-public class Texture2D implements GameImage {
-    public static final int COORDINATES_LENGTH = 8;
-    public static final int COORDINATES_LENGTH_X_4 = 32;
+public class Texture2D {
+    private static final int COORDINATES_LENGTH = 8;
+    private static final int COORDINATES_LENGTH_X_4 = 32;
     public static float DRAW_ADJUST_X_MOVE = 0.0f;
     public static float DRAW_ADJUST_Y_MOVE = 0.0f;
     public static final int GHB = 33;
@@ -33,34 +34,34 @@ public class Texture2D implements GameImage {
     public static final int GRV = 12;
     public static final int SCRHEIGHT_480 = 480;
     public static final int SCRWIDTH_800 = 800;
-    public static final int STROKE_SIZE_PER_DEPTH = 6;
-    static final float TEXTURE_DRAW_MARGIN = 0.5f;
-    public static final int VERTICES_LENGTH_X_4 = 48;
-    public static int[] _name;
-    static float[] coordinates;
-    static FloatBuffer coordinatesBuffer;
-    static float drawLengthX;
-    static float drawLengthY;
-    static float drawStartX;
-    static float drawStartY;
+    private static final int STROKE_SIZE_PER_DEPTH = 6;
+    private static final float TEXTURE_DRAW_MARGIN = 0.5f;
+    private static final int VERTICES_LENGTH_X_4 = 48;
+    private static int[] _name;
+    private static float[] coordinates;
+    private static FloatBuffer coordinatesBuffer;
+    private static float drawLengthX;
+    private static float drawLengthY;
+    private static float drawStartX;
+    private static float drawStartY;
     public static GL10 gl;
-    static float guideEndX;
-    static float guideEndY;
-    static float guideStartX;
-    static float guideStartY;
-    static float height;
-    static FloatBuffer mVertexBuffer;
-    static NewTower newTower;
-    static float pointX;
-    static float pointY;
-    static float[] tanValue;
-    static ByteBuffer tbb;
-    static ByteBuffer vbb;
-    static float[] vertices;
-    static float width;
+    private static float guideEndX;
+    private static float guideEndY;
+    private static float guideStartX;
+    private static float guideStartY;
+    private static float height;
+    private static FloatBuffer mVertexBuffer;
+    private static NewTower newTower;
+    private static float pointX;
+    private static float pointY;
+    private static float[] tanValue;
+    private static ByteBuffer tbb;
+    private static ByteBuffer vbb;
+    private static float[] vertices;
+    private static float width;
     public int _height;
-    public float _maxS;
-    public float _maxT;
+    private float _maxS;
+    private float _maxT;
     public float _sizeX;
     public float _sizeY;
     public int _width;
@@ -156,7 +157,6 @@ public class Texture2D implements GameImage {
     public void initWithImageName(int id) {
         if (name != -1)
             dealloc();
-        System.out.println(_name[0]);
 
         gl.glGenTextures(1, _name, 0);
         name = _name[0];
@@ -172,12 +172,12 @@ public class Texture2D implements GameImage {
 
         Bitmap createBitmap = Bitmap.createBitmap(wPow, hPow, Bitmap.Config.ARGB_8888);
         new Canvas(createBitmap).drawBitmap(decodeResource, new Rect(0, 0, resW, resH), new Rect(0, 0, resW, resH), GameRenderer.drawFont);
-        gl.glBindTexture(3553, this.name);
+        gl.glBindTexture(GL_TEXTURE_2D, this.name);
         gl.glTexEnvx(8960, 8704, 7681);
         gl.glTexEnvx(8960, 8705, 6408);
-        gl.glTexParameterx(3553, 10241, 9729);
-        gl.glTexParameterx(3553, 10240, 9729);
-        GLUtils.texImage2D(3553, 0, createBitmap, 0);
+        gl.glTexParameterx(GL_TEXTURE_2D, 10241, 9729);
+        gl.glTexParameterx(GL_TEXTURE_2D, 10240, 9729);
+        GLUtils.texImage2D(GL_TEXTURE_2D, 0, createBitmap, 0);
         _width = wPow;
         _height = hPow;
         _sizeX = (float) resW;
@@ -409,6 +409,8 @@ public class Texture2D implements GameImage {
     }
 
     private void setPivot(float dX, float dY, int pivot) {
+        pointX = dX;
+        pointY = dY;
         if (pivot == 9) {
             pointX = dX - (width / 2f);
             pointY = dY - (height / 2f);
@@ -429,10 +431,6 @@ public class Texture2D implements GameImage {
             pointY = dY - height;
         } else if (pivot == 34)
             pointY = dY - height;
-        else {
-            pointX = dX;
-            pointY = dY;
-        }
     }
 
     public void drawAtPointFill(float dX, float dY, float w, float h) {

@@ -58,6 +58,16 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
         loaded = true;
     }
 
+    @Override
+    public void onReload() {
+        titlePressed = -1;
+        titleCount = 0;
+        if (child != null && child.loaded)
+            child.unload();
+        child = null;
+        cancel = false;
+    }
+
     public void back(boolean anim) {
         titleCount = 0;
         cancel = anim;
@@ -74,28 +84,27 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             return;
 
         if (!cancel) {
-            if (titleCount >= TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT)
+            if (titleCount > TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT)
                 return;
 
             if (titleCount >= TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT && (titlePressed == GAME_MAINMENU_TOUCH_LIST_0_START || titlePressed == GAME_MAINMENU_TOUCH_LIST_5_BACK)) {
-                if (!Config.tutorial) {
-                    child.unload();
-                    child = new LoadingPage(new TutorialPage(new StageSelectPage(this)));
-                }
                 GameThread.stopLoopSound(0);
+                if (!Config.tutorial && titlePressed == GAME_MAINMENU_TOUCH_LIST_0_START) {
+                    child.unload();
+                    child = new TutorialPage(new StageSelectPage(this));
+                }
                 NewTower.switchPage(child, true);
-            } else if (titleCount >= TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT)
-                NewTower.switchPage(child, true);
-            else
+            } else if (titleCount >= TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT)
                 child.update();
-        } else if (titleCount < TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT) {
-            titleCount++;
+        } else {
             cancel = titleCount < TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT;
             if (!cancel) {
                 titlePressed = -1;
                 child = null;
             }
         }
+        if (titlePressed != -1 && titleCount < TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT)
+            titleCount++;
     }
 
     @Override
@@ -111,11 +120,9 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_4_SHOP, CGRect.CGRectMake(98.0f, 258.0f, 236.0f, 203.0f));
             TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_5_BACK, CGRect.CGRectMake(0.0f, 333.0f, 92.0f, 129.0f));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_MAINMENU_TOUCH_LIST_TOTAL_COUNT;
-
             TouchManager.swapTouchMap();
             return;
         }
-
         if (cancel) {
             float a = titleCount >= TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_POS ? 1.0f - ((titleCount - TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_POS) * TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_RATE) : 1.0f;
             if (a > 0.0f) {
@@ -127,27 +134,24 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                 if (titleCount < TITLE_MAINMENU_REV_COUNT_FADE_AWAY_REMOVE_COUNT) {
                     a = 0.5f - (titleCount * TITLE_MAINMENU_COUNT_FADE_IN_BLACK_DEGREE);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, a);
+                    Texture2D.setAlpha(a);
                     fillBlackImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    Texture2D.setAlpha(1f);
                 }
                 float f4 = 1.0f - (titleCount * TITLE_MAINMENU_REV_COUNT_FADE_OUT_RATE);
                 if (f4 > 0.0f) {
                     gl10.glTexEnvf(8960, 8704, 8448.0f);
                     gl10.glColor4f(1f, 1f, 1f, f4);
-                    child.paint(gl10, false);
+                    child.paint(gl10, init);
                 }
             }
             gl10.glColor4f(1f, 1f, 1f, 1.0f);
-            TouchManager.swapTouchMap();
             return;
         }
 
         if (titleCount >= TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT) {
             drawOn(titlePressed + 1);
-            return;
-        }
-        if (titleCount >= TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_POS) {
+        } else if (titleCount >= TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_POS) {
             float a = Math.min(1f, (titleCount - TITLE_MAINMENU_COUNT_FADE_IN_START_POS) * TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_RATE);
 
             gl10.glTexEnvf(8960, 8704, 8448.0f);
@@ -158,23 +162,26 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             if (titleCount > TITLE_MAINMENU_COUNT_FADE_IN_START_POS) {
                 float aa = (titleCount - TITLE_MAINMENU_COUNT_FADE_IN_START_POS) * TITLE_MAINMENU_COUNT_FADE_IN_BLACK_DEGREE;
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(1f, 1f, 1f, aa);
+                Texture2D.setAlpha(aa);
                 fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                Texture2D.setAlpha(1f);
             }
             float aaa = Math.min(1f, (titleCount - TITLE_MAINMENU_COUNT_FADE_IN_START_POS) * TITLE_MAINMENU_COUNT_FADE_IN_RATE);
             if (aaa > 0f) {
                 gl10.glTexEnvf(8960, 8704, 8448.0f);
                 gl10.glColor4f(1f, 1f, 1f, aaa);
-                child.paint(gl10, false);
+                child.paint(gl10, init);
             }
         }
         gl10.glColor4f(1f, 1f, 1f, 1f);
-        TouchManager.swapTouchMap();
     }
 
     @Override
     public void touchCheck() {
+        if (child != null && titleCount >= TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT) {
+            child.touchCheck();
+            return;
+        }
         int i = TouchManager.lastActionStatus;
         if (i != TouchManager.TOUCH_STATUS_NO_INPUT)
             return;
@@ -188,34 +195,28 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             titlePressed = CTLS;
             switch (CTLS) {
                 case GAME_MAINMENU_TOUCH_LIST_0_START:
-                    child = new LoadingPage(new StageSelectPage(this));
+                    child = new StageSelectPage(this);
                     GameThread.playSound(14);
-                    titleCount = 0;
                     break;
                 case GAME_MAINMENU_TOUCH_LIST_1_HELP:
                     child = new HelpPage(this);
-                    GameThread.gameHelpViewNum = 0;
                     GameThread.playSound(14);
-                    titleCount = 0;
                     break;
                 case GAME_MAINMENU_TOUCH_LIST_2_RECORD:
                     child = new RecordPage(this);
                     GameThread.playSound(14);
-                    titleCount = 0;
                     break;
                 case GAME_MAINMENU_TOUCH_LIST_3_UPGRADE: {
-                    Consumer<Integer> c = (in -> NewTower.switchPage(new UpgradePage(child, in), true));
-                    child = new ListPage(this, new Consumer[]{c, c}, new int[]{UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnherooff], ShopPage.uiShopResource[UpgradePage.upgrade_btnheroon], ShopPage.uiShopResource[UpgradePage.upgrade_btnunitoff], ShopPage.uiShopResource[UpgradePage.upgrade_btnuniton]});
+                    Consumer<Integer> c = (in -> child = new UpgradePage(child, in));
+                    child = new ListPage(this, new Consumer[]{c, c}, new int[]{UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnherooff], UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnheroon], UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnunitoff], UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnuniton]});
                     GameThread.playSound(14);
-                    titleCount = 0;
                     break;
                 } case GAME_MAINMENU_TOUCH_LIST_4_SHOP: {
-                    Consumer<Integer> c1 = (in -> NewTower.switchPage(new ShopPage(child), true));
-                    Consumer<Integer> c2 = (in -> NewTower.switchPage(new EquipPage(child), true));
+                    Consumer<Integer> c1 = (in -> child = new ShopPage(child));
+                    Consumer<Integer> c2 = (in -> child = new EquipPage(child));
                     int imi = ShopPage.MIN_U;
                     child = new ListPage(this, new Consumer[]{c1, c2}, new int[]{ShopPage.uiShopResource[imi], ShopPage.uiShopResource[imi + 1], ShopPage.uiShopResource[imi + 2], ShopPage.uiShopResource[imi + 3]});
                     GameThread.playSound(14);
-                    titleCount = 0;
                     break;
                 } case GAME_MAINMENU_TOUCH_LIST_5_BACK:
                     child = parent; //lol
@@ -223,6 +224,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                     GameThread.stopLoopSound(0);
                     break;
             }
+            titleCount = 0;
             if (child != null)
                 child.load(null);
         }

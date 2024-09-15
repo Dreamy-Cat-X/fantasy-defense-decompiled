@@ -100,8 +100,6 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;
             TLS = TouchManager.checkTouchListStatus();
         }
-
-        parent.paint(gl10, false);
         uiRecordImage[rec_title].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
         uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
         if (Dscore) {
@@ -142,30 +140,29 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                 int[] pxs = {120, 182, 245, 307, 370};
                 px = pxs[curP];
             }
-            uiEtcImage[etc_scrollbutton].drawAtPointOption(731.0f, px - ((rankListDraw.blockCorrectionPixel * 63) / 250), 10);
+            uiEtcImage[etc_scrollbutton].drawAtPointOption(731, px - ((rankListDraw.blockCorrectionPixel * 63) / 250), 10);
         } else {
-            uiRecordImage[rec_awardbase].drawAtPointOption(30.0f, 90.0f, 18);
+            uiRecordImage[rec_awardbase].drawAtPointOption(30, 90, 18);
             for (int j = awardListDraw.totalHalfBlockSize - 1; j <= awardListDraw.totalHalfBlockSize + 4; j++)
                 if (awardListDraw.blockCurrentArray[j] != -1) {
                     int awd = awardListDraw.blockCurrentArray[j];
                     int abs = Math.abs(j - awardListDraw.totalHalfBlockSize);
                     int blen = j < awardListDraw.totalHalfBlockSize ? -awardListDraw.blockLengthArray[abs] : awardListDraw.blockLengthArray[abs];
 
-                    CGRect rect = CGRect.CGRectMake(70.0f, 100.0f, 660.0f, 240.0f);
-                    int ay = awd * 100;
-                    uiRecordImage[rec_awardbar].drawAtPointOptionGuide(70.0f, ay + 100, 18, rect);
+                    CGRect rect = CGRect.CGRectMake(70, 100, 660, 240);
                     float y = blen + awardListDraw.blockCorrectionPixel + 104;
-                    uiAwardImage[awd].drawAtPointOptionGuide(74.0f, y, 18, rect);
+                    uiRecordImage[rec_awardbar].drawAtPointOptionGuide(70, y, 18, rect);
+                    uiAwardImage[awd].drawAtPointOptionGuide(74, y, 18, rect);
                     GameRenderer.setFontDoubleColor(-1, -11106408);
                     GameRenderer.setFontSize(22);
-                    GameRenderer.drawStringDoubleGuideM(DataAward.awardTitle[awd], 149.0f, ay + 110, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(DataAward.awardTitle[awd], 149, y + 5, 18, rect);
                     GameRenderer.setFontSize(12);
-                    GameRenderer.drawStringDoubleGuideM(DataAward.awardDescription[awd], 150.0f, ay + 140, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(DataAward.awardDescription[awd], 150, y + 32, 18, rect);
 
                     if (!Config.awardValues[awd])
-                        uiRecordImage[rec_lock].drawAtPointOptionGuide(669.0f, y, 18, rect);
+                        uiRecordImage[rec_lock].drawAtPointOptionGuide(669, y + 5, 18, rect);
                     else
-                        uiRecordImage[rec_cup].drawAtPointOptionGuide(672.0f, ay + 112, 18, rect);
+                        uiRecordImage[rec_cup].drawAtPointOptionGuide(672, y + 15, 18, rect);
                 }
             uiEtcImage[etc_scrollbutton].drawAtPointOption(731.0f, (((awardListDraw.blockCurrentArray[awardListDraw.totalHalfBlockSize] * 250) / 58f) + 120) - (((awardListDraw.blockCorrectionPixel * 250) / 58f) / 250f), 10);
             GameRenderer.setFontColor(-16777216);
@@ -188,18 +185,18 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
         if (Dscore) {
             if (lastAction == TouchManager.TOUCH_STATUS_NO_INPUT) { //Drag
                 int cTLS = TouchManager.checkTouchListStatus();
-                if (cTLS == 3)
+                if (cTLS == BODY)
                     rankListDraw.backupCurrentDrawPosition();
-                else if (cTLS == 4) {
+                else if (cTLS == SIDEBAR) {
                     scrollbars[0].setUpdatePosition(TouchManager.getFirstFirstActionTouch().y);
                     rankListDraw.setAnchorDrawPosition(scrollbars[0].BarLastValue);
                 }
             } else if (lastAction == TouchManager.TOUCH_STATUS_START_INPUTED) { //Drag 2
                 int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstLastActionTouch());
-                if (cTLP == 3) {
+                if (cTLP == BODY) {
                     if (TouchManager.checkTouchMoveDegree(true))
                         rankListDraw.resetWithDegree((int) (-TouchManager.lastMoveCheckDistance.y));
-                } else if (cTLP == 4) {
+                } else if (cTLP == SIDEBAR) {
                     scrollbars[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().y);
                     rankListDraw.setAnchorDrawPosition(scrollbars[0].BarLastValue);
                 }
@@ -212,31 +209,29 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     GameThread.playSound(15);
                     MenuPage par = (MenuPage)parent;
                     par.back(true);
-                    NewTower.switchPage(par, false);
                     break;
                 case SCORE: case AWARD:
                     GameThread.playSound(14);
                     Dscore = !Dscore;
                     break;
-
             }
             return;
         }
         if (lastAction == TouchManager.TOUCH_STATUS_NO_INPUT) {
             int cTLS = TouchManager.checkTouchListStatus();
-            if (cTLS == 3)
+            if (cTLS == BODY)
                 awardListDraw.backupCurrentDrawPosition();
-            else if (cTLS == 4) {
+            else if (cTLS == SIDEBAR) {
                 scrollbars[1].setUpdatePosition(TouchManager.getFirstFirstActionTouch().y);
                 awardListDraw.setAnchorDrawPosition(scrollbars[1].BarLastValue);
             }
             return;
         } else if (lastAction == TouchManager.TOUCH_STATUS_START_INPUTED) {
             int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstLastActionTouch());
-            if (cTLP == 3) {
+            if (cTLP == BODY) {
                 if (TouchManager.checkTouchMoveDegree(true))
                     awardListDraw.resetWithDegree((int) (-TouchManager.lastMoveCheckDistance.y));
-            } else if (cTLP == 4) {
+            } else if (cTLP == SIDEBAR) {
                 scrollbars[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().y);
                 awardListDraw.setAnchorDrawPosition(scrollbars[1].BarLastValue);
             }
@@ -251,7 +246,6 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                 GameThread.playSound(15);
                 MenuPage par = (MenuPage)parent;
                 par.back(true);
-                NewTower.switchPage(par, false);
                 break;
             case SCORE: case AWARD:
                 GameThread.playSound(14);
