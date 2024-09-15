@@ -755,9 +755,9 @@ public class StagePage extends StageBase {
             Texture2D.setAlpha(1);
         }
         if (monsterGoalBlinkCount > 0) {
-            float f10 = (monsterGoalBlinkCount < 3 ? monsterGoalBlinkCount : 6 - monsterGoalBlinkCount) * MONSTER_GOAL_BLINK_ALPHA_DEGREE;
+            float al = (monsterGoalBlinkCount < 3 ? monsterGoalBlinkCount : 6 - monsterGoalBlinkCount) * MONSTER_GOAL_BLINK_ALPHA_DEGREE;
             Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-            Texture2D.setAlpha(f10);
+            Texture2D.setAlpha(al);
             fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
             Texture2D.setAlpha(1);
         }
@@ -1789,7 +1789,7 @@ public class StagePage extends StageBase {
         float size = 0.7f;
         int eWave = st.waveManager.current % st.waveManager.wcc;
         int stWave = Math.min(st.waveManager.current, DataWave.WAVE_MAX_COUNT - 1);
-        int overWave = st.waveManager.current - DataWave.WAVE_MAX_COUNT;
+        int overWave = st.waveManager.current <= DataWave.WAVE_MAX_COUNT ? 0 : st.waveManager.current - DataWave.WAVE_MAX_COUNT;
         int uiPosY = characterMenuMonsterStartViewCount < 10 ? (10 - characterMenuMonsterStartViewCount) * 9 : 0;
         if (st.waveManager.waveMobData[eWave][3] == -1) {
             size = 1;
@@ -1807,9 +1807,9 @@ public class StagePage extends StageBase {
             int spd;
             int bossType = st.waveManager.waveMobData[eWave][6];
             if (bossType == 2 || bossType == 3) {
-                spd = (((DataMonster.monsterData[type][4] * 150) * (DataWave.monsterWaveData[stWave][10] + (DataWave.monsterWaveData[60][10] * overWave))) / 100) / 100;
+                spd = (((150 * DataMonster.monsterData[type][4]) * (DataWave.monsterWaveData[stWave][10] + (DataWave.monsterWaveData[60][10] * overWave))) / 100) / 100;
             } else
-                spd = (((DataMonster.monsterData[type][4] * 150) * (DataWave.monsterWaveData[stWave][2] + (DataWave.monsterWaveData[60][2] * overWave))) / 100) / 100;
+                spd = (((150 * DataMonster.monsterData[type][4]) * (DataWave.monsterWaveData[stWave][2] + (DataWave.monsterWaveData[60][2] * overWave))) / 100) / 100;
 
             int i17 = DataMonster.monsterData[type][1];
             int hp;
@@ -1823,19 +1823,19 @@ public class StagePage extends StageBase {
                     hp += DataWave.monsterWaveData[60][0] * overWave;
             }
 
-            int aY = (y - 390) + 445;
-            uiMonsterEtcImage[0].drawAtPointOption(0.0f, aY + 390 + uiPosY, 18);
-            uiMonsterEtcImage[1].drawAtPointOption(556.0f, aY + 411 + uiPosY, 18);
-            uiMonsterFaceImage[monVis].drawAtPointOptionSize(130.0f, aY + 470 + uiPosY, 33, size);
-            uiMonsterNameImage[monVis].drawAtPointOption(370.0f, aY + 407 + uiPosY, 17);
+            float ay = y + uiPosY;
+            uiMonsterEtcImage[0].drawAtPointOption(0, ay, 18);
+            uiMonsterEtcImage[1].drawAtPointOption(556, ay + 20, 18);
+            uiMonsterFaceImage[monVis].drawAtPointOptionSize(130, ay + 80, 33, size);
+            uiMonsterNameImage[monVis].drawAtPointOption(370, ay + 20, 17);
             GameRenderer.setFontSize(25);
             GameRenderer.setFontColor(-1);
-            GameRenderer.drawStringM(String.format("x %d", amount), (uiMonsterNameImage[monVis]._sizeX / 2.0f) + 380.0f, aY + 7 + 410 + uiPosY, 18);
+            GameRenderer.drawStringM(String.format("x %d", amount), (uiMonsterNameImage[monVis]._sizeX / 2.0f) + 380.0f, ay + 27.5f, 18);
             GameRenderer.setFontSize(20);
             GameRenderer.setFontColor(-8716355);
-            float bY = aY + uiPosY;
-            GameRenderer.drawStringM(String.valueOf(hp), 582.0f, bY, 17);
-            GameRenderer.drawStringM(String.valueOf(spd), 679.0f, bY, 17);
+            float bY = y + uiPosY + 55;
+            GameRenderer.drawStringM(String.valueOf(hp), 582, bY, 17);
+            GameRenderer.drawStringM(String.valueOf(spd), 679, bY, 17);
             y += 90;
         }
     }

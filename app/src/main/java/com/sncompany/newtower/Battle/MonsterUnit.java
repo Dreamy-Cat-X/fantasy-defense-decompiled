@@ -60,28 +60,28 @@ public class MonsterUnit extends EnemyUnit {
         bodySize = data[2];
         unitDefense = data[3];
 
-        int i2 = 0;
+        int overwave = 0;
         int swave = st.waveManager.current;
         boolean infWave = st.mapType == 1 && swave >= DataWave.WAVE_MAX_COUNT;
         if (infWave) {
-            i2 = (swave - DataWave.WAVE_MAX_COUNT) + 1;
+            overwave = (swave - DataWave.WAVE_MAX_COUNT) + 1;
             swave = DataWave.WAVE_MAX_COUNT - 1;
         }
 
         if (bossFlag) {
-            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][8] + (DataWave.monsterWaveData[60][8] * i2))) / 100) * DataStage.stageData[st.mapType][3]) / 100;
+            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][8] + (DataWave.monsterWaveData[60][8] * overwave))) / 100) * DataStage.stageData[st.mapType][3]) / 100;
             unitDefense += DataWave.monsterWaveData[swave][9];
             if (infWave)
-                unitDefense += DataWave.monsterWaveData[60][9] * i2;
-            unitSpeed = (((unitSpeed * data[4]) * (DataWave.monsterWaveData[swave][10] + (DataWave.monsterWaveData[60][10] * i2))) / 100) / 100;
-            unitMinSpeed = (unitSpeed * (DataWave.monsterWaveData[swave][11] + (i2 * DataWave.monsterWaveData[60][11]))) / 1000;
+                unitDefense += DataWave.monsterWaveData[60][9] * overwave;
+            unitSpeed = (((unitSpeed * data[4]) * (DataWave.monsterWaveData[swave][10] + (DataWave.monsterWaveData[60][10] * overwave))) / 100) / 100;
+            unitMinSpeed = (unitSpeed * (DataWave.monsterWaveData[swave][11] + (overwave * DataWave.monsterWaveData[60][11]))) / 1000;
         } else {
-            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][0] + (DataWave.monsterWaveData[60][0] * i2))) / 100) * DataStage.stageData[st.mapType][2]) / 100;
+            unitHP = (((unitHP * (DataWave.monsterWaveData[swave][0] + (DataWave.monsterWaveData[60][0] * overwave))) / 100) * DataStage.stageData[st.mapType][2]) / 100;
             unitDefense += DataWave.monsterWaveData[swave][1];
             if (infWave)
-                unitDefense += DataWave.monsterWaveData[60][1] * i2;
-            unitSpeed = (((unitSpeed * data[4]) * (DataWave.monsterWaveData[swave][2] + (DataWave.monsterWaveData[60][2] * i2))) / 100) / 100;
-            unitMinSpeed = (unitSpeed * (DataWave.monsterWaveData[swave][3] + (i2 * DataWave.monsterWaveData[60][3]))) / 1000;
+                unitDefense += DataWave.monsterWaveData[60][1] * overwave;
+            unitSpeed = (((unitSpeed * data[4]) * (DataWave.monsterWaveData[swave][2] + (DataWave.monsterWaveData[60][2] * overwave))) / 100) / 100;
+            unitMinSpeed = (unitSpeed * (DataWave.monsterWaveData[swave][3] + (overwave * DataWave.monsterWaveData[60][3]))) / 1000;
         }
         unitMaxHP = unitHP;
         if (unitMinSpeed > unitSpeed)
@@ -179,11 +179,11 @@ public class MonsterUnit extends EnemyUnit {
                 targetBlockY += DataMap.DIR_MOVE_POS[randomMapDirection][1];
             }
         }
-        for (int i6 = 0; i6 < st.map.mapEndPositionCount; i6++) {
-            int[][] iArr = st.map.mapEndPosition;
-            int i7 = ((iArr[i6][0] * 45) + 22) * 50;
-            int i8 = ((iArr[i6][1] * 45) + 22) * 50;
-            if (posX == i7 && posY == i8) {
+        for (int i = 0; i < st.map.mapEndPositionCount; i++) {
+            int[][] end = st.map.mapEndPosition;
+            int ex = ((end[i][0] * 45) + 22) * 50;
+            int ey = ((end[i][1] * 45) + 22) * 50;
+            if (posX == ex && posY == ey) {
                 st.addEffectUnit(EffectUnit.EFFECT_TYPE_GATE_BREAK, posX, posY);
                 if (Config.vibration) {
                     NewTower.vibe.vibrate(250L);
@@ -382,7 +382,7 @@ public class MonsterUnit extends EnemyUnit {
                 else
                     drawTexture[drawData[coord]].drawAtPointOptionSize((drawData[coord + 1] * size) + x, (drawData[coord+2] * size) + y + 10f, 18, size);
             } else if (size == 1)
-                drawTexture[drawData[coord]].drawAtPointOptionFlip(drawData[coord + 1] + x, drawData[coord + 2] + y + 10f, 18);//prob
+                drawTexture[drawData[coord]].drawAtPointOptionFlip(drawData[coord + 1] + x, drawData[coord + 2] + y + 10f, 18);
             else
                 drawTexture[drawData[coord]].drawAtPointOptionFlipSize((drawData[coord + 1] * size) + x, (drawData[coord+2] * size) + y + 10f, 18, size);
 
