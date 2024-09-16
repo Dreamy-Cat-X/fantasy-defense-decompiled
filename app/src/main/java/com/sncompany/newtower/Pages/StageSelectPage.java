@@ -143,9 +143,9 @@ public class StageSelectPage extends TPage {
             uiStageImage[46].drawAtPointOption(503f, 163f, 18);
         else if (Config.stageProg[getStageIndex()][0] == -1) {
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-            Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+            Texture2D.setColors(0.5f);
             fillBlackImage.fillRect(500f, 160f, 200f, 120f);
-            Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+            Texture2D.setColors(1);
             uiStageImage[45].drawAtPointOption(600f, 220f, 9);
         }
 
@@ -173,33 +173,33 @@ public class StageSelectPage extends TPage {
         if (i2 > 0) {
             float f2 = 1f - ((i2 < 17 ? i2 : 34 - i2) * GAME_STAGE_SELECT_STAGE_FADE_DEGREE);
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-            Texture2D.gl.glColor4f(f2, f2, f2, f2);
+            Texture2D.setColors(f2);
         }
         uiStageImage[31].drawAtPointOption((stageSelectStageNumber * 10) + 543, 343f, 18);
         if (i2 > 0) {
             float f3 = 1f - ((i2 < 17 ? i2 : 34 - i2) * GAME_STAGE_SELECT_VIEW_FADE_DEGREE);
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-            Texture2D.gl.glColor4f(f3, f3, f3, f3);
+            Texture2D.setColors(f3);
         }
 
         float f = 286f;
         uiStageImage[stageSelectChapterNumber + 2].drawAtPointOption(uiStageCoords[stageSelectChapterNumber][0], uiStageCoords[stageSelectChapterNumber][1], 18);
 
-        Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+        Texture2D.setColors(1);
         uiStageImage[LTS == 5 ? 33 : 32].drawAtPointOption(519f, f, 18);
 
         if (Config.stageProg[getStageIndex()][0] == -1) {
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-            Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+            Texture2D.setColors(0.5f);
             fillBlackImage.fillRect(527f, 294f, 145f, 37f);
-            Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+            Texture2D.setColors(1);
         }
         if (stageLoad > 0) {
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
             GL10 gl102 = Texture2D.gl;
             gl102.glColor4f(stageLoad * 0.066f, stageLoad * 0.066f, stageLoad * 0.066f, stageLoad * 0.066f);
             fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-            Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+            Texture2D.setColors(1);
         }
         TouchManager.swapTouchMap();
     }
@@ -334,6 +334,7 @@ public class StageSelectPage extends TPage {
         stageSelectChapterNumber = Config.lastPlayed / 10;
         stageSelectStageNumber = Config.lastPlayed % 10;
         mapNumber = -1;
+        stageLoad = 0;
 
         map = DataMap.loadMap(getStageIndex());
     }

@@ -111,6 +111,8 @@ public class MonsterUnit extends EnemyUnit {
         else
             unitStatusCount++;
 
+        if (dead())
+            return false;
         if (dotHolyCount > 0) {
             dotHolyCount--;
             if (dotHolyCount > 0)
@@ -123,9 +125,6 @@ public class MonsterUnit extends EnemyUnit {
         }
         if (slowRate > 0)
             slowRate--;
-
-        if (dead())
-            return false;
 
         int espd = unitSpeed;
         if (stunCount > 0)
@@ -185,9 +184,8 @@ public class MonsterUnit extends EnemyUnit {
             int ey = ((end[i][1] * 45) + 22) * 50;
             if (posX == ex && posY == ey) {
                 st.addEffectUnit(EffectUnit.EFFECT_TYPE_GATE_BREAK, posX, posY);
-                if (Config.vibration) {
+                if (Config.vibration)
                     NewTower.vibe.vibrate(250L);
-                }
                 GameThread.playSound(12);
                 type = -1;
                 unitHP = 0;
@@ -374,7 +372,7 @@ public class MonsterUnit extends EnemyUnit {
                 a = (a * drawData[coord + 3]) / 1000.0f;
             if (a != 1.0f) {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(a, a, a, a);
+                Texture2D.setColors(a);
             }
             if (drawData[coord + 4] == 0) {
                 if (size == 1)
@@ -387,7 +385,7 @@ public class MonsterUnit extends EnemyUnit {
                 drawTexture[drawData[coord]].drawAtPointOptionFlipSize((drawData[coord + 1] * size) + x, (drawData[coord+2] * size) + y + 10f, 18, size);
 
             if (a != 1.0f)
-                Texture2D.gl.glColor4f(1, 1, 1, 1);
+                Texture2D.setColors(1);
         }
         if (unitHP > 0 && unitHP < unitMaxHP)
             drawHealthBar(x, (y - DataMonster.monsterData[type][9]) + 10.0f, unitMaxHP, unitHP);

@@ -117,22 +117,21 @@ public class ObjectUnit extends EnemyUnit {
 
     @Override
     public void kill(TowerUnit uni) {
-        if (rewardType != 0) {
-            if (rewardType != 1)
-                return;
-            st.mana += rewardValue;
-            return;
-        }
-        st.money += rewardValue;
-        DataAward.check_money(st.money);
-
         type = -2;
         st.addEffectUnit(EffectUnit.EFFECT_TYPE_DIE, posX, posY);
         if (st.selectedTarget == this)
             st.selectedTarget = null;
+
+        if (rewardType == 0) {
+            st.money += rewardValue;
+            DataAward.check_money(st.money);
+        } else if (rewardType == 1)
+            st.mana += rewardValue;
     }
 
     public void draw() {
+        if (type == -1)
+            return;
         float x = posX / 50f + 62, y = posY / 50f + 30;
 
         if (type == -2) {
@@ -202,7 +201,7 @@ public class ObjectUnit extends EnemyUnit {
                 int py = 35 + (ind * 5);
                 st.page.gatefireImage[4 + ind].drawAtPointOption(bx - py, by - 63 - py, 18);
             } else if (type == 32)
-                st.page.gatefireImage[6 + ind].drawAtPointOption((ind * 5) + 2 + bx, by - 98 - (ind * 5), 18);
+                st.page.gatefireImage[6 + ind].drawAtPointOption(bx + 7 - (ind * 5), by - 98 - (ind * 5), 18);
         }
         if (type == 30) {
             int time = GameThread.gameTimeCount % 4;

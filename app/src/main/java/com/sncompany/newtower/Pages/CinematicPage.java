@@ -199,9 +199,9 @@ public class CinematicPage extends TPage {
                 }
                 if (storyDrawDataBlock[8] == 1) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
-                    Texture2D.gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+                    Texture2D.setColors(0.5f);
                     storyImage[9].drawAtPointOption(0f, 0f, 18);
-                    Texture2D.gl.glColor4f(1f, 1f, 1f, 1f);
+                    Texture2D.setColors(1f);
                 }
                 if (storyDrawDataBlock[9] == 1) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448f);

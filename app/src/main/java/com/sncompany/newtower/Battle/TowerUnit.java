@@ -364,7 +364,8 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
 
     public void getCloseEnemyUnitInRange() {
         lockedEnemies.removeIf(mon -> mon.dead() || Math.abs(posX - mon.posX) + Math.abs(posY - mon.posY) > attackDistance * 2 ||
-                !(((posX - mon.posX) * (posX - mon.posX)) + ((posY - mon.posY) * (posY - mon.posY)) <= atkDistanceSquare()));
+                !(((posX - mon.posX) * (posX - mon.posX)) + ((posY - mon.posY) * (posY - mon.posY)) <= atkDistanceSquare()) ||
+                (mon instanceof ObjectUnit && st.selectedTarget != mon));
 
         EnemyUnit targ = st.selectedTarget;
         if (targ != null && !lockedEnemies.contains(targ) && !(Math.abs(posX - targ.posX) + Math.abs(posY - targ.posY) > attackDistance * 2) &&
@@ -419,10 +420,9 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         if (unitStatus == 1) {
             dire = lastViewDirection == 6 ? 2 : 3;
             sprSpd = 3;
-        } else if (unitStatus != 2) {
-            sprSpd = 25;
+        } else if (unitStatus != 2)
             dire = 0;
-        }
+
         if (st.turbo > 0)
             sprSpd /= st.turbo;
 

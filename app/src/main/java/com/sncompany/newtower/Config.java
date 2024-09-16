@@ -49,12 +49,10 @@ public class Config {
         for (boolean b : awardValues)
             if (b)
                 t++;
-
-        for (int i = 10; i <= 30 && t >= i; i += 10) {
-            if (!awardValues[DataAward.AWARD_10_Title + (i / 10)])
-                t++;
-            awardValues[DataAward.AWARD_10_Title + (i / 10)] = true;
-        }
+        int rwc = t;
+        for (int i = DataAward.AWARD_10_Title; i <= DataAward.AWARD_30_Title; i++)
+            if (awardValues[i]) rwc--;
+            else awardValues[i] = (1 + i - DataAward.AWARD_10_Title) * 10 >= rwc;
         return t;
     }
 

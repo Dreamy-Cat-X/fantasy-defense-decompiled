@@ -207,16 +207,19 @@ public class DataStage {
     }
 
     public void restart() {
-        monsterUnit.clear();
         towerUnit.clear();
         effectUnit.clear();
         arrowUnit.clear();
         life = maxLife;
+        money = DataStage.stageData[SID][DATA_STAGE_START_MONEY];
+        mana = DataStage.stageData[SID][DATA_STAGE_START_MANA];
 
         map.objectUnit.clear();
-        map.objectUnit.addAll(map.defaultObjs);
-        for (ObjectUnit obj : map.objectUnit)
-            obj.type = obj.oType;
+        for (ObjectUnit obj : map.defaultObjs)
+            map.objectUnit.add(new ObjectUnit(this, obj));
         waveManager.current = 0;
+        waveManager.waveStartT = 90;
+        selectedTarget = null;
+        setCurrentWave();
     }
 }

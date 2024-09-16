@@ -40,7 +40,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
 
 
     public static final int[] mainmenuResource = {R.drawable.ui_mainmenu_background2, R.drawable.ui_mainmenu_startonl, R.drawable.ui_mainmenu_helponl, R.drawable.ui_mainmenu_recordonl, R.drawable.ui_mainmenu_upgradeonl, R.drawable.ui_mainmenu_shoponl, R.drawable.ui_mainmenu_backonl};
-    public static final float[][] onPos = {{514.0f, 0.0f}, {228.0f, 5.0f}, {29.0f, 0.0f}, {383.0f, 204.0f}, {87.0f, 254.0f}, {8.0f, 318.0f}};
+    public static final float[][] onPos = {{514, 0}, {228, 5}, {29, 0}, {383, 204}, {87, 254}, {8, 318}};
     public static final int[] numberHeroismResource = {R.drawable.num_heroism_0, R.drawable.num_heroism_1, R.drawable.num_heroism_2, R.drawable.num_heroism_3, R.drawable.num_heroism_4, R.drawable.num_heroism_5, R.drawable.num_heroism_6, R.drawable.num_heroism_7, R.drawable.num_heroism_8, R.drawable.num_heroism_9};
 
     public final Texture2D[] mainmenuImage = new Texture2D[mainmenuResource.length];
@@ -111,65 +111,66 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
     public void paint(GL10 gl10, boolean init) {
         if (init)
             TouchManager.clearTouchMap();
-        mainmenuImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+        mainmenuImage[0].drawAtPointOption(0, 0, 18);
         if (child == null) {
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_0_START, CGRect.CGRectMake(535.0f, 0.0f, 265.0f, 206.0f)); //Stage Select
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_1_HELP, CGRect.CGRectMake(227.0f, 2.0f, 225.0f, 159.0f));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_2_RECORD, CGRect.CGRectMake(5.0f, 23.0f, 190.0f, 207.0f));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_3_UPGRADE, CGRect.CGRectMake(398.0f, 205.0f, 324.0f, 247.0f));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_4_SHOP, CGRect.CGRectMake(98.0f, 258.0f, 236.0f, 203.0f));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_5_BACK, CGRect.CGRectMake(0.0f, 333.0f, 92.0f, 129.0f));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_0_START, CGRect.CGRectMake(535, 0, 265, 206)); //Stage Select
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_1_HELP, CGRect.CGRectMake(227, 2, 225, 159));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_2_RECORD, CGRect.CGRectMake(5, 23, 190, 207));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_3_UPGRADE, CGRect.CGRectMake(398, 205, 324, 247));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_4_SHOP, CGRect.CGRectMake(98, 258, 236, 203));
+            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_5_BACK, CGRect.CGRectMake(0, 333, 92, 129));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_MAINMENU_TOUCH_LIST_TOTAL_COUNT;
             TouchManager.swapTouchMap();
             return;
         }
         if (cancel) {
-            float a = titleCount >= TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_POS ? 1.0f - ((titleCount - TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_POS) * TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_RATE) : 1.0f;
-            if (a > 0.0f) {
-                gl10.glTexEnvf(8960, 8704, 8448.0f);
-                gl10.glColor4f(1f, 1f, 1f, a);
+            float a = titleCount >= TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_POS ? 1 - ((titleCount - TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_POS) * TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_RATE) : 1;
+            if (a > 0) {
+                gl10.glTexEnvf(8960, 8704, 8448);
+                gl10.glColor4f(a, a, a, a);
                 drawOn(titlePressed + 1);
             }
             if (titleCount <= TITLE_MAINMENU_REV_COUNT_FADE_AWAY_REMOVE_COUNT) {
                 if (titleCount < TITLE_MAINMENU_REV_COUNT_FADE_AWAY_REMOVE_COUNT) {
                     a = 0.5f - (titleCount * TITLE_MAINMENU_COUNT_FADE_IN_BLACK_DEGREE);
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                     Texture2D.setAlpha(a);
-                    fillBlackImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                    fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
                     Texture2D.setAlpha(1f);
                 }
-                float f4 = 1.0f - (titleCount * TITLE_MAINMENU_REV_COUNT_FADE_OUT_RATE);
-                if (f4 > 0.0f) {
-                    gl10.glTexEnvf(8960, 8704, 8448.0f);
-                    gl10.glColor4f(1f, 1f, 1f, f4);
+                float f4 = 1 - (titleCount * TITLE_MAINMENU_REV_COUNT_FADE_OUT_RATE);
+                if (f4 > 0) {
+                    gl10.glTexEnvf(8960, 8704, 8448);
+                    gl10.glColor4f(f4, f4, f4, f4);
                     child.paint(gl10, init);
                 }
             }
-            gl10.glColor4f(1f, 1f, 1f, 1.0f);
+            gl10.glColor4f(1, 1, 1, 1);
             return;
         }
 
-        if (titleCount >= TITLE_MAINMENU_COUNT_MOVE_MAX_COUNT) {
+        if (titleCount >= TITLE_MAINMENU_COUNT_FADE_IN_START_POS) {
             drawOn(titlePressed + 1);
         } else if (titleCount >= TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_POS) {
-            float a = Math.min(1f, (titleCount - TITLE_MAINMENU_COUNT_FADE_IN_START_POS) * TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_RATE);
+            float a = titleCount * TITLE_MAINMENU_COUNT_LIGHT_FADE_IN_RATE;
 
-            gl10.glTexEnvf(8960, 8704, 8448.0f);
-            gl10.glColor4f(1f, 1f, 1f, a);
+            gl10.glTexEnvf(8960, 8704, 8448);
+            gl10.glColor4f(a, a, a, a);
             drawOn(titlePressed + 1);
+            gl10.glColor4f(1, 1, 1, 1);
         }
         if (titleCount >= TITLE_MAINMENU_COUNT_FADE_IN_START_POS) {
             if (titleCount > TITLE_MAINMENU_COUNT_FADE_IN_START_POS) {
                 float aa = (titleCount - TITLE_MAINMENU_COUNT_FADE_IN_START_POS) * TITLE_MAINMENU_COUNT_FADE_IN_BLACK_DEGREE;
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                 Texture2D.setAlpha(aa);
                 fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
                 Texture2D.setAlpha(1f);
             }
             float aaa = Math.min(1f, (titleCount - TITLE_MAINMENU_COUNT_FADE_IN_START_POS) * TITLE_MAINMENU_COUNT_FADE_IN_RATE);
             if (aaa > 0f) {
-                gl10.glTexEnvf(8960, 8704, 8448.0f);
-                gl10.glColor4f(1f, 1f, 1f, aaa);
+                gl10.glTexEnvf(8960, 8704, 8448);
+                gl10.glColor4f(aaa, aaa, aaa, aaa);
                 child.paint(gl10, init);
             }
         }
