@@ -78,7 +78,7 @@ public class DataWave {
         for (int i = 0; i < waveCount; i++)
             for (int j = 0; j < 8; j++)
                 waveMobData[i][j] = Config.ByteArrayToInt(data, (i * 32) + 4 + (j * 4));
-        wcc = DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[m.SID];//Log.d("Check", "The " + (wcc == waveCount) + " check");
+        wcc = DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[m.SID];
     }
 
     /**
@@ -112,8 +112,7 @@ public class DataWave {
         byte iWMOP = (byte) (waveMonsterOutPos ? 1 : 0);
         if (wavePattern == 0) {
             if (waveMonsterRemainCount[iWMOP] <= 0) {
-                if (iWMOP == 0)
-                    waveMonsterOutPos = true;
+                waveMonsterOutPos = !waveMonsterOutPos;
                 return;
             }
             if (++waveMonsterShowCurrent[iWMOP] >= waveMonsterShowTime[iWMOP]) {
@@ -127,8 +126,7 @@ public class DataWave {
         if (wavePattern != 1) {
             if (wavePattern == 2 || wavePattern == 3) {
                 if (waveMonsterRemainCount[iWMOP] <= 0) {
-                    if (iWMOP == 0)
-                        waveMonsterOutPos = true;
+                    waveMonsterOutPos = !waveMonsterOutPos;
                     return;
                 }
                 if (++waveMonsterShowCurrent[iWMOP] >= waveMonsterShowTime[iWMOP]) {
@@ -150,9 +148,8 @@ public class DataWave {
             waveMonsterShowCurrent[iWMOP] -= waveMonsterShowTime[iWMOP];
             monsterOpenTime = 12;
             waveMonsterOutPos = !waveMonsterOutPos;
-            if (waveMonsterRemainCount[1 - iWMOP] <= 0) {
+            if (waveMonsterRemainCount[1 - iWMOP] <= 0)
                 waveMonsterOutPos = !waveMonsterOutPos;
-            }
         }
     }
 
@@ -172,9 +169,9 @@ public class DataWave {
             perfectWave = true;
             return setWave();
         }
-        if (st.mapType > 2) {
+        if (st.mapType > 2)
             return 0;
-        }
+
         boolean z = false;
         for (ObjectUnit obj : map.objectUnit) {
             int i5 = obj.type;
@@ -190,15 +187,12 @@ public class DataWave {
         }
         if (!st.monsterUnit.isEmpty())
             return 0;
-
-        for (int i6 = 0; i6 < 2; i6++) {
-            if (waveMonsterRemainCount[i6] > 0) {
+        for (int i6 = 0; i6 < 2; i6++)
+            if (waveMonsterRemainCount[i6] > 0)
                 return 0;
-            }
-        }
-        if (perfectWave) {
+
+        if (perfectWave)
             st.bScore += ((current * 0.1f) + 1.0f) * 600.0f;
-        }
         current++;
         waveStartT = 60;
         perfectWave = true;
