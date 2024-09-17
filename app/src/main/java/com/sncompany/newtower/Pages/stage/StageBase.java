@@ -28,14 +28,6 @@ public abstract class StageBase extends TPage {
     public static final MyOscillator[] myOscillator = new MyOscillator[20];
     public static final int[] numberUnitBuyResource = {R.drawable.num_unit_buy_0, R.drawable.num_unit_buy_1, R.drawable.num_unit_buy_2, R.drawable.num_unit_buy_3, R.drawable.num_unit_buy_4, R.drawable.num_unit_buy_5, R.drawable.num_unit_buy_6, R.drawable.num_unit_buy_7, R.drawable.num_unit_buy_8, R.drawable.num_unit_buy_9};
     public static final int[] numberHeroBuyResource = {R.drawable.num_hero_buy_0, R.drawable.num_hero_buy_1, R.drawable.num_hero_buy_2, R.drawable.num_hero_buy_3, R.drawable.num_hero_buy_4, R.drawable.num_hero_buy_5, R.drawable.num_hero_buy_6, R.drawable.num_hero_buy_7, R.drawable.num_hero_buy_8, R.drawable.num_hero_buy_9};
-    public static final int[] uiCharButtonResource = {R.drawable.ui_char_button_class_off, R.drawable.ui_char_button_class_on, R.drawable.ui_char_button_lvlup_off, R.drawable.ui_char_button_lvlup_on, R.drawable.ui_char_button_ok_off, R.drawable.ui_char_button_ok_on, R.drawable.ui_char_button_sell_off, R.drawable.ui_char_button_sell_on, R.drawable.ui_char_button_spe_dancing_blade_off, R.drawable.ui_char_button_spe_dancing_blade_on, R.drawable.ui_char_button_spe_millon_arrow_off, R.drawable.ui_char_button_spe_millon_arrow_on, R.drawable.ui_char_button_spe_ice_quake_off, R.drawable.ui_char_button_spe_ice_quake_on, R.drawable.ui_char_button_lvluphero_off, R.drawable.ui_char_button_lvluphero_on, R.drawable.ui_char_button_1_off, R.drawable.ui_char_button_1_on, R.drawable.ui_char_button_2_off, R.drawable.ui_char_button_2_on, R.drawable.ui_char_button_3_off, R.drawable.ui_char_button_3_on, R.drawable.ui_char_button_4_off, R.drawable.ui_char_button_4_on, R.drawable.ui_char_button_5_off, R.drawable.ui_char_button_5_on};
-    public static final int[] uiCharEtcResource = {R.drawable.ui_char_etc_background, R.drawable.ui_char_etc_stat, R.drawable.ui_char_etc_lv, R.drawable.ui_char_etc_1, R.drawable.ui_char_etc_2, R.drawable.ui_char_etc_3, R.drawable.ui_char_etc_4, R.drawable.ui_char_etc_5, R.drawable.ui_char_etc_hero, R.drawable.ui_char_etc_specialdancingblade, R.drawable.ui_char_etc_specialmillionarrow, R.drawable.ui_char_etc_specialicequake, R.drawable.ui_char_etc_backline};
-    public static final int[] uiCharFaceResource = {R.drawable.ui_char_face_warrior, R.drawable.ui_char_face_manatarms, R.drawable.ui_char_face_knight, R.drawable.ui_char_face_warlord, R.drawable.ui_char_face_archer, R.drawable.ui_char_face_holyeye, R.drawable.ui_char_face_splatter, R.drawable.ui_char_face_skybeholder, R.drawable.ui_char_face_wizard, R.drawable.ui_char_face_colddiviner, R.drawable.ui_char_face_warlock, R.drawable.ui_char_face_magmablaster, R.drawable.ui_char_face_hero0, R.drawable.ui_char_face_hero1, R.drawable.ui_char_face_hero2};
-    public static final int[] uiCharNameResource = {R.drawable.ui_char_name_warrior, R.drawable.ui_char_name_manatarms, R.drawable.ui_char_name_knight, R.drawable.ui_char_name_warlord, R.drawable.ui_char_name_archer, R.drawable.ui_char_name_holyeye, R.drawable.ui_char_name_splatter, R.drawable.ui_char_name_skybeholder, R.drawable.ui_char_name_wizard, R.drawable.ui_char_name_colddiviner, R.drawable.ui_char_name_warlock, R.drawable.ui_char_name_blaster, R.drawable.ui_char_name_hero0, R.drawable.ui_char_name_hero1, R.drawable.ui_char_name_hero2};
-    public static final int[] uiCharUpFaceResource = {R.drawable.ui_char_up_face_knight, R.drawable.ui_char_up_face_warlord, R.drawable.ui_char_up_face_splatter, R.drawable.ui_char_up_face_skybeholder, R.drawable.ui_char_up_face_warlock, R.drawable.ui_char_up_face_magmablaster};
-    public static final int[] uiMonsterEtcResource = {R.drawable.ui_monster_etc_background, R.drawable.ui_monster_etc_stat, R.drawable.ui_monster_etc_nextwave, R.drawable.ui_monster_etc_warning, R.drawable.ui_monster_etc_warningglow};
-    public static final int[] uiMonsterFaceResource = {R.drawable.ui_monster_face__0skulldog, R.drawable.ui_monster_face__1zombie, R.drawable.ui_monster_face__2lamia, R.drawable.ui_monster_face__3imp, R.drawable.ui_monster_face__4wraith, R.drawable.ui_monster_face__5hollowskull, R.drawable.ui_monster_face__6zombieturtle, R.drawable.ui_monster_face__7ninetail, R.drawable.ui_monster_face__8vampire, R.drawable.ui_monster_face__9swordwraith, R.drawable.ui_monster_face__10boneworm, R.drawable.ui_monster_face__11zombieknight, R.drawable.ui_monster_face__12ukiona, R.drawable.ui_monster_face__13succubus, R.drawable.ui_monster_face__14wraithbishop, R.drawable.ui_monster_face_a1ogrezombie, R.drawable.ui_monster_face_a2deviltiger, R.drawable.ui_monster_face_b1mudman, R.drawable.ui_monster_face_b2swampwoman, R.drawable.ui_monster_face_c1spinx, R.drawable.ui_monster_face_c2mummy, R.drawable.ui_monster_face_d1salamander, R.drawable.ui_monster_face_d2magmarock, R.drawable.ui_monster_face_e1demon, R.drawable.ui_monster_face_e2grimdevil, R.drawable.ui_monster_face_boss1skullgiant, R.drawable.ui_monster_face_boss2rich, R.drawable.ui_monster_face_boss3fallenangel, R.drawable.ui_monster_face_boss4lilis, R.drawable.ui_monster_face_boss5wraithking, R.drawable.ui_monster_face_ex1zombiegirl};
-    public static final int[] uiMonsterNameResource = {R.drawable.ui_monster_name__0skulldog, R.drawable.ui_monster_name__1zombie, R.drawable.ui_monster_name__2lamia, R.drawable.ui_monster_name__3imp, R.drawable.ui_monster_name__4wraith, R.drawable.ui_monster_name__5hollowskull, R.drawable.ui_monster_name__6zombieturtle, R.drawable.ui_monster_name__7ninetail, R.drawable.ui_monster_name__8vampire, R.drawable.ui_monster_name__9swordwraith, R.drawable.ui_monster_name__10boneworm, R.drawable.ui_monster_name__11zombieknight, R.drawable.ui_monster_name__12ukiona, R.drawable.ui_monster_name__13succubus, R.drawable.ui_monster_name__14wraithbishop, R.drawable.ui_monster_name_a1ogrezombie, R.drawable.ui_monster_name_a2deviltiger, R.drawable.ui_monster_name_b1mudman, R.drawable.ui_monster_name_b2swampwoman, R.drawable.ui_monster_name_c1spinx, R.drawable.ui_monster_name_c2mummy, R.drawable.ui_monster_name_d1salamander, R.drawable.ui_monster_name_d2magmarock, R.drawable.ui_monster_name_e1demon, R.drawable.ui_monster_name_e2grimdevil, R.drawable.ui_monster_name_boss1skullgiant, R.drawable.ui_monster_name_boss2rich, R.drawable.ui_monster_name_boss3fallenangel, R.drawable.ui_monster_name_boss4lilis, R.drawable.ui_monster_name_boss5wraithking, R.drawable.ui_monster_name_ex1zombiegirl};
     public static final int[] numberManaResource = {R.drawable.num_mana_0, R.drawable.num_mana_1, R.drawable.num_mana_2, R.drawable.num_mana_3, R.drawable.num_mana_4, R.drawable.num_mana_5, R.drawable.num_mana_6, R.drawable.num_mana_7, R.drawable.num_mana_8, R.drawable.num_mana_9};
     public static final int[] numberLifeResource = {R.drawable.num_life_0, R.drawable.num_life_1, R.drawable.num_life_2, R.drawable.num_life_3, R.drawable.num_life_4, R.drawable.num_life_5, R.drawable.num_life_6, R.drawable.num_life_7, R.drawable.num_life_8, R.drawable.num_life_9};
     public static final int[] numberWaveResource = {R.drawable.num_wave_0, R.drawable.num_wave_1, R.drawable.num_wave_2, R.drawable.num_wave_3, R.drawable.num_wave_4, R.drawable.num_wave_5, R.drawable.num_wave_6, R.drawable.num_wave_7, R.drawable.num_wave_8, R.drawable.num_wave_9, R.drawable.num_wave_10, R.drawable.num_wave_11};
@@ -49,8 +41,6 @@ public abstract class StageBase extends TPage {
     public final Texture2D targetImage = new Texture2D(R.drawable.etc_target), backShadowImage = new Texture2D(R.drawable.etc_shadow);
     public final Texture2D[] numberManaImage = new Texture2D[numberManaResource.length], numberMoneyImage = new Texture2D[numberMoneyResource.length], numberLifeImage = new Texture2D[numberLifeResource.length],
         numberWaveImage = new Texture2D[numberWaveResource.length], shadowImage = new Texture2D[2], uiUpperImage = new Texture2D[uiUpperResource.length], uiButtonImage = new Texture2D[uiButtonResource.length],
-        uiCharButtonImage = new Texture2D[uiCharButtonResource.length], uiCharEtcImage = new Texture2D[uiCharEtcResource.length], uiCharFaceImage = new Texture2D[uiCharFaceResource.length], uiCharNameImage = new Texture2D[uiCharNameResource.length],
-        uiCharUpFaceImage = new Texture2D[uiCharUpFaceResource.length], uiMonsterEtcImage = new Texture2D[uiMonsterEtcResource.length], uiMonsterFaceImage = new Texture2D[uiMonsterFaceResource.length], uiMonsterNameImage = new Texture2D[uiMonsterNameResource.length],
         numberUnitBuyImage = new Texture2D[numberUnitBuyResource.length], numberHeroBuyImage = new Texture2D[numberHeroBuyResource.length], whiteCircleImage = new Texture2D[4], redCircleImage = new Texture2D[4],
         gatefireImage = new Texture2D[gatefireResource.length];
     public final Texture2D[][] enemyImages = new Texture2D[DataAnim.enemyDrawResource.length][], debuffImages = new Texture2D[DataAnim.debuffDrawResource.length][], heroImages = new Texture2D[DataAnim.heroDrawResource.length][],
@@ -84,8 +74,7 @@ public abstract class StageBase extends TPage {
     public void load(Consumer<Float> prog) {
         int lod = 3;
         int tot = numberMoneyImage.length + enemyImages.length + debuffImages.length + heroImages.length + towerImages.length + uiUpperResource.length + numberManaImage.length +
-                numberLifeImage.length + numberWaveImage.length + uiButtonImage.length + uiCharButtonImage.length + uiCharEtcImage.length + uiCharFaceImage.length + uiCharNameImage.length +
-                uiCharUpFaceImage.length + uiMonsterEtcImage.length + uiMonsterFaceImage.length + uiMonsterNameImage.length + numberUnitBuyImage.length + numberHeroBuyImage.length +
+                numberLifeImage.length + numberWaveImage.length + uiButtonImage.length + numberUnitBuyImage.length + numberHeroBuyImage.length +
                 gatefireImage.length;
         shadowImage[0] = new Texture2D(R.drawable.etc_sha34);
         shadowImage[1] = new Texture2D(R.drawable.etc_sha63);
@@ -132,14 +121,6 @@ public abstract class StageBase extends TPage {
         lod = loadP(numberLifeImage, numberLifeResource, prog, lod, tot);
         lod = loadP(numberWaveImage, numberWaveResource, prog, lod, tot);
         lod = loadP(uiButtonImage, uiButtonResource, prog, lod, tot);
-        lod = loadP(uiCharButtonImage, uiCharButtonResource, prog, lod, tot);
-        lod = loadP(uiCharEtcImage, uiCharEtcResource, prog, lod, tot);
-        lod = loadP(uiCharFaceImage, uiCharFaceResource, prog, lod, tot);
-        lod = loadP(uiCharNameImage, uiCharNameResource, prog, lod, tot);
-        lod = loadP(uiCharUpFaceImage, uiCharUpFaceResource, prog, lod, tot);
-        lod = loadP(uiMonsterEtcImage, uiMonsterEtcResource, prog, lod, tot);
-        lod = loadP(uiMonsterFaceImage, uiMonsterFaceResource, prog, lod, tot);
-        lod = loadP(uiMonsterNameImage, uiMonsterNameResource, prog, lod, tot);
         lod = loadP(numberUnitBuyImage, numberUnitBuyResource, prog, lod, tot);
         lod = loadP(numberHeroBuyImage, numberHeroBuyResource, prog, lod, tot);
         lod = loadP(gatefireImage, gatefireResource, prog, lod, tot);
@@ -182,22 +163,6 @@ public abstract class StageBase extends TPage {
         for (Texture2D img : numberWaveImage)
             img.dealloc();
         for (Texture2D img : uiButtonImage)
-            img.dealloc();
-        for (Texture2D img : uiCharButtonImage)
-            img.dealloc();
-        for (Texture2D img : uiCharEtcImage)
-            img.dealloc();
-        for (Texture2D img : uiCharFaceImage)
-            img.dealloc();
-        for (Texture2D img : uiCharNameImage)
-            img.dealloc();
-        for (Texture2D img : uiCharUpFaceImage)
-            img.dealloc();
-        for (Texture2D img : uiMonsterEtcImage)
-            img.dealloc();
-        for (Texture2D img : uiMonsterFaceImage)
-            img.dealloc();
-        for (Texture2D img : uiMonsterNameImage)
             img.dealloc();
         for (Texture2D img : numberUnitBuyImage)
             img.dealloc();
@@ -432,7 +397,6 @@ public abstract class StageBase extends TPage {
         if (type < 12) {
             rang = DataCharacter.charData[type * 3][4];
             rngUpgr = TowerUnit.getUpgradeRate(type / 6, 9);
-            System.out.println(rang);
         } else {
             int t2 = type - 12;
             rang = DataHero.heroData[t2][3];

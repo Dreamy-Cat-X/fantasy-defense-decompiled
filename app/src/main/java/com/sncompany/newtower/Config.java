@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class Config {
     static final String SAVEFILE_NAME = "SAVEDATA";
     static final String SAVEFILE_NAME2 = "SAVEDATA2";
-    public static final int SAVEFILE_SIZE = 27392;
+    public static final int SAVEFILE_SIZE = 880;
     static byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
     public static int musicVolume, effectVolume, musicMaxVolume;
     public static byte lastPlayed = 0, limitBreak;

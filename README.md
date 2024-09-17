@@ -2,11 +2,8 @@
  Decompiled code for a 2011 game no one ever knows about, with some tweaks to make it more manageable. Not affiliated with SN Mobile Technology
 
 ## Remaining Bugs
-- Archers' arrows don't move nor deal damage
-- Mages' magic is drawn from the wrong spot
-- Ice Mage magic crashes the game
-- Warriors don't rush to attack opponents
-- Units are not deselected properly
+- Battle doesn't pause upon entering unit info menu
+- Can't deploy heroes
 - Units can't be leveled up
 - Victory screen is a black void
 

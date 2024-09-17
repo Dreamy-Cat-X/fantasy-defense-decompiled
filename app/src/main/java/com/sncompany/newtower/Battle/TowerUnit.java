@@ -236,16 +236,15 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         int oStatus = unitStatus;
         if (unitStatus == 1) {
             EnemyUnit e = lockedEnemies.get(0);
-            if (this instanceof HeroUnit && unitStatusCount <= 6) {
+            if (unitStatusCount <= 6 && ((this instanceof HeroUnit && type == 0) || ((!(this instanceof HeroUnit) && type < 4)))) {
                 posX = (int) (originalPosX + ((((e.posX - posX) * unitStatusCount) / 6) * SPECIAL_ATTACK_ARROW_UNIT_SIZE_START));
                 posY = (int) (originalPosY + ((((e.posY - posY) * unitStatusCount) / 6) * SPECIAL_ATTACK_ARROW_UNIT_SIZE_START));
             }
             headRotateDegree = getRotateDegree(e.posX - posX, e.posY - posY);
             if (posX < e.posX) {
                 lastViewDirection = 2;
-            } else if (posX > e.posX) {
+            } else if (posX > e.posX)
                 lastViewDirection = 6;
-            }
 
             if (unitStatusCount == 6) {
                 boolean attack = false;
@@ -331,20 +330,18 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         st.arrowUnit.add(arrow);
     }
 
-    public static float getRotateDegree(float f, float f2) {
+    public static float getRotateDegree(float x, float y) {
         double d;
         double degrees;
         double degrees2;
-        if (f == 0.0f) {
-            return f2 < 0.0f ? 0.0f : 180.0f;
-        }
-        if (f2 == 0.0f) {
-            return f < 0.0f ? 270.0f : 90.0f;
-        }
-        float abs = Math.abs(f2) / Math.abs(f);
-        if (f < 0.0f) {
-            d = 270.0d;
-            if (f2 < 0.0f) {
+        if (x == 0)
+            return y < 0 ? 0 : 180;
+        if (y == 0)
+            return x < 0 ? 270 : 90;
+        float abs = Math.abs(y) / Math.abs(x);
+        if (x < 0) {
+            d = 270;
+            if (y < 0) {
                 degrees = Math.toDegrees(Math.atan(abs));
             } else {
                 degrees2 = Math.toDegrees(Math.atan(abs));
@@ -352,12 +349,11 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
             }
         } else {
             d = 90.0d;
-            if (f2 < 0.0f) {
+            if (y < 0) {
                 degrees2 = Math.toDegrees(Math.atan(abs));
                 degrees = -degrees2;
-            } else {
+            } else
                 degrees = Math.toDegrees(Math.atan(abs));
-            }
         }
         return (float) (degrees + d);
     }

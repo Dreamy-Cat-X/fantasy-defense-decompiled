@@ -65,10 +65,21 @@ public class StagePage extends StageBase {
     public static final int[] ingameResource = {R.drawable.ui_ingame_paused, R.drawable.ui_ingame_resumeoff, R.drawable.ui_ingame_resumeon, R.drawable.ui_ingame_restartoff, R.drawable.ui_ingame_restarton, R.drawable.ui_ingame_stageoff, R.drawable.ui_ingame_stageon};
     public static final int[] uiThemeclearResource = {R.drawable.ui_themeclear_background, R.drawable.ui_themeclear_map1, R.drawable.ui_themeclear_map2, R.drawable.ui_themeclear_icon, R.drawable.ui_themeclear_glow, R.drawable.ui_themeclear_arrow, R.drawable.ui_themeclear_iconblack};
 
+    public static final int[] uiCharButtonResource = {R.drawable.ui_char_button_class_off, R.drawable.ui_char_button_class_on, R.drawable.ui_char_button_lvlup_off, R.drawable.ui_char_button_lvlup_on, R.drawable.ui_char_button_ok_off, R.drawable.ui_char_button_ok_on, R.drawable.ui_char_button_sell_off, R.drawable.ui_char_button_sell_on, R.drawable.ui_char_button_spe_dancing_blade_off, R.drawable.ui_char_button_spe_dancing_blade_on, R.drawable.ui_char_button_spe_millon_arrow_off, R.drawable.ui_char_button_spe_millon_arrow_on, R.drawable.ui_char_button_spe_ice_quake_off, R.drawable.ui_char_button_spe_ice_quake_on, R.drawable.ui_char_button_lvluphero_off, R.drawable.ui_char_button_lvluphero_on, R.drawable.ui_char_button_1_off, R.drawable.ui_char_button_1_on, R.drawable.ui_char_button_2_off, R.drawable.ui_char_button_2_on, R.drawable.ui_char_button_3_off, R.drawable.ui_char_button_3_on, R.drawable.ui_char_button_4_off, R.drawable.ui_char_button_4_on, R.drawable.ui_char_button_5_off, R.drawable.ui_char_button_5_on};
+    public static final int[] uiCharEtcResource = {R.drawable.ui_char_etc_background, R.drawable.ui_char_etc_stat, R.drawable.ui_char_etc_lv, R.drawable.ui_char_etc_1, R.drawable.ui_char_etc_2, R.drawable.ui_char_etc_3, R.drawable.ui_char_etc_4, R.drawable.ui_char_etc_5, R.drawable.ui_char_etc_hero, R.drawable.ui_char_etc_specialdancingblade, R.drawable.ui_char_etc_specialmillionarrow, R.drawable.ui_char_etc_specialicequake, R.drawable.ui_char_etc_backline};
+    public static final int[] uiCharFaceResource = {R.drawable.ui_char_face_warrior, R.drawable.ui_char_face_manatarms, R.drawable.ui_char_face_knight, R.drawable.ui_char_face_warlord, R.drawable.ui_char_face_archer, R.drawable.ui_char_face_holyeye, R.drawable.ui_char_face_splatter, R.drawable.ui_char_face_skybeholder, R.drawable.ui_char_face_wizard, R.drawable.ui_char_face_colddiviner, R.drawable.ui_char_face_warlock, R.drawable.ui_char_face_magmablaster, R.drawable.ui_char_face_hero0, R.drawable.ui_char_face_hero1, R.drawable.ui_char_face_hero2};
+    public static final int[] uiCharNameResource = {R.drawable.ui_char_name_warrior, R.drawable.ui_char_name_manatarms, R.drawable.ui_char_name_knight, R.drawable.ui_char_name_warlord, R.drawable.ui_char_name_archer, R.drawable.ui_char_name_holyeye, R.drawable.ui_char_name_splatter, R.drawable.ui_char_name_skybeholder, R.drawable.ui_char_name_wizard, R.drawable.ui_char_name_colddiviner, R.drawable.ui_char_name_warlock, R.drawable.ui_char_name_blaster, R.drawable.ui_char_name_hero0, R.drawable.ui_char_name_hero1, R.drawable.ui_char_name_hero2};
+    public static final int[] uiCharUpFaceResource = {R.drawable.ui_char_up_face_knight, R.drawable.ui_char_up_face_warlord, R.drawable.ui_char_up_face_splatter, R.drawable.ui_char_up_face_skybeholder, R.drawable.ui_char_up_face_warlock, R.drawable.ui_char_up_face_magmablaster};
+    public static final int[] uiMonsterEtcResource = {R.drawable.ui_monster_etc_background, R.drawable.ui_monster_etc_stat, R.drawable.ui_monster_etc_nextwave, R.drawable.ui_monster_etc_warning, R.drawable.ui_monster_etc_warningglow};
+    public static final int[] uiMonsterFaceResource = {R.drawable.ui_monster_face__0skulldog, R.drawable.ui_monster_face__1zombie, R.drawable.ui_monster_face__2lamia, R.drawable.ui_monster_face__3imp, R.drawable.ui_monster_face__4wraith, R.drawable.ui_monster_face__5hollowskull, R.drawable.ui_monster_face__6zombieturtle, R.drawable.ui_monster_face__7ninetail, R.drawable.ui_monster_face__8vampire, R.drawable.ui_monster_face__9swordwraith, R.drawable.ui_monster_face__10boneworm, R.drawable.ui_monster_face__11zombieknight, R.drawable.ui_monster_face__12ukiona, R.drawable.ui_monster_face__13succubus, R.drawable.ui_monster_face__14wraithbishop, R.drawable.ui_monster_face_a1ogrezombie, R.drawable.ui_monster_face_a2deviltiger, R.drawable.ui_monster_face_b1mudman, R.drawable.ui_monster_face_b2swampwoman, R.drawable.ui_monster_face_c1spinx, R.drawable.ui_monster_face_c2mummy, R.drawable.ui_monster_face_d1salamander, R.drawable.ui_monster_face_d2magmarock, R.drawable.ui_monster_face_e1demon, R.drawable.ui_monster_face_e2grimdevil, R.drawable.ui_monster_face_boss1skullgiant, R.drawable.ui_monster_face_boss2rich, R.drawable.ui_monster_face_boss3fallenangel, R.drawable.ui_monster_face_boss4lilis, R.drawable.ui_monster_face_boss5wraithking, R.drawable.ui_monster_face_ex1zombiegirl};
+    public static final int[] uiMonsterNameResource = {R.drawable.ui_monster_name__0skulldog, R.drawable.ui_monster_name__1zombie, R.drawable.ui_monster_name__2lamia, R.drawable.ui_monster_name__3imp, R.drawable.ui_monster_name__4wraith, R.drawable.ui_monster_name__5hollowskull, R.drawable.ui_monster_name__6zombieturtle, R.drawable.ui_monster_name__7ninetail, R.drawable.ui_monster_name__8vampire, R.drawable.ui_monster_name__9swordwraith, R.drawable.ui_monster_name__10boneworm, R.drawable.ui_monster_name__11zombieknight, R.drawable.ui_monster_name__12ukiona, R.drawable.ui_monster_name__13succubus, R.drawable.ui_monster_name__14wraithbishop, R.drawable.ui_monster_name_a1ogrezombie, R.drawable.ui_monster_name_a2deviltiger, R.drawable.ui_monster_name_b1mudman, R.drawable.ui_monster_name_b2swampwoman, R.drawable.ui_monster_name_c1spinx, R.drawable.ui_monster_name_c2mummy, R.drawable.ui_monster_name_d1salamander, R.drawable.ui_monster_name_d2magmarock, R.drawable.ui_monster_name_e1demon, R.drawable.ui_monster_name_e2grimdevil, R.drawable.ui_monster_name_boss1skullgiant, R.drawable.ui_monster_name_boss2rich, R.drawable.ui_monster_name_boss3fallenangel, R.drawable.ui_monster_name_boss4lilis, R.drawable.ui_monster_name_boss5wraithking, R.drawable.ui_monster_name_ex1zombiegirl};
+
     public final Texture2D[] specialArrowImage = new Texture2D[specialArrowResource.length], specialIceImage = new Texture2D[specialIceResource.length], specialSwordImage = new Texture2D[specialSwordResource.length];
     public final Texture2D[] arrowImage0 = new Texture2D[arrowResource0.length], arrowImage1 = new Texture2D[arrowResource1.length], arrowImage2 = new Texture2D[arrowResource2.length], arrowImage3 = new Texture2D[arrowResource3.length], arrowImage4 = new Texture2D[arrowResource4.length], arrowImage9 = new Texture2D[arrowResource9.length];
-    public static final Texture2D[] uiIngameImage = new Texture2D[ingameResource.length], uiThemeclearImage = new Texture2D[uiThemeclearResource.length], numberClearImage = new Texture2D[numberClearResource.length],
-            numberTotalImage = new Texture2D[numberTotalResource.length], stageClearImage = new Texture2D[stageClearResource.length];
+    public final Texture2D[] uiIngameImage = new Texture2D[ingameResource.length], uiThemeclearImage = new Texture2D[uiThemeclearResource.length], numberClearImage = new Texture2D[numberClearResource.length],
+            numberTotalImage = new Texture2D[numberTotalResource.length], stageClearImage = new Texture2D[stageClearResource.length],
+            uiCharButtonImage = new Texture2D[uiCharButtonResource.length], uiCharEtcImage = new Texture2D[uiCharEtcResource.length], uiCharFaceImage = new Texture2D[uiCharFaceResource.length], uiCharNameImage = new Texture2D[uiCharNameResource.length],
+            uiCharUpFaceImage = new Texture2D[uiCharUpFaceResource.length], uiMonsterEtcImage = new Texture2D[uiMonsterEtcResource.length], uiMonsterFaceImage = new Texture2D[uiMonsterFaceResource.length], uiMonsterNameImage = new Texture2D[uiMonsterNameResource.length];
 
     public final Texture2D[][] effectImages = new Texture2D[DataAnim.effectDrawResource.length][];
     private int startViewCount, rewardShowOrder;
@@ -94,7 +105,8 @@ public class StagePage extends StageBase {
     public void load(Consumer<Float> prog) {
         super.load(prog);
         int tot2 = specialArrowImage.length + specialIceImage.length + specialSwordImage.length + arrowImage0.length + arrowImage1.length + arrowImage2.length + arrowImage3.length + arrowImage4.length +
-                arrowImage9.length + effectImages.length + uiIngameImage.length + uiThemeclearImage.length + numberClearImage.length + numberTotalImage.length + stageClearImage.length;
+                arrowImage9.length + effectImages.length + uiIngameImage.length + uiThemeclearImage.length + numberClearImage.length + numberTotalImage.length + stageClearImage.length + uiCharButtonImage.length
+                + uiCharEtcImage.length + uiCharFaceImage.length + uiCharNameImage.length + uiCharUpFaceImage.length + uiMonsterEtcImage.length + uiMonsterFaceImage.length + uiMonsterNameImage.length;
         int lod = loadP(specialArrowImage, specialArrowResource, prog, 0, tot2);
         lod = loadP(specialIceImage, specialIceResource, prog, lod, tot2);
         lod = loadP(specialSwordImage, specialSwordResource, prog, lod, tot2);
@@ -116,6 +128,14 @@ public class StagePage extends StageBase {
         lod = loadP(numberClearImage, numberClearResource, prog, lod, tot2);
         lod = loadP(numberTotalImage, numberTotalResource, prog, lod, tot2);
         lod = loadP(stageClearImage, stageClearResource, prog, lod, tot2);
+        lod = loadP(uiCharButtonImage, uiCharButtonResource, prog, lod, tot2);
+        lod = loadP(uiCharEtcImage, uiCharEtcResource, prog, lod, tot2);
+        lod = loadP(uiCharFaceImage, uiCharFaceResource, prog, lod, tot2);
+        lod = loadP(uiCharNameImage, uiCharNameResource, prog, lod, tot2);
+        lod = loadP(uiCharUpFaceImage, uiCharUpFaceResource, prog, lod, tot2);
+        lod = loadP(uiMonsterEtcImage, uiMonsterEtcResource, prog, lod, tot2);
+        lod = loadP(uiMonsterFaceImage, uiMonsterFaceResource, prog, lod, tot2);
+        lod = loadP(uiMonsterNameImage, uiMonsterNameResource, prog, lod, tot2);
         loaded = true;
         if (prog != null)
             prog.accept(1f);
@@ -154,6 +174,22 @@ public class StagePage extends StageBase {
         for (Texture2D[] imgs : effectImages)
             for (Texture2D img : imgs)
                 img.dealloc();
+        for (Texture2D img : uiCharButtonImage)
+            img.dealloc();
+        for (Texture2D img : uiCharEtcImage)
+            img.dealloc();
+        for (Texture2D img : uiCharFaceImage)
+            img.dealloc();
+        for (Texture2D img : uiCharNameImage)
+            img.dealloc();
+        for (Texture2D img : uiCharUpFaceImage)
+            img.dealloc();
+        for (Texture2D img : uiMonsterEtcImage)
+            img.dealloc();
+        for (Texture2D img : uiMonsterFaceImage)
+            img.dealloc();
+        for (Texture2D img : uiMonsterNameImage)
+            img.dealloc();
         loaded = false;
     }
 
@@ -1365,13 +1401,13 @@ public class StagePage extends StageBase {
 
                     if (characterMenuSelectFlag >= 2) {
                         if (cTLS > PLAY_HEROS && cTLS < PLAY_PAUSE) {
-                            if (checkEnableHeroBuyUnit(cTLS - 7))
+                            if (checkEnableHeroBuyUnit(cTLS - 7)) {
+                                characterMenuSelectFlag = 3;
                                 characterAddNumber = cTLS + 5; //12 ~ 14
-                        } else {
+                            }
+                        } else
                             for (int i = 8; i <= 10; i++)
                                 myOscillator[i].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-                            TouchManager.clearTouchStatus();
-                        }
                     } else if (cTLS != -1 && cTLS < PLAY_HEROS) {
                         int addChar = (cTLS * 2) - (cTLS % 2);
                         if (checkEnableBuyUnit(addChar)) {
@@ -1394,8 +1430,8 @@ public class StagePage extends StageBase {
                 if (lastAction != 2)
                     return;
                 tempChara = null;
-                if (cTLS == 7) {
-                    characterMenuSelectFlag = 3;
+                if (cTLS == PLAY_HEROS) {
+                    characterMenuSelectFlag = 2;
                     for (int i = 8; i <= 10; i++)
                         myOscillator[i].initWithTwoWayStartPosition(GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 0, 10, -10, 5);
                     return;
@@ -1424,6 +1460,9 @@ public class StagePage extends StageBase {
                         break;
                     default:
                         switch (characterMenuSelectFlag) {
+                            case 2:
+                                if (cTLS <= PLAY_HEROS || cTLS >= PLAY_PAUSE)
+                                    characterMenuSelectFlag = 0;
                             case 0:
                                 TowerUnit twu = checkTowerUnit();
                                 if (twu != null) {
@@ -1825,9 +1864,8 @@ public class StagePage extends StageBase {
 
         GameRenderer.drawStringM(String.valueOf(st.selectedUnit.attackRange), 420.0f, 416.0f, 20);
         GameRenderer.drawStringM(TowerUnit.getEffectTypeString(st.selectedUnit.effectType), 420.0f, 442.0f, 20);
-        int i23 = characterMenuSelectFlag;
-        if (i23 != 2) {
-            if (i23 == 5 || i23 == 6) {
+        if (characterMenuSelectFlag != 2) {
+            if (characterMenuSelectFlag == 5 || characterMenuSelectFlag == 6) {
                 TouchManager.addTouchRectListData(17, CGRect.CGRectMake(670.0f, 350.0f, 115.0f, 115.0f));
                 TouchManager.addTouchRectListData(19, CGRect.CGRectMake(0.0f, 343.0f, GameRenderer.SCRWIDTH, 137.0f));
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 20;
@@ -1842,7 +1880,7 @@ public class StagePage extends StageBase {
                 else
                     uiUpperImage[upper_money].drawAtPointOption(696.0f, 427.0f, 18);
                 GameRenderer.drawStringM(String.valueOf(buyPrice), 755.0f, 430.0f, 20);
-            } else if (i23 != 12 && i23 != 13)
+            } else if (characterMenuSelectFlag != 4 && characterMenuSelectFlag != 8)
                 return;
         }
         if (!(st.selectedUnit instanceof HeroUnit))
@@ -1863,11 +1901,7 @@ public class StagePage extends StageBase {
             GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getSellPrice()), 80, 430, 20);
         }
         if (st.selectedUnit.getUpgradeType() != -1) {
-            if (checkTouchListStatus2 == 15) {
-                uiCharButtonImage[1].drawAtPointOption(435.0f, 350.0f, 18);
-            } else {
-                uiCharButtonImage[0].drawAtPointOption(435.0f, 350.0f, 18);
-            }
+            uiCharButtonImage[checkTouchListStatus2 == 15 ? 1 : 0].drawAtPointOption(435.0f, 350.0f, 18);
             uiCharUpFaceImage[towerBox].drawAtPointOption(514.0f, 364.0f, 18);
             uiCharNameImage[towerImg].drawAtPointOptionSize(653.0f, 449.0f, 36, 0.4f);
             GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getUpgradePrice()), 503.0f, 421.0f, 20);
@@ -1932,15 +1966,15 @@ public class StagePage extends StageBase {
     }
 
     public void drawPlayingUi(boolean init) {
-        if (init && characterMenuSelectFlag < 5) {
+        if (init && characterMenuSelectFlag < 4) {
             TouchManager.clearTouchMap();
             TouchManager.addTouchRectListData(PLAY_PAUSE, CGRect.CGRectMake(0, 437, 43, 39));
             TouchManager.addTouchRectListData(PLAY_SOFTPAUSE, CGRect.CGRectMake(0, 344, 43, 39));
             TouchManager.addTouchRectListData(PLAY_TURBO, CGRect.CGRectMake(0, 393, 43, 39));
             if (characterMenuSelectFlag == 0) {
                 TouchManager.addTouchRectListData(PLAY_HEROS, CGRect.CGRectMake(742, 12, 56, 56));
-            } else if (characterMenuSelectFlag == 3) {
-                int heroPos = HeroUnit.SPECIAL_ATTACK_ARROW_LEG_POS_Y;
+            } else if (characterMenuSelectFlag == 2) {
+                int heroPos = 586;
                 for (int i = 0; i < 3; i++)
                     if (!DataStage.heroAvail[i])
                         heroPos += 60;

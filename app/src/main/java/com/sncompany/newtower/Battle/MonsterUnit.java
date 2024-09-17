@@ -106,7 +106,7 @@ public class MonsterUnit extends EnemyUnit {
 
     @Override
     public boolean update() {
-        if (stunCount > 0)
+        if (stunCount > 0 && !dead())
             stunCount--;
         else
             unitStatusCount++;
@@ -189,6 +189,8 @@ public class MonsterUnit extends EnemyUnit {
                 GameThread.playSound(12);
                 type = -1;
                 unitHP = 0;
+                if (st.selectedTarget == this)
+                    st.selectedTarget = null;
                 ((StagePage)st.page).monsterGoalBlinkCount = 6;
                 if (st.life > 0) {
                     int i10 = st.waveManager.wavePattern;

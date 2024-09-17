@@ -191,4 +191,8 @@ public class GameThread extends Thread {
         } catch (Exception ignored) {
         }
     }
+
+    public static String getString(int id) {
+        return newTower.getString(id);
+    }
 }

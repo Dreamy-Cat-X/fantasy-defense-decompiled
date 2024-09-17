@@ -1043,56 +1043,38 @@ public class Texture2D {
         gl.glPopMatrix();
     }
 
-    public void drawLineWithImage(float f, float f2, float f3, float f4, float f5) {
-        if (this.name == -1) {
+    private static float ll = 0;
+    public void drawLineWithImage(float x, float y, float eX, float eY, float hh) {
+        if (name == -1 || (eX == 0 && eY == 0) || hh == 0)
             return;
-        }
-        if ((f3 == 0.0f && f4 == 0.0f) || f5 == 0.0f) {
-            return;
-        }
-        float[] fArr = coordinates;
-        fArr[0] = 0.0f;
-        float f6 = this._maxT;
-        fArr[1] = f6;
-        float f7 = this._maxS;
-        fArr[2] = f7;
-        fArr[3] = f6;
-        fArr[4] = 0.0f;
-        fArr[5] = 0.0f;
-        fArr[6] = f7;
-        fArr[7] = 0.0f;
-        width = this._width * f7;
-        double d = this._height * f6 * f5;
-        double sqrt = Math.sqrt((f3 * f3) + (f4 * f4));
-        Double.isNaN(d);
-        double d2 = d * sqrt;
-        double d3 = this._sizeY;
-        Double.isNaN(d3);
-        float f8 = (float) (d2 / d3);
-        height = f8;
-        pointX = 0.0f;
-        pointY = 0.0f;
-        float f9 = width;
-        float f10 = 0.0f - (f9 / 2.0f);
-        pointX = f10;
-        float f11 = f10 + DRAW_ADJUST_X_MOVE;
-        pointX = f11;
-        float f12 = DRAW_ADJUST_Y_MOVE + 0.0f;
-        pointY = f12;
-        float[] fArr2 = vertices;
-        fArr2[0] = f11 - TEXTURE_DRAW_MARGIN;
-        fArr2[1] = f12 - TEXTURE_DRAW_MARGIN;
-        fArr2[2] = 0.0f;
-        fArr2[3] = f11 + f9;
-        fArr2[4] = f12 - TEXTURE_DRAW_MARGIN;
-        fArr2[5] = 0.0f;
-        fArr2[6] = f11 - TEXTURE_DRAW_MARGIN;
-        fArr2[7] = f12 + f8;
-        fArr2[8] = 0.0f;
-        fArr2[9] = f11 + f9;
-        fArr2[10] = f12 + f8;
-        fArr2[11] = 0.0f;
-        mVertexBuffer.put(fArr2);
+
+        coordinates[0] = 0;
+        coordinates[1] = _maxT;
+        coordinates[2] = _maxS;
+        coordinates[3] = _maxT;
+        coordinates[4] = 0;
+        coordinates[5] = 0;
+        coordinates[6] = _maxS;
+        coordinates[7] = 0;
+
+        width = _width * _maxS;
+        height = (float)((_height * _maxT * hh * Math.sqrt((eX * eX) + (eY * eY))) / _sizeY);
+        pointX = -(width / 2f);
+        pointY = 0;
+
+        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[2] = 0;
+        vertices[3] = pointX + width;
+        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[5] = 0;
+        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[7] = pointY + height;
+        vertices[8] = 0;
+        vertices[9] = pointX + width;
+        vertices[10] = pointY + height;
+        vertices[11] = 0;
+        mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
         coordinatesBuffer.put(coordinates);
         coordinatesBuffer.position(0);
@@ -1100,79 +1082,59 @@ public class Texture2D {
         gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
         gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
         gl.glPushMatrix();
-        gl.glTranslatef(f, VIEW_SCRHEIGHT - f2, 0.0f);
-        if (f3 == 0.0f) {
-            if (f4 >= 0.0f) {
-                gl.glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
-            }
-        } else if (f4 != 0.0f) {
-            float abs = Math.abs(f4) / Math.abs(f3);
-            if (f3 < 0.0f) {
-                if (f4 < 0.0f) {
-                    gl.glRotatef((float) (90.0d - Math.toDegrees(Math.atan(abs))), 0.0f, 0.0f, 1.0f);
-                } else {
-                    gl.glRotatef((float) (Math.toDegrees(Math.atan(abs)) + 90.0d), 0.0f, 0.0f, 1.0f);
-                }
-            } else if (f4 < 0.0f) {
-                gl.glRotatef((float) (Math.toDegrees(Math.atan(abs)) + 270.0d), 0.0f, 0.0f, 1.0f);
-            } else {
-                gl.glRotatef((float) (270.0d - Math.toDegrees(Math.atan(abs))), 0.0f, 0.0f, 1.0f);
-            }
-        } else if (f3 < 0.0f) {
-            gl.glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-        } else {
-            gl.glRotatef(270.0f, 0.0f, 0.0f, 1.0f);
-        }
+        gl.glTranslatef(x + DRAW_ADJUST_X_MOVE, VIEW_SCRHEIGHT - y + DRAW_ADJUST_Y_MOVE, 0);
+        if (eX == 0) {
+            if (eY >= 0)
+                gl.glRotatef(180, 0, 0, 1);
+        } else if (eY != 0) {
+            float abs = Math.abs(eY) / Math.abs(eX);
+            if (eX < 0) {
+                if (eY < 0) {
+                    gl.glRotatef((float) (90.0d - Math.toDegrees(Math.atan(abs))), 0, 0, 1);
+                } else
+                    gl.glRotatef((float) (Math.toDegrees(Math.atan(abs)) + 90.0d), 0, 0, 1);
+            } else if (eY < 0) {
+                gl.glRotatef((float) (Math.toDegrees(Math.atan(abs)) + 270.0d), 0, 0, 1);
+            } else
+                gl.glRotatef((float) (270.0d - Math.toDegrees(Math.atan(abs))), 0, 0, 1);
+        } else if (eX < 0) {
+            gl.glRotatef(90, 0, 0, 1);
+        } else
+            gl.glRotatef(270, 0, 0, 1);
         gl.glDrawArrays(5, 0, 4);
         gl.glPopMatrix();
     }
 
-    public void drawArrowWithImage(float f, float f2, float f3, float f4, float f5) {
-        if (this.name == -1) {
+    public void drawArrowWithImage(float x, float y, float eX, float eY, float hh) {
+        if (this.name == -1 || (eX == 0 && eY == 0) || hh == 0)
             return;
-        }
-        if ((f3 == 0.0f && f4 == 0.0f) || f5 == 0.0f) {
-            return;
-        }
-        float[] fArr = coordinates;
-        fArr[0] = 0.0f;
-        float f6 = this._maxT;
-        fArr[1] = f6;
-        float f7 = this._maxS;
-        fArr[2] = f7;
-        fArr[3] = f6;
-        fArr[4] = 0.0f;
-        fArr[5] = 0.0f;
-        fArr[6] = f7;
-        fArr[7] = 0.0f;
-        float f8 = this._width * f7;
-        width = f8;
-        float f9 = this._height * f6;
-        height = f9;
-        pointX = 0.0f;
-        pointY = 0.0f;
-        float f10 = 0.0f - (f8 / 2.0f);
-        pointX = f10;
-        float f11 = 0.0f - f9;
-        pointY = f11;
-        float f12 = f10 + DRAW_ADJUST_X_MOVE;
-        pointX = f12;
-        float f13 = f11 + DRAW_ADJUST_Y_MOVE;
-        pointY = f13;
-        float[] fArr2 = vertices;
-        fArr2[0] = f12 - TEXTURE_DRAW_MARGIN;
-        fArr2[1] = f13 - TEXTURE_DRAW_MARGIN;
-        fArr2[2] = 0.0f;
-        fArr2[3] = f12 + f8;
-        fArr2[4] = f13 - TEXTURE_DRAW_MARGIN;
-        fArr2[5] = 0.0f;
-        fArr2[6] = f12 - TEXTURE_DRAW_MARGIN;
-        fArr2[7] = f13 + f9;
-        fArr2[8] = 0.0f;
-        fArr2[9] = f12 + f8;
-        fArr2[10] = f13 + f9;
-        fArr2[11] = 0.0f;
-        mVertexBuffer.put(fArr2);
+        coordinates[0] = 0;
+        coordinates[1] = _maxT;
+        coordinates[2] = _maxS;
+        coordinates[3] = _maxT;
+        coordinates[4] = 0;
+        coordinates[5] = 0;
+        coordinates[6] = _maxS;
+        coordinates[7] = 0;
+
+        width = _width * _maxS;
+        height = _height * _maxT;
+        pointX = -(width / 2f);
+        pointY = -height;
+
+        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[2] = 0;
+        vertices[3] = pointX + width;
+        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
+        vertices[5] = 0;
+        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
+        vertices[7] = pointY + _height * _maxT;
+        vertices[8] = 0;
+        vertices[9] = pointX + width;
+        vertices[10] = pointY + _height * _maxT;
+        vertices[11] = 0;
+        mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
         coordinatesBuffer.put(coordinates);
         coordinatesBuffer.position(0);
@@ -1180,29 +1142,25 @@ public class Texture2D {
         gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
         gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
         gl.glPushMatrix();
-        gl.glTranslatef(f + (f3 * f5), (VIEW_SCRHEIGHT - f2) - (f4 * f5), 0.0f);
-        if (f3 == 0.0f) {
-            if (f4 >= 0.0f) {
-                gl.glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
-            }
-        } else if (f4 != 0.0f) {
-            float abs = Math.abs(f4) / Math.abs(f3);
-            if (f3 < 0.0f) {
-                if (f4 < 0.0f) {
-                    gl.glRotatef((float) (90.0d - Math.toDegrees(Math.atan(abs))), 0.0f, 0.0f, 1.0f);
-                } else {
-                    gl.glRotatef((float) (Math.toDegrees(Math.atan(abs)) + 90.0d), 0.0f, 0.0f, 1.0f);
-                }
-            } else if (f4 < 0.0f) {
-                gl.glRotatef((float) (Math.toDegrees(Math.atan(abs)) + 270.0d), 0.0f, 0.0f, 1.0f);
-            } else {
-                gl.glRotatef((float) (270.0d - Math.toDegrees(Math.atan(abs))), 0.0f, 0.0f, 1.0f);
-            }
-        } else if (f3 < 0.0f) {
-            gl.glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-        } else {
-            gl.glRotatef(270.0f, 0.0f, 0.0f, 1.0f);
-        }
+        gl.glTranslatef(x + (eX * hh) + DRAW_ADJUST_X_MOVE, (VIEW_SCRHEIGHT - y) - (eY * hh) + DRAW_ADJUST_Y_MOVE, 0);
+        if (eX == 0) {
+            if (eY >= 0)
+                gl.glRotatef(180, 0, 0, 1);
+        } else if (eY != 0) {
+            float abs = Math.abs(eY) / Math.abs(eX);
+            if (eX < 0) {
+                if (eY < 0) {
+                    gl.glRotatef((float) (90.0d - Math.toDegrees(Math.atan(abs))), 0, 0, 1);
+                } else
+                    gl.glRotatef((float) (Math.toDegrees(Math.atan(abs)) + 90.0d), 0, 0, 1);
+            } else if (eY < 0) {
+                gl.glRotatef((float) (Math.toDegrees(Math.atan(abs)) + 270.0d), 0, 0, 1);
+            } else
+                gl.glRotatef((float) (270.0d - Math.toDegrees(Math.atan(abs))), 0, 0, 1);
+        } else if (eX < 0) {
+            gl.glRotatef(90, 0, 0, 1);
+        } else
+            gl.glRotatef(270, 0, 0, 1);
         gl.glDrawArrays(5, 0, 4);
         gl.glPopMatrix();
     }
@@ -1230,16 +1188,16 @@ public class Texture2D {
         pointY += DRAW_ADJUST_Y_MOVE;
         vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
         vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0.0f;
+        vertices[2] = 0;
         vertices[3] = pointX + w;
         vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[5] = 0.0f;
+        vertices[5] = 0;
         vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
         vertices[7] = pointY + h;
-        vertices[8] = 0.0f;
+        vertices[8] = 0;
         vertices[9] = pointX + w;
         vertices[10] = pointY + h;
-        vertices[11] = 0.0f;
+        vertices[11] = 0;
         mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
         coordinatesBuffer.put(coordinates);
@@ -1258,19 +1216,19 @@ public class Texture2D {
         guideStartY = rect.originY;
         guideEndX = rect.originX + rect.sizeWidth;
         guideEndY = rect.originY + rect.sizeHeight;
-        coordinates[0] = 0.0f;
+        coordinates[0] = 0;
         coordinates[1] = _maxT;
         coordinates[2] = _maxS;
         coordinates[3] = _maxT;
-        coordinates[4] = 0.0f;
-        coordinates[5] = 0.0f;
+        coordinates[4] = 0;
+        coordinates[5] = 0;
         coordinates[6] = _maxS;
-        coordinates[7] = 0.0f;
+        coordinates[7] = 0;
         width = wdt;
         height = hgt;
         pointX = dX;
         pointY = (VIEW_SCRHEIGHT - dY) - hgt;
-        if (wdt <= 0.0f || hgt <= 0.0f || wdt + dX <= 0.0f || dX >= VIEW_SCRWIDTH || hgt + pointY <= 0.0f || pointY >= VIEW_SCRHEIGHT)
+        if (wdt <= 0 || hgt <= 0 || wdt + dX <= 0 || dX >= VIEW_SCRWIDTH || hgt + pointY <= 0 || pointY >= VIEW_SCRHEIGHT)
             return;
 
         if (dX < guideStartX) {
@@ -1290,16 +1248,16 @@ public class Texture2D {
         pointY += DRAW_ADJUST_Y_MOVE;
         vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
         vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0.0f;
+        vertices[2] = 0;
         vertices[3] = pointX + width;
         vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[5] = 0.0f;
+        vertices[5] = 0;
         vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
         vertices[7] = pointY + height;
-        vertices[8] = 0.0f;
+        vertices[8] = 0;
         vertices[9] = pointX + width;
         vertices[10] = pointY + height;
-        vertices[11] = 0.0f;
+        vertices[11] = 0;
         mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
         coordinatesBuffer.put(coordinates);

@@ -113,7 +113,7 @@ public class ArrowUnit extends StageEntity {
         startX = shtr.posX;
         startY = shtr.posY;
 
-        if (shtr.type == 0) {
+        if (type == 0) {
             moveSpeed = 750;
             for (int h = 0; h < 5; h++) {
                 moveHistory[h][0] = startX;
@@ -148,10 +148,10 @@ public class ArrowUnit extends StageEntity {
             return;
 
         if (type == 0) {
-            for (int i5 = 4; i5 > 0; i5--) {
-                int i6 = i5 - 1;
-                moveHistory[i5][0] = moveHistory[i6][0];
-                moveHistory[i5][1] = moveHistory[i6][1];
+            for (int i = 4; i > 0; i--) {
+                int o = i - 1;
+                moveHistory[i][0] = moveHistory[o][0];
+                moveHistory[i][1] = moveHistory[o][1];
             }
             moveHistory[0][0] = startX;
             moveHistory[0][1] = startY;
@@ -259,11 +259,12 @@ public class ArrowUnit extends StageEntity {
                 case 5:
                     drawTexture[0].drawLineWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
                     drawTexture[1].drawArrowWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
+                    break;
                 case 2: case 3: case 12:
-                    drawTexture[3].drawAtPointOption((startX / 50) + 62, (float) (((startY / 50) + 30) - 15), 9);
+                    drawTexture[3].drawAtPointOption((startX / 50) + 62, (float)(((startY / 50) + 30) - 15), 9);
                     break;
                 default:
-                    drawTexture[0].drawLineWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
+                    drawTexture[0].drawLineWithImage((shooter.posX / 50f) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
                     break;
             }
         } else if (type <= 18) {
