@@ -127,7 +127,6 @@ public class NewTower extends Activity {
     @Override
     public void onPause() {
         Log.d("PAUSE", "NEWTOWER PAUSE");
-        GameRenderer.loadViewFlag = false;
         super.onPause();
         glGameSurfaceView.onPause();
     }

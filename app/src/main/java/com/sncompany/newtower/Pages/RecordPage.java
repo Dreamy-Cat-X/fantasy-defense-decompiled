@@ -11,7 +11,6 @@ import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.MyScrollbar;
-import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -46,8 +45,8 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
 
         for (int i = 0; i < rankListDraw.totalHalfBlockSize; i++) {
             rankListDraw.blockLengthArray[i] = i * 270;
-            rankListDraw.blockSizeArray[i] = 1.0f;
-            rankListDraw.blockAlphaArray[i] = 1.0f;
+            rankListDraw.blockSizeArray[i] = 1;
+            rankListDraw.blockAlphaArray[i] = 1;
         }
         rankListDraw.blockLengthArray[0] = 0;
         rankListDraw.FIRST_BLOCK_SIZE = 270;
@@ -56,8 +55,8 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
         rankListDraw.moveCloseFlag = true;
         for (int i2 = 0; i2 < awardListDraw.totalHalfBlockSize; i2++) {
             awardListDraw.blockLengthArray[i2] = i2 * 60;
-            awardListDraw.blockSizeArray[i2] = 1.0f;
-            awardListDraw.blockAlphaArray[i2] = 1.0f;
+            awardListDraw.blockSizeArray[i2] = 1;
+            awardListDraw.blockAlphaArray[i2] = 1;
         }
         awardListDraw.blockLengthArray[0] = 0;
         awardListDraw.FIRST_BLOCK_SIZE = 60;
@@ -92,18 +91,18 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
         int TLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
-            TouchManager.addTouchRectListData(SCORE, CGRect.CGRectMake(30.0f, 90.0f, 40.0f, 155.0f));
-            TouchManager.addTouchRectListData(AWARD, CGRect.CGRectMake(30.0f, 245.0f, 40.0f, 155.0f));
-            TouchManager.addTouchRectListData(BODY, CGRect.CGRectMake(70.0f, 100.0f, 660.0f, 290.0f));
-            TouchManager.addTouchRectListData(SIDEBAR, CGRect.CGRectMake(730.0f, 90.0f, 40.0f, 310.0f));
+            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11, 412, 68, 58));
+            TouchManager.addTouchRectListData(SCORE, CGRect.CGRectMake(30, 90, 40, 155));
+            TouchManager.addTouchRectListData(AWARD, CGRect.CGRectMake(30, 245, 40, 155));
+            TouchManager.addTouchRectListData(BODY, CGRect.CGRectMake(70, 100, 660, 290));
+            TouchManager.addTouchRectListData(SIDEBAR, CGRect.CGRectMake(730, 90, 40, 310));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;
             TLS = TouchManager.checkTouchListStatus();
         }
-        uiRecordImage[rec_title].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
-        uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
+        uiRecordImage[rec_title].drawAtPointOption(GameRenderer.CX, 6, 17);
+        uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77, 17);
         if (Dscore) {
-            uiRecordImage[rec_scorebase].drawAtPointOption(30.0f, 90.0f, 18);
+            uiRecordImage[rec_scorebase].drawAtPointOption(30, 90, 18);
             int px = 0;
             for (int i = rankListDraw.totalHalfBlockSize - 1; i <= rankListDraw.totalHalfBlockSize + 1; i++)
                 if (rankListDraw.blockCurrentArray[i] != -1) {
@@ -112,24 +111,24 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     int BLA = i < rankListDraw.totalHalfBlockSize ? -rankListDraw.blockLengthArray[abs] : rankListDraw.blockLengthArray[abs];
                     int CorrectedBLA = BLA + rankListDraw.blockCorrectionPixel;
 
-                    CGRect rect = CGRect.CGRectMake(70f, 100.0f, 660.0f, 290.0f);
+                    CGRect rect = CGRect.CGRectMake(70f, 100, 660, 290);
                     uiRecordImage[rec_scoreback].drawAtPointOptionGuide(70f, CorrectedBLA + 100, 18, rect);
                     GameRenderer.setFontDoubleColor(-1, -16107151);
                     GameRenderer.setFontSize(27);
-                    GameRenderer.drawStringDoubleGuideM(String.format("Theme %d. %s", bit + 1, GameThread.chapterName[bit]), 79.0f, CorrectedBLA + 108, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(String.format("Theme %d. %s", bit + 1, GameThread.chapterName[bit]), 79, CorrectedBLA + 108, 18, rect);
                     GameRenderer.setFontSize(16);
                     GameRenderer.setFontDoubleColor(-84043, -8835532);
                     float y = CorrectedBLA + 142;
-                    GameRenderer.drawStringDoubleGuideM("Normal", 245.0f, y, 17, rect);
+                    GameRenderer.drawStringDoubleGuideM("Normal", 245, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-3223, -10065378);
-                    GameRenderer.drawStringDoubleGuideM("Infinite", 435.0f, y, 17, rect);
+                    GameRenderer.drawStringDoubleGuideM("Infinite", 435, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-10030377, -16031651);
-                    GameRenderer.drawStringDoubleGuideM("Destroy the Moon", 625.0f, y, 17, rect);
+                    GameRenderer.drawStringDoubleGuideM("Destroy the Moon", 625, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-1, -11106408);
                     for (int j = 0; j < 10; j++) {
                         int stInd = (bit * 10) + j;
                         float f5 = CorrectedBLA + 162 + (j * 20);
-                        GameRenderer.drawStringDoubleGuideM(String.format("Stage %d", stInd + 1), 80.0f, f5, 18, rect);
+                        GameRenderer.drawStringDoubleGuideM(String.format("Stage %d", stInd + 1), 80, f5, 18, rect);
                         for (int k = 0; k < 3; k++)
                             GameRenderer.drawStringDoubleGuideM(String.valueOf(Math.max(0, Config.highScores[stInd][k])), (k * 190) + 245, f5, 17, rect);
                     }
@@ -164,17 +163,17 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     else
                         uiRecordImage[rec_cup].drawAtPointOptionGuide(672, y + 15, 18, rect);
                 }
-            uiEtcImage[etc_scrollbutton].drawAtPointOption(731.0f, (((awardListDraw.blockCurrentArray[awardListDraw.totalHalfBlockSize] * 250) / 58f) + 120) - (((awardListDraw.blockCorrectionPixel * 250) / 58f) / 250f), 10);
+            uiEtcImage[etc_scrollbutton].drawAtPointOption(731, (((awardListDraw.blockCurrentArray[awardListDraw.totalHalfBlockSize] * 250) / 58f) + 120) - (((awardListDraw.blockCorrectionPixel * 250) / 58f) / 250f), 10);
             GameRenderer.setFontColor(-16777216);
             GameRenderer.setFontSize(20);
-            GameRenderer.drawStringM(String.format("%02d%%", (Config.getAwardCount() * 100) / 62), 320.0f, 366.0f, 20);
+            GameRenderer.drawStringM(String.format("%02d%%", (Config.getAwardCount() * 100) / 62), 320, 366, 20);
             GameRenderer.setFontSize(13);
-            GameRenderer.drawStringM(String.format("(%02d/%02d)", Config.getAwardCount(), 62), 323.0f, 368.0f, 18);
+            GameRenderer.drawStringM(String.format("(%02d/%02d)", Config.getAwardCount(), 62), 323, 368, 18);
             GameRenderer.setFontSize(20);
-            GameRenderer.drawStringM(String.format("%d", Config.getAwardScore()), 610.0f, 365.0f, 18);
+            GameRenderer.drawStringM(String.format("%d", Config.getAwardScore()), 610, 365, 18);
         }
 
-        uiEtcImage[TLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
+        uiEtcImage[TLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11, 412, 18);
         if (init)
             TouchManager.swapTouchMap();
     }

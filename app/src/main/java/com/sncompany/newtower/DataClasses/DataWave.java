@@ -158,8 +158,8 @@ public class DataWave {
             if (!st.monsterUnit.isEmpty())
                 return 0;
 
-            for (int i2 = 0; i2 < waveMonsterType.length; i2++)
-                if (waveMonsterRemainCount[i2] > 0)
+            for (int i = 0; i < waveMonsterType.length; i++)
+                if (waveMonsterRemainCount[i] > 0)
                     return 0;
             if (perfectWave)
                 st.bScore += ((current * 0.1f) + 1) * 600;
@@ -182,17 +182,17 @@ public class DataWave {
         }
         if (!z) {
             if (perfectWave)
-                st.bScore += ((current * 0.1f) + 1.0f) * 600.0f;
+                st.bScore += ((current * 0.1f) + 1) * 600;
             return 1;
         }
         if (!st.monsterUnit.isEmpty())
             return 0;
-        for (int i6 = 0; i6 < 2; i6++)
-            if (waveMonsterRemainCount[i6] > 0)
+        for (int i = 0; i < 2; i++)
+            if (waveMonsterRemainCount[i] > 0)
                 return 0;
 
         if (perfectWave)
-            st.bScore += ((current * 0.1f) + 1.0f) * 600.0f;
+            st.bScore += ((current * 0.1f) + 1) * 600;
         current++;
         waveStartT = 60;
         perfectWave = true;

@@ -47,92 +47,83 @@ public class TouchManager {
     public static int touchCheckSlot;
     public static int touchSettingSlot;
     public static final int[][] touchDirection = {new int[]{0, -1}, new int[]{-1, 0}, new int[]{0, 1}, new int[]{1, 0}};
-    public static float scaleX = 1.0f;
-    public static float scaleY = 1.0f;
+    public static float scaleX = 1;
+    public static float scaleY = 1;
     public static int[] touchInputStatus = new int[2];
     public static CGPoint[] touchStartPosition = new CGPoint[2];
-    public static CGPoint[][] touchMovedPosition = (CGPoint[][]) Array.newInstance((Class<?>) CGPoint.class, 2, 30);
+    public static CGPoint[][] touchMovedPosition = (CGPoint[][]) Array.newInstance(CGPoint.class, 2, 30);
     public static CGPoint[] touchEndPosition = new CGPoint[2];
     public static int[] touchTapStartCount = new int[2];
-    public static int[][] touchTapMovedCount = (int[][]) Array.newInstance((Class<?>) int.class, 2, 30);
+    public static int[][] touchTapMovedCount = (int[][]) Array.newInstance(int.class, 2, 30);
     public static int[] touchTapEndCount = new int[2];
     public static int[] touchMovedUsedCount = new int[2];
     public static int[] touchListCheckCount = new int[2];
-    public static CGRect[][] touchListCheckData = (CGRect[][]) Array.newInstance((Class<?>) CGRect.class, 2, 100);
-    public static CGRect[][] touchYesnookCheckData = (CGRect[][]) Array.newInstance((Class<?>) CGRect.class, 2, 8);
+    public static CGRect[][] touchListCheckData = (CGRect[][]) Array.newInstance(CGRect.class, 2, 100);
     public static boolean[] lastActionSlot = new boolean[2];
     public static CGPoint[] lastInputedArray = new CGPoint[2];
     public static int[] lastInputedTapCount = new int[2];
     public static float[] touchDistanceCheck = new float[2];
 
     float fabsf(float f) {
-        return f < 0.0f ? -f : f;
+        return f < 0 ? -f : f;
     }
 
     public TouchManager(boolean z) {
         curruptFlag = false;
         multiTouchFlag = z;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++)
             touchStartPosition[i] = new CGPoint();
-        }
-        for (int i2 = 0; i2 < 2; i2++) {
-            for (int i3 = 0; i3 < 30; i3++) {
-                touchMovedPosition[i2][i3] = new CGPoint();
-            }
-        }
-        for (int i4 = 0; i4 < 2; i4++) {
-            touchEndPosition[i4] = new CGPoint();
-        }
+        for (int i = 0; i < 2; i++)
+            for (int j = 0; j < 30; j++)
+                touchMovedPosition[i][j] = new CGPoint();
+        for (int i = 0; i < 2; i++)
+            touchEndPosition[i] = new CGPoint();
+
         touchCheckSlot = 0;
         touchSettingSlot = 1;
-        for (int i5 = 0; i5 < 2; i5++) {
-            for (int i6 = 0; i6 < 100; i6++) {
-                touchListCheckData[i5][i6] = new CGRect();
-            }
-            for (int i7 = 0; i7 < 8; i7++) {
-                touchYesnookCheckData[i5][i7] = new CGRect();
-            }
-        }
-        for (int i8 = 0; i8 < 2; i8++) {
-            lastInputedArray[i8] = new CGPoint();
-        }
+        for (int i = 0; i < 2; i++)
+            for (int j = 0; j < 100; j++)
+                touchListCheckData[i][j] = new CGRect();
+        for (int i = 0; i < 2; i++)
+            lastInputedArray[i] = new CGPoint();
+
         lastMoveCheckDistance = new CGPoint();
         lastSwipeCheckDistance = new CGPoint();
-        emptyPosition = new CGPoint(0.0f, 0.0f);
+        emptyPosition = new CGPoint(0, 0);
     }
 
-    public void addLastInputPoint(int i, int i2, CGPoint cGPoint, int i3) {
+    public void addLastInputPoint(int i, int p, CGPoint cGPoint, int t) {
         lastInputedCount = i;
-        lastInputedArray[i2].x = cGPoint.x * scaleX;
-        lastInputedArray[i2].y = cGPoint.y * scaleY;
-        lastInputedTapCount[i2] = i3;
+        lastInputedArray[p].x = cGPoint.x * scaleX;
+        lastInputedArray[p].y = cGPoint.y * scaleY;
+        lastInputedTapCount[p] = t;
     }
 
     /**
      * Processes when the touchscreen is touched
-     * @param i
+     * @param act Touch type
      */
-    public void processTouchEvent(int i) {
+    public void processTouchEvent(int act) {
         int i2;
         float f;
         float f2;
         float f3;
         float f4;
-        for (int i3 = 0; i3 < 2; i3++) {
+        for (int i3 = 0; i3 < 2; i3++)
             lastActionSlot[i3] = false;
-        }
-        if (i == 0) {
+
+        if (act == 0) {
             if (multiTouchFlag) {
-                for (int i4 = 0; i4 < lastInputedCount; i4++) {
+                for (int i = 0; i < lastInputedCount; i++) {
                     int i5 = 0;
                     while (true) {
                         if (i5 < 2) {
                             int[] iArr = touchInputStatus;
                             if (iArr[i5] == 0) {
                                 iArr[i5] = 1;
-                                touchStartPosition[i5].x = lastInputedArray[i4].x;
-                                touchStartPosition[i5].y = lastInputedArray[i4].y;
-                                touchTapStartCount[i5] = lastInputedTapCount[i4];
+                                touchStartPosition[i5].x = lastInputedArray[i].x;
+                                touchStartPosition[i5].y = lastInputedArray[i].y;
+                                touchTapStartCount[i5] = lastInputedTapCount[i];
                                 touchMovedUsedCount[i5] = 0;
                                 lastActionSlot[i5] = true;
                                 break;
@@ -150,7 +141,7 @@ public class TouchManager {
                 lastActionSlot[0] = true;
             }
             lastActionStatus = TOUCH_STATUS_NO_INPUT;
-        } else if (i == 1) {
+        } else if (act == 1) {
             if (multiTouchFlag) {
                 int firstValidTouch = getFirstValidTouch();
                 if (firstValidTouch == -1) {
@@ -245,7 +236,7 @@ public class TouchManager {
                 lastActionSlot[0] = true;
             }
             lastActionStatus = TOUCH_STATUS_START_INPUTED;
-        } else if (i == 2) {
+        } else if (act == 2) {
             if (multiTouchFlag) {
                 for (int i18 = 0; i18 < lastInputedCount; i18++) {
                     for (int i19 = 0; i19 < 2; i19++) {
@@ -323,29 +314,16 @@ public class TouchManager {
 
     public static void clearTouchMap() {
         for (int i = 0; i < 100; i++) {
-            touchListCheckData[touchSettingSlot][i].originX = 0.0f;
-            touchListCheckData[touchSettingSlot][i].originY = 0.0f;
-            touchListCheckData[touchSettingSlot][i].sizeWidth = 0.0f;
-            touchListCheckData[touchSettingSlot][i].sizeHeight = 0.0f;
+            touchListCheckData[touchSettingSlot][i].originX = 0;
+            touchListCheckData[touchSettingSlot][i].originY = 0;
+            touchListCheckData[touchSettingSlot][i].sizeWidth = 0;
+            touchListCheckData[touchSettingSlot][i].sizeHeight = 0;
         }
         touchListCheckCount[touchSettingSlot] = 0;
-        for (int i2 = 0; i2 < 8; i2++) {
-            touchYesnookCheckData[touchSettingSlot][i2].originX = 0.0f;
-            touchYesnookCheckData[touchSettingSlot][i2].originY = 0.0f;
-            touchYesnookCheckData[touchSettingSlot][i2].sizeWidth = 0.0f;
-            touchYesnookCheckData[touchSettingSlot][i2].sizeHeight = 0.0f;
-        }
     }
 
     public static boolean InRect(CGPoint cGPoint, CGRect cGRect) {
         return cGPoint.x >= cGRect.originX && cGPoint.x < cGRect.originX + cGRect.sizeWidth && cGPoint.y >= cGRect.originY && cGPoint.y < cGRect.originY + cGRect.sizeHeight;
-    }
-
-    public static void addTouchRectYesnoData(int i, CGRect cGRect) {
-        touchYesnookCheckData[touchSettingSlot][i].originX = cGRect.originX;
-        touchYesnookCheckData[touchSettingSlot][i].originY = cGRect.originY;
-        touchYesnookCheckData[touchSettingSlot][i].sizeWidth = cGRect.sizeWidth;
-        touchYesnookCheckData[touchSettingSlot][i].sizeHeight = cGRect.sizeHeight;
     }
 
     public static void addTouchRectListData(int i, CGRect cGRect) {
@@ -353,13 +331,6 @@ public class TouchManager {
         touchListCheckData[touchSettingSlot][i].originY = cGRect.originY;
         touchListCheckData[touchSettingSlot][i].sizeWidth = cGRect.sizeWidth;
         touchListCheckData[touchSettingSlot][i].sizeHeight = cGRect.sizeHeight;
-    }
-
-    public static int checkTouchYesnoPressed(CGPoint cGPoint) {
-        for (int i = 0; i < 8; i++)
-            if (InRect(cGPoint, touchYesnookCheckData[touchCheckSlot][i]))
-                return i;
-        return -1;
     }
 
     public static int checkTouchListPressed(CGPoint cGPoint) {
@@ -405,49 +376,12 @@ public class TouchManager {
         return emptyPosition;
     }
 
-    public int getFirstLastTapTouch() {
-        for (int i = 0; i < 2; i++) {
-            if (lastActionSlot[i]) {
-                int i2 = lastActionStatus;
-                if (i2 == 0)
-                    return touchTapStartCount[i];
-                if (i2 == 1)
-                    return touchTapMovedCount[i][touchMovedUsedCount[i] - 1];
-                if (i2 == 2)
-                    return touchTapEndCount[i];
-            }
-        }
-        return 1;
-    }
-
     public static int getPressedCount() {
         int i = 0;
         for (int j = 0; j < touchInputStatus.length; j++)
             if (touchInputStatus[j] >= 1 && touchInputStatus[j] <= 3)
                 i++;
         return i;
-    }
-
-    public boolean checkTouchStartEndEqual() {
-        int firstValidTouch = getFirstValidTouch();
-        if (firstValidTouch == -1) {
-            return false;
-        }
-        int i = touchInputStatus[firstValidTouch];
-        if (i != 1 && i != 3) {
-            return false;
-        }
-        if (touchMovedUsedCount[firstValidTouch] == 0) {
-            return true;
-        }
-        if (touchInputStatus[firstValidTouch] == 1) {
-            if (fabsf(touchStartPosition[firstValidTouch].x - touchMovedPosition[firstValidTouch][touchMovedUsedCount[firstValidTouch] - 1].x) < 40.0f && fabsf(touchStartPosition[firstValidTouch].y - touchMovedPosition[firstValidTouch][touchMovedUsedCount[firstValidTouch] - 1].y) < 40.0f) {
-                return true;
-            }
-        } else if (fabsf(touchStartPosition[firstValidTouch].x - touchEndPosition[firstValidTouch].x) < 40.0f && fabsf(touchStartPosition[firstValidTouch].y - touchEndPosition[firstValidTouch].y) < 40.0f) {
-            return true;
-        }
-        return false;
     }
 
     public static int checkTouchListStatus() {
@@ -466,39 +400,6 @@ public class TouchManager {
         return -1;
     }
 
-    public static int checkTouchYesnoStatus() {
-        int checkTouchYesnoPressed;
-        int firstValidTouch = getFirstValidTouch();
-        if (firstValidTouch == -1) {
-            return -1;
-        }
-        int i = touchInputStatus[firstValidTouch];
-        if ((i != 1 && i != 3) || (checkTouchYesnoPressed = checkTouchYesnoPressed(touchStartPosition[firstValidTouch])) == -1) {
-            return -1;
-        }
-        for (int i2 = 0; i2 < touchMovedUsedCount[firstValidTouch]; i2++) {
-            if (checkTouchYesnoPressed != checkTouchYesnoPressed(touchMovedPosition[firstValidTouch][i2])) {
-                return -1;
-            }
-        }
-        if (touchInputStatus[firstValidTouch] != 3 || checkTouchYesnoPressed == checkTouchYesnoPressed(touchEndPosition[firstValidTouch])) {
-            return checkTouchYesnoPressed;
-        }
-        return -1;
-    }
-
-    public int checkTouchYesnoStatusFirstPressed() {
-        int firstValidTouch = getFirstValidTouch();
-        if (firstValidTouch == -1) {
-            return -1;
-        }
-        int i = touchInputStatus[firstValidTouch];
-        if (i == 1 || i == 3) {
-            return checkTouchYesnoPressed(touchStartPosition[firstValidTouch]);
-        }
-        return -1;
-    }
-
     public static boolean checkTouchMoveDegree(boolean z) {
         int i;
         int firstValidTouch = getFirstValidTouch();
@@ -510,93 +411,20 @@ public class TouchManager {
         }
         int[] iArr = touchMovedUsedCount;
         if (iArr[firstValidTouch] == 0) {
-            lastMoveCheckDistance.x = 0.0f;
-            lastMoveCheckDistance.y = 0.0f;
+            lastMoveCheckDistance.x = 0;
+            lastMoveCheckDistance.y = 0;
             return false;
         }
         lastMoveCheckDistance.x = touchMovedPosition[firstValidTouch][iArr[firstValidTouch] - 1].x - touchStartPosition[firstValidTouch].x;
         lastMoveCheckDistance.y = touchMovedPosition[firstValidTouch][touchMovedUsedCount[firstValidTouch] - 1].y - touchStartPosition[firstValidTouch].y;
         float f = lastMoveCheckDistance.x;
         float f2 = lastMoveCheckDistance.y;
-        if (f < 0.0f) {
+        if (f < 0) {
             f = -f;
         }
-        if (f2 < 0.0f) {
+        if (f2 < 0) {
             f2 = -f2;
         }
-        return f >= 10.0f || f2 >= 10.0f;
-    }
-
-    public CGPoint getSwipeDistance() {
-        CGPoint[][] cGPointArr = (CGPoint[][]) Array.newInstance((Class<?>) CGPoint.class, 2, 2);
-        for (int i = 0; i < 2; i++) {
-            for (int i2 = 0; i2 < 2; i2++) {
-                cGPointArr[i][i2] = new CGPoint();
-            }
-        }
-        lastSwipeCheckDistance.x = 0.0f;
-        lastSwipeCheckDistance.y = 0.0f;
-        if (getPressedCount() < 2) {
-            return lastSwipeCheckDistance;
-        }
-        int i3 = 0;
-        for (int i4 = 0; i4 < 2 && i3 < 2; i4++) {
-            int i5 = touchInputStatus[i4];
-            if (i5 == 1 || i5 == 2) {
-                int[] iArr = touchMovedUsedCount;
-                if (iArr[i4] == 0) {
-                    cGPointArr[i3][1].x = touchStartPosition[i4].x;
-                    cGPointArr[i3][1].y = touchStartPosition[i4].y;
-                } else {
-                    cGPointArr[i3][1].x = touchMovedPosition[i4][iArr[i4] - 1].x;
-                    cGPointArr[i3][1].y = touchMovedPosition[i4][touchMovedUsedCount[i4] - 1].y;
-                }
-                cGPointArr[i3][0].x = touchStartPosition[i4].x;
-                cGPointArr[i3][0].y = touchStartPosition[i4].y;
-            } else if (i5 == 3) {
-                cGPointArr[i3][1].x = touchEndPosition[i4].x;
-                cGPointArr[i3][1].y = touchEndPosition[i4].y;
-                cGPointArr[i3][0].x = touchStartPosition[i4].x;
-                cGPointArr[i3][0].y = touchStartPosition[i4].y;
-            }
-            i3++;
-        }
-        lastSwipeCheckDistance.x = fabsf(cGPointArr[0][1].x - cGPointArr[1][1].x) - fabsf(cGPointArr[0][0].x - cGPointArr[1][0].x);
-        lastSwipeCheckDistance.y = fabsf(cGPointArr[0][1].y - cGPointArr[1][1].y) - fabsf(cGPointArr[0][0].y - cGPointArr[1][0].y);
-        return lastSwipeCheckDistance;
-    }
-
-    public CGPoint getSwipeMoveDistance() {
-        CGPoint[][] cGPointArr = (CGPoint[][]) Array.newInstance((Class<?>) CGPoint.class, 2, 2);
-        lastSwipeCheckDistance.x = 0.0f;
-        lastSwipeCheckDistance.y = 0.0f;
-        if (getPressedCount() < 2)
-            return lastSwipeCheckDistance;
-
-        int i = 0;
-        for (int i2 = 0; i2 < 2 && i < 2; i2++) {
-            int i3 = touchInputStatus[i2];
-            if (i3 == 1 || i3 == 2) {
-                int[] iArr = touchMovedUsedCount;
-                if (iArr[i2] == 0) {
-                    cGPointArr[i][1].x = touchStartPosition[i2].x;
-                    cGPointArr[i][1].y = touchStartPosition[i2].y;
-                } else {
-                    cGPointArr[i][1].x = touchMovedPosition[i2][iArr[i2] - 1].x;
-                    cGPointArr[i][1].y = touchMovedPosition[i2][touchMovedUsedCount[i2] - 1].y;
-                }
-                cGPointArr[i][0].x = touchStartPosition[i2].x;
-                cGPointArr[i][0].y = touchStartPosition[i2].y;
-            } else if (i3 == 3) {
-                cGPointArr[i][1].x = touchEndPosition[i2].x;
-                cGPointArr[i][1].y = touchEndPosition[i2].y;
-                cGPointArr[i][0].x = touchStartPosition[i2].x;
-                cGPointArr[i][0].y = touchStartPosition[i2].y;
-            }
-            i++;
-        }
-        lastMoveCheckDistance.x = ((cGPointArr[0][1].x + cGPointArr[1][1].x) / 2.0f) - ((cGPointArr[0][0].x + cGPointArr[1][0].x) / 2.0f);
-        lastMoveCheckDistance.y = ((cGPointArr[0][1].y + cGPointArr[1][1].y) / 2.0f) - ((cGPointArr[0][0].y + cGPointArr[1][0].y) / 2.0f);
-        return lastMoveCheckDistance;
+        return f >= 10 || f2 >= 10;
     }
 }

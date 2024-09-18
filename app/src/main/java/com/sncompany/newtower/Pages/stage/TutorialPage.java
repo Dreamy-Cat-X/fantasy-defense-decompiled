@@ -155,7 +155,7 @@ public class TutorialPage extends StageBase {
         }
         uiButtonImage[18].drawAtPointOption(770, 12, 17);
         if (characterMenuSelectFlag == 1 || characterMenuSelectFlag == 3) {
-            boolean addable = getAddSettingPosition();
+            boolean addable = enableAddSetting(true);
             drawAddGridBlock();
             drawAddRangeCircle(characterAddNumber, characterAddPosX, characterAddPosY, addable);
         }
@@ -311,7 +311,7 @@ public class TutorialPage extends StageBase {
                 if (pX == tutorialUnitPos[tp][0] && pY == tutorialUnitPos[tp][1]) {
                     characterMenuSelectFlag = 0;
                     GameThread.playSound(14);
-                    getAddSettingPosition();
+                    enableAddSetting(true);
                     if (tutorStep < 15) {
                         st.addUnit(characterAddNumber, pX, pY);
                         st.money -= TowerUnit.getBuyPrice(characterAddNumber);

@@ -88,97 +88,97 @@ public class UpgradePage extends TPage {
         int cTLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(UPGRADE, CGRect.CGRectMake(680.0f, 367.0f, 100.0f, 100.0f));
-            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
-            TouchManager.addTouchRectListData(TOGGLE_HERO, CGRect.CGRectMake(21.0f, 8.0f, 38.0f, 48.0f));
+            TouchManager.addTouchRectListData(UPGRADE, CGRect.CGRectMake(680, 367, 100, 100));
+            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11, 362, 68, 114));
+            TouchManager.addTouchRectListData(TOGGLE_HERO, CGRect.CGRectMake(21, 8, 38, 48));
             for (int i = 0; i < BACK; i++) {
                 if (hero && !DataStage.heroAvail[i / 6])
                     break;
                 int perc = i % 6, xpos = (perc % 3) * 70, ypos = perc < 3 ? 0 : 70;
-                TouchManager.addTouchRectListData(i, CGRect.CGRectMake(((i / 6) * 255) + 45 + xpos, ypos + GAME_UPGRADE_HERO_SKILL_START_Y, 60.0f, 60.0f));
+                TouchManager.addTouchRectListData(i, CGRect.CGRectMake(((i / 6) * 255) + 45 + xpos, ypos + GAME_UPGRADE_HERO_SKILL_START_Y, 60, 60));
             }
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOT;
             cTLS = TouchManager.checkTouchListStatus();
         }
 
-        shopImages[cTLS == BACK ? 2 : 1].drawAtPointOption(11.0f, 356.0f, 18);
+        shopImages[cTLS == BACK ? 2 : 1].drawAtPointOption(11, 356, 18);
         uiUpgradeImage[hero ? cTLS == TOGGLE_HERO ? upgrade_tabuniton : upgrade_tabunitoff :
-                cTLS == TOGGLE_HERO ? upgrade_tabheroon : upgrade_tabherooff].drawAtPointOption(21.0f, 8.0f, 18);
-        uiUpgradeImage[hero ? upgrade_titlehero : upgrade_titleunit].drawAtPointOption(66.0f, 5.0f, 18);
-        uiUpgradeImage[hero ? upgrade_basehero : upgrade_baseunit].drawAtPointOption(20.0f, 60.0f, 18);
+                cTLS == TOGGLE_HERO ? upgrade_tabheroon : upgrade_tabherooff].drawAtPointOption(21, 8, 18);
+        uiUpgradeImage[hero ? upgrade_titlehero : upgrade_titleunit].drawAtPointOption(66, 5, 18);
+        uiUpgradeImage[hero ? upgrade_basehero : upgrade_baseunit].drawAtPointOption(20, 60, 18);
 
         byte[][] sUpgrades = hero ? Config.heroUpgrades : Config.unitUpgrades;
         for (int I = 0; I < 3; I++)
             if (!hero || DataStage.heroAvail[I]) {
                 for (int j = 0; j < 6; j++) {
                     float tx = (I * 255f) + 45 + ((j % 3) * 70);
-                    float ty = (j < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y + 43.0f;
+                    float ty = (j < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y + 43;
                     if (sUpgrades[I][j] == getUpgradeMax()) { //DataUpgradeUnit.upgradeUnitData[k][3] = 10 in every single instance. Least useless variable
-                        uiUpgradeImage[upgrade_max].drawAtPointOption(tx + 30.0f, ty, 17);
+                        uiUpgradeImage[upgrade_max].drawAtPointOption(tx + 30, ty, 17);
                     } else {
-                        numberUpgradeImage[10].drawAtPointOption(30.0f + tx, ty, 17);
-                        GameRenderer.drawNumberBlock(sUpgrades[I][j], numberUpgradeImage, tx + 15.0f, ty, -2, 17, 1);
-                        GameRenderer.drawNumberBlock(getUpgradeMax(), numberUpgradeImage, tx + 45.0f, ty, -2, 17, 1);
+                        numberUpgradeImage[10].drawAtPointOption(30 + tx, ty, 17);
+                        GameRenderer.drawNumberBlock(sUpgrades[I][j], numberUpgradeImage, tx + 15, ty, -2, 17, 1);
+                        GameRenderer.drawNumberBlock(getUpgradeMax(), numberUpgradeImage, tx + 45, ty, -2, 17, 1);
                     }
                 }
             } else {
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                 Texture2D.setColors(0.5f);
-                fillBlackImage.fillRect((I * 255) + 21, 61.0f, 248.0f, 298.0f);
+                fillBlackImage.fillRect((I * 255) + 21, 61, 248, 298);
                 Texture2D.setColors(1);
                 GameRenderer.setFontColor(-1);
-                GameRenderer.drawStringDoubleM(HeroUnit.getUnlock(I), 149.0f + (I * 255), 284.0f, 17);
+                GameRenderer.drawStringDoubleM(HeroUnit.getUnlock(I), 149 + (I * 255), 284, 17);
             }
-        uiUpgradeImage[upgrade_uprightbar].drawAtPointOption(572.0f, 8.0f, 18);
-        GameRenderer.drawNumberBlock(Config.heroPoints, numberHeroismImage, 779.0f, 24.0f, 1, 20, 1);
-        shopImages[0].drawAtPointOption(72.0f, 362.0f, 18);
-        uiUpgradeImage[cTLS == UPGRADE ? upgrade_btnupgradeon : upgrade_btnupgradeoff].drawAtPointOption(680.0f, 367.0f, 18);
+        uiUpgradeImage[upgrade_uprightbar].drawAtPointOption(572, 8, 18);
+        GameRenderer.drawNumberBlock(Config.heroPoints, numberHeroismImage, 779, 24, 1, 20, 1);
+        shopImages[0].drawAtPointOption(72, 362, 18);
+        uiUpgradeImage[cTLS == UPGRADE ? upgrade_btnupgradeon : upgrade_btnupgradeoff].drawAtPointOption(680, 367, 18);
 
-        uiUpgradeImage[upgrade_baseblack].drawAtPointOption(96.0f, 386.0f, 18);
+        uiUpgradeImage[upgrade_baseblack].drawAtPointOption(96, 386, 18);
         if (lastUpdateItemViewDelay > 0) {
             float rX = ((lastUpdateItemPos / 6) * 255) + 45 + ((lastUpdateItemPos % 3) * 70);
             float rY = (lastUpdateItemPos % 6 < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y;
             float alpha = lastUpdateItemViewDelay * 0.066f;
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
             Texture2D.setColors(alpha);
-            fillWhiteImage.fillRect(rX, rY, 60.0f, 60.0f);
+            fillWhiteImage.fillRect(rX, rY, 60, 60);
             Texture2D.setColors(1);
         }
         int sPos = upgradeUnitSelectPos % 6;
         float boxX = ((upgradeUnitSelectPos / 6) * 255) + 45 + ((sPos % 3) * 70);
         float boxY = (sPos % 6 < 3 ? 0 : 70) + GAME_UPGRADE_HERO_SKILL_START_Y;
         drawSelectRedBox(boxX, boxY);
-        drawUpgradeDescription(boxX + 30.0f, boxY, upgradeUnitSelectPos / 6, sPos);
+        drawUpgradeDescription(boxX + 30, boxY, upgradeUnitSelectPos / 6, sPos);
 
         if (hero)
-            uiUpheroImage[upgradeUnitSelectPos % 6].drawAtPointOption(97.0f, 387.0f, 18);
+            uiUpheroImage[upgradeUnitSelectPos % 6].drawAtPointOption(97, 387, 18);
         else
-            uiUpunitImage[upgradeUnitSelectPos].drawAtPointOption(97.0f, 387.0f, 18);
+            uiUpunitImage[upgradeUnitSelectPos].drawAtPointOption(97, 387, 18);
         GameRenderer.setFontSize(20);
         GameRenderer.setFontColor(-2560);
         if (hero)
-            GameRenderer.drawStringM(DataUpgradeHero.upgradeHeroName[upgradeUnitSelectPos % 6], 183.0f, 384.0f, 18);
+            GameRenderer.drawStringM(DataUpgradeHero.upgradeHeroName[upgradeUnitSelectPos % 6], 183, 384, 18);
         else
-            GameRenderer.drawStringM(DataUpgradeUnit.upgradeUnitName[upgradeUnitSelectPos], 183.0f, 384.0f, 18);
+            GameRenderer.drawStringM(DataUpgradeUnit.upgradeUnitName[upgradeUnitSelectPos], 183, 384, 18);
         GameRenderer.setFontSize(18);
         GameRenderer.setFontColor(-1);
         int lvE;
         int nexE;
 
         if (hero) {
-            GameRenderer.drawStringM(String.format(DataUpgradeHero.upgradeHeroDescription[sPos], DataUpgradeHero.upgradeHeroData[sPos][0]), 183.0f, 410.0f, 18);
+            GameRenderer.drawStringM(String.format(DataUpgradeHero.upgradeHeroDescription[sPos], DataUpgradeHero.upgradeHeroData[sPos][0]), 183, 410, 18);
             lvE = DataUpgradeHero.upgradeHeroData[sPos][0] * sUpgrades[upgradeUnitSelectPos / 6][sPos];
             nexE = lvE + DataUpgradeHero.upgradeHeroData[sPos][0];
         } else {
-            GameRenderer.drawStringM(String.format(DataUpgradeUnit.upgradeUnitDescription[sPos], DataUpgradeUnit.upgradeUnitData[sPos][0]), 183.0f, 410.0f, 18);
+            GameRenderer.drawStringM(String.format(DataUpgradeUnit.upgradeUnitDescription[sPos], DataUpgradeUnit.upgradeUnitData[sPos][0]), 183, 410, 18);
             lvE = DataUpgradeUnit.upgradeUnitData[sPos][0] * sUpgrades[upgradeUnitSelectPos / 6][sPos];
             nexE = lvE + DataUpgradeUnit.upgradeUnitData[sPos][0];
         }
         GameRenderer.setFontSize(14);
         if (sUpgrades[upgradeUnitSelectPos / 6][sPos] >= getUpgradeMax())
-            GameRenderer.drawStringM(String.format("( MAX : %d )", lvE), 183.0f, 435.0f, 18);
+            GameRenderer.drawStringM(String.format("( MAX : %d )", lvE), 183, 435, 18);
         else
-            GameRenderer.drawStringM(String.format("( %d > %d )", lvE, nexE), 183.0f, 435.0f, 18);
+            GameRenderer.drawStringM(String.format("( %d > %d )", lvE, nexE), 183, 435, 18);
         if (init)
             TouchManager.swapTouchMap();
     }
@@ -191,7 +191,7 @@ public class UpgradePage extends TPage {
     }
 
     public void drawSelectRedBox(float x, float y) {
-        uiUpgradeImage[upgrade_iconselectn].drawAtPointOption(x - 11.0f, (-11.0f) + y, 18);
+        uiUpgradeImage[upgrade_iconselectn].drawAtPointOption(x - 11, (-11) + y, 18);
         float xw = x - 2f;
         float ty = (GameThread.gameTimeCount % 109) + y - 49f;
         uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y - 2f, 64f, 2f));
@@ -220,20 +220,20 @@ public class UpgradePage extends TPage {
         GameRenderer.drawFont.getTextBounds(format2, 0, format2.length(), Texture2D.bounds_);
         int rbound = Math.max((Texture2D.bounds_.right - Texture2D.bounds_.left) + 28, bound + bound2 + 65);
         float xbound = x - (rbound / 2);
-        float ry = y - 73.0f;
+        float ry = y - 73;
         GameRenderer.drawLeftRightBox(xbound, ry, rbound); //TODO - Load TestBoxImg
         GameRenderer.setFontColor(-68096);
         GameRenderer.setFontSize(17);
-        GameRenderer.drawStringM(name, xbound + 14.0f, ry + 14.0f, 18);
+        GameRenderer.drawStringM(name, xbound + 14, ry + 14, 18);
         GameRenderer.setFontColor(-1);
         if (upgradeUnitHeroism > -1) {
             float xrbound = xbound + rbound;
-            heroismImage.drawAtPointOption((xrbound - bound2) - 40.0f, ry + 12.0f, 18);
+            heroismImage.drawAtPointOption((xrbound - bound2) - 40, ry + 12, 18);
             GameRenderer.setFontSize(12);
-            GameRenderer.drawStringM(String.format("%d", upgradeUnitHeroism), xrbound - 17.0f, ry + 18.0f, 20);
+            GameRenderer.drawStringM(String.format("%d", upgradeUnitHeroism), xrbound - 17, ry + 18, 20);
         }
         GameRenderer.setFontSize(14);
-        GameRenderer.drawStringM(String.format(desc, eff), xbound + (rbound / 2), ry + 34.0f, 17);
+        GameRenderer.drawStringM(String.format(desc, eff), xbound + (rbound / 2), ry + 34, 17);
     }
 
     public int getUpgradeCost(int i, int j) {

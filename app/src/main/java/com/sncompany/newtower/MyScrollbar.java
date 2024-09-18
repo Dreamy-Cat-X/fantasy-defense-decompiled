@@ -78,7 +78,7 @@ public class MyScrollbar {
         }
         float f2 = (float) (BarLastValue - BarStartValue) / (BarEndValue - BarStartValue);
         float val = BarStartPos + ((BarEndPos - BarStartPos) * f2);
-        if (val >= 0.0f)
+        if (val >= 0)
             val += 0.5f;
         this.BarLastPosition = (int) val;
     }

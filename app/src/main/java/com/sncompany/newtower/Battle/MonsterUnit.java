@@ -129,7 +129,7 @@ public class MonsterUnit extends EnemyUnit {
         int espd = unitSpeed;
         if (stunCount > 0)
             espd = 0;
-        else if ((slowRate > 0) && (espd = (int) ((espd * (100.0f - slowRate)) / 100.0f)) < unitMinSpeed)
+        else if ((slowRate > 0) && (espd = (int) ((espd * (100 - slowRate)) / 100)) < unitMinSpeed)
             espd = unitMinSpeed;
 
         while (espd > 0) {
@@ -242,8 +242,8 @@ public class MonsterUnit extends EnemyUnit {
             itemBuff = hero.getEquipEffect(DataUpgradeItem.EQ_MISC, 3);
             if (itemBuff > 0 && NewTower.getRandom(100) < itemBuff) {
                 slowRate += DataCharacter.charData[29][8];
-                if (slowRate > 80.0f)
-                    slowRate = 80.0f;
+                if (slowRate > 80)
+                    slowRate = 80;
             }
         } else {
             int oType = unit.oldType();
@@ -371,9 +371,9 @@ public class MonsterUnit extends EnemyUnit {
 
             int coord = (i * 5) + (sCur + 1);
             if (drawData[coord + 3] != 1000)
-                a = (a * drawData[coord + 3]) / 1000.0f;
-            if (a != 1.0f) {
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                a = (a * drawData[coord + 3]) / 1000;
+            if (a != 1) {
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                 Texture2D.setColors(a);
             }
             if (drawData[coord + 4] == 0) {
@@ -386,11 +386,11 @@ public class MonsterUnit extends EnemyUnit {
             else
                 drawTexture[drawData[coord]].drawAtPointOptionFlipSize((drawData[coord + 1] * size) + x, (drawData[coord+2] * size) + y + 10f, 18, size);
 
-            if (a != 1.0f)
+            if (a != 1)
                 Texture2D.setColors(1);
         }
         if (unitHP > 0 && unitHP < unitMaxHP)
-            drawHealthBar(x, (y - DataMonster.monsterData[type][9]) + 10.0f, unitMaxHP, unitHP);
+            drawHealthBar(x, (y - DataMonster.monsterData[type][9]) + 10, unitMaxHP, unitHP);
         if (st.selectedTarget == this)
             st.page.targetImage.drawAtPointOption(x, y, 9);
 

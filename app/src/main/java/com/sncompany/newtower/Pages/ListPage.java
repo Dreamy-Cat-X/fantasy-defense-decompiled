@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
-import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
@@ -48,21 +47,21 @@ public class ListPage extends TPage { //This class' parent will be a MenuPage al
         int i = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(1.0f, 412.0f, 68.0f, 58.0f));
-            TouchManager.addTouchRectListData(1, CGRect.CGRectMake(300.0f, 158.0f, 199.0f, 65.0f));
-            TouchManager.addTouchRectListData(2, CGRect.CGRectMake(300.0f, 258.0f, 199.0f, 65.0f));
+            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(1, 412, 68, 58));
+            TouchManager.addTouchRectListData(1, CGRect.CGRectMake(300, 158, 199, 65));
+            TouchManager.addTouchRectListData(2, CGRect.CGRectMake(300, 258, 199, 65));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 3;
             i = TouchManager.checkTouchListStatus();
 
-            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
             Texture2D.setColors(0.5f);
             fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
             Texture2D.setColors(1);
             TouchManager.swapTouchMap();
         }
-        images[i == 1 ? 3 : 2].drawAtPointOption(300.0f, 158.0f, 18);
-        images[i == 2 ? 1 : 0].drawAtPointOption(300.0f, 258.0f, 18);
-        uiEtcImage[i == 0 ? etc_back_on : etc_back_off].drawAtPointOption(1.0f, 421.0f, 18);
+        images[i == 1 ? 3 : 2].drawAtPointOption(300, 158, 18);
+        images[i == 2 ? 1 : 0].drawAtPointOption(300, 258, 18);
+        uiEtcImage[i == 0 ? etc_back_on : etc_back_off].drawAtPointOption(1, 421, 18);
     }
 
     @Override

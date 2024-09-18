@@ -94,9 +94,6 @@ public class GameThread extends Thread {
             GameRenderer.lastFontName = null;
             GameRenderer.makeBaseStruct();
             Config.readSaveData(newTower, 1);
-
-            GameRenderer.lastCheckTime = System.currentTimeMillis();
-            GameRenderer.loadCount_GAME_PRE_IMAGE_LOAD = 0;
             return;
         }
         Log.d("UPDATE", "GL NO!!!");

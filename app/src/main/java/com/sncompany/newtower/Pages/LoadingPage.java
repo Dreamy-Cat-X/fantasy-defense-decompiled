@@ -127,33 +127,33 @@ public class LoadingPage extends TPage {
             return;
         int uiname = loadingViewType < 3 ? 12 + loadingViewType : (loadingViewType - 3) * 4;
 
-        alwaysImage[0].drawAtPointOption(0.0f, 0.0f, 18);
+        alwaysImage[0].drawAtPointOption(0, 0, 18);
         if (loadingViewType < 3) {
             alwaysImage[loadingViewType + 1].drawAtPointOption(GameRenderer.CX, GameRenderer.SCRHEIGHT_SMALL, 33);
-            uiCharNameImage[uiname].drawAtPointOption(9.0f, 10.0f, 18);
+            uiCharNameImage[uiname].drawAtPointOption(9, 10, 18);
         } else {
-            uiLoadingImage[3].drawAtPointOption(0.0f, 329.0f, 18);
+            uiLoadingImage[3].drawAtPointOption(0, 329, 18);
             for (int i = 0; i < 4; i++) {
                 int uin = uiname + i;
                 int px = (GameRenderer.SCRWIDTH_SMALL / 4) * i;
-                uiCharFaceImage[uin].drawAtPointOptionGuide(loadingUnitAdjustPos[uin] + px, 328.0f, 34, CGRect.CGRectMake(px, 0.0f, 200.0f, 328.0f));
-                uiCharNameImage[uin].drawAtPointOption(px + 100, 335.0f, 17);
+                uiCharFaceImage[uin].drawAtPointOptionGuide(loadingUnitAdjustPos[uin] + px, 328, 34, CGRect.CGRectMake(px, 0, 200, 328));
+                uiCharNameImage[uin].drawAtPointOption(px + 100, 335, 17);
             }
         }
-        uiLoadingImage[0].drawAtPointOption(7.0f, 428.0f, 18);
-        uiLoadingImage[1].drawAtPointOption(10.0f, 460.0f, 18);
-        uiLoadingImage[2].drawAtPointOptionGuide(10.0f, 460.0f, 18, CGRect.CGRectMake(10.0f, 460.0f, prog * 780, 10.0f));
+        uiLoadingImage[0].drawAtPointOption(7, 428, 18);
+        uiLoadingImage[1].drawAtPointOption(10, 460, 18);
+        uiLoadingImage[2].drawAtPointOptionGuide(10, 460, 18, CGRect.CGRectMake(10, 460, prog * 780, 10));
         GameRenderer.setFontColor(-1);
         GameRenderer.setFontSize(17);
         String[] split = TIP_TEXT[loadTipNumber].split("_");
         GameRenderer.drawFont.getTextBounds(TIP_TEXT[loadTipNumber], 0, TIP_TEXT[loadTipNumber].length(), Texture2D.bounds_);
         int boundsize = Texture2D.bounds_.right - Texture2D.bounds_.left;
-        Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+        Texture2D.gl.glTexEnvf(8960, 8704, 8448);
         Texture2D.setColors(0.5f);
-        fillBlackImage.fillRect((GameRenderer.CX - (boundsize / 2f)) - 5, 380.0f, boundsize + 10, split.length * 27);
+        fillBlackImage.fillRect((GameRenderer.CX - (boundsize / 2f)) - 5, 380, boundsize + 10, split.length * 27);
         Texture2D.setColors(1f);
         for (int part = 0; part < split.length; part++)
-            GameRenderer.drawStringDoubleM(split[part], 385.0f, (part * 21) + 387, 17);
+            GameRenderer.drawStringDoubleM(split[part], 385, (part * 21) + 387, 17);
     }
 
     @Override

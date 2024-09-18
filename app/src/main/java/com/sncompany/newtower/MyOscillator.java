@@ -43,7 +43,7 @@ public class MyOscillator {
         }
         blockPosition[count - 1] = overPos;
         for (int i = 0; i < overCount; i++) {
-            double cos = Math.cos((((i * 90) * M_PI) / ((float) (count - 1))) / 180.0f);
+            double cos = Math.cos((((i * 90) * M_PI) / ((float) (count - 1))) / 180);
             double d = overPos - end;
             blockPosition[count] = (int) ((cos * d) + end);
             count++;

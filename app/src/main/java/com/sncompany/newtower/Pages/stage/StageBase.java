@@ -173,33 +173,21 @@ public abstract class StageBase extends TPage {
         loaded = false;
     }
 
-    public boolean enableAddUnit() { //Yes this function is identical to getAddSettingPosition, only difference is it doesn't change the position. That's it
+    public boolean enableAddSetting(boolean changePos) {
         CGPoint acTouch = TouchManager.getFirstLastActionTouch();
-        if (acTouch.x < 62.0f || acTouch.y - 25.0f < 30.0f || acTouch.x >= 737.0f || acTouch.y - 25.0f >= Texture2D.VIEW_SCRHEIGHT) {
+        if (acTouch.x < 62 || acTouch.y - 25 < 30 || acTouch.x >= 737 || acTouch.y - 25 >= Texture2D.VIEW_SCRHEIGHT) {
+            if (changePos) {
+                characterAddPosX = acTouch.x;
+                characterAddPosY = acTouch.y - 25;
+            }
             return false;
         }
-        int bX = (int) ((acTouch.x - 62.0f) / 45.0f);
-        int bY = (int) (((acTouch.y - 25.0f) - 30.0f) / 45.0f);
-        if (tmap.mapTileData[bX][bY] != -1)
-            return false;
-
-        for (TowerUnit twu : st.towerUnit)
-            if (twu.blockX == bX && twu.blockY == bY)
-                return false;
-        return searchObjectTouch(bX, bY) == null;
-    }
-
-    public boolean getAddSettingPosition() {
-        CGPoint acTouch = TouchManager.getFirstLastActionTouch();
-        if (acTouch.x < 62.0f || acTouch.y - 25.0f < 30.0f || acTouch.x >= 737.0f || acTouch.y - 25.0f >= Texture2D.VIEW_SCRHEIGHT) {
-            characterAddPosX = acTouch.x;
-            characterAddPosY = acTouch.y - 25.0f;
-            return false;
+        int bX = (int) ((acTouch.x - 62) / 45);
+        int bY = (int) (((acTouch.y - 25) - 30) / 45);
+        if (changePos) {
+            characterAddPosX = (bX * 45) + 62 + 22;
+            characterAddPosY = (bY * 45) + 30 + 22;
         }
-        int bX = (int) ((acTouch.x - 62.0f) / 45.0f);
-        int bY = (int) (((acTouch.y - 25.0f) - 30.0f) / 45.0f);
-        characterAddPosX = (bX * 45) + 62 + 22;
-        characterAddPosY = (bY * 45) + 30 + 22;
         if (tmap.mapTileData[bX][bY] != -1)
             return false;
 
@@ -211,8 +199,8 @@ public abstract class StageBase extends TPage {
 
     public ObjectUnit searchObjectTouch() {
         CGPoint acTouch = TouchManager.getFirstLastActionTouch();
-        int bX = (int) ((acTouch.x - 62.0f) / 45.0f);
-        int bY = (int) (((acTouch.y - 25.0f) - 30.0f) / 45.0f);
+        int bX = (int) ((acTouch.x - 62) / 45);
+        int bY = (int) (((acTouch.y - 25) - 30) / 45);
         return searchObjectTouch(bX, bY);
     }
 
@@ -289,10 +277,10 @@ public abstract class StageBase extends TPage {
     }
 
     protected void drawUpperUI() {
-        uiUpperImage[upper_upbar].drawAtPointOption(0.0f, 0.0f, 18);
-        uiUpperImage[upper_money].drawAtPointOption(9.0f, 4.0f, 18);
-        uiUpperImage[upper_mana].drawAtPointOption(126.0f, 5.0f, 18);
-        uiUpperImage[upper_wave].drawAtPointOption(298.0f, 6.0f, 18);
+        uiUpperImage[upper_upbar].drawAtPointOption(0, 0, 18);
+        uiUpperImage[upper_money].drawAtPointOption(9, 4, 18);
+        uiUpperImage[upper_mana].drawAtPointOption(126, 5, 18);
+        uiUpperImage[upper_wave].drawAtPointOption(298, 6, 18);
         if (st.turbo == 1) {
             uiUpperImage[upper_speedempty].drawAtPointOption(22, 398, 18);
             uiUpperImage[upper_speedempty].drawAtPointOption(16, 398, 18);
@@ -302,19 +290,19 @@ public abstract class StageBase extends TPage {
             uiUpperImage[upper_speed1].drawAtPointOption(7, 391, 18);
             uiUpperImage[upper_speed0].drawAtPointOption(1, 391, 18);
         }
-        uiUpperImage[inGamePause ? upper_ingameon : upper_ingameoff].drawAtPointOption(5.0f, 437.0f, 18);
-        uiUpperImage[softPause ? upper_pauseon : upper_pauseoff].drawAtPointOption(6.0f, 344.0f, 18);
-        GameRenderer.drawNumberBlock(st.money, numberMoneyImage, 96.0f, 6.0f, 1, 20, 1);
-        GameRenderer.drawNumberBlock(st.mana, numberManaImage, 213.0f, 6.0f, 1, 20, 1);
+        uiUpperImage[inGamePause ? upper_ingameon : upper_ingameoff].drawAtPointOption(5, 437, 18);
+        uiUpperImage[softPause ? upper_pauseon : upper_pauseoff].drawAtPointOption(6, 344, 18);
+        GameRenderer.drawNumberBlock(st.money, numberMoneyImage, 96, 6, 1, 20, 1);
+        GameRenderer.drawNumberBlock(st.mana, numberManaImage, 213, 6, 1, 20, 1);
         int wavInd = st.waveManager.current;
         if (st.mapType != 1 && wavInd >= st.waveManager.wcc)
             wavInd = st.waveManager.wcc - 1;
-        float dnb = GameRenderer.drawNumberBlock(wavInd + 1, numberWaveImage, 366.0f, 8.0f, 1, 18, 2);
-        numberWaveImage[10].drawAtPointOption(2.0f + dnb, 6.0f, 18);
+        float dnb = GameRenderer.drawNumberBlock(wavInd + 1, numberWaveImage, 366, 8, 1, 18, 2);
+        numberWaveImage[10].drawAtPointOption(2 + dnb, 6, 18);
         if (st.mapType == 1)
-            numberWaveImage[11].drawAtPointOption(dnb + 10.0f, 6.0f, 18);
+            numberWaveImage[11].drawAtPointOption(dnb + 10, 6, 18);
         else
-            GameRenderer.drawNumberBlock(st.waveManager.wcc, numberWaveImage, dnb + 10.0f, 8.0f, 1, 18, 2);
+            GameRenderer.drawNumberBlock(st.waveManager.wcc, numberWaveImage, dnb + 10, 8, 1, 18, 2);
         drawBaseHealth();
     }
 
@@ -366,9 +354,9 @@ public abstract class StageBase extends TPage {
                 Texture2D.setColors(drawData[i8] / 1000f);
             }
             if (drawData[i7 + 4] == 0)
-                textures[drawData[i7]].drawAtPointOption(x + drawData[i7 + 1], y + drawData[i7 + 2] + 10.0f, 18);
+                textures[drawData[i7]].drawAtPointOption(x + drawData[i7 + 1], y + drawData[i7 + 2] + 10, 18);
             else
-                textures[drawData[i7]].drawAtPointOptionFlip(x + drawData[i7 + 1], y + drawData[i7 + 2] + 10.0f, 18);
+                textures[drawData[i7]].drawAtPointOptionFlip(x + drawData[i7 + 1], y + drawData[i7 + 2] + 10, 18);
 
             if (drawData[i8] != 1000) {
                 Texture2D.setColors(1);
@@ -377,13 +365,13 @@ public abstract class StageBase extends TPage {
     }
 
     public void drawAddGridBlock() {
-        Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+        Texture2D.gl.glTexEnvf(8960, 8704, 8448);
         Texture2D.setColors(0.15f);
         for (int i = 0; i <= 15; i++) {
-            fillWhiteImage.fillRect((i * 45) + 62, 30.0f, 1.0f, 450.0f);
+            fillWhiteImage.fillRect((i * 45) + 62, 30, 1, 450);
         }
         for (int i2 = 0; i2 <= 10; i2++) {
-            fillWhiteImage.fillRect(62.0f, (i2 * 45) + 30, 675.0f, 1.0f);
+            fillWhiteImage.fillRect(62, (i2 * 45) + 30, 675, 1);
         }
         Texture2D.setColors(1);
     }
@@ -418,9 +406,9 @@ public abstract class StageBase extends TPage {
 
     public TowerUnit checkTowerUnit() {
         CGPoint ActionTouch = TouchManager.getFirstLastActionTouch();
-        if (ActionTouch.x >= 62.0f && ActionTouch.y >= 30.0f && ActionTouch.x < 737.0f && ActionTouch.y < Texture2D.VIEW_SCRHEIGHT) {
-            int rX = (int) ((ActionTouch.x - 62.0f) / 45.0f);
-            int rY = (int) ((ActionTouch.y - 30.0f) / 45.0f);
+        if (ActionTouch.x >= 62 && ActionTouch.y >= 30 && ActionTouch.x < 737 && ActionTouch.y < Texture2D.VIEW_SCRHEIGHT) {
+            int rX = (int) ((ActionTouch.x - 62) / 45);
+            int rY = (int) ((ActionTouch.y - 30) / 45);
             for (TowerUnit twu : st.towerUnit)
                 if (twu.blockX == rX && twu.blockY == rY)
                     return twu;

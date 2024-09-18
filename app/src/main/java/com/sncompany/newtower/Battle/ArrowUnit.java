@@ -80,11 +80,11 @@ public class ArrowUnit extends StageEntity {
             }
             float yRot = Math.abs(((float) Math.cos(Math.toRadians(moveRotateDegree))) * moveSpeed);
             float xRot = Math.abs(((float) Math.sin(Math.toRadians(moveRotateDegree))) * moveSpeed);
-            if (moveRotateDegree >= 0.0f && moveRotateDegree < 180.0f) {
+            if (moveRotateDegree >= 0 && moveRotateDegree < 180) {
                 startX = (int) (startX + (xRot * moveNum));
             } else
                 startX = (int) (startX - (xRot * moveNum));
-            if ((moveRotateDegree >= 0.0f && moveRotateDegree < 90.0f) || (moveRotateDegree >= 270.0f && moveRotateDegree < 360.0f)) {
+            if ((moveRotateDegree >= 0 && moveRotateDegree < 90) || (moveRotateDegree >= 270 && moveRotateDegree < 360)) {
                 startY = (int) (startY - (yRot * moveNum));
             } else
                 startY = (int) (startY + (yRot * moveNum));
@@ -181,11 +181,11 @@ public class ArrowUnit extends StageEntity {
                 moveCount++;
                 float abs3 = Math.abs(((float) Math.cos(Math.toRadians(moveRotateDegree))) * moveSpeed);
                 float abs4 = Math.abs(((float) Math.sin(Math.toRadians(moveRotateDegree))) * moveSpeed);
-                if (moveRotateDegree >= 0.0f && moveRotateDegree < 180.0f)
+                if (moveRotateDegree >= 0 && moveRotateDegree < 180)
                     startX = (int) (startX + abs4);
                 else
                     startX = (int) (startX - abs4);
-                if ((moveRotateDegree >= 0.0f && moveRotateDegree < 90.0f) || (moveRotateDegree >= 270.0f && moveRotateDegree < 360.0f))
+                if ((moveRotateDegree >= 0 && moveRotateDegree < 90) || (moveRotateDegree >= 270 && moveRotateDegree < 360))
                     startY = (int) (startY - abs3);
                 else
                     startY = (int) (startY + abs3);
@@ -212,11 +212,11 @@ public class ArrowUnit extends StageEntity {
                     if (moveCount <= 0) {
                         float abs5 = Math.abs(((float) Math.cos(Math.toRadians(moveRotateDegree))) * moveSpeed);
                         float abs6 = Math.abs(((float) Math.sin(Math.toRadians(moveRotateDegree))) * moveSpeed);
-                        if (moveRotateDegree >= 0.0f && moveRotateDegree < 180.0f)
+                        if (moveRotateDegree >= 0 && moveRotateDegree < 180)
                             startX = (int) (startX + abs6);
                         else
                             startX = (int) (startX - abs6);
-                        if ((moveRotateDegree >= 0.0f && moveRotateDegree < 90.0f) || (moveRotateDegree >= 270.0f && moveRotateDegree < 360.0f))
+                        if ((moveRotateDegree >= 0 && moveRotateDegree < 90) || (moveRotateDegree >= 270 && moveRotateDegree < 360))
                             startY = (int) (startY - abs5);
                         else
                             startY = (int) (startY + abs5);
@@ -273,7 +273,7 @@ public class ArrowUnit extends StageEntity {
             if (moveCount >= 0) {
                 drawTexture[(type + 3) - 19].drawAtPointOption((startX / 50) + 62, (startY / 50) + 30, 9);
             } else if (moveCount > -10) {
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                 Texture2D.setAlpha((moveCount * (-0.05f)) + 0.5f);
                 drawTexture[(type + 3) - 19].drawAtPointOptionSize((startX / 50) + 62, (startY / 50) + 30, 9, 1f - (moveCount * 0.5f));
                 Texture2D.setAlpha(1);

@@ -46,7 +46,7 @@ public class InventoryTable { //Probably useless, but only one way to tell
 
     public void addTouch() {
         for (int i = 0; i < 8; i++)
-            TouchManager.addTouchRectListData(i, CGRect.CGRectMake(((i % 8) * 70) + 125, 390.0f, 60.0f, 60.0f));
+            TouchManager.addTouchRectListData(i, CGRect.CGRectMake(((i % 8) * 70) + 125, 390, 60, 60));
     }
 
     public int getPage() {
@@ -102,8 +102,8 @@ public class InventoryTable { //Probably useless, but only one way to tell
         int itmslot = getItemID(itm);
 
         if (pivot == 9) {
-            x -= 30.0f;
-            y -= 30.0f;
+            x -= 30;
+            y -= 30;
         }
         uiUpitemImage[itmslot].drawAtPointOption(x, y, 18);
     }
@@ -141,23 +141,23 @@ public class InventoryTable { //Probably useless, but only one way to tell
 
         float halfbnd = bnd / 2;
         float bX = x - halfbnd;
-        float bY = y - 73.0f;
+        float bY = y - 73;
         GameRenderer.drawLeftRightBox(bX, bY, bnd);
         GameRenderer.setFontColor(-68096);
         GameRenderer.setFontSize(17);
-        GameRenderer.drawStringM(DataUpgradeItem.upgradeItemName[idm], bX + 14.0f, bY + 14.0f, 18);
+        GameRenderer.drawStringM(DataUpgradeItem.upgradeItemName[idm], bX + 14, bY + 14, 18);
         GameRenderer.setFontSize(14);
-        GameRenderer.drawStringM(String.format(DataUpgradeItem.upgradeItemDescription[idm], eff), bX + halfbnd, bY + 34.0f, 17);
+        GameRenderer.drawStringM(String.format(DataUpgradeItem.upgradeItemDescription[idm], eff), bX + halfbnd, bY + 34, 17);
         GameRenderer.setFontColor(-1);
         GameRenderer.setFontSize(12);
 
         float f7 = bX + bnd;
-        getShop().heroismImage.drawAtPointOption((f7 - bound2) - 40.0f, bY + 12.0f, 18);
-        GameRenderer.drawStringM(String.format("%d", (DataUpgradeItem.upgradeItemData[idm][4] * 50) / 100), f7 - 17.0f, bY + 18.0f, 20);
+        getShop().heroismImage.drawAtPointOption((f7 - bound2) - 40, bY + 12, 18);
+        GameRenderer.drawStringM(String.format("%d", (DataUpgradeItem.upgradeItemData[idm][4] * 50) / 100), f7 - 17, bY + 18, 20);
     }
 
     public void drawSelectRedBox(float x, float y) {
-        selectOutline[0].drawAtPointOption(x - 11.0f, (-11.0f) + y, 18);
+        selectOutline[0].drawAtPointOption(x - 11, -11 + y, 18);
         float xw = x - 2f;
         float ty = (GameThread.gameTimeCount % 109) + y - 49f;
         selectOutline[1].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y - 2f, 64f, 2f));

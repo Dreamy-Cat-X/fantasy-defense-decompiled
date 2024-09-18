@@ -60,7 +60,7 @@ public class HeroUnit extends TowerUnit {
     static final float SPECIAL_ATTACK_ICE_UNIT_SIZE_ZOOM_DEGREE = 0.1f;
     public static final int SPECIAL_ATTACK_ICE_UNIT_START_FRAME = 135;
     static final float SPECIAL_ATTACK_ICE_WHITE_ALPHA_DEGREE = 0.1f;
-    static final float SPECIAL_ATTACK_ICE_WHITE_ALPHA_START = 2.0f;
+    static final float SPECIAL_ATTACK_ICE_WHITE_ALPHA_START = 2;
     public static final int SPECIAL_ATTACK_ICE_WHITE_END_FRAME = 170;
     public static final int SPECIAL_ATTACK_ICE_WHITE_START_FRAME = 150;
     private static final int[] hitPoint = {150, 195, 170};
@@ -393,9 +393,9 @@ public class HeroUnit extends TowerUnit {
                 Texture2D.setColors(drawData[i16] / 1000f);
             }
             if (drawData[i15 + 4] == 0)
-                drawTexture[drawData[i15]].drawAtPointOption(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10.0f, 18);
+                drawTexture[drawData[i15]].drawAtPointOption(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10, 18);
             else
-                drawTexture[drawData[i15]].drawAtPointOptionFlip(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10.0f, 18);
+                drawTexture[drawData[i15]].drawAtPointOptionFlip(drawData[i15 + 1] + x, y + drawData[i15 + 2] + 10, 18);
 
             if (drawData[i16] != 1000 || glow)
                 Texture2D.setColors(1);

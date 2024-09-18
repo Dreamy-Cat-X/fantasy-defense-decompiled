@@ -149,7 +149,7 @@ public class CinematicPage extends TPage {
     }
 
     private static final float[][] logoDrawCoords = {{0, 16.5f, -318f}, {0, -18f, -279f}, {0, -46.5f, -247.5f}, {1, -61.5f, -223.5f}, {2, -61.5f, -202.5f}, {3, -61.5f, -202.5f},
-            {4, -61.5f, -139.5f, 7, -336f, 52.5f}, {5, -61.5f, -135f, 7, -279f, 0}, {6, -61.5f, -129f, 7, -241.5f, -34.5f}, {6, -61.5f, -129.0f, 8, -202.5f, -69f},
+            {4, -61.5f, -139.5f, 7, -336f, 52.5f}, {5, -61.5f, -135f, 7, -279f, 0}, {6, -61.5f, -129f, 7, -241.5f, -34.5f}, {6, -61.5f, -129, 8, -202.5f, -69f},
             {9, -165f, -129f}, {10, -142.5f, -129f}, {11, -127.5f, -129f}, {12, -123f, -129f}, {13, -121.5f, -129f}};
     private static final float[][] moonCords = {{316f, 156f},{266f, 289f},{185f, 60f},{472f, 286f},{509f, 30f},{110f, 307f},{622f, 197f}};
     private static final float[][] wCords = {{0 ,200f}, {0, 39f}};
@@ -186,9 +186,9 @@ public class CinematicPage extends TPage {
             case OPENING: {
                 int bg = storyDrawDataBlock[0];
                 if (bg >= 102)
-                    fillWhiteImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                    fillWhiteImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
                 else if (bg >= 100)
-                    fillBlackImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                    fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
                 else
                     storyImage[storyDrawDataBlock[0]].drawAtPointOption(0f, 0f, 18);
 

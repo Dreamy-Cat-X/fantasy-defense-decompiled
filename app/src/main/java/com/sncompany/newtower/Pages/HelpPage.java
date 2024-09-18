@@ -48,27 +48,27 @@ public class HelpPage extends TPage {
         int i = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_0_BACK, CGRect.CGRectMake(11.0f, 412.0f, 68.0f, 58.0f));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_1_TUTORIAL, CGRect.CGRectMake(650.0f, 18.0f, 130.0f, 44.0f));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_2_LEFTARROW, CGRect.CGRectMake(628.0f, 417.0f, 45.0f, 50.0f));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_3_RIGHTARROW, CGRect.CGRectMake(738.0f, 417.0f, 45.0f, 50.0f));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_0_BACK, CGRect.CGRectMake(11, 412, 68, 58));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_1_TUTORIAL, CGRect.CGRectMake(650, 18, 130, 44));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_2_LEFTARROW, CGRect.CGRectMake(628, 417, 45, 50));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_3_RIGHTARROW, CGRect.CGRectMake(738, 417, 45, 50));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 4;
             i = TouchManager.checkTouchListStatus();
         }
 
-        uiHelpImage[0].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
-        uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77.0f, 17);
-        uiHelpShotImage.drawAtPointOption(32.0f, 94.0f, 18);
+        uiHelpImage[0].drawAtPointOption(GameRenderer.CX, 6, 17);
+        uiEtcImage[etc_window].drawAtPointOption(GameRenderer.CX, 77, 17);
+        uiHelpShotImage.drawAtPointOption(32, 94, 18);
 
-        uiHelpImage[i == 1 ? 2 : 1].drawAtPointOption(650.0f, 18.0f, 18);
-        uiHelpImage[i == 2 ? 4 : 3].drawAtPointOption(628.0f, 417.0f, 18);
-        uiHelpImage[i == 3 ? 6 : 5].drawAtPointOption(738.0f, 417.0f, 18);
+        uiHelpImage[i == 1 ? 2 : 1].drawAtPointOption(650, 18, 18);
+        uiHelpImage[i == 2 ? 4 : 3].drawAtPointOption(628, 417, 18);
+        uiHelpImage[i == 3 ? 6 : 5].drawAtPointOption(738, 417, 18);
 
         GameRenderer.setFontDoubleColor(-1, -1);
         GameRenderer.setFontSize(19);
-        GameRenderer.drawStringDoubleM(String.format("%d/%d", gameHelpViewNum + 1, uiHelpShotResource.length), 705.0f, 431.0f, 17);
+        GameRenderer.drawStringDoubleM(String.format("%d/%d", gameHelpViewNum + 1, uiHelpShotResource.length), 705, 431, 17);
 
-        uiEtcImage[i == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11.0f, 412.0f, 18);
+        uiEtcImage[i == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11, 412, 18);
         if (init)
             TouchManager.swapTouchMap();
     }

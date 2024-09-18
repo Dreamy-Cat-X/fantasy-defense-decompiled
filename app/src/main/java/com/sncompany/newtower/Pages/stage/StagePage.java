@@ -89,6 +89,7 @@ public class StagePage extends StageBase {
 
     private static final int PLAY_HEROS = 6, PLAY_PAUSE = 10, PLAY_SOFTPAUSE = 11, PLAY_TURBO = 12, CHARMENU_SELL = 0, CHARMENU_UPGRADE = 1, CHARMENU_LVL = 2, CHARMENU_SPECIAL = 3, CHARMENU_BODY = 4, CHARMENU_NO = 5, CHARMENU_YES = 7;
     private static final int SEL_DEF = 0, SEL_USPWN = 1, SEL_HERO = 2, SEL_HSPWN = 3, SEL_CHARMENU = 4, SEL_UPGRMENU = 5, SEL_LVMENU = 6, SEL_HEROMENU = 7;
+    private static final int VIC_DEF = 0, VIC_PERFECT = 1, VIC_MAPUNLK = 2, VIC_RWDULK = 3, VIC_MENU = 4, VIC_TOMAP = 5, VIC_TOUPGR = 6, VIC_NEXTST = 7, VTCH_MAP = 0, VTCH_UPG = 1, VTCH_NEXT = 2;
 
     public StagePage(TPage par, DataStage s) {
         super(par, s);
@@ -395,48 +396,45 @@ public class StagePage extends StageBase {
             case CLEAR:
                 st.updateEffects(false);
                 st.sortEntities();
-                if (substate == 0) {
+                if (substate == VIC_DEF) {
                     myOscillator[11].updatePosition();
-                } else if (substate == 1) {
-                    if (startViewCount == 40 || startViewCount == 70 || startViewCount == 100 || startViewCount == 130 || startViewCount == 160 || startViewCount == 190 || startViewCount == 220 || startViewCount == 250) {
+                } else if (substate == VIC_MENU) {
+                    if (startViewCount % 30 == 10)
                         GameThread.playSound(1);
-                    }
                     startViewCount++;
-                } else if (substate == 3) {
+                } else if (substate == VIC_MAPUNLK) {
                     darkViewCount++;
                     if (darkViewCount >= 198)
-                        substate = 1;
-                } else if (substate == 2) {
+                        substate = VIC_MENU;
+                } else if (substate == VIC_PERFECT) {
                     for (int i = 12; i < myOscillator.length; i++) {
                         myOscillator[i].updatePosition();
                         if (myOscillator[i].currentCount < 5)
                             break;
                     }
                     if (myOscillator[19].currentCount >= 60) {
-                        if (rewardShowOrder != -4) {
+                        if (rewardShowOrder != -2) {
                             substate = 4;
                             return;
                         }
                         if (st.SID % 10 == 9 && st.SID != 49) {
                             darkViewCount = 0;
-                            substate = 3;
+                            substate = VIC_MAPUNLK;
                         } else
-                            substate = 1;
+                            substate = VIC_MENU;
                     }
                 }
-                if (substate < 5)
+                if (substate < VIC_TOMAP)
                     return;
-
                 darkViewCount++;
                 if (darkViewCount >= 45) {
                     if (st.SID < 49 && Config.stageProg[st.SID + 1][0] == -1) {
                         Config.stageProg[st.SID + 1][0] = 0;
                         Config.lastPlayed++;
                     }
-
-                    if (substate == 5) {
+                    if (substate == VIC_TOMAP) {
                         NewTower.switchPage(parent, true); //Stage select
-                    } else if (substate == 6) {
+                    } else if (substate == VIC_TOUPGR) {
                         NewTower.switchPage(parent.parent, true); //TODO - Make it switch to list upgrade page
                     } else
                         NewTower.switchPage(new StagePage(parent, new DataStage(DataMap.loadMap(Config.lastPlayed), st.mapType)), true);
@@ -585,384 +583,257 @@ public class StagePage extends StageBase {
                 TouchManager.swapTouchMap();
                 break;
             } case CLEAR: {
-                if (substate == 3) {
+                if (substate == 3)
                     if (uiThemeclearImage[0].name == -1)
                         loadImageResourceToTexture(uiThemeclearImage, uiThemeclearResource);
-                }
                 tmap.checkBackBase();
-                tmap.backBaseImageArray[tmap.lastShowBackBase].drawAtPointOption(0.0f, 0.0f, 18);
-                backShadowImage.drawAtPointOption(0.0f, 0.0f, 18);
+                tmap.backBaseImageArray[tmap.lastShowBackBase].drawAtPointOption(0, 0, 18);
+                backShadowImage.drawAtPointOption(0, 0, 18);
                 drawMapTile(gl10);
                 drawAllUnit(gl10);
                 drawPlayingUi(false);
                 TouchManager.clearTouchMap();
-                boolean z;
+                boolean z = false;
                 switch (substate) {
-                    case 0: case 3: case 5:
-                        TouchManager.addTouchRectListData(0, CGRect.CGRectMake(0.0f, 0.0f, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
-                        z = false;
+                    case VIC_DEF: case VIC_PERFECT: case VIC_MAPUNLK:
+                        TouchManager.addTouchRectListData(0, CGRect.CGRectMake(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
                         break;
-                    case 1:
+                    case VIC_MENU:
                         if (startViewCount < 270) {
-                            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(0.0f, 0.0f, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
+                            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
                         } else if (st.mapType == 1) {
-                            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(338.0f, 382.0f, 125.0f, 58.0f));
+                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.CGRectMake(338, 382, 125, 58));
                         } else if (st.SID == 49) {
-                            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(210.0f, 382.0f, 381.0f, 43.0f));
+                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.CGRectMake(210, 382, 381, 43));
                         } else {
-                            TouchManager.addTouchRectListData(2, CGRect.CGRectMake(156.0f, 382.0f, 125.0f, 58.0f));
-                            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(338.0f, 382.0f, 125.0f, 58.0f));
-                            z = st.SID < 49 && (st.mapType == 0 || Config.highScores[st.SID + 1][2] == -1);
-                            if (z) {
-                                TouchManager.addTouchRectListData(1, CGRect.CGRectMake(520.0f, 382.0f, 125.0f, 58.0f));
-                                break;
-                            }
+                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.CGRectMake(156, 382, 125, 58));
+                            TouchManager.addTouchRectListData(VTCH_UPG, CGRect.CGRectMake(338, 382, 125, 58));
+                            z = st.mapType == 0 || Config.highScores[st.SID + 1][2] == -1;
+                            if (z)
+                                TouchManager.addTouchRectListData(VTCH_NEXT, CGRect.CGRectMake(520, 382, 125, 58));
                         }
-                        z = false;
                         break;
-                    case 2:
-                        if (st.mapType != 1 && st.SID < 49 && (st.mapType == 0 || !(st.mapType != 2 || Config.highScores[st.SID + 1][2] == -1))) {
-                            z = true;
-                            break;
-                        }
-                        z = false;
-                        break;
-                    case 4: case 6: case 7: case 8:
-                        TouchManager.addTouchRectListData(0, CGRect.CGRectMake(213.0f, 289.0f, 381.0f, 65.0f));
-                        z = false;
-                        break;
-                    default:
-                        z = false;
+                    case VIC_RWDULK:
+                        TouchManager.addTouchRectListData(0, CGRect.CGRectMake(213, 289, 381, 65));
                         break;
                 }
-                TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 7;
-                int checkTouchListStatus = TouchManager.checkTouchListStatus();
+                TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = VTCH_NEXT + 1;
+                int cTLS = TouchManager.checkTouchListStatus();
                 TouchManager.swapTouchMap();
-                float f18 = startViewCount < 30 ? startViewCount * GAME_STAGE_CLEAR_START_BLACK_ALPHA : 0.48000002f;
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                Texture2D.gl.glColor4f(f18, f18, f18, f18);
-                fillBlackImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                Texture2D.setColors(startViewCount < 30 ? startViewCount * GAME_STAGE_CLEAR_START_BLACK_ALPHA : 0.48000002f);
+                fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
                 Texture2D.setColors(1);
                 switch (substate) {
-                    case 0:
-                        stageClearImage[1].drawAtPointOption(GameRenderer.CX, 199.0f, 17);
+                    case VIC_DEF:
+                        stageClearImage[1].drawAtPointOption(GameRenderer.CX, 199, 17);
                         break;
-                    case 1:
-                    case 2:
-                        float f2 = 1, f3, f5, f7, f9, f11, f13, f15, f17;
-                        if (startViewCount < 30) {
-                            f2 = (startViewCount) * 0.033f;
-                            break;
+                    case VIC_PERFECT:
+                        stageClearImage[23].drawAtPointOption(124, myOscillator[12].getCurrentPosition() + 196, 18);
+                        stageClearImage[24].drawAtPointOption(202, myOscillator[13].getCurrentPosition() + 196, 18);
+                        stageClearImage[25].drawAtPointOption(270, myOscillator[14].getCurrentPosition() + 196, 18);
+                        stageClearImage[26].drawAtPointOption(347, myOscillator[15].getCurrentPosition() + 196, 18);
+                        stageClearImage[24].drawAtPointOption(416, myOscillator[16].getCurrentPosition() + 196, 18);
+                        stageClearImage[27].drawAtPointOption(484, myOscillator[17].getCurrentPosition() + 196, 18);
+                        stageClearImage[28].drawAtPointOption(552, myOscillator[18].getCurrentPosition() + 196, 18);
+                        stageClearImage[29].drawAtPointOption(623, myOscillator[19].getCurrentPosition() + 196, 18);
+                        break;
+                    case VIC_MAPUNLK: {
+                        uiThemeclearImage[0].drawAtPointOption(0, 0, 18);
+                        if (darkViewCount <= 64)
+                            uiThemeclearImage[1].drawAtPointOption(200, darkViewCount <= 34 ? (darkViewCount - 34) * 20 : 0, 18);
+
+                        if (darkViewCount > 34) {
+                            if (darkViewCount < 64) {
+                                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                                Texture2D.setColors(((float) (darkViewCount - 34)) * 0.033f);
+                                uiThemeclearImage[2].drawAtPointOption(200, 0, 18);
+                                Texture2D.setColors(1);
+                            } else
+                                uiThemeclearImage[2].drawAtPointOption(200, 0, 18);
                         }
-                        if (f2 > 0.0f) {
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f2, f2, f2, f2);
-                            stageClearImage[0].drawAtPointOption(GameRenderer.CX, 6.0f, 17);
-                            Texture2D.setColors(1);
-                        }
-                        GameRenderer.setFontSize(18);
-                        GameRenderer.setFontColor(-1);
-                        if (startViewCount < 60) {
-                            f3 = (startViewCount - 30) * 0.033f;
-                            break;
-                        }
-                        f3 = 1.0f;
-                        if (f3 > 0.0f) {
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f3, f3, f3, f3);
-                            GameRenderer.drawStringM("Score ", 259.0f, 108.0f, 18);
-                            GameRenderer.drawStringM(String.valueOf((int) st.bScore), 540.0f, 108.0f, 20);
-                            Texture2D.setColors(1);
-                        }
-                        if (startViewCount < 90) {
-                            f5 = (startViewCount - 60) * 0.033f;
-                            break;
-                        }
-                        f5 = 1.0f;
-                        if (f5 > 0.0f) {
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f5, f5, f5, f5);
-                            GameRenderer.drawStringM("Life", 259.0f, 140.0f, 18);
-                            GameRenderer.drawStringM(String.format("%d/%d", st.life, DataStage.maxLife), 540.0f, 140.0f, 20);
-                            if (st.perfectClear())
-                                stageClearImage[13].drawAtPointOption(553.0f, 131.0f, 18);
-                            Texture2D.setColors(1);
-                        }
-                        if (startViewCount < 120) {
-                            f7 = startViewCount - 90 * 0.033f;
-                            break;
-                        }
-                        f7 = 1.0f;
-                        if (f7 > 0.0f) {
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f7, f7, f7, f7);
-                            GameRenderer.drawStringM("Gold", 259.0f, 172.0f, 18);
-                            GameRenderer.drawStringM(String.valueOf(st.money), 540.0f, 172.0f, 20);
-                            Texture2D.setColors(1);
-                        }
-                        if (startViewCount < 150) {
-                            f9 = (startViewCount - 120) * 0.033f;
-                            break;
-                        }
-                        f9 = 1.0f;
-                        if (f9 > 0.0f) {
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f9, f9, f9, f9);
-                            GameRenderer.drawStringM("Mana", 259.0f, 206.0f, 18);
-                            GameRenderer.drawStringM(String.valueOf(st.mana), 540.0f, 206.0f, 20);
-                            Texture2D.setColors(1);
-                        }
-                        if (startViewCount < 180) {
-                            f11 = (startViewCount - 150) * 0.033f;
-                            break;
-                        }
-                        f11 = 1.0f;
-                        if (f11 > 0.0f) {
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f11, f11, f11, f11);
-                            stageClearImage[3].drawAtPointOption(270.0f, 257.0f, 18);
-                            GameRenderer.drawNumberBlock((int)st.getTotalScore(), numberTotalImage, 530.0f, 257.0f, 0, 20, 1);
-                            Texture2D.setColors(1);
-                        }
-                        if (startViewCount < 210) {
-                            f13 = (startViewCount - 180) * 0.033f;
-                            break;
-                        }
-                        f13 = 1.0f;
-                        if (f13 > 0.0f) {
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f13, f13, f13, f13);
-                            stageClearImage[4].drawAtPointOption(287.0f, 288.0f, 18);
-                            GameRenderer.drawNumberBlock((int)st.victoryH, numberClearImage, 513.0f, 288.0f, 0, 20, 1);
-                            Texture2D.setColors(1);
-                        }
-                        if (startViewCount < 240) {
-                            f15 = (startViewCount - 210) * 0.033f;
-                            break;
-                        }
-                        f15 = 1.0f;
-                        if (f15 > 0.0f) {
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f15, f15, f15, f15);
-                            GameRenderer.setFontDoubleColor(-1, -15385258);
-                            GameRenderer.drawStringDoubleM("Highest Score", 290.0f, 328.0f, 18);
-                            GameRenderer.drawStringDoubleM(String.valueOf(Config.highScores[st.SID][st.mapType]), 508.0f, 328.0f, 20);
-                            Texture2D.setColors(1);
-                        }
-                        if (startViewCount < 270) {
-                            f17 = (startViewCount - 240) * 0.033f;
-                            break;
-                        }
-                        f17 = 1.0f;
-                        if (f17 > 0.0f) {
-                            if (st.mapType != 1) { //This is always true btw
-                                if (st.SID == 49) {
-                                    if (checkTouchListStatus == 6) {
-                                        uiPopupImage[13].drawAtPointOption(210.0f, 382.0f, 18);
-                                    } else {
-                                        uiPopupImage[12].drawAtPointOption(210.0f, 382.0f, 18);
-                                    }
-                                    break;
-                                } else {
-                                    if (checkTouchListStatus == 2) {
-                                        stageClearImage[10].drawAtPointOption(156.0f, 382.0f, 18);
-                                    } else {
-                                        stageClearImage[9].drawAtPointOption(156.0f, 382.0f, 18);
-                                    }
-                                    if (checkTouchListStatus == 0) {
-                                        stageClearImage[8].drawAtPointOption(338.0f, 382.0f, 18);
-                                    } else {
-                                        stageClearImage[7].drawAtPointOption(338.0f, 382.0f, 18);
-                                    }
-                                    if (z) {
-                                        if (checkTouchListStatus == 1) {
-                                            stageClearImage[6].drawAtPointOption(520.0f, 382.0f, 18);
-                                        } else {
-                                            stageClearImage[5].drawAtPointOption(520.0f, 382.0f, 18);
-                                        }
-                                        break;
-                                    }
-                                }
-                            } else if (checkTouchListStatus == 2) {
-                                stageClearImage[10].drawAtPointOption(338.0f, 382.0f, 18);
-                                break;
+                        int yy = darkViewCount < 88 ? (88 - darkViewCount) * 20 : 0;
+                        int chapter = st.SID / 10;
+                        for (int i = 0; i < 5; i++) {
+                            if (i < chapter) {
+                                uiThemeclearImage[4].drawAtPointOption((i * 150) + 17, yy + 222, 18);
+                            } else if (i > chapter) {
+                                uiThemeclearImage[6].drawAtPointOption((i * 150) + 41, yy + 248, 18);
                             } else {
-                                stageClearImage[9].drawAtPointOption(338.0f, 382.0f, 18);
-                                break;
+                                uiThemeclearImage[3].drawAtPointOption(40, yy + 247, 18);
+
+                                if (darkViewCount < 88 || darkViewCount >= 168 || (darkViewCount - 88) % 20 != 1)
+                                    uiThemeclearImage[5].drawAtPointOption((chapter * 150) + 132, yy + 258, 18);
+
+                                int i21 = chapter * 150;
+                                drawThemeTowerUnit(0, DataStage.heroAvail[0], i21 + 101, yy + 281);
+                                drawThemeTowerUnit(DataStage.heroAvail[1] ? 1 : 4, DataStage.heroAvail[1], i21 + 66, yy + 299);
+                                drawThemeTowerUnit(DataStage.heroAvail[2] ? 2 : 8, DataStage.heroAvail[2], i21 + 134, yy + 299);
+
+                                GameRenderer.setFontSize(25);
+                                GameRenderer.setFontColor(-1);
+                                GameRenderer.drawStringM(String.format("Theme %d. %s Cleared", chapter + 1, GameThread.chapterName[chapter]), GameRenderer.CX, yy + 104, 17);
+                                if (chapter < 4)
+                                    GameRenderer.drawStringM(String.format("Opened Next Theme. %s", GameThread.chapterName[chapter + 1]), GameRenderer.CX, yy + 385, 17);
+                                i++;
                             }
                         }
                         break;
-                    case 4:
-                        uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
-                        stageClearImage[14].drawAtPointOption(291.0f, 111.0f, 18);
+                    } case VIC_MENU: case VIC_NEXTST: case VIC_TOMAP: case VIC_TOUPGR:
+                        float f = startViewCount < 30 ? startViewCount * 0.033f : 1;
+                        if (f > 0) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(f);
+                            stageClearImage[0].drawAtPointOption(GameRenderer.CX, 6, 17);
+                            Texture2D.setColors(1);
+                        } else break;
+                        GameRenderer.setFontSize(18);
+                        GameRenderer.setFontColor(-1);
+                        f = startViewCount < 60 ? (startViewCount - 30) * 0.033f : 1;
+                        if (f > 0) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(f);
+                            GameRenderer.drawStringM("Score", 259, 108, 18);
+                            GameRenderer.drawStringM(String.valueOf((int) st.bScore), 540, 108, 20);
+                            Texture2D.setColors(1);
+                        } else break;
+                        f = startViewCount < 90 ? (startViewCount - 60) * 0.033f : 1;
+                        if (f > 0) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(f);
+                            GameRenderer.drawStringM("Life", 259, 140, 18);
+                            GameRenderer.drawStringM(String.format("%d/%d", st.life, DataStage.maxLife), 540, 140, 20);
+                            if (st.perfectClear())
+                                stageClearImage[13].drawAtPointOption(553, 131, 18);
+                            Texture2D.setColors(1);
+                        } else break;
+                        f = startViewCount < 120 ? (startViewCount - 90) * 0.033f : 1;
+                        if (f > 0) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(f);
+                            GameRenderer.drawStringM("Gold", 259, 172, 18);
+                            GameRenderer.drawStringM(String.valueOf(st.money), 540, 172, 20);
+                            Texture2D.setColors(1);
+                        } else break;
+                        f = startViewCount < 150 ? (startViewCount - 120) * 0.033f : 1;
+                        if (f > 0) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(f);
+                            GameRenderer.drawStringM("Mana", 259, 206, 18);
+                            GameRenderer.drawStringM(String.valueOf(st.mana), 540, 206, 20);
+                            Texture2D.setColors(1);
+                        } else break;
+                        f = startViewCount < 180 ? (startViewCount - 150) * 0.033f : 1;
+                        if (f > 0) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(f);
+                            stageClearImage[3].drawAtPointOption(270, 257, 18);
+                            GameRenderer.drawNumberBlock(st.getTotalScore(), numberTotalImage, 530, 257, 0, 20, 1);
+                            Texture2D.setColors(1);
+                        } else break;
+                        f = startViewCount < 210 ? (startViewCount - 180) * 0.033f : 1;
+                        if (f > 0) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(f);
+                            stageClearImage[4].drawAtPointOption(287, 288, 18);
+                            GameRenderer.drawNumberBlock((int)st.victoryH, numberClearImage, 513, 288, 0, 20, 1);
+                            Texture2D.setColors(1);
+                        } else break;
+                        f = startViewCount < 240 ? (startViewCount - 210) * 0.033f : 1;
+                        if (f > 0) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(f);
+                            GameRenderer.setFontDoubleColor(-1, -15385258);
+                            GameRenderer.drawStringDoubleM("Highest Score", 290, 328, 18);
+                            GameRenderer.drawStringDoubleM(String.valueOf(Config.highScores[st.SID][st.mapType]), 508, 328, 20);
+                            Texture2D.setColors(1);
+                        } else break;
+                        f = startViewCount < 270 ? (startViewCount - 240) * 0.033f : 1;
+                        if (f > 0) {
+                            if (st.SID == 49) {
+                                uiPopupImage[cTLS == VTCH_MAP ? popup_okon2 : popup_okoff2].drawAtPointOption(210, 382, 18);
+                            } else {
+                                stageClearImage[cTLS == VTCH_MAP ? 10 : 9].drawAtPointOption(156, 382, 18);
+                                stageClearImage[cTLS == VTCH_UPG ? 8 : 7].drawAtPointOption(338, 382, 18);
+                                if (z)
+                                    stageClearImage[cTLS == VTCH_NEXT ? 6 : 5].drawAtPointOption(520, 382, 18);
+                            }
+                        }
+                        break;
+                    case VIC_RWDULK:
+                        uiPopupImage[7].drawAtPointOption(201, 101, 18);
+                        stageClearImage[14].drawAtPointOption(291, 111, 18);
                         switch (rewardShowOrder) {
                             case 0:
-                                stageClearImage[19].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[19].drawAtPointOption(365, 169, 18);
                                 break;
                             case 1:
-                                stageClearImage[18].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[18].drawAtPointOption(365, 169, 18);
                                 GameRenderer.setFontSize(11);
                                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                                GameRenderer.drawStringDoubleM("1500", 400.0f, 220.0f, 17);
+                                GameRenderer.drawStringDoubleM("1500", 400, 220, 17);
                                 break;
                             case 2:
-                                stageClearImage[20].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[20].drawAtPointOption(365, 169, 18);
                                 break;
                             case 3:
-                                stageClearImage[16].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[16].drawAtPointOption(365, 169, 18);
                                 break;
                             case 4:
-                                stageClearImage[21].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[21].drawAtPointOption(365, 169, 18);
                                 break;
                             case 5:
-                                stageClearImage[15].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[15].drawAtPointOption(365, 169, 18);
                                 break;
                             case 6:
-                                stageClearImage[22].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[22].drawAtPointOption(365, 169, 18);
                                 break;
                             case 7:
-                                stageClearImage[18].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[18].drawAtPointOption(365, 169, 18);
                                 GameRenderer.setFontSize(11);
                                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                                GameRenderer.drawStringDoubleM("1000", 400.0f, 220.0f, 17);
+                                GameRenderer.drawStringDoubleM("1000", 400, 220, 17);
                                 break;
                             case 8:
-                                stageClearImage[17].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[17].drawAtPointOption(365, 169, 18);
                                 break;
                             case 9:
-                                stageClearImage[18].drawAtPointOption(365.0f, 169.0f, 18);
+                                stageClearImage[18].drawAtPointOption(365, 169, 18);
                                 GameRenderer.setFontSize(11);
                                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                                GameRenderer.drawStringDoubleM("2500", 400.0f, 220.0f, 17);
+                                GameRenderer.drawStringDoubleM("2500", 400, 220, 17);
                                 break;
+                            default:
+                                stageClearImage[22].drawAtPointOption(365, 169, 18);
+                                GameRenderer.setFontDoubleColor(-16777216, -16777216);
+                                GameRenderer.setFontSize(15);
+                                GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153, 17);
+                                GameRenderer.setFontColor(-16777216);
+                                if (rewardShowOrder == -2)
+                                    GameRenderer.drawStringM("Champion: Splashed damage", GameRenderer.CX, 243, 17);
+                                else if (rewardShowOrder == -3)
+                                    GameRenderer.drawStringM("Bow Master: Double Shot", GameRenderer.CX, 243, 17);
+                                else
+                                    GameRenderer.drawStringM("Archmage: Splashed damage", GameRenderer.CX, 243, 17);
                         }
-                        if (checkTouchListStatus == 5) {
-                            uiPopupImage[13].drawAtPointOption(213.0f, 289.0f, 18);
+                        if (cTLS == 5) {
+                            uiPopupImage[13].drawAtPointOption(213, 289, 18);
                         } else {
-                            uiPopupImage[12].drawAtPointOption(213.0f, 289.0f, 18);
+                            uiPopupImage[12].drawAtPointOption(213, 289, 18);
                         }
                         GameRenderer.setFontDoubleColor(-16777216, -16777216);
                         GameRenderer.setFontSize(15);
-                        GameRenderer.drawStringDoubleM(rewardDataString[substate * 3], GameRenderer.CX, 153.0f, 17);
+                        GameRenderer.drawStringDoubleM(rewardDataString[substate * 3], GameRenderer.CX, 153, 17);
                         GameRenderer.setFontColor(-16777216);
-                        GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 1], GameRenderer.CX, 243.0f, 17);
-                        GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 2], GameRenderer.CX, 262.0f, 17);
-                        break;
-                    case 5:
-                        stageClearImage[23].drawAtPointOption(124.0f, myOscillator[12].getCurrentPosition() + 196, 18);
-                        stageClearImage[24].drawAtPointOption(202.0f, myOscillator[13].getCurrentPosition() + 196, 18);
-                        stageClearImage[25].drawAtPointOption(270.0f, myOscillator[14].getCurrentPosition() + 196, 18);
-                        stageClearImage[26].drawAtPointOption(347.0f, myOscillator[15].getCurrentPosition() + 196, 18);
-                        stageClearImage[24].drawAtPointOption(416.0f, myOscillator[16].getCurrentPosition() + 196, 18);
-                        stageClearImage[27].drawAtPointOption(484.0f, myOscillator[17].getCurrentPosition() + 196, 18);
-                        stageClearImage[28].drawAtPointOption(552.0f, myOscillator[18].getCurrentPosition() + 196, 18);
-                        stageClearImage[29].drawAtPointOption(623.0f, myOscillator[19].getCurrentPosition() + 196, 18);
-                        break;
-                    case 6:
-                        uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
-                        stageClearImage[14].drawAtPointOption(291.0f, 111.0f, 18);
-                        stageClearImage[22].drawAtPointOption(365.0f, 169.0f, 18);
-                        if (checkTouchListStatus == 5) {
-                            uiPopupImage[13].drawAtPointOption(213.0f, 289.0f, 18);
-                        } else {
-                            uiPopupImage[12].drawAtPointOption(213.0f, 289.0f, 18);
-                        }
-                        GameRenderer.setFontDoubleColor(-16777216, -16777216);
-                        GameRenderer.setFontSize(15);
-                        GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153.0f, 17);
-                        GameRenderer.setFontColor(-16777216);
-                        GameRenderer.drawStringM("Champion: Splashed damage", GameRenderer.CX, 243.0f, 17);
-                        break;
-                    case 7:
-                        uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
-                        stageClearImage[14].drawAtPointOption(291.0f, 111.0f, 18);
-                        stageClearImage[22].drawAtPointOption(365.0f, 169.0f, 18);
-                        if (checkTouchListStatus == 5) {
-                            uiPopupImage[13].drawAtPointOption(213.0f, 289.0f, 18);
-                        } else {
-                            uiPopupImage[12].drawAtPointOption(213.0f, 289.0f, 18);
-                        }
-                        GameRenderer.setFontDoubleColor(-16777216, -16777216);
-                        GameRenderer.setFontSize(15);
-                        GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153.0f, 17);
-                        GameRenderer.setFontColor(-16777216);
-                        GameRenderer.drawStringM("Bow Master: Double Shot", GameRenderer.CX, 243.0f, 17);
-                        break;
-                    case 8:
-                        uiPopupImage[7].drawAtPointOption(201.0f, 101.0f, 18);
-                        stageClearImage[14].drawAtPointOption(291.0f, 111.0f, 18);
-                        stageClearImage[22].drawAtPointOption(365.0f, 169.0f, 18);
-                        if (checkTouchListStatus == 5) {
-                            uiPopupImage[13].drawAtPointOption(213.0f, 289.0f, 18);
-                        } else {
-                            uiPopupImage[12].drawAtPointOption(213.0f, 289.0f, 18);
-                        }
-                        GameRenderer.setFontDoubleColor(-16777216, -16777216);
-                        GameRenderer.setFontSize(15);
-                        GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153.0f, 17);
-                        GameRenderer.setFontColor(-16777216);
-                        GameRenderer.drawStringM("Archmage: Splashed damage", GameRenderer.CX, 243.0f, 17);
+                        GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 1], GameRenderer.CX, 243, 17);
+                        GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 2], GameRenderer.CX, 262, 17);
                         break;
                 }
-                float f;
-                if (substate == 2) {
-                    float f19 = darkViewCount * 0.033f;
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                    Texture2D.gl.glColor4f(f19, f19, f19, f19);
-                    f = 0.0f;
-                    fillBlackImage.fillRect(0.0f, 0.0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                if (substate >= VIC_NEXTST) {
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                    Texture2D.setColors(darkViewCount * 0.033f);
+                    fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
                     Texture2D.setColors(1);
-                } else
-                    f = 0.0f;
-
-                if (substate == 3) {
-                    uiThemeclearImage[0].drawAtPointOption(f, f, 18);
-                    int i12 = darkViewCount;
-                    if (i12 <= 64) {
-                        if (i12 <= 34) {
-                            uiThemeclearImage[1].drawAtPointOption(200.0f, (i12 - 34) * 20, 18);
-                        } else {
-                            uiThemeclearImage[1].drawAtPointOption(200.0f, 0.0f, 18);
-                        }
-                    }
-                    int i13 = darkViewCount;
-                    if (i13 > 34) {
-                        if (i13 < 64) {
-                            float f20 = ((float) (i13 - 34)) * 0.033f;
-                            Texture2D.gl.glTexEnvf(8960, 8704, 8448.0f);
-                            Texture2D.gl.glColor4f(f20, f20, f20, f20);
-                            uiThemeclearImage[2].drawAtPointOption(200.0f, 0.0f, 18);
-                            Texture2D.setColors(1);
-                        } else {
-                            uiThemeclearImage[2].drawAtPointOption(200.0f, 0.0f, 18);
-                        }
-                    }
-                    int i15 = darkViewCount < 88 ? (88 - darkViewCount) * 20 : 0;
-                    int chapter = st.SID / 10;
-                    for (int i = 0; i < 5; i++) {
-                        if (i < chapter) {
-                            uiThemeclearImage[4].drawAtPointOption((i * 150) + 17, i15 + 222, 18);
-                        } else if (i > chapter) {
-                            uiThemeclearImage[6].drawAtPointOption((i * 150) + 41, i15 + 248, 18);
-                        } else {
-                            uiThemeclearImage[3].drawAtPointOption(40.0f, i15 + 247, 18);
-
-                            if (darkViewCount < 88 || darkViewCount >= 168 || (darkViewCount - 88) % 20 != 1)
-                                uiThemeclearImage[5].drawAtPointOption((chapter * 150) + 132, i15 + 258, 18);
-
-                            int i21 = chapter * 150;
-                            drawThemeTowerUnit(0, DataStage.heroAvail[0], i21 + 101, i15 + 281);
-                            drawThemeTowerUnit(DataStage.heroAvail[1] ? 1 : 4, DataStage.heroAvail[1], i21 + 66, i15 + 299);
-                            drawThemeTowerUnit(DataStage.heroAvail[2] ? 2 : 8, DataStage.heroAvail[2], i21 + 134, i15 + 299);
-
-                            GameRenderer.setFontSize(25);
-                            GameRenderer.setFontColor(-1);
-                            GameRenderer.drawStringM(String.format("Theme %d. %s Cleared", chapter + 1, GameThread.chapterName[chapter]), GameRenderer.CX, i15 + 104, 17);
-                            if (chapter < 4)
-                                GameRenderer.drawStringM(String.format("Opened Next Theme. %s", GameThread.chapterName[chapter + 1]), GameRenderer.CX, i15 + 385, 17);
-                            i++;
-                        }
-                    }
                 }
                 break;
             } case GAMEOVER: {
@@ -1069,7 +940,7 @@ public class StagePage extends StageBase {
                     f = startViewCount < 240 ? (startViewCount - 210) * 0.033f : 1;
                     if (f > 0) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                        Texture2D.gl.glColor4f(f, f, f, f); //TODO - Kill
+                        Texture2D.setColors(f);
                         GameRenderer.setFontDoubleColor(-1, -15385258);
                         GameRenderer.drawStringDoubleM("Highest Score", 290, 328, 18);
                         GameRenderer.drawStringDoubleM(String.valueOf(Config.highScores[st.SID][st.mapType]), 508, 328, 20);
@@ -1111,7 +982,7 @@ public class StagePage extends StageBase {
         drawAllUnit(gl10);
         drawPlayingUi(init);
         if (characterMenuSelectFlag == SEL_USPWN || characterMenuSelectFlag == SEL_HSPWN) {
-            boolean addable = getAddSettingPosition();
+            boolean addable = enableAddSetting(true);
             drawAddGridBlock();
             drawAddRangeCircle(characterAddNumber, characterAddPosX, characterAddPosY, addable);
         }
@@ -1412,9 +1283,9 @@ public class StagePage extends StageBase {
                                 break;
                             case SEL_USPWN:
                                 characterMenuSelectFlag = SEL_DEF;
-                                if (enableAddUnit()) {
+                                if (enableAddSetting(false)) {
                                     GameThread.playSound(14);
-                                    getAddSettingPosition();
+                                    enableAddSetting(true);
                                     st.addUnit(characterAddNumber, (int) ((characterAddPosX - 62) / 45), (int) ((characterAddPosY - 30) / 45));
                                     st.money -= TowerUnit.getBuyPrice(characterAddNumber);
                                 }
@@ -1425,9 +1296,9 @@ public class StagePage extends StageBase {
                                 st.selectedUnit = null;
                                 break;
                             case SEL_HSPWN:
-                                if (enableAddUnit()) {
+                                if (enableAddSetting(false)) {
                                     GameThread.playSound(14);
-                                    getAddSettingPosition();
+                                    enableAddSetting(true);
                                     st.selectedUnit = st.addHero(characterAddNumber - 12, (int) ((characterAddPosX - 62) / 45), (int) ((characterAddPosY - 30) / 45), true);
                                     for (int i = 8; i <= 10; i++)
                                         myOscillator[i].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
@@ -1511,7 +1382,7 @@ public class StagePage extends StageBase {
                     darkViewCount = 0;
                 }
                 break;
-            case CLEAR:
+            case CLEAR: //TODO
                 if (TouchManager.lastActionStatus != 2)
                     return;
                 switch (substate) {
@@ -1811,7 +1682,7 @@ public class StagePage extends StageBase {
                 uiCharButtonImage[lv + 19].drawAtPointOption(764, 401, 17);
             } else {
                 uiCharButtonImage[lv + 16].drawAtPointOption(708, 401, 17);
-                uiCharButtonImage[lv + 18].drawAtPointOption(764, 401.0f, 17);
+                uiCharButtonImage[lv + 18].drawAtPointOption(764, 401, 17);
             }
             GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getLevelupPrice()), 756, 423, 20);
             if (levelUpCount > 0) {
