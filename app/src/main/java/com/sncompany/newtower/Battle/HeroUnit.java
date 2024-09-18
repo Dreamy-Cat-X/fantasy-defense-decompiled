@@ -71,7 +71,6 @@ public class HeroUnit extends TowerUnit {
     public int specialMana;
     public int specialMaxCooltime;
     public int specialShowCount = 0;
-    public int specialType;
     public final int[][] specialDataValue = new int[20][4];
 
     public static String getUnlock(int h) {
@@ -80,8 +79,6 @@ public class HeroUnit extends TowerUnit {
 
     public HeroUnit(DataStage s, int tType, int bX, int bY) {
         super(s, tType, bX, bY);
-        drawData = DataAnim.heroDrawData[type];
-        drawTexture = st.page.heroImages[type];
     }
 
     public HeroUnit(TowerUnit twu, int tType, int lvl) {
@@ -106,7 +103,6 @@ public class HeroUnit extends TowerUnit {
         attackType = dat[11];
         effectType = -1;
         attackEffect = dat[12];
-        specialType = type;
         specialMana = dat[6] + ((dat[6] * getUpgradeRate(17)) / 100);
         specialAttPower = dat[7] + ((dat[7] * (getUpgradeRate(16) + getEquipEffect(DataUpgradeItem.EQ_CHARM, 0))) / 100);
         specialAttCount = dat[8];
@@ -119,9 +115,10 @@ public class HeroUnit extends TowerUnit {
                 effectType = 8;
             }
         }
-
-        drawData = DataAnim.heroDrawData[type];
-        drawTexture = st.page.heroImages[type];
+        if (st != null) {//Check because this is used on equipPage
+            drawData = DataAnim.heroDrawData[type];
+            drawTexture = st.page.heroImages[type];
+        }
     }
 
     @Override
@@ -209,7 +206,7 @@ public class HeroUnit extends TowerUnit {
         for (byte[] e : equipment)
             if (e != null && e[0] == type)
                 eff += DataUpgradeItem.equipData[type][e[1]];
-        return -1;
+        return eff;
     }
 
     public int getUpgradePrice() {
@@ -250,7 +247,7 @@ public class HeroUnit extends TowerUnit {
                 ((StagePage)st.page).specialBlinkCount = 10;
             }
         }
-        return specialAttackFrameCount == -1;
+        return specialAttackFrameCount != -1;
     }
 
     @Override
@@ -331,7 +328,7 @@ public class HeroUnit extends TowerUnit {
     public boolean hitSpecialAttackUnit(MonsterUnit mon) {
         if (!mon.dead()) {
             int specialHitDamage = getSpecialHitDamage(mon);
-            if (specialType == 1) {
+            if (type == 1) {
                 mon.dotHolyDamage = specialHitDamage / 20;
                 mon.dotHolyCount = DataHero.heroData[oldType()][10];
             }
@@ -364,17 +361,15 @@ public class HeroUnit extends TowerUnit {
     public void draw() {
         float x = posX / 50f + 62, y = posY / 50f + 30;
 
-        int dire = lastViewDirection == 6 ? 0 : 1;
         int sprSpd = 5;
+        int dire = lastViewDirection == 6 ? 0 : 1;
         if (specialShowCount > 0) {
             specialShowCount--;
             dire = lastViewDirection == 6 ? 4 : 5;
         } else if (unitStatus == 1) {
             dire = lastViewDirection == 6 ? 2 : 3;
             sprSpd = 3;
-        } else if (unitStatus != 2)
-            sprSpd = 25;
-
+        }
         if (st.turbo > 0)
             sprSpd /= st.turbo;
 
@@ -405,8 +400,9 @@ public class HeroUnit extends TowerUnit {
             if (drawData[i16] != 1000 || glow)
                 Texture2D.setColors(1);
         }
-        float starX = x - (7.5f * (level));
-        for (int i5 = 0; i5 < level + 1; i5++)
-            st.page.uiUpperImage[StageBase.upper_star].drawAtPointOption((i5 * 15) + starX, y + 10, 9);
+        float starX = x - (level < 3 ? 7.5f * level : 15);
+        float dis = level < 3 ? 15 : 15 - (4.5f * (level - 2));
+        for (int I = 0; I < level + 1; I++)
+            st.page.uiUpperImage[StageBase.upper_star].drawAtPointOption((I * dis) + starX, y + 10, 9);
     }
 }

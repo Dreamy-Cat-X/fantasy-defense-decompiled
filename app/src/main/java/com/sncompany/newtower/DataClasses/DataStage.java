@@ -193,7 +193,6 @@ public class DataStage {
 
     public TowerUnit addUnit(int type, int bX, int bY) {
         TowerUnit twu = new TowerUnit(this, type, bX, bY);
-        twu.restatTowerUnit(false);
         towerUnit.add(twu);
         return twu;
     }

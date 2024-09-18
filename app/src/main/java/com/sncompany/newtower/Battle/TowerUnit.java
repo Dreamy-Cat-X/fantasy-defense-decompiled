@@ -85,8 +85,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         originalPosX = posX;
         originalPosY = posY;
 
-        drawData = DataAnim.towerDrawData[type];
-        drawTexture = st.page.towerImages[type];
+        restatTowerUnit(s != null);
     }
 
     public TowerUnit(TowerUnit twr, int tType, int lvl) { //Used exclusively for comparison upgrades
@@ -115,10 +114,8 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         attackType = dat[9];
         effectType = dat[6];
         attackEffect = dat[10];
-        if (targetMaxNum <= 1 || effectType != -1)
-            return;
-        effectType = 7;
-
+        if (targetMaxNum >= 2 && effectType == -1)
+            effectType = 7;
         if (classChange) {
             drawData = DataAnim.towerDrawData[type];
             drawTexture = st.page.towerImages[type];
@@ -212,14 +209,13 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public void upgradeUnit() {
-        if (getUpgradeType() != -1 && st.money >= getUpgradePrice()) {
-            st.money -= getUpgradePrice();
-            type = getUpgradeType();
-            restatTowerUnit(true);
-            st.addEffectUnit(14, posX, posY);
-            GameThread.playSound(13);
-            ((StagePage)st.page).upgradeCount = 10;
-        }
+        st.money -= getUpgradePrice();
+        level = 0;
+        type = getUpgradeType();
+        restatTowerUnit(true);
+        st.addEffectUnit(14, posX, posY);
+        GameThread.playSound(13);
+        ((StagePage)st.page).upgradeCount = 10;
     }
 
     public int getUpgradePrice() {

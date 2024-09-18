@@ -11,7 +11,6 @@ import com.sncompany.newtower.DataClasses.DataUpgradeHero;
 import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
-import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
@@ -20,32 +19,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class UpgradePage extends TPage {
 
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_0_BACK = 60;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_1_OK_TOTAL = 61;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_2_UNIT = 62;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_3_HERO = 63;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_BOTTOM_SELECT = 70;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_BUY_ARCHER = 66;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_BUY_WARRIOR = 65;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_BUY_WIZARD = 67;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_EQUIP_START = 30;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_ETC_START = 60;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_HERO_START = 20;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_INVEN_START = 0;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_LEFT_ARROW = 68;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_RIGHT_ARROW = 69;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_TOTAL_COUNT = 71;
-    public static final int GAME_UPGRADE_HERO_TOUCH_LIST_UPGRADE_START = 40;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_0_BACK = 24;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_1_UPGRADE = 25;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_2_UNIT = 26;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_3_HERO = 27;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_4_COMMON = 28;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_5_WARRIOR = 29;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_6_ARCHER = 30;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_7_WIZARD = 31;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_ITEM_TOTAL_COUNT = 24;
-    public static final int GAME_UPGRADE_UNIT_TOUCH_LIST_TOTAL_COUNT = 32;
+    private static final int BACK = 18, UPGRADE = 19, TOGGLE_HERO = 20, TOT = 21;
     public static final int GAME_UPGRADE_HERO_SKILL_START_Y = 220;
     public static final int[] uiUpunitResource = {R.drawable.ui_upunit_warrior0, R.drawable.ui_upunit_warrior1, R.drawable.ui_upunit_warrior2, R.drawable.ui_upunit_warrior3, R.drawable.ui_upunit_warrior4, R.drawable.ui_upunit_warrior5, R.drawable.ui_upunit_archer0, R.drawable.ui_upunit_archer1, R.drawable.ui_upunit_archer2, R.drawable.ui_upunit_archer3, R.drawable.ui_upunit_archer4, R.drawable.ui_upunit_archer5, R.drawable.ui_upunit_wizard0, R.drawable.ui_upunit_wizard1, R.drawable.ui_upunit_wizard2, R.drawable.ui_upunit_wizard3, R.drawable.ui_upunit_wizard4, R.drawable.ui_upunit_wizard5};
     public static final int[] uiUpheroResource = {R.drawable.ui_uphero_up0, R.drawable.ui_uphero_up1, R.drawable.ui_uphero_up2, R.drawable.ui_uphero_up3, R.drawable.ui_uphero_up4, R.drawable.ui_uphero_up5};
@@ -114,22 +88,22 @@ public class UpgradePage extends TPage {
         int cTLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(25, CGRect.CGRectMake(680.0f, 367.0f, 100.0f, 100.0f));
-            TouchManager.addTouchRectListData(24, CGRect.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
-            TouchManager.addTouchRectListData(27, CGRect.CGRectMake(21.0f, 8.0f, 38.0f, 48.0f));
-            for (int i = 0; i < 18; i++) {
+            TouchManager.addTouchRectListData(UPGRADE, CGRect.CGRectMake(680.0f, 367.0f, 100.0f, 100.0f));
+            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11.0f, 362.0f, 68.0f, 114.0f));
+            TouchManager.addTouchRectListData(TOGGLE_HERO, CGRect.CGRectMake(21.0f, 8.0f, 38.0f, 48.0f));
+            for (int i = 0; i < BACK; i++) {
                 if (hero && !DataStage.heroAvail[i / 6])
                     break;
                 int perc = i % 6, xpos = (perc % 3) * 70, ypos = perc < 3 ? 0 : 70;
                 TouchManager.addTouchRectListData(i, CGRect.CGRectMake(((i / 6) * 255) + 45 + xpos, ypos + GAME_UPGRADE_HERO_SKILL_START_Y, 60.0f, 60.0f));
             }
-            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 32;
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOT;
             cTLS = TouchManager.checkTouchListStatus();
         }
 
-        shopImages[cTLS == 24 ? 2 : 1].drawAtPointOption(11.0f, 356.0f, 18);
-        uiUpgradeImage[hero ? cTLS == 27 ? upgrade_tabuniton : upgrade_tabunitoff :
-                cTLS == 27 ? upgrade_tabheroon : upgrade_tabherooff].drawAtPointOption(21.0f, 8.0f, 18);
+        shopImages[cTLS == BACK ? 2 : 1].drawAtPointOption(11.0f, 356.0f, 18);
+        uiUpgradeImage[hero ? cTLS == TOGGLE_HERO ? upgrade_tabuniton : upgrade_tabunitoff :
+                cTLS == TOGGLE_HERO ? upgrade_tabheroon : upgrade_tabherooff].drawAtPointOption(21.0f, 8.0f, 18);
         uiUpgradeImage[hero ? upgrade_titlehero : upgrade_titleunit].drawAtPointOption(66.0f, 5.0f, 18);
         uiUpgradeImage[hero ? upgrade_basehero : upgrade_baseunit].drawAtPointOption(20.0f, 60.0f, 18);
 
@@ -158,7 +132,7 @@ public class UpgradePage extends TPage {
         uiUpgradeImage[upgrade_uprightbar].drawAtPointOption(572.0f, 8.0f, 18);
         GameRenderer.drawNumberBlock(Config.heroPoints, numberHeroismImage, 779.0f, 24.0f, 1, 20, 1);
         shopImages[0].drawAtPointOption(72.0f, 362.0f, 18);
-        uiUpgradeImage[cTLS == 61 ? upgrade_btnupgradeon : upgrade_btnupgradeoff].drawAtPointOption(680.0f, 367.0f, 18);
+        uiUpgradeImage[cTLS == UPGRADE ? upgrade_btnupgradeon : upgrade_btnupgradeoff].drawAtPointOption(680.0f, 367.0f, 18);
 
         uiUpgradeImage[upgrade_baseblack].drawAtPointOption(96.0f, 386.0f, 18);
         if (lastUpdateItemViewDelay > 0) {
@@ -281,16 +255,16 @@ public class UpgradePage extends TPage {
         int checkTouchListStatus = TouchManager.checkTouchListStatus();
         if (checkTouchListStatus < 0)
             return;
-        if (checkTouchListStatus <= 18) {
+        if (checkTouchListStatus < BACK) {
             upgradeUnitSelectPos = checkTouchListStatus;
         } else {
             switch (checkTouchListStatus) {
-                case 24:
+                case BACK:
                     GameThread.playSound(15);
                     ((MenuPage)parent.parent).child = parent;
                     unload();
                     break;
-                case 25:
+                case UPGRADE:
                     byte[] upgrades = hero ? Config.heroUpgrades[upgradeUnitSelectPos / 6] : Config.unitUpgrades[upgradeUnitSelectPos / 6];
                     int pos = upgradeUnitSelectPos % 6;
                     int price = getUpgradeCost(upgradeUnitSelectPos / 6, pos);
@@ -305,7 +279,7 @@ public class UpgradePage extends TPage {
                         break;
                     }
                     break;
-                case 27:
+                case TOGGLE_HERO:
                     hero = !hero;
                     upgradeUnitSelectPos = 0;
                     GameThread.playSound(14);

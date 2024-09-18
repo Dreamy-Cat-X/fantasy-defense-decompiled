@@ -256,11 +256,11 @@ public class ArrowUnit extends StageEntity {
                             drawTexture[i + 1].drawAtPointOption((moveHistory[i][0] / 50) + 62, (float) (((moveHistory[i][1] / 50) + 30) - 15), 9);
                     drawTexture[0].drawAtPointOption((startX / 50) + 62, (float) (((startY / 50) + 30) - 15), 9);
                     break;
-                case 5:
+                case 2: case 3: case 5:
                     drawTexture[0].drawLineWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
                     drawTexture[1].drawArrowWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
                     break;
-                case 2: case 3: case 12:
+                case 12:
                     drawTexture[3].drawAtPointOption((startX / 50) + 62, (float)(((startY / 50) + 30) - 15), 9);
                     break;
                 default:

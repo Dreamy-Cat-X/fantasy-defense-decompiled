@@ -93,7 +93,7 @@ public class InventoryTable { //Probably useless, but only one way to tell
 
         float y2 = y + 28;
         drawSelectRedBox(x + 53 + ((getSelectedInd() % 8) * 70), y2);
-        drawInvenItemDescription(x + 30, y2, Config.inventory[shopShopInventorySelectPos]); //Might be wrong
+        drawInvenItemDescription(x + 83 + ((getSelectedInd() % 8) * 70), y2, Config.inventory[shopShopInventorySelectPos]); //Might be wrong
     }
 
     public void drawUpItemImage(byte[] itm, float x, float y, int pivot) {

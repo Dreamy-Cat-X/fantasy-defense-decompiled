@@ -153,14 +153,14 @@ public class StageSelectPage extends TPage {
         if (Config.stageProg[getStageIndex()][1] == 0 && Config.highScores[getStageIndex()][0] == -1)
             uiStageImage[43].drawAtPointOption(415f, 364f, 18);
 
-        if (Config.stageProg[getStageIndex()][1] == -1) {
+        if (Config.stageProg[getStageIndex()][0] < 1) {
             uiStageImage[41].drawAtPointOption(535f, 368f, 18);
         } else {
             uiStageImage[mapAttackType == 1 ? 38 : 37].drawAtPointOption(535f, 368f, 18);
             if (Config.highScores[getStageIndex()][1] == -1) //NEW Text
                 uiStageImage[43].drawAtPointOption(541f, 364f, 18);
         }
-        if (Config.stageProg[getStageIndex()][2] == -1) {
+        if (Config.stageProg[getStageIndex()][0] < 2) {
             uiStageImage[42].drawAtPointOption(661f, 368f, 18);
         } else {
             uiStageImage[mapAttackType == 2 ? 40 : 39].drawAtPointOption(661f, 368f, 18);

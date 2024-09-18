@@ -160,7 +160,6 @@ public class LoadingPage extends TPage {
     public void touchCheck() {
         if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)
             return;
-
         reloadTip();
     }
 

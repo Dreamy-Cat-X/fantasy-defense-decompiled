@@ -30,13 +30,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
     public static float TITLE_MAINMENU_REV_COUNT_FADE_OUT_RATE = 0.1f;
     public static float TITLE_MAINMENU_REV_COUNT_LIGHT_FADE_OUT_RATE = TITLE_GLOW_MOVE_DEGREE;
     public static int TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT = 30;
-    public static final int GAME_MAINMENU_TOUCH_LIST_0_START = 0;
-    public static final int GAME_MAINMENU_TOUCH_LIST_1_HELP = 1;
-    public static final int GAME_MAINMENU_TOUCH_LIST_2_RECORD = 2;
-    public static final int GAME_MAINMENU_TOUCH_LIST_3_UPGRADE = 3;
-    public static final int GAME_MAINMENU_TOUCH_LIST_4_SHOP = 4;
-    public static final int GAME_MAINMENU_TOUCH_LIST_5_BACK = 5;
-    public static final int GAME_MAINMENU_TOUCH_LIST_TOTAL_COUNT = 6;
+    public static final int START = 0, HELP = 1,RECORD = 2, UPGRADE = 3, SHOP = 4, BACK = 5, TCH_TOT = 6;
 
 
     public static final int[] mainmenuResource = {R.drawable.ui_mainmenu_background2, R.drawable.ui_mainmenu_startonl, R.drawable.ui_mainmenu_helponl, R.drawable.ui_mainmenu_recordonl, R.drawable.ui_mainmenu_upgradeonl, R.drawable.ui_mainmenu_shoponl, R.drawable.ui_mainmenu_backonl};
@@ -87,9 +81,9 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             if (titleCount > TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT)
                 return;
 
-            if (titleCount >= TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT && (titlePressed == GAME_MAINMENU_TOUCH_LIST_0_START || titlePressed == GAME_MAINMENU_TOUCH_LIST_5_BACK)) {
+            if (titleCount >= TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT && (titlePressed == START || titlePressed == BACK)) {
                 GameThread.stopLoopSound(0);
-                if (!Config.tutorial && titlePressed == GAME_MAINMENU_TOUCH_LIST_0_START) {
+                if (!Config.tutorial && titlePressed == START) {
                     child.unload();
                     child = new TutorialPage(new StageSelectPage(this));
                 }
@@ -113,13 +107,13 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             TouchManager.clearTouchMap();
         mainmenuImage[0].drawAtPointOption(0, 0, 18);
         if (child == null) {
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_0_START, CGRect.CGRectMake(535, 0, 265, 206)); //Stage Select
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_1_HELP, CGRect.CGRectMake(227, 2, 225, 159));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_2_RECORD, CGRect.CGRectMake(5, 23, 190, 207));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_3_UPGRADE, CGRect.CGRectMake(398, 205, 324, 247));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_4_SHOP, CGRect.CGRectMake(98, 258, 236, 203));
-            TouchManager.addTouchRectListData(GAME_MAINMENU_TOUCH_LIST_5_BACK, CGRect.CGRectMake(0, 333, 92, 129));
-            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = GAME_MAINMENU_TOUCH_LIST_TOTAL_COUNT;
+            TouchManager.addTouchRectListData(START, CGRect.CGRectMake(535, 0, 265, 206)); //Stage Select
+            TouchManager.addTouchRectListData(HELP, CGRect.CGRectMake(227, 2, 225, 159));
+            TouchManager.addTouchRectListData(RECORD, CGRect.CGRectMake(5, 23, 190, 207));
+            TouchManager.addTouchRectListData(UPGRADE, CGRect.CGRectMake(398, 205, 324, 247));
+            TouchManager.addTouchRectListData(SHOP, CGRect.CGRectMake(98, 258, 236, 203));
+            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(0, 333, 92, 129));
+            TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TCH_TOT;
             TouchManager.swapTouchMap();
             return;
         }
@@ -188,38 +182,38 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             return;
 
         int CTLS = TouchManager.checkTouchListStatus();
-        if (CTLS != -1 && CTLS <= GAME_MAINMENU_TOUCH_LIST_5_BACK) {
+        if (CTLS != -1 && CTLS <= BACK) {
             if (TouchManager.curruptFlag) {
                 TouchManager.clearTouchStatus();
                 return;
             }
             titlePressed = CTLS;
             switch (CTLS) {
-                case GAME_MAINMENU_TOUCH_LIST_0_START:
+                case START:
                     child = new StageSelectPage(this);
                     GameThread.playSound(14);
                     break;
-                case GAME_MAINMENU_TOUCH_LIST_1_HELP:
+                case HELP:
                     child = new HelpPage(this);
                     GameThread.playSound(14);
                     break;
-                case GAME_MAINMENU_TOUCH_LIST_2_RECORD:
+                case RECORD:
                     child = new RecordPage(this);
                     GameThread.playSound(14);
                     break;
-                case GAME_MAINMENU_TOUCH_LIST_3_UPGRADE: {
+                case UPGRADE: {
                     Consumer<Integer> c = (in -> child = new UpgradePage(child, in));
                     child = new ListPage(this, new Consumer[]{c, c}, new int[]{UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnherooff], UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnheroon], UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnunitoff], UpgradePage.uiUpgradeResource[UpgradePage.upgrade_btnuniton]});
                     GameThread.playSound(14);
                     break;
-                } case GAME_MAINMENU_TOUCH_LIST_4_SHOP: {
+                } case SHOP: {
                     Consumer<Integer> c1 = (in -> child = new ShopPage(child));
                     Consumer<Integer> c2 = (in -> child = new EquipPage(child));
                     int imi = ShopPage.MIN_U;
                     child = new ListPage(this, new Consumer[]{c1, c2}, new int[]{ShopPage.uiShopResource[imi + 2], ShopPage.uiShopResource[imi + 3], ShopPage.uiShopResource[imi], ShopPage.uiShopResource[imi + 1]});
                     GameThread.playSound(14);
                     break;
-                } case GAME_MAINMENU_TOUCH_LIST_5_BACK:
+                } case BACK:
                     child = parent; //lol
                     GameThread.stopLoopSound(1);
                     GameThread.stopLoopSound(0);

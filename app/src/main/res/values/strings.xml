@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Fantasy Defense</string>
+    <string name="tip_num">Tip _ : </string>
+    <string name="tip0">Equip the item on your Hero under the [Item] > [Equipment] menu.</string>
+    <string name="tip1">Clear stages and acquire up to 3 Heroes.</string>
+    <string name="tip2">Certain stages reward you with a Hero character.</string>
+    <string name="tip3">Use Mana to increase the levels of your Heroes.</string>
+    <string name="tip4">Heroes consume Mana to use their special skills.</string>
+    <string name="tip5">Special skills have a downtime after each use.</string>
+    <string name="tip6">Clear a stage to receive Hero Points.</string>
+    <string name="tip7">Configure your game settings under the [Title Screen] > Settings.</string>
+    <string name="tip8">Basic units can be upgraded up to Level 3.</string>
+    <string name="tip9">Hero units can be upgraded up to Level 5.</string>
+    <string name="tip10">Upgrade your units to give them stronger abilities.</string>
 </resources>
