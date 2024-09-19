@@ -88,14 +88,14 @@ public class UpgradePage extends TPage {
         int cTLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(UPGRADE, CGRect.CGRectMake(680, 367, 100, 100));
-            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11, 362, 68, 114));
-            TouchManager.addTouchRectListData(TOGGLE_HERO, CGRect.CGRectMake(21, 8, 38, 48));
+            TouchManager.addTouchRectListData(UPGRADE, CGRect.make(680, 367, 100, 100));
+            TouchManager.addTouchRectListData(BACK, CGRect.make(11, 362, 68, 114));
+            TouchManager.addTouchRectListData(TOGGLE_HERO, CGRect.make(21, 8, 38, 48));
             for (int i = 0; i < BACK; i++) {
                 if (hero && !DataStage.heroAvail[i / 6])
                     break;
                 int perc = i % 6, xpos = (perc % 3) * 70, ypos = perc < 3 ? 0 : 70;
-                TouchManager.addTouchRectListData(i, CGRect.CGRectMake(((i / 6) * 255) + 45 + xpos, ypos + GAME_UPGRADE_HERO_SKILL_START_Y, 60, 60));
+                TouchManager.addTouchRectListData(i, CGRect.make(((i / 6) * 255) + 45 + xpos, ypos + GAME_UPGRADE_HERO_SKILL_START_Y, 60, 60));
             }
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOT;
             cTLS = TouchManager.checkTouchListStatus();
@@ -194,10 +194,10 @@ public class UpgradePage extends TPage {
         uiUpgradeImage[upgrade_iconselectn].drawAtPointOption(x - 11, (-11) + y, 18);
         float xw = x - 2f;
         float ty = (GameThread.gameTimeCount % 109) + y - 49f;
-        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y - 2f, 64f, 2f));
-        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y + 60f, 64f, 2f));
-        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(xw, y, 2f, 60f));
-        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.CGRectMake(x + 60f, y, 2f, 60f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.make(xw, y - 2f, 64f, 2f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.make(xw, y + 60f, 64f, 2f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.make(xw, y, 2f, 60f));
+        uiUpgradeImage[upgrade_iconselecta].drawAtPointOptionGuide(xw, ty, 18, CGRect.make(x + 60f, y, 2f, 60f));
     }
 
     public void drawUpgradeDescription(float x, float y, int unI, int upgI) {

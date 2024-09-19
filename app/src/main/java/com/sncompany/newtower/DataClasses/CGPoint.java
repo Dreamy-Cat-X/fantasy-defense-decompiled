@@ -7,10 +7,9 @@ public class CGPoint {
     public float x;
     public float y;
 
-    public static CGPoint CGPointMake(float x, float y) {
-        if (_CGPoint == null) {
+    public static CGPoint make(float x, float y) {
+        if (_CGPoint == null)
             _CGPoint = new CGPoint();
-        }
         _CGPoint.x = x;
         _CGPoint.y = y;
         return _CGPoint;
@@ -18,7 +17,6 @@ public class CGPoint {
 
     public CGPoint() {
     }
-
     public CGPoint(float x, float y) {
         this.x = x;
         this.y = y;

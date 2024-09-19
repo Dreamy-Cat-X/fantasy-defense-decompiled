@@ -48,10 +48,10 @@ public class HelpPage extends TPage {
         int i = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_0_BACK, CGRect.CGRectMake(11, 412, 68, 58));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_1_TUTORIAL, CGRect.CGRectMake(650, 18, 130, 44));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_2_LEFTARROW, CGRect.CGRectMake(628, 417, 45, 50));
-            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_3_RIGHTARROW, CGRect.CGRectMake(738, 417, 45, 50));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_0_BACK, CGRect.make(11, 412, 68, 58));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_1_TUTORIAL, CGRect.make(650, 18, 130, 44));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_2_LEFTARROW, CGRect.make(628, 417, 45, 50));
+            TouchManager.addTouchRectListData(GAME_HELP_TOUCH_LIST_3_RIGHTARROW, CGRect.make(738, 417, 45, 50));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 4;
             i = TouchManager.checkTouchListStatus();
         }

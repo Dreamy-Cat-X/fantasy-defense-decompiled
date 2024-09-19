@@ -136,13 +136,13 @@ public class LoadingPage extends TPage {
             for (int i = 0; i < 4; i++) {
                 int uin = uiname + i;
                 int px = (GameRenderer.SCRWIDTH_SMALL / 4) * i;
-                uiCharFaceImage[uin].drawAtPointOptionGuide(loadingUnitAdjustPos[uin] + px, 328, 34, CGRect.CGRectMake(px, 0, 200, 328));
+                uiCharFaceImage[uin].drawAtPointOptionGuide(loadingUnitAdjustPos[uin] + px, 328, 34, CGRect.make(px, 0, 200, 328));
                 uiCharNameImage[uin].drawAtPointOption(px + 100, 335, 17);
             }
         }
         uiLoadingImage[0].drawAtPointOption(7, 428, 18);
         uiLoadingImage[1].drawAtPointOption(10, 460, 18);
-        uiLoadingImage[2].drawAtPointOptionGuide(10, 460, 18, CGRect.CGRectMake(10, 460, prog * 780, 10));
+        uiLoadingImage[2].drawAtPointOptionGuide(10, 460, 18, CGRect.make(10, 460, prog * 780, 10));
         GameRenderer.setFontColor(-1);
         GameRenderer.setFontSize(17);
         String[] split = TIP_TEXT[loadTipNumber].split("_");

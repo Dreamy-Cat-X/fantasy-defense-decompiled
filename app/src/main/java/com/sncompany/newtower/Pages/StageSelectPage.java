@@ -97,24 +97,24 @@ public class StageSelectPage extends TPage {
     public void paint(GL10 gl10, boolean init) {
         TouchManager.clearTouchMap();
 
-        TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(0f, 392f, 75f, 88f));
-        TouchManager.addTouchRectListData(START, CGRect.CGRectMake(519f, 286f, 161f, 53f));
+        TouchManager.addTouchRectListData(BACK, CGRect.make(0f, 392f, 75f, 88f));
+        TouchManager.addTouchRectListData(START, CGRect.make(519f, 286f, 161f, 53f));
         if (stageSelectStageNumber > 0)
-            TouchManager.addTouchRectListData(ARROW_L, CGRect.CGRectMake(429f, 180f, 54f, 82f));
+            TouchManager.addTouchRectListData(ARROW_L, CGRect.make(429f, 180f, 54f, 82f));
         if (stageSelectStageNumber < 9)
-            TouchManager.addTouchRectListData(ARROW_R, CGRect.CGRectMake(717f, 180f, 54f, 82f));
+            TouchManager.addTouchRectListData(ARROW_R, CGRect.make(717f, 180f, 54f, 82f));
         if (Config.stageProg[getStageIndex()][0] != -1)
-            TouchManager.addTouchRectListData(MIN_MAPMODE, CGRect.CGRectMake(409f, 368f, 130f, 44f));
+            TouchManager.addTouchRectListData(MIN_MAPMODE, CGRect.make(409f, 368f, 130f, 44f));
         if (Config.stageProg[getStageIndex()][0] >= 1)
-            TouchManager.addTouchRectListData(MIN_MAPMODE + 1, CGRect.CGRectMake(535f, 368f, 130f, 44f));
+            TouchManager.addTouchRectListData(MIN_MAPMODE + 1, CGRect.make(535f, 368f, 130f, 44f));
         if (Config.stageProg[getStageIndex()][0] == 2)
-            TouchManager.addTouchRectListData(MAX_MAPMODE, CGRect.CGRectMake(661f, 368f, 130f, 44f));
-        TouchManager.addTouchRectListData(7, CGRect.CGRectMake(500f, 160f, 200f, 120f)); //Appears to be the minimap box
-        TouchManager.addTouchRectListData(MIN_CHAPTER, CGRect.CGRectMake(0f, 301f, 204f, 147f));
-        TouchManager.addTouchRectListData(MIN_CHAPTER + 1, CGRect.CGRectMake(184f, 274f, 214f, 133f));
-        TouchManager.addTouchRectListData(MIN_CHAPTER + 2, CGRect.CGRectMake(0f, 161f, 211f, 140f));
-        TouchManager.addTouchRectListData(MIN_CHAPTER + 3, CGRect.CGRectMake(210f, 0f, 190f, 224f));
-        TouchManager.addTouchRectListData(MAX_CHAPTER, CGRect.CGRectMake(0f, 0f, 211f, 161f));
+            TouchManager.addTouchRectListData(MAX_MAPMODE, CGRect.make(661f, 368f, 130f, 44f));
+        TouchManager.addTouchRectListData(7, CGRect.make(500f, 160f, 200f, 120f)); //Appears to be the minimap box
+        TouchManager.addTouchRectListData(MIN_CHAPTER, CGRect.make(0f, 301f, 204f, 147f));
+        TouchManager.addTouchRectListData(MIN_CHAPTER + 1, CGRect.make(184f, 274f, 214f, 133f));
+        TouchManager.addTouchRectListData(MIN_CHAPTER + 2, CGRect.make(0f, 161f, 211f, 140f));
+        TouchManager.addTouchRectListData(MIN_CHAPTER + 3, CGRect.make(210f, 0f, 190f, 224f));
+        TouchManager.addTouchRectListData(MAX_CHAPTER, CGRect.make(0f, 0f, 211f, 161f));
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = MAX_CHAPTER + 1;
 
         int LTS = TouchManager.checkTouchListStatus();

@@ -91,11 +91,11 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
         int TLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11, 412, 68, 58));
-            TouchManager.addTouchRectListData(SCORE, CGRect.CGRectMake(30, 90, 40, 155));
-            TouchManager.addTouchRectListData(AWARD, CGRect.CGRectMake(30, 245, 40, 155));
-            TouchManager.addTouchRectListData(BODY, CGRect.CGRectMake(70, 100, 660, 290));
-            TouchManager.addTouchRectListData(SIDEBAR, CGRect.CGRectMake(730, 90, 40, 310));
+            TouchManager.addTouchRectListData(BACK, CGRect.make(11, 412, 68, 58));
+            TouchManager.addTouchRectListData(SCORE, CGRect.make(30, 90, 40, 155));
+            TouchManager.addTouchRectListData(AWARD, CGRect.make(30, 245, 40, 155));
+            TouchManager.addTouchRectListData(BODY, CGRect.make(70, 100, 660, 290));
+            TouchManager.addTouchRectListData(SIDEBAR, CGRect.make(730, 90, 40, 310));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;
             TLS = TouchManager.checkTouchListStatus();
         }
@@ -111,7 +111,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     int BLA = i < rankListDraw.totalHalfBlockSize ? -rankListDraw.blockLengthArray[abs] : rankListDraw.blockLengthArray[abs];
                     int CorrectedBLA = BLA + rankListDraw.blockCorrectionPixel;
 
-                    CGRect rect = CGRect.CGRectMake(70f, 100, 660, 290);
+                    CGRect rect = CGRect.make(70f, 100, 660, 290);
                     uiRecordImage[rec_scoreback].drawAtPointOptionGuide(70f, CorrectedBLA + 100, 18, rect);
                     GameRenderer.setFontDoubleColor(-1, -16107151);
                     GameRenderer.setFontSize(27);
@@ -148,7 +148,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     int abs = Math.abs(j - awardListDraw.totalHalfBlockSize);
                     int blen = j < awardListDraw.totalHalfBlockSize ? -awardListDraw.blockLengthArray[abs] : awardListDraw.blockLengthArray[abs];
 
-                    CGRect rect = CGRect.CGRectMake(70, 100, 660, 240);
+                    CGRect rect = CGRect.make(70, 100, 660, 240);
                     float y = blen + awardListDraw.blockCorrectionPixel + 104;
                     uiRecordImage[rec_awardbar].drawAtPointOptionGuide(70, y, 18, rect);
                     uiAwardImage[awd].drawAtPointOptionGuide(74, y, 18, rect);

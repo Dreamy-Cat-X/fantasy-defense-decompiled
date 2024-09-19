@@ -116,13 +116,13 @@ public class TitlePage extends TPage {
         if (mode == MENUMODE.TITLE) {
             float f = GameThread.gameTimeCount % 40 <= 20 ? (GameThread.gameTimeCount % 40) * GLOW_MOVE_DG : 1 - (((GameThread.gameTimeCount % 40) - 20) * GLOW_MOVE_DG);
             if (gameSubStatus == 12) {
-                TouchManager.addTouchRectListData(START, CGRect.CGRectMake(296, 337, 208, 48));
-                TouchManager.addTouchRectListData(CONFIG, CGRect.CGRectMake(326, 412, 148, 36));
-                TouchManager.addTouchRectListData(ABOUT, CGRect.CGRectMake(9, 429, 42, 42));
-                TouchManager.addTouchRectListData(TWITTER, CGRect.CGRectMake(56, 429, 42, 42));
-                TouchManager.addTouchRectListData(FACEBOOK, CGRect.CGRectMake(104, 429, 42, 42));
+                TouchManager.addTouchRectListData(START, CGRect.make(296, 337, 208, 48));
+                TouchManager.addTouchRectListData(CONFIG, CGRect.make(326, 412, 148, 36));
+                TouchManager.addTouchRectListData(ABOUT, CGRect.make(9, 429, 42, 42));
+                TouchManager.addTouchRectListData(TWITTER, CGRect.make(56, 429, 42, 42));
+                TouchManager.addTouchRectListData(FACEBOOK, CGRect.make(104, 429, 42, 42));
             } else
-                TouchManager.addTouchRectListData(START, CGRect.CGRectMake(0, 0, 800, 480));
+                TouchManager.addTouchRectListData(START, CGRect.make(0, 0, 800, 480));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TITLE_TOTAL;
 
             if (gameSubStatus >= 8) switch (gameSubStatus) {
@@ -229,11 +229,11 @@ public class TitlePage extends TPage {
                 titleImage[title_mobeye].drawAtPointOption(64, 38, 18);
             }
         } else if (mode == MENUMODE.OPTION) {
-            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11, 412, 68, 58));
-            TouchManager.addTouchRectListData(BGM, CGRect.CGRectMake(310, 140, 390, 40));
-            TouchManager.addTouchRectListData(SFX, CGRect.CGRectMake(310, 225, 390, 40));
-            TouchManager.addTouchRectListData(INTRO, CGRect.CGRectMake(218, 307, 118, 46));
-            TouchManager.addTouchRectListData(VIBRATE, CGRect.CGRectMake(583, 307, 118, 46));
+            TouchManager.addTouchRectListData(BACK, CGRect.make(11, 412, 68, 58));
+            TouchManager.addTouchRectListData(BGM, CGRect.make(310, 140, 390, 40));
+            TouchManager.addTouchRectListData(SFX, CGRect.make(310, 225, 390, 40));
+            TouchManager.addTouchRectListData(INTRO, CGRect.make(218, 307, 118, 46));
+            TouchManager.addTouchRectListData(VIBRATE, CGRect.make(583, 307, 118, 46));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = CONFIG_TOTAL;
 
             alwaysImage[ALWAYS_R_BG].drawAtPointOption(0, 0, 18);
@@ -247,8 +247,8 @@ public class TitlePage extends TPage {
             uiEtcImage[etc_scrollbutton].drawAtPointOption(soundBars[1].BarLastPosition, 244, 9);
             uiEtcImage[cTLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11, 412, 18);
         } else {
-            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11, 412, 68, 58));
-            TouchManager.addTouchRectListData(DEVELOPER, CGRect.CGRectMake(340, 130, 260, 50));
+            TouchManager.addTouchRectListData(BACK, CGRect.make(11, 412, 68, 58));
+            TouchManager.addTouchRectListData(DEVELOPER, CGRect.make(340, 130, 260, 50));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = ABOUT_TOTAL;
 
             alwaysImage[ALWAYS_R_BG].drawAtPointOption(0, 0, 18);

@@ -101,23 +101,23 @@ public class ShopPage extends TPage {
         if (init) {
             TouchManager.clearTouchMap();
             if (buyFail == 0) { //Default StoremFront
-                TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11, 362, 68, 114));
-                TouchManager.addTouchRectListData(EQUIP, CGRect.CGRectMake(19, 13, 42, 48));
-                TouchManager.addTouchRectListData(ARROW_L, CGRect.CGRectMake(81, 397, 47, 48));
-                TouchManager.addTouchRectListData(ARROW_R, CGRect.CGRectMake(672, 397, 47, 48));
-                TouchManager.addTouchRectListData(BODY, CGRect.CGRectMake(30, 70, 690, 280));
-                TouchManager.addTouchRectListData(SIDEBAR, CGRect.CGRectMake(722, 70, 52, 280));
+                TouchManager.addTouchRectListData(BACK, CGRect.make(11, 362, 68, 114));
+                TouchManager.addTouchRectListData(EQUIP, CGRect.make(19, 13, 42, 48));
+                TouchManager.addTouchRectListData(ARROW_L, CGRect.make(81, 397, 47, 48));
+                TouchManager.addTouchRectListData(ARROW_R, CGRect.make(672, 397, 47, 48));
+                TouchManager.addTouchRectListData(BODY, CGRect.make(30, 70, 690, 280));
+                TouchManager.addTouchRectListData(SIDEBAR, CGRect.make(722, 70, 52, 280));
                 if (inventory.shopShopInventorySelectPos != -1)
-                    TouchManager.addTouchRectListData(SELL, CGRect.CGRectMake(711, 381, 68, 78));
+                    TouchManager.addTouchRectListData(SELL, CGRect.make(711, 381, 68, 78));
                 for (int j = 0; j < 4; j++) {
                     int touch = (j * 2) + EquipPage.MIN_HERO;
                     int y = j * 70;
-                    TouchManager.addTouchRectListData(touch, CGRect.CGRectMake(565, y + 75, 70, 60));
-                    TouchManager.addTouchRectListData(touch + 1, CGRect.CGRectMake(636, y + 71, 78, 68));
+                    TouchManager.addTouchRectListData(touch, CGRect.make(565, y + 75, 70, 60));
+                    TouchManager.addTouchRectListData(touch + 1, CGRect.make(636, y + 71, 78, 68));
                 }
                 inventory.addTouch();
             } else //BUy fail
-                TouchManager.addTouchRectListData(BTN_OK, CGRect.CGRectMake(213, 259, 381, 65));
+                TouchManager.addTouchRectListData(BTN_OK, CGRect.make(213, 259, 381, 65));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;
             TouchManager.swapTouchMap();
         }
@@ -137,7 +137,7 @@ public class ShopPage extends TPage {
                 int abs = Math.abs(curBlock - upgradeItemListDraw.totalHalfBlockSize);
                 int cY = curBlock < upgradeItemListDraw.totalHalfBlockSize ? -upgradeItemListDraw.blockLengthArray[abs] : upgradeItemListDraw.blockLengthArray[abs];
 
-                CGRect rect = CGRect.CGRectMake(30, 70, 690, 280);
+                CGRect rect = CGRect.make(30, 70, 690, 280);
                 int r2 = cY + upgradeItemListDraw.blockCorrectionPixel;
                 uiShopImage[shop_shopitembar].drawAtPointOptionGuide(30, r2 + 70, 18, rect);
                 inventory.drawUpItemImageGuide(curInd, 40, r2 + 75, rect);

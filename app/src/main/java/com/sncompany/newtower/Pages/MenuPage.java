@@ -107,12 +107,12 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             TouchManager.clearTouchMap();
         mainmenuImage[0].drawAtPointOption(0, 0, 18);
         if (child == null) {
-            TouchManager.addTouchRectListData(START, CGRect.CGRectMake(535, 0, 265, 206)); //Stage Select
-            TouchManager.addTouchRectListData(HELP, CGRect.CGRectMake(227, 2, 225, 159));
-            TouchManager.addTouchRectListData(RECORD, CGRect.CGRectMake(5, 23, 190, 207));
-            TouchManager.addTouchRectListData(UPGRADE, CGRect.CGRectMake(398, 205, 324, 247));
-            TouchManager.addTouchRectListData(SHOP, CGRect.CGRectMake(98, 258, 236, 203));
-            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(0, 333, 92, 129));
+            TouchManager.addTouchRectListData(START, CGRect.make(535, 0, 265, 206)); //Stage Select
+            TouchManager.addTouchRectListData(HELP, CGRect.make(227, 2, 225, 159));
+            TouchManager.addTouchRectListData(RECORD, CGRect.make(5, 23, 190, 207));
+            TouchManager.addTouchRectListData(UPGRADE, CGRect.make(398, 205, 324, 247));
+            TouchManager.addTouchRectListData(SHOP, CGRect.make(98, 258, 236, 203));
+            TouchManager.addTouchRectListData(BACK, CGRect.make(0, 333, 92, 129));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TCH_TOT;
             TouchManager.swapTouchMap();
             return;

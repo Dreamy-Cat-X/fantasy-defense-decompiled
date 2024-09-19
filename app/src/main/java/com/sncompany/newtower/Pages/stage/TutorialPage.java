@@ -106,7 +106,7 @@ public class TutorialPage extends StageBase {
         drawMapTile(gl10);
         drawAllUnit(gl10);
         TouchManager.clearTouchMap();
-        TouchManager.addTouchRectListData(1, CGRect.CGRectMake(0, 437, 43, 39));
+        TouchManager.addTouchRectListData(1, CGRect.make(0, 437, 43, 39));
         if (tutorStep <= 2) {
             int sta = 0, end = 5;
             if (tutorStep == 2) {
@@ -114,28 +114,28 @@ public class TutorialPage extends StageBase {
                 end = 8;
             }
             for (int i = sta; i < end; i++)
-                TouchManager.addTouchRectListData(i, CGRect.CGRectMake(tutorialBoxLinePos[i][4], tutorialBoxLinePos[i][5], tutorialBoxLinePos[i][6], tutorialBoxLinePos[i][7]));
+                TouchManager.addTouchRectListData(i, CGRect.make(tutorialBoxLinePos[i][4], tutorialBoxLinePos[i][5], tutorialBoxLinePos[i][6], tutorialBoxLinePos[i][7]));
         } else if (tutorStep % 2 == 0 && tutorStep <= 16) {
             int[] BoxPos = tutorialBoxLinePos[6 + (tutorStep / 2)];
-            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(BoxPos[4], BoxPos[5], BoxPos[6], BoxPos[7]));
+            TouchManager.addTouchRectListData(0, CGRect.make(BoxPos[4], BoxPos[5], BoxPos[6], BoxPos[7]));
         } else if (tutorStep < 15) {
             int ind = 77 + (65 * (tutorStep - 3) / 2);
-            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(742, ind, 56, 56));
+            TouchManager.addTouchRectListData(0, CGRect.make(742, ind, 56, 56));
         } else switch (tutorStep) {
             case 15:
                 if (characterMenuSelectFlag == 2) {
-                    TouchManager.addTouchRectListData(0, CGRect.CGRectMake(558, 12, 56, 56));
-                    TouchManager.addTouchRectListData(1, CGRect.CGRectMake(618, 12, 56, 56));
-                    TouchManager.addTouchRectListData(2, CGRect.CGRectMake(678, 12, 56, 56));
+                    TouchManager.addTouchRectListData(0, CGRect.make(558, 12, 56, 56));
+                    TouchManager.addTouchRectListData(1, CGRect.make(618, 12, 56, 56));
+                    TouchManager.addTouchRectListData(2, CGRect.make(678, 12, 56, 56));
                 } else if (characterMenuSelectFlag == 0)
-                    TouchManager.addTouchRectListData(0, CGRect.CGRectMake(742, 12, 56, 56));
+                    TouchManager.addTouchRectListData(0, CGRect.make(742, 12, 56, 56));
                 break;
             case 17: case 18:
                 int[] aStep = tutorialBoxLinePos[tutorStep - 2];
-                TouchManager.addTouchRectListData(0, CGRect.CGRectMake(aStep[4], aStep[5], aStep[6], aStep[7]));
+                TouchManager.addTouchRectListData(0, CGRect.make(aStep[4], aStep[5], aStep[6], aStep[7]));
                 break;
             default:
-                TouchManager.addTouchRectListData(0, CGRect.CGRectMake(209, 289, 381, 65));
+                TouchManager.addTouchRectListData(0, CGRect.make(209, 289, 381, 65));
                 break;
         }
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 31;

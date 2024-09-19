@@ -36,8 +36,8 @@ public abstract class EnemyUnit extends StageEntity implements Comparable<EnemyU
         }
         float f3 = (int) f2;
         float f4 = ((int) f) - 15;
-        st.page.uiUpperImage[StageBase.upper_hpbar].drawAtPointOptionClip(f4, f3, 18, CGRect.CGRectMake(0, 0, (float) (i3 - 1), 6));
-        st.page.uiUpperImage[StageBase.upper_hpbar].drawAtPointOptionClip((f4 + i3) - 1, f3, 18, CGRect.CGRectMake(0, 0, 1, 6));
+        st.page.uiUpperImage[StageBase.upper_hpbar].drawAtPointOptionClip(f4, f3, 18, CGRect.make(0, 0, (float) (i3 - 1), 6));
+        st.page.uiUpperImage[StageBase.upper_hpbar].drawAtPointOptionClip((f4 + i3) - 1, f3, 18, CGRect.make(0, 0, 1, 6));
     }
 
     @Override

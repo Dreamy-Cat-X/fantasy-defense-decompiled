@@ -82,7 +82,7 @@ public class StagePage extends StageBase {
             uiCharUpFaceImage = new Texture2D[uiCharUpFaceResource.length], uiMonsterEtcImage = new Texture2D[uiMonsterEtcResource.length], uiMonsterFaceImage = new Texture2D[uiMonsterFaceResource.length], uiMonsterNameImage = new Texture2D[uiMonsterNameResource.length];
 
     public final Texture2D[][] effectImages = new Texture2D[DataAnim.effectDrawResource.length][];
-    private int startViewCount, rewardShowOrder;
+    private int startViewCount, rewardShowOrder = -1;
     public int upgradeCount = 0, specialBlinkCount = 0, characterMenuMonsterViewCount, characterMenuMonsterStartViewCount, levelUpCount = 0, darkViewCount = 0, monsterGoalBlinkCount = 0;
     private STATE state = STATE.START;
     private int substate;
@@ -94,12 +94,12 @@ public class StagePage extends StageBase {
     public StagePage(TPage par, DataStage s) {
         super(par, s);
 
-        for (int i5 = 0; i5 < 11; i5++) {
-            if (i5 < 8)
-                myOscillator[i5].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
+        for (int i = 0; i < 11; i++) {
+            if (i < 8)
+                myOscillator[i].initWithTwoWayStartPosition(200, 0, 10, -10, 5);
             else
-                myOscillator[i5].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
-            myOscillator[i5].fastForward();
+                myOscillator[i].initWithTwoWayStartPosition(0, 300, 10, GameRenderer.PLAYING_OSCILLATOR_HERO_OUT_MOVE_POS, 5);
+            myOscillator[i].fastForward();
         }
     }
 
@@ -357,9 +357,8 @@ public class StagePage extends StageBase {
                 else
                     st.victoryH = (st.SID * 10) + (st.waveManager.current * 8) + (st.life * 3);*/
                 st.victoryH = 100;
-                Config.heroPoints += 100;
+                Config.heroPoints += (int)st.victoryH;
 
-                rewardShowOrder = -1;
                 int[] srds = new int[]{0, 14, 9, 4, 24, 19, 29, 34, 39, 44};
                 for (int i = 0; i < srds.length; i++)
                     if (st.SID == srds[i] && !Config.rewardValues[i]) {
@@ -413,11 +412,9 @@ public class StagePage extends StageBase {
                             break;
                     }
                     if (myOscillator[19].currentCount >= 60) {
-                        if (rewardShowOrder != -2) {
-                            substate = 4;
-                            return;
-                        }
-                        if (st.SID % 10 == 9 && st.SID != 49) {
+                        if (rewardShowOrder >= 0) {
+                            substate = VIC_RWDULK;
+                        } else if (st.SID % 10 == 9 && st.SID != 49) {
                             darkViewCount = 0;
                             substate = VIC_MAPUNLK;
                         } else
@@ -428,9 +425,9 @@ public class StagePage extends StageBase {
                     return;
                 darkViewCount++;
                 if (darkViewCount >= 45) {
-                    if (st.SID < 49 && Config.stageProg[st.SID + 1][0] == -1) {
-                        Config.stageProg[st.SID + 1][0] = 0;
+                    if (st.SID < 49) {
                         Config.lastPlayed++;
+                        Config.saveAll();
                     }
                     if (substate == VIC_TOMAP) {
                         NewTower.switchPage(parent, true); //Stage select
@@ -548,7 +545,7 @@ public class StagePage extends StageBase {
                     Texture2D.setAlpha(1);
                 }
                 TouchManager.clearTouchMap();
-                TouchManager.addTouchRectListData(0, CGRect.CGRectMake(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
+                TouchManager.addTouchRectListData(0, CGRect.make(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 1;
                 TouchManager.swapTouchMap();
                 break;
@@ -558,9 +555,9 @@ public class StagePage extends StageBase {
             case PAUSE: {
                 paint_GAME_PLAYING(gl10, false);
                 TouchManager.clearTouchMap();
-                TouchManager.addTouchRectListData(0, CGRect.CGRectMake(300, 136, 201, 61));
-                TouchManager.addTouchRectListData(1, CGRect.CGRectMake(300, 236, 201, 61));
-                TouchManager.addTouchRectListData(2, CGRect.CGRectMake(300, 336, 201, 61));
+                TouchManager.addTouchRectListData(0, CGRect.make(300, 136, 201, 61));
+                TouchManager.addTouchRectListData(1, CGRect.make(300, 236, 201, 61));
+                TouchManager.addTouchRectListData(2, CGRect.make(300, 336, 201, 61));
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 3;
                 int cTLS = TouchManager.checkTouchListStatus();
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448);
@@ -574,9 +571,8 @@ public class StagePage extends StageBase {
                 System.out.println(substate);
 
                 if (substate != 0) {
-                    float alpha = darkViewCount * 0.033f;
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(alpha);
+                    Texture2D.setAlpha(darkViewCount * 0.033f);
                     fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
                     Texture2D.setAlpha(1);
                 }
@@ -593,28 +589,27 @@ public class StagePage extends StageBase {
                 drawAllUnit(gl10);
                 drawPlayingUi(false);
                 TouchManager.clearTouchMap();
-                boolean z = false;
+                boolean z = st.mapType == 0 || Config.highScores[st.SID + 1][2] == -1;
                 switch (substate) {
                     case VIC_DEF: case VIC_PERFECT: case VIC_MAPUNLK:
-                        TouchManager.addTouchRectListData(0, CGRect.CGRectMake(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
+                        TouchManager.addTouchRectListData(0, CGRect.make(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
                         break;
                     case VIC_MENU:
                         if (startViewCount < 270) {
-                            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
+                            TouchManager.addTouchRectListData(0, CGRect.make(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
                         } else if (st.mapType == 1) {
-                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.CGRectMake(338, 382, 125, 58));
+                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.make(338, 382, 125, 58));
                         } else if (st.SID == 49) {
-                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.CGRectMake(210, 382, 381, 43));
+                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.make(210, 382, 381, 43));
                         } else {
-                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.CGRectMake(156, 382, 125, 58));
-                            TouchManager.addTouchRectListData(VTCH_UPG, CGRect.CGRectMake(338, 382, 125, 58));
-                            z = st.mapType == 0 || Config.highScores[st.SID + 1][2] == -1;
+                            TouchManager.addTouchRectListData(VTCH_MAP, CGRect.make(156, 382, 125, 58));
+                            TouchManager.addTouchRectListData(VTCH_UPG, CGRect.make(338, 382, 125, 58));
                             if (z)
-                                TouchManager.addTouchRectListData(VTCH_NEXT, CGRect.CGRectMake(520, 382, 125, 58));
+                                TouchManager.addTouchRectListData(VTCH_NEXT, CGRect.make(520, 382, 125, 58));
                         }
                         break;
                     case VIC_RWDULK:
-                        TouchManager.addTouchRectListData(0, CGRect.CGRectMake(213, 289, 381, 65));
+                        TouchManager.addTouchRectListData(0, CGRect.make(213, 289, 381, 65));
                         break;
                 }
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = VTCH_NEXT + 1;
@@ -750,6 +745,7 @@ public class StagePage extends StageBase {
                         } else break;
                         f = startViewCount < 270 ? (startViewCount - 240) * 0.033f : 1;
                         if (f > 0) {
+                            Texture2D.setColors(f);
                             if (st.SID == 49) {
                                 uiPopupImage[cTLS == VTCH_MAP ? popup_okon2 : popup_okoff2].drawAtPointOption(210, 382, 18);
                             } else {
@@ -758,6 +754,13 @@ public class StagePage extends StageBase {
                                 if (z)
                                     stageClearImage[cTLS == VTCH_NEXT ? 6 : 5].drawAtPointOption(520, 382, 18);
                             }
+                            Texture2D.setColors(1);
+                        }
+                        if (substate != VIC_MENU) {
+                            Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                            Texture2D.setColors(darkViewCount * 0.033f);
+                            fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
+                            Texture2D.setColors(1);
                         }
                         break;
                     case VIC_RWDULK:
@@ -785,8 +788,18 @@ public class StagePage extends StageBase {
                             case 5:
                                 stageClearImage[15].drawAtPointOption(365, 169, 18);
                                 break;
-                            case 6:
+                            case 6: case -3: case -4:
                                 stageClearImage[22].drawAtPointOption(365, 169, 18);
+                                GameRenderer.setFontDoubleColor(-16777216, -16777216);
+                                GameRenderer.setFontSize(15);
+                                GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153, 17);
+                                GameRenderer.setFontColor(-16777216);
+                                if (rewardShowOrder == 6)
+                                    GameRenderer.drawStringM("Champion: Splashed damage", GameRenderer.CX, 243, 17);
+                                else if (rewardShowOrder == -3)
+                                    GameRenderer.drawStringM("Bow Master: Double Shot", GameRenderer.CX, 243, 17);
+                                else
+                                    GameRenderer.drawStringM("Archmage: Splashed damage", GameRenderer.CX, 243, 17);
                                 break;
                             case 7:
                                 stageClearImage[18].drawAtPointOption(365, 169, 18);
@@ -803,24 +816,8 @@ public class StagePage extends StageBase {
                                 GameRenderer.setFontDoubleColor(-1, -16777216);
                                 GameRenderer.drawStringDoubleM("2500", 400, 220, 17);
                                 break;
-                            default:
-                                stageClearImage[22].drawAtPointOption(365, 169, 18);
-                                GameRenderer.setFontDoubleColor(-16777216, -16777216);
-                                GameRenderer.setFontSize(15);
-                                GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153, 17);
-                                GameRenderer.setFontColor(-16777216);
-                                if (rewardShowOrder == -2)
-                                    GameRenderer.drawStringM("Champion: Splashed damage", GameRenderer.CX, 243, 17);
-                                else if (rewardShowOrder == -3)
-                                    GameRenderer.drawStringM("Bow Master: Double Shot", GameRenderer.CX, 243, 17);
-                                else
-                                    GameRenderer.drawStringM("Archmage: Splashed damage", GameRenderer.CX, 243, 17);
                         }
-                        if (cTLS == 5) {
-                            uiPopupImage[13].drawAtPointOption(213, 289, 18);
-                        } else {
-                            uiPopupImage[12].drawAtPointOption(213, 289, 18);
-                        }
+                        uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(213, 289, 18);
                         GameRenderer.setFontDoubleColor(-16777216, -16777216);
                         GameRenderer.setFontSize(15);
                         GameRenderer.drawStringDoubleM(rewardDataString[substate * 3], GameRenderer.CX, 153, 17);
@@ -828,12 +825,6 @@ public class StagePage extends StageBase {
                         GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 1], GameRenderer.CX, 243, 17);
                         GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 2], GameRenderer.CX, 262, 17);
                         break;
-                }
-                if (substate >= VIC_NEXTST) {
-                    Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setColors(darkViewCount * 0.033f);
-                    fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                    Texture2D.setColors(1);
                 }
                 break;
             } case GAMEOVER: {
@@ -846,14 +837,14 @@ public class StagePage extends StageBase {
                 drawPlayingUi(false);
                 TouchManager.clearTouchMap();
                 if (substate == 0) {
-                    TouchManager.addTouchRectListData(3, CGRect.CGRectMake(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
+                    TouchManager.addTouchRectListData(3, CGRect.make(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
                 } else if (substate == 1) {
                     if (startViewCount < 270) {
-                        TouchManager.addTouchRectListData(4, CGRect.CGRectMake(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
+                        TouchManager.addTouchRectListData(4, CGRect.make(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
                     } else {
-                        TouchManager.addTouchRectListData(2, CGRect.CGRectMake(155, 380, 128, 61));
-                        TouchManager.addTouchRectListData(0, CGRect.CGRectMake(336, 380, 128, 61));
-                        TouchManager.addTouchRectListData(1, CGRect.CGRectMake(517, 380, 128, 61));
+                        TouchManager.addTouchRectListData(2, CGRect.make(155, 380, 128, 61));
+                        TouchManager.addTouchRectListData(0, CGRect.make(336, 380, 128, 61));
+                        TouchManager.addTouchRectListData(1, CGRect.make(517, 380, 128, 61));
                     }
                 }
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 5;
@@ -1382,82 +1373,44 @@ public class StagePage extends StageBase {
                     darkViewCount = 0;
                 }
                 break;
-            case CLEAR: //TODO
+            case CLEAR:
                 if (TouchManager.lastActionStatus != 2)
                     return;
                 switch (substate) {
-                    case 1:
-                        if (cTLS <= 2) {
-                            substate = cTLS + 2;
-                            darkViewCount = 0;
-                        } else if (cTLS == 4) {
-                            if (startViewCount < 270) {
-                                GameThread.playSound(1);
-                                startViewCount = 270;
-                            }
-                        } else if (cTLS == 6) {
+                    case VIC_DEF: case VIC_PERFECT:
+                        if (cTLS == 0)
+                            substate = substate == VIC_DEF && st.perfectClear() ? VIC_PERFECT : rewardShowOrder >= 0 ? VIC_RWDULK : VIC_MENU;
+                        break;
+                    case VIC_MENU:
+                        if (cTLS == -1)
+                            break;
+                        if (startViewCount < 270) {
+                            GameThread.playSound(1);
+                            startViewCount = 270;
+                        } else if (st.SID == 49) {
                             GameThread.playLoopSound(2);
                             NewTower.switchPage(new CinematicPage(parent), true);
+                        } else if (cTLS <= VTCH_NEXT) {
+                            substate += cTLS + 1;
+                            darkViewCount = 0;
                         }
                         break;
-                    case 3:
-                        if (darkViewCount >= 168) {
-                            substate = 1;
-                            break;
-                        }
+                    case VIC_MAPUNLK:
+                        if (darkViewCount >= 168)
+                            substate = VIC_MENU;
                         break;
-                    case 4:
-                        if (TouchManager.checkTouchListStatus() == 5) {
+                    case VIC_RWDULK:
+                        if (TouchManager.checkTouchListStatus() == 0) {
                             if (rewardShowOrder == 6) {
-                                substate = 6;
-                                break;
+                                rewardShowOrder = -3;
+                            } else if (rewardShowOrder == -3) {
+                                rewardShowOrder--;
                             } else if (st.SID % 10 == 9 && st.SID != 49) {
                                 darkViewCount = 0;
-                                substate = 3;
-                                break;
-                            } else {
-                                substate = 1;
-                                break;
-                            }
+                                substate = VIC_MAPUNLK;
+                            } else
+                                substate = VIC_MENU;
                         }
-                        break;
-                    case 5:
-                        if (myOscillator[19].currentCount >= 5) {
-                            if (rewardShowOrder != -1) {
-                                substate = 4;
-                                break;
-                            } else if (st.SID % 10 == 9 && st.SID != 49) {
-                                darkViewCount = 0;
-                                substate = 3;
-                                break;
-                            } else {
-                                substate = 1;
-                                break;
-                            }
-                        }
-                        break;
-                    case 6:
-                        if (TouchManager.checkTouchListStatus() == 5) {
-                            substate = 7;
-                            break;
-                        }
-                        break;
-                    case 7:
-                        if (TouchManager.checkTouchListStatus() == 5) {
-                            substate = 8;
-                            break;
-                        }
-                        break;
-                    case 8:
-                        if (TouchManager.checkTouchListStatus() == 5) {
-                            if (st.SID % 10 == 9 && st.SID != 49) {
-                                darkViewCount = 0;
-                                substate = 3;
-                            } else {
-                                substate = 1;
-                            }
-                        }
-                        break;
                 }
                 break;
             case GAMEOVER:
@@ -1590,7 +1543,7 @@ public class StagePage extends StageBase {
             canLvl = st.selectedUnit.level < getTowerMaxLevel(false) - 1 && st.money >= st.selectedUnit.getLevelupPrice();
         } else {
             buyPrice = HeroUnit.getHeroBuyPrice(hero.type);
-            canLvl = st.selectedUnit.level < getTowerMaxLevel(true) - 1 && st.mana >= st.selectedUnit.getLevelupPrice();
+            canLvl = st.selectedUnit.level < getTowerMaxLevel(true) - 1 && st.mana >= (characterMenuSelectFlag == SEL_HEROMENU ? buyPrice : st.selectedUnit.getLevelupPrice());
         }
         TouchManager.clearTouchMap();
         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
@@ -1636,15 +1589,15 @@ public class StagePage extends StageBase {
             uiCharEtcImage[9 + hero.type].drawAtPointOption(440, 400, 18);
 
         if (!(st.selectedUnit instanceof HeroUnit))
-            TouchManager.addTouchRectListData(CHARMENU_SELL, CGRect.CGRectMake(15, 390, 75, 75));
+            TouchManager.addTouchRectListData(CHARMENU_SELL, CGRect.make(15, 390, 75, 75));
         if (st.selectedUnit.getUpgradeType() != -1 && !cantUpgr)
-            TouchManager.addTouchRectListData(CHARMENU_UPGRADE, CGRect.CGRectMake(435, 350, 235, 115));
+            TouchManager.addTouchRectListData(CHARMENU_UPGRADE, CGRect.make(435, 350, 235, 115));
         if (st.selectedUnit.level < getTowerMaxLevel(st.selectedUnit instanceof HeroUnit) - 1 && canLvl)
-            TouchManager.addTouchRectListData(CHARMENU_LVL, CGRect.CGRectMake(670, 350, 115, 115));
+            TouchManager.addTouchRectListData(CHARMENU_LVL, CGRect.make(670, 350, 115, 115));
         if (characterMenuSelectFlag < SEL_HEROMENU && hero != null && Config.rewardValues[3] && hero.specialCooltime <= 0 && st.mana >= hero.specialMana)
-            TouchManager.addTouchRectListData(CHARMENU_SPECIAL, CGRect.CGRectMake(625, 272, 160, 69));
+            TouchManager.addTouchRectListData(CHARMENU_SPECIAL, CGRect.make(625, 272, 160, 69));
 
-        TouchManager.addTouchRectListData(CHARMENU_BODY, CGRect.CGRectMake(0, 343, GameRenderer.SCRWIDTH, 137));
+        TouchManager.addTouchRectListData(CHARMENU_BODY, CGRect.make(0, 343, GameRenderer.SCRWIDTH, 137));
         TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = CHARMENU_YES + 1;
         int cTLS = TouchManager.checkTouchListStatus();
         if (!(st.selectedUnit instanceof HeroUnit)) {
@@ -1721,11 +1674,11 @@ public class StagePage extends StageBase {
     public void drawPlayingUi(boolean init) {
         if (init && characterMenuSelectFlag < SEL_CHARMENU) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(PLAY_PAUSE, CGRect.CGRectMake(0, 437, 43, 39));
-            TouchManager.addTouchRectListData(PLAY_SOFTPAUSE, CGRect.CGRectMake(0, 344, 43, 39));
-            TouchManager.addTouchRectListData(PLAY_TURBO, CGRect.CGRectMake(0, 393, 43, 39));
+            TouchManager.addTouchRectListData(PLAY_PAUSE, CGRect.make(0, 437, 43, 39));
+            TouchManager.addTouchRectListData(PLAY_SOFTPAUSE, CGRect.make(0, 344, 43, 39));
+            TouchManager.addTouchRectListData(PLAY_TURBO, CGRect.make(0, 393, 43, 39));
             if (characterMenuSelectFlag == SEL_DEF) {
-                TouchManager.addTouchRectListData(PLAY_HEROS, CGRect.CGRectMake(742, 12, 56, 56));
+                TouchManager.addTouchRectListData(PLAY_HEROS, CGRect.make(742, 12, 56, 56));
             } else if (characterMenuSelectFlag == SEL_HERO) {
                 int heroPos = 586;
                 for (int i = 0; i < 3; i++)
@@ -1734,12 +1687,12 @@ public class StagePage extends StageBase {
                 for (int i = 0; i < 3; i++)
                     if (DataStage.heroAvail[i]) {
                         if (checkEnableHeroBuyUnit(i))
-                            TouchManager.addTouchRectListData(i + PLAY_HEROS + 1, CGRect.CGRectMake(heroPos, 12, 56, 56));
+                            TouchManager.addTouchRectListData(i + PLAY_HEROS + 1, CGRect.make(heroPos, 12, 56, 56));
                         heroPos += 60;
                     }
             }
             for (int i = 0; i < PLAY_HEROS; i++)
-                TouchManager.addTouchRectListData(i, CGRect.CGRectMake(742, 77 + (65 * i), 56, 56));
+                TouchManager.addTouchRectListData(i, CGRect.make(742, 77 + (65 * i), 56, 56));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = PLAY_TURBO + 1;
         }
 
@@ -1775,8 +1728,8 @@ public class StagePage extends StageBase {
             drawCharMenu();
             if (characterMenuSelectFlag >= SEL_UPGRMENU && characterMenuSelectFlag < SEL_HEROMENU) {
                 TouchManager.clearTouchMap();
-                TouchManager.addTouchRectListData(CHARMENU_YES, CGRect.CGRectMake(162, 290, 236, 43));
-                TouchManager.addTouchRectListData(CHARMENU_NO, CGRect.CGRectMake(402, 290, 236, 43));
+                TouchManager.addTouchRectListData(CHARMENU_YES, CGRect.make(162, 290, 236, 43));
+                TouchManager.addTouchRectListData(CHARMENU_NO, CGRect.make(402, 290, 236, 43));
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = CHARMENU_YES + 1;
                 Texture2D.setAlpha(0.5f);
                 fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);

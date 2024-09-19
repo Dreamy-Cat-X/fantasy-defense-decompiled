@@ -66,19 +66,19 @@ public class EquipPage extends TPage {
         int cTLS = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(BACK, CGRect.CGRectMake(11, 362, 68, 114));
+            TouchManager.addTouchRectListData(BACK, CGRect.make(11, 362, 68, 114));
             if (inventory.shopShopInventorySelectPos >= 0)
-                TouchManager.addTouchRectListData(SELL, CGRect.CGRectMake(711, 381, 68, 78)); //sell
-            TouchManager.addTouchRectListData(SHOP, CGRect.CGRectMake(16, 8, 46, 49));
-            TouchManager.addTouchRectListData(L_ARROW, CGRect.CGRectMake(81, 397, 47, 48));
-            TouchManager.addTouchRectListData(R_ARROW, CGRect.CGRectMake(672, 397, 47, 48));
+                TouchManager.addTouchRectListData(SELL, CGRect.make(711, 381, 68, 78)); //sell
+            TouchManager.addTouchRectListData(SHOP, CGRect.make(16, 8, 46, 49));
+            TouchManager.addTouchRectListData(L_ARROW, CGRect.make(81, 397, 47, 48));
+            TouchManager.addTouchRectListData(R_ARROW, CGRect.make(672, 397, 47, 48));
             for (int j = 0; j < heroes.length * 2; j += 2) {
                 if (Config.rewardValues[j]) {
                     float jd = 203 + (j * 127.5f); //The distance per block is 255 and 127.5 if half of that. 203 is initial value
-                    TouchManager.addTouchRectListData(MIN_HERO + j, CGRect.CGRectMake(jd, 224, 60f, 60f));
-                    TouchManager.addTouchRectListData(MIN_HERO + 1 + j, CGRect.CGRectMake(jd, 293, 60f, 60f));
+                    TouchManager.addTouchRectListData(MIN_HERO + j, CGRect.make(jd, 224, 60f, 60f));
+                    TouchManager.addTouchRectListData(MIN_HERO + 1 + j, CGRect.make(jd, 293, 60f, 60f));
                 } else
-                    TouchManager.addTouchRectListData(MIN_LOCK + (j / 2), CGRect.CGRectMake(109, 174, 100, 120));
+                    TouchManager.addTouchRectListData(MIN_LOCK + (j / 2), CGRect.make(109, 174, 100, 120));
             }
             inventory.addTouch();
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = TOTAL;

@@ -10,7 +10,7 @@ public class CGRect {
     public float sizeHeight;
     public float sizeWidth;
 
-    public static CGRect CGRectMake(float x, float y, float w, float h) {
+    public static CGRect make(float x, float y, float w, float h) {
         if (_CGRect == null)
             _CGRect = new CGRect();
 

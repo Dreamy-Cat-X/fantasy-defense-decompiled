@@ -70,8 +70,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         DRAW_SCALE_SIZE = 1;
         DRAW_SCALE_SIZE_X = 1;
         DRAW_SCALE_SIZE_Y = 1;
-        DRAW_SCALE_X_MOVE = 0;
-        DRAW_SCALE_Y_MOVE = 0;
         Texture2D.DRAW_ADJUST_X_MOVE = 0;
         Texture2D.DRAW_ADJUST_Y_MOVE = 0;
         float dw = SCRWIDTH != SCRWIDTH_SMALL ? (float)SCRWIDTH / SCRWIDTH_SMALL : 1;
@@ -84,11 +82,13 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 f3 = (int) (((SCRHEIGHT / dw) - SCRHEIGHT_SMALL) / 2);
                 DRAW_SCALE_Y_MOVE = f3;
                 Texture2D.DRAW_ADJUST_Y_MOVE = f3;
+                DRAW_SCALE_X_MOVE = 0;
             } else {
                 DRAW_SCALE_SIZE = dh;
-                f3 = (int) (((SCRWIDTH / dh) - SCRWIDTH_SMALL) / 2);
+                f3 = (int)(((SCRWIDTH / dh) - SCRWIDTH_SMALL) / 2);
                 DRAW_SCALE_X_MOVE = f3;
                 Texture2D.DRAW_ADJUST_X_MOVE = f3;
+                DRAW_SCALE_Y_MOVE = 0;
             }
         }
         gl10.glViewport(0, 0, SCRWIDTH, SCRHEIGHT);
@@ -278,10 +278,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         int bX = bound - testboxCoord[1][2], cX = (bound - testboxCoord[2][2]) / 2;
         int dX = cX - testboxCoord[0][2], eX = cX + testboxCoord[2][2];
 
-        testboxImage.drawAtPointOptionClip(x + 0, y, 18, CGRect.CGRectMake(testboxCoord[0][0], testboxCoord[0][1], testboxCoord[0][2], testboxCoord[0][3]));
-        testboxImage.drawAtPointOptionClip(x + bX, y, 18, CGRect.CGRectMake(testboxCoord[1][0], testboxCoord[1][1], testboxCoord[1][2], testboxCoord[1][3]));
-        testboxImage.drawAtPointOptionClip(x + cX, y, 18, CGRect.CGRectMake(testboxCoord[2][0], testboxCoord[2][1], testboxCoord[2][2], testboxCoord[2][3]));
-        testboxImage.drawAtPointOptionClipPixel(x + testboxCoord[0][2], y, 18, CGRect.CGRectMake(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), dX, testboxCoord[3][3]);
-        testboxImage.drawAtPointOptionClipPixel(x + eX, y, 18, CGRect.CGRectMake(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), bX - eX, testboxCoord[3][3]);
+        testboxImage.drawAtPointOptionClip(x + 0, y, 18, CGRect.make(testboxCoord[0][0], testboxCoord[0][1], testboxCoord[0][2], testboxCoord[0][3]));
+        testboxImage.drawAtPointOptionClip(x + bX, y, 18, CGRect.make(testboxCoord[1][0], testboxCoord[1][1], testboxCoord[1][2], testboxCoord[1][3]));
+        testboxImage.drawAtPointOptionClip(x + cX, y, 18, CGRect.make(testboxCoord[2][0], testboxCoord[2][1], testboxCoord[2][2], testboxCoord[2][3]));
+        testboxImage.drawAtPointOptionClipPixel(x + testboxCoord[0][2], y, 18, CGRect.make(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), dX, testboxCoord[3][3]);
+        testboxImage.drawAtPointOptionClipPixel(x + eX, y, 18, CGRect.make(testboxCoord[3][0], testboxCoord[3][1], testboxCoord[3][2], testboxCoord[3][3]), bX - eX, testboxCoord[3][3]);
     }
 }

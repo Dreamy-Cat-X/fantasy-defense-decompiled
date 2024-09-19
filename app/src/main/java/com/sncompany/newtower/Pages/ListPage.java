@@ -47,9 +47,9 @@ public class ListPage extends TPage { //This class' parent will be a MenuPage al
         int i = -1;
         if (init) {
             TouchManager.clearTouchMap();
-            TouchManager.addTouchRectListData(0, CGRect.CGRectMake(1, 412, 68, 58));
-            TouchManager.addTouchRectListData(1, CGRect.CGRectMake(300, 158, 199, 65));
-            TouchManager.addTouchRectListData(2, CGRect.CGRectMake(300, 258, 199, 65));
+            TouchManager.addTouchRectListData(0, CGRect.make(1, 412, 68, 58));
+            TouchManager.addTouchRectListData(1, CGRect.make(300, 158, 199, 65));
+            TouchManager.addTouchRectListData(2, CGRect.make(300, 258, 199, 65));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 3;
             i = TouchManager.checkTouchListStatus();
 
