@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import com.sncompany.newtower.DataClasses.CGRect;
 import com.sncompany.newtower.GameRenderer;
+import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
@@ -13,50 +14,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class LoadingPage extends TPage {
 
-    static final String[] TIP_TEXT = {"Tip 1  : Equip the item on your Hero under the [Item] > [Equipment] menu.",
-            "Tip 2  : Clear stages and acquire up to 3 Heroes.",
-            "Tip 3  : Certain stages reward you with a Hero character.",
-            "Tip 4  : Use Mana to increase the levels of your Heroes.",
-            "Tip 5  : Heroes consume Mana to use their special skills.",
-            "Tip 6  : Special skills have a downtime after each use.",
-            "Tip 7  : Clear a stage to receive Hero Points.",
-            "Tip 8  : Configure your game settings under the [Title Screen] > Settings.",
-            "Tip 9  : Basic units can be upgraded up to Level 3.",
-            "Tip 10 : Hero units can be upgraded up to Level 5.",
-            "Tip 11 : Upgrade your units to give them stronger abilities.",
-            "Tip 12 : Use gold to advance your units to higher classes or increase their levels.",
-            "Tip 13 : Increase the level of your units to improve their combat capabilities.",
-            "Tip 14 : Advance your units to higher classes for more versatile abilities. ",
-            "Tip 15 : Reselling a unit returns to you a portion _ of the money that you spent to hire the unit.",
-            "Tip 16 : You will fail a Boss stage if you fail to defeat the bosses.",
-            "Tip 17 : Boss monsters have high HP, but they move slowly.",
-            "Tip 18 : Monsters drop gold and mana upon death.",
-            "Tip 19 : Use Hero Points to buy items under [Item] > [Shop].",
-            "Tip 20 : Use Hero Points to upgrade your Hero and basic units under the [Skill] menu.",
-            "Tip 21 : Knights, the 2nd advanced class of Warrior,_have high Attack Speed.",
-            "Tip 22 : Warlords, the 3rd advanced class of Warrior,_inflict Splashed damage to multiple enemies.",
-            "Tip 23 : Special Warrior Brandishers attack monsters with a chance of causing Stun.",
-            "Tip 24 : Splatters, the 2nd advanced class of Archer,_shoot multi arrows and attack up to 3 enemies at the same time.",
-            "Tip 25 : Sky Arrows, the 3rd advanced class of Archer,_strike enemies with their extremely Long Attack Range.",
-            "Tip 26 : Special Archer Holy Eyes specialize in DoT (Damage over Time) attacks.",
-            "Tip 27 : Sorceresses, the 2nd advanced class of Wizard, inflict Piercing damage.",
-            "Tip 28 : Blasters, the 3rd advanced class of Wizard,_inflict Splashed damage with their Fire magic.",
-            "Tip 29 : Special Wizard Ice Mages attack monsters with a chance of causing Slow.",
-            "Tip 30 : Clear all the normal stages to unlock two special modes: _ Destroy the Moon and Infinite.",
-            "Tip 31 : A stage's Infinite Mode is only opened_when you clear it with a perfect score.",
-            "Tip 32 : The objective of Destroy the Moon is to destroy_the monster gates where monsters spawn.",
-            "Tip 33 : Destroy stage objects to obtain gold and mana.",
-            "Tip 34 : When clearing a normal stage more than twice,_you will receive only 70% of the Hero Point reward from the stage.",
-            "Tip 35 : Touch a monster or object to manually attack it.",
-            "Tip 36 : Blasters, the 3rd advanced class of Wizard,_inflict Splashed damage with their Fire magic.",
-            "Tip 37 : Special Wizard Ice Mages attack monsters with a chance of causing Slow.",
-            "Tip 38 : You will receive a Hero unit or additional ability_each time you clear 5 stages.",
-            "Tip 39 : Clear 25 stages to upgrade your units up to 10 levels.",
-            "Tip 40 : Clear 5 stages to unlock the special skill of your Hero units.",
-            "Tip 41 : Clear 30 stages to unlock the special attack ability_of your Hero units. (Splashed damage or Double Shot)",
-            "Tip 42 : Never hesitate to upgrade your Heroes and basic units_when facing a difficult stage.",
-            "Tip 43 : Certain stages contain special items for you to discover.",
-            "Tip 44 : Cash items endow special abilities."};
+    private static final int[] tips = {R.string.tip0, R.string.tip1, R.string.tip2, R.string.tip3, R.string.tip4, R.string.tip5, R.string.tip6, R.string.tip7, R.string.tip8, R.string.tip9, R.string.tip10, R.string.tip11, R.string.tip12, R.string.tip13, R.string.tip14, R.string.tip15, R.string.tip16, R.string.tip17, R.string.tip18, R.string.tip19, R.string.tip20, R.string.tip21, R.string.tip22, R.string.tip23, R.string.tip24, R.string.tip25, R.string.tip26, R.string.tip27, R.string.tip28, R.string.tip29, R.string.tip30, R.string.tip31, R.string.tip32,
+            R.string.tip33, R.string.tip34, R.string.tip35, R.string.tip36, R.string.tip37, R.string.tip38, R.string.tip39, R.string.tip40, R.string.tip41, R.string.tip42, R.string.tip43};
     private float prog = 0f;
     private final int loadingViewType;
     private int loadTipNumber;
@@ -145,8 +104,10 @@ public class LoadingPage extends TPage {
         uiLoadingImage[2].drawAtPointOptionGuide(10, 460, 18, CGRect.make(10, 460, prog * 780, 10));
         GameRenderer.setFontColor(-1);
         GameRenderer.setFontSize(17);
-        String[] split = TIP_TEXT[loadTipNumber].split("_");
-        GameRenderer.drawFont.getTextBounds(TIP_TEXT[loadTipNumber], 0, TIP_TEXT[loadTipNumber].length(), Texture2D.bounds_);
+        String text = GameThread.getString(tips[loadTipNumber]);
+        String[] split = text.split("_");
+        split[0] = GameThread.getString(R.string.tip_num).replace("_", (loadTipNumber+1)+"") + split[0];
+        GameRenderer.drawFont.getTextBounds(text, 0, text.length(), Texture2D.bounds_);
         int boundsize = Texture2D.bounds_.right - Texture2D.bounds_.left;
         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
         Texture2D.setColors(0.5f);
@@ -164,6 +125,6 @@ public class LoadingPage extends TPage {
     }
 
     private void reloadTip() {
-        loadTipNumber = NewTower.getRandom(TIP_TEXT.length);
+        loadTipNumber = NewTower.getRandom(tips.length);
     }
 }

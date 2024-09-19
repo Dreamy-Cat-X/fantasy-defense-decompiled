@@ -52,7 +52,7 @@ public class Config {
         int rwc = t;
         for (int i = DataAward.AWARD_10_Title; i <= DataAward.AWARD_30_Title; i++)
             if (awardValues[i]) rwc--;
-            else awardValues[i] = (1 + i - DataAward.AWARD_10_Title) * 10 >= rwc;
+            else awardValues[i] = rwc >= (1 + (i - DataAward.AWARD_10_Title)) * 10;
         return t;
     }
 
