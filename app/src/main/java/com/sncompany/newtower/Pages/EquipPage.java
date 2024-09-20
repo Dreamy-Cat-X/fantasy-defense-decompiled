@@ -110,22 +110,21 @@ public class EquipPage extends TPage {
                     GameRenderer.setFontColor(-65536);
                 else
                     GameRenderer.setFontColor(-8519745);
-                int i5 = heroes[j].unitPower;
-                GameRenderer.drawStringDoubleM(String.valueOf(i5 + (((heroes[j].getUpgradeRate( 7) + heroes[j].getEquipEffect(DataUpgradeItem.EQ_RING, 0)) * i5) / 100)), 167, 257, 20);
+                GameRenderer.drawStringDoubleM(String.valueOf(heroes[j].getHitPower()), 167 + pDis, 257, 20);
 
                 if (avail && heq[0] == DataUpgradeItem.EQ_BOOT) {
                     GameRenderer.setFontColor(-65536);
                 } else
                     GameRenderer.setFontColor(-8519745);
-                GameRenderer.drawStringDoubleM(heroes[j].towerCoolTimeMax <= 1 ? "MAX" : String.valueOf(heroes[j].getAttackSpeed()), 167, 284, 20);
+                GameRenderer.drawStringDoubleM(heroes[j].towerCoolTimeMax <= 1 ? "MAX" : String.valueOf(heroes[j].getAttackSpeed()), 167 + pDis, 284, 20);
 
                 if (avail && heq[0] == DataUpgradeItem.EQ_AMLT) {
                     GameRenderer.setFontColor(-65536);
                 } else
                     GameRenderer.setFontColor(-8519745);
-                GameRenderer.drawStringDoubleM(String.valueOf(heroes[j].attackRange), 167, 311, 20);
+                GameRenderer.drawStringDoubleM(String.valueOf(heroes[j].attackRange), 167 + pDis, 311, 20);
                 GameRenderer.setFontColor(-8519745);
-                GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(heroes[j].effectType), 167, 338, 20);
+                GameRenderer.drawStringDoubleM(TowerUnit.getEffectTypeString(heroes[j].effectType), 167 + pDis, 338, 20);
             } else {
                 shopP.uiShopImage[ShopPage.shop_warriorshadow + (j * 3)].drawAtPointOption(19f + pDis, 74 + (287 - shopP.uiShopImage[ShopPage.shop_warriorshadow+(j*3)]._sizeY), 18);
                 shopP.uiShopImage[ShopPage.shop_lock].drawAtPointOption(109f + pDis, 174f, 18);
@@ -148,13 +147,13 @@ public class EquipPage extends TPage {
                 alpha = 1 - ((GameThread.gameTimeCount % 10) * 0.1f);
 
             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-            Texture2D.setAlpha(alpha);
+            Texture2D.setColors(alpha);
             for (int j = 0; j < 3; j++) {
                 if (Config.rewardValues[j * 2])
                     for (int i12 = 0; i12 < 2; i12++)
                         shopP.uiShopImage[ShopPage.shop_glow].drawAtPointOption(((j * 255) + GAME_SHOP_EQUIP_SKILL_START_X) - 7, ((i12 * 69) + GAME_SHOP_EQUIP_SKILL_START_Y) - 7, 18);
             }
-            Texture2D.setAlpha(1);
+            Texture2D.setColors(1);
             inventory.drawInventoryWindow(72, 362, i8, true);
         } else
             inventory.drawInventoryWindow(72, 362, i8, false);
@@ -163,9 +162,9 @@ public class EquipPage extends TPage {
         if (heq != null) {
             if (TouchManager.lastActionStatus == TouchManager.TOUCH_STATUS_START_INPUTED && t != TouchManager.emptyPosition) {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                Texture2D.setAlpha(GAME_SHOP_EQUIP_MOVING_ALPHA);
+                Texture2D.setColors(GAME_SHOP_EQUIP_MOVING_ALPHA);
                 inventory.drawUpItemImage(heq, t.x, t.y - 25, 9);
-                Texture2D.setAlpha(1f);
+                Texture2D.setColors(1f);
             } else if (selectedHero != -1)
                 inventory.drawInvenItemDescription((selectedHero * 255) + GAME_SHOP_EQUIP_SKILL_START_X + 30, (selectedHeroEquip * 69) + GAME_SHOP_EQUIP_SKILL_START_Y, heq);
         }

@@ -135,9 +135,9 @@ public class TitlePage extends TPage {
                     titleBossImage[3].drawAtPointOption(0, bPos + ((int) titleBossImage[0]._sizeY) + ((int) titleBossImage[1]._sizeY) + ((int) titleBossImage[2]._sizeY), 18);
                     if (alpha > 0) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                        Texture2D.setAlpha(alpha);
+                        Texture2D.setColors(alpha);
                         fillWhiteImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                        Texture2D.setAlpha(1);
+                        Texture2D.setColors(1);
                     }
                     titleImage[title_mob1].drawAtPointOption(0, 9, 18);
                     titleImage[title_mobeye].drawAtPointOption(64, 38, 18);
@@ -165,14 +165,14 @@ public class TitlePage extends TPage {
                     titleImage[title_title].drawAtPointOption(41, 22, 18);
 
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(f);
+                    Texture2D.setColors(f);
                     titleImage[title_titleglow].drawAtPointOption(24, 6, 18);
-                    Texture2D.setAlpha(1);
+                    Texture2D.setColors(1);
                     if (f > 0) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                        Texture2D.setAlpha(f);
+                        Texture2D.setColors(f);
                         fillWhiteImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                        Texture2D.setAlpha(1);
+                        Texture2D.setColors(1);
                         break;
                     }
                     break;
@@ -185,9 +185,9 @@ public class TitlePage extends TPage {
                     titleImage[title_title].drawAtPointOption(41, 22, 18);
 
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(f);
+                    Texture2D.setColors(f);
                     titleImage[title_titleglow].drawAtPointOption(24, 6, 18);
-                    Texture2D.setAlpha(1f);
+                    Texture2D.setColors(1f);
                     float alp = gameTitleViewCount * 0.1f;
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                     Texture2D.setColors(alp);
@@ -208,9 +208,9 @@ public class TitlePage extends TPage {
                     titleImage[title_title].drawAtPointOption(41, 22, 18);
 
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(f);
+                    Texture2D.setColors(f);
                     titleImage[title_titleglow].drawAtPointOption(24, 6, 18);
-                    Texture2D.setAlpha(1);
+                    Texture2D.setColors(1);
 
                     titleImage[cTLS == 0 ? 9 : 8].drawAtPointOption(296, 337, 18);
                     titleImage[cTLS == 1 ? 11 : 10].drawAtPointOption(326, 412, 18);

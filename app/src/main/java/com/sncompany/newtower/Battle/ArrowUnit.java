@@ -256,12 +256,9 @@ public class ArrowUnit extends StageEntity {
                             drawTexture[i + 1].drawAtPointOption((moveHistory[i][0] / 50) + 62, (float) (((moveHistory[i][1] / 50) + 30) - 15), 9);
                     drawTexture[0].drawAtPointOption((startX / 50) + 62, (float) (((startY / 50) + 30) - 15), 9);
                     break;
-                case 2: case 3: case 5:
+                case 2: case 3: case 5: case 12:
                     drawTexture[0].drawLineWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
                     drawTexture[1].drawArrowWithImage((shooter.posX / 50) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
-                    break;
-                case 12:
-                    drawTexture[3].drawAtPointOption((startX / 50) + 62, (float)(((startY / 50) + 30) - 15), 9);
                     break;
                 default:
                     drawTexture[0].drawLineWithImage((shooter.posX / 50f) + 62, (float) (((shooter.posY / 50) + 30) - 15), (tX - shooter.posX) / 50f, ((float) tY - shooter.posY) / 50f, (moveCount * 1f) / moveMaxCount);
@@ -274,9 +271,9 @@ public class ArrowUnit extends StageEntity {
                 drawTexture[(type + 3) - 19].drawAtPointOption((startX / 50) + 62, (startY / 50) + 30, 9);
             } else if (moveCount > -10) {
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                Texture2D.setAlpha((moveCount * (-0.05f)) + 0.5f);
+                Texture2D.setColors((moveCount * (-0.05f)) + 0.5f);
                 drawTexture[(type + 3) - 19].drawAtPointOptionSize((startX / 50) + 62, (startY / 50) + 30, 9, 1f - (moveCount * 0.5f));
-                Texture2D.setAlpha(1);
+                Texture2D.setColors(1);
             }
         } else {
             int rInd = type - 33, sum = 4 * (rInd <= 1 ? 1 - rInd : rInd);

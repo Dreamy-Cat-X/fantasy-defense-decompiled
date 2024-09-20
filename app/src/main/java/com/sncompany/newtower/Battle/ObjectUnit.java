@@ -137,7 +137,7 @@ public class ObjectUnit extends EnemyUnit {
         if (type == -2) {
             float f3 = objectVanishCount < OBJECT_VANISHING_HALF_COUNT ? 1 : 1 - (objectVanishCount * OBJECT_VANISHING_ALPHA_DEGREE);
             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-            Texture2D.setAlpha(f3);
+            Texture2D.setColors(f3);
             int i2 = rewardType;
             if (i2 == 0) {
                 st.page.uiUpperImage[StageBase.upper_money].drawAtPointOption(x - 1, y - (objectVanishCount * 2), 20);
@@ -146,7 +146,7 @@ public class ObjectUnit extends EnemyUnit {
                 st.page.uiUpperImage[StageBase.upper_mana].drawAtPointOption(x - 1, (y - (objectVanishCount * 2)) + 1, 20);
                 GameRenderer.drawNumberBlock(rewardValue, st.page.numberManaImage, x + 1, (y - (objectVanishCount * 2)) + 2, 1, 18, 1);
             }
-            Texture2D.setAlpha(1);
+            Texture2D.setColors(1);
             return;
         }
         int i3 = 34;

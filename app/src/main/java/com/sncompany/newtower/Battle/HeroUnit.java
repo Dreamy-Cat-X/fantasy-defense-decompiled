@@ -155,7 +155,7 @@ public class HeroUnit extends TowerUnit {
     }
 
     public static int getHeroBuyPrice(int type) {
-        if (type == -1 || !DataStage.heroAvail[type * 2])
+        if (type == -1 || !DataStage.heroAvail[type])
             return 0;
         int i3 = DataHero.heroData[type * 5][0];
         return i3 + ((Config.heroUpgrades[type][0] * DataUpgradeHero.upgradeHeroData[type][0] * i3) / 100);
@@ -251,9 +251,8 @@ public class HeroUnit extends TowerUnit {
     }
 
     @Override
-    public int getSoundAttackType() {
-        int i3 = DataHero.heroData[oldType()][13];
-        return 22 + (5 * i3) - ((i3*(i3+1))/2);
+    protected int getVoice() {
+        return 22 + (5 * type) - ((type*(type+1))/2);
     }
 
     @Override
@@ -270,7 +269,7 @@ public class HeroUnit extends TowerUnit {
     /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
     /* JADX WARN: Failed to find 'out' block for switch in B:13:0x0043. Please report as an issue. */
     public void useSpecialAttack() {
-        GameThread.playSound(19);
+        GameThread.playSound(16);
 
         st.selectedUnit = this; //type + 8
         int arrowC = 0;
@@ -384,7 +383,7 @@ public class HeroUnit extends TowerUnit {
                     f5 = Math.max(0.3f, (float)(specialMaxCooltime - specialCooltime) / specialMaxCooltime);
 
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                Texture2D.setAlpha(f5);
+                Texture2D.setColors(f5);
             }
             int i15 = (i * 5) + (sCur + 1);
             int i16 = i15 + 3;

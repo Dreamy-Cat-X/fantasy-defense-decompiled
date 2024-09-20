@@ -128,9 +128,9 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                 if (titleCount < TITLE_MAINMENU_REV_COUNT_FADE_AWAY_REMOVE_COUNT) {
                     a = 0.5f - (titleCount * TITLE_MAINMENU_COUNT_FADE_IN_BLACK_DEGREE);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(a);
+                    Texture2D.setColors(a);
                     fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                    Texture2D.setAlpha(1f);
+                    Texture2D.setColors(1f);
                 }
                 float f4 = 1 - (titleCount * TITLE_MAINMENU_REV_COUNT_FADE_OUT_RATE);
                 if (f4 > 0) {
@@ -157,9 +157,9 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
             if (titleCount > TITLE_MAINMENU_COUNT_FADE_IN_START_POS) {
                 float aa = (titleCount - TITLE_MAINMENU_COUNT_FADE_IN_START_POS) * TITLE_MAINMENU_COUNT_FADE_IN_BLACK_DEGREE;
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                Texture2D.setAlpha(aa);
+                Texture2D.setColors(aa);
                 fillBlackImage.fillRect(0f, 0f, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                Texture2D.setAlpha(1f);
+                Texture2D.setColors(1f);
             }
             float aaa = Math.min(1f, (titleCount - TITLE_MAINMENU_COUNT_FADE_IN_START_POS) * TITLE_MAINMENU_COUNT_FADE_IN_RATE);
             if (aaa > 0f) {

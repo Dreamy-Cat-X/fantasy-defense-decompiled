@@ -237,9 +237,8 @@ public class Config {
             movie = lbs[1];
             vibration = lbs[2];
 
-            heroAvail[0] = rewardValues[0];
-            heroAvail[1] = rewardValues[2];
-            heroAvail[2] = rewardValues[4];
+            for (int i = 0; i <= 2; i++)
+                heroAvail[i] = rewardValues[i * 2];
         } catch (Exception e) {
             e.printStackTrace();
             newGame();

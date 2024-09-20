@@ -103,7 +103,7 @@ public class EffectUnit extends StageEntity {
             return;
         if (opa != 1) {
             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-            Texture2D.setAlpha(opa);
+            Texture2D.setColors(opa);
         }
         for (int i = 0; i < end; i++) {
             int coords = (i * 5) + i10;
@@ -112,8 +112,7 @@ public class EffectUnit extends StageEntity {
             } else
                 drawTexture[drawData[coords]].drawAtPointOptionFlip((posX / 50) + 62 + drawData[coords + 1], (posY / 50) + 30 + drawData[coords + 2] + ybn, 18);
         }
-
         if (opa < 1)
-            Texture2D.setAlpha(1);
+            Texture2D.setColors(1);
     }
 }

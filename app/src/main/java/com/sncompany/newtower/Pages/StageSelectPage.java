@@ -88,7 +88,6 @@ public class StageSelectPage extends TPage {
         Config.saveAll();
         DataStage nst = new DataStage(map, mapAttackType);
 
-        GameThread.playLoopSound(2);
         NewTower.switchPage(new StagePage(this, nst), true); //End of update_GAME_STAGE_START_LOADING
     }
 

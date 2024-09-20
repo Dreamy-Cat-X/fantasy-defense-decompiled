@@ -141,6 +141,7 @@ public class StagePage extends StageBase {
         loaded = true;
         if (prog != null)
             prog.accept(1f);
+        GameThread.playLoopSound(2);
     }
 
     @Override
@@ -286,7 +287,7 @@ public class StagePage extends StageBase {
                     st.unlockUnit();
                 } else if (spe != null && spe.updateSpecial()) {
                     if (spe.specialAttackFrameCount == 60)
-                        GameThread.playSound(16 + spe.type);
+                        GameThread.playSound(17 + spe.type);
                     else if (spe.type == 2 && spe.specialAttackFrameCount == 135)
                         st.setReverseSpecialIce();
                     st.updateEffects(false);
@@ -397,9 +398,9 @@ public class StagePage extends StageBase {
                 st.sortEntities();
                 if (substate == VIC_DEF) {
                     myOscillator[11].updatePosition();
-                } else if (substate == VIC_MENU) {
+                } else if (substate == VIC_MENU && startViewCount < 270) {
                     if (startViewCount % 30 == 10)
-                        GameThread.playSound(1);
+                        GameThread.playSound(15);
                     startViewCount++;
                 } else if (substate == VIC_MAPUNLK) {
                     darkViewCount++;
@@ -447,7 +448,7 @@ public class StagePage extends StageBase {
                         myOscillator[11].updatePosition();
                 } else if (substate == 1) {
                     if (startViewCount % 30 == 0 && startViewCount <= 240)
-                        GameThread.playSound(1);
+                        GameThread.playSound(15);
                     startViewCount++;
                 }
                 if (substate < 2)
@@ -506,6 +507,7 @@ public class StagePage extends StageBase {
         st.turbo = 1;
         softPause = false;
         state = STATE.START;
+        GameThread.playLoopSound(2);
     }
 
     @Override
@@ -522,14 +524,14 @@ public class StagePage extends StageBase {
                 float alpha = Math.min(1, startViewCount < 15 ? 1 - ((startViewCount * 0.5f) / 15) : 0.5f - (((startViewCount - 15) * 0.5f) / 20));
                 if (alpha > 0) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(alpha);
+                    Texture2D.setColors(alpha);
                     fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                    Texture2D.setAlpha(1);
+                    Texture2D.setColors(1);
                 }
                 float walpha = Math.min(1, startViewCount < 15 ? startViewCount / 15f : 1 - ((startViewCount - 15) / 20f));
                 if (walpha > 0) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(walpha);
+                    Texture2D.setColors(walpha);
                     GameRenderer.setFontDoubleColor(-1, -16702370);
                     GameRenderer.setFontSize(50);
                     GameRenderer.drawStringDoubleM(GameThread.chapterName[st.SID / 10], GameRenderer.CX, 115, 9);
@@ -542,7 +544,7 @@ public class StagePage extends StageBase {
                     GameRenderer.setFontDoubleColor(-65703, -9816043);
                     GameRenderer.setFontSize(25);
                     GameRenderer.drawStringDoubleM("Touch the screen!!", GameRenderer.CX, 391, 17);
-                    Texture2D.setAlpha(1);
+                    Texture2D.setColors(1);
                 }
                 TouchManager.clearTouchMap();
                 TouchManager.addTouchRectListData(0, CGRect.make(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
@@ -561,9 +563,9 @@ public class StagePage extends StageBase {
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = 3;
                 int cTLS = TouchManager.checkTouchListStatus();
                 Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                Texture2D.setAlpha(0.5f);
+                Texture2D.setColors(0.5f);
                 fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                Texture2D.setAlpha(1);
+                Texture2D.setColors(1);
                 uiIngameImage[0].drawAtPointOption(GameRenderer.CX, 6, 17);
                 uiIngameImage[cTLS == 0 ? 2 : 1].drawAtPointOption(GameRenderer.CX, 136, 17);
                 uiIngameImage[cTLS == 1 ? 4 : 3].drawAtPointOption(GameRenderer.CX, 236, 17);
@@ -572,9 +574,9 @@ public class StagePage extends StageBase {
 
                 if (substate != 0) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(darkViewCount * 0.033f);
+                    Texture2D.setColors(darkViewCount * 0.033f);
                     fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                    Texture2D.setAlpha(1);
+                    Texture2D.setColors(1);
                 }
                 TouchManager.swapTouchMap();
                 break;
@@ -982,21 +984,21 @@ public class StagePage extends StageBase {
                 if (hero.specialAttackFrameCount < 60) {
                     float alpha;
                     if (hero.specialAttackFrameCount < 50)
-                        alpha = Math.min((hero.specialAttackFrameCount) * 0.1f, 1);
+                        alpha = Math.min(hero.specialAttackFrameCount * 0.1f, 1);
                     else
-                        alpha = Math.max((hero.specialAttackFrameCount - 50) * 0.1f, 0);
+                        alpha = Math.max((60 - hero.specialAttackFrameCount) * 0.1f, 0);
 
                     if (alpha > 0) {
                         if (alpha < 1) {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                            Texture2D.setAlpha(alpha);
+                            Texture2D.setColors(alpha);
                         }
                         specialSwordImage[5].drawAtPointOption(0, 0, 18);
                         specialSwordImage[5].drawAtPointOptionFlipHorizon(0, GameRenderer.SCRHEIGHT_SMALL, 34);
                         for (int i = 0; i < 90; i++)
                             specialSwordImage[(i % 3) + 6].drawAtPointOption(NewTower.getRandom(GameRenderer.SCRWIDTH), NewTower.getRandom(GameRenderer.SCRHEIGHT_SMALL), 9);
                         if (alpha < 1)
-                            Texture2D.setAlpha(1);
+                            Texture2D.setColors(1);
                     }
                     if (hero.specialAttackFrameCount >= 10 && hero.specialAttackFrameCount < 50) {
                         int sX;
@@ -1036,14 +1038,14 @@ public class StagePage extends StageBase {
                     if (alpha > 0) {
                         if (alpha < 1) {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                            Texture2D.setAlpha(alpha);
+                            Texture2D.setColors(alpha);
                         }
                         specialArrowImage[15].drawAtPointOption(GameRenderer.SCRWIDTH, 0, 20);
                         specialArrowImage[15].drawAtPointOptionFlipHorizon(0, GameRenderer.SCRHEIGHT, 34);
                         for (int i = 0; i < 90; i++)
                             specialArrowImage[(i % 3) + 16].drawAtPointOption(NewTower.getRandom(GameRenderer.SCRWIDTH), NewTower.getRandom(GameRenderer.SCRHEIGHT_SMALL), 9);
                         if (alpha < 1)
-                            Texture2D.setAlpha(1);
+                            Texture2D.setColors(1);
                     }
                     if (hero.specialAttackFrameCount >= 10 && hero.specialAttackFrameCount < 50) {
                         int bX = 200, bY = 10;
@@ -1063,9 +1065,9 @@ public class StagePage extends StageBase {
                 if (hero.specialAttackFrameCount >= 165) {
                     float alpha = Math.min((((float) (hero.specialAttackFrameCount - 165)) * 0.025f) + 0.5f, 1);
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(alpha);
+                    Texture2D.setColors(alpha);
                     specialArrowImage[19].drawAtPointOptionSize(GameRenderer.CX, GameRenderer.CY, 9, alpha);
-                    Texture2D.setAlpha(1);
+                    Texture2D.setColors(1);
                 }
             } else {
                 if (hero.specialAttackFrameCount < 60) {
@@ -1078,14 +1080,14 @@ public class StagePage extends StageBase {
                     if (alpha > 0) {
                         if (alpha < 1) {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                            Texture2D.setAlpha(alpha);
+                            Texture2D.setColors(alpha);
                         }
                         specialIceImage[1].drawAtPointOption(GameRenderer.SCRWIDTH_SMALL, 0, 20);
                         specialIceImage[1].drawAtPointOptionFlip(0, 0, 18);
                         for (int i = 0; i < 90; i++)
                             specialIceImage[(i % 3) + 17].drawAtPointOption(NewTower.getRandom(GameRenderer.SCRWIDTH), NewTower.getRandom(GameRenderer.SCRHEIGHT_SMALL), 9);
                         if (alpha < 1)
-                            Texture2D.setAlpha(1);
+                            Texture2D.setColors(1);
                     }
                     if (hero.specialAttackFrameCount >= 10 && hero.specialAttackFrameCount < 50) {
                         int mY = 40;
@@ -1104,9 +1106,9 @@ public class StagePage extends StageBase {
                     float alpha = Math.min(2 - (((float) (hero.specialAttackFrameCount - 150)) * 0.1f), 1);
                     if (alpha > 0) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                        Texture2D.setAlpha(alpha);
+                        Texture2D.setColors(alpha);
                         fillWhiteImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                        Texture2D.setAlpha(1);
+                        Texture2D.setColors(1);
                     }
                 }
             }
@@ -1115,16 +1117,16 @@ public class StagePage extends StageBase {
         if (blink > 0) {
             float alpha = blink * 0.2f;
             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-            Texture2D.setAlpha(alpha);
+            Texture2D.setColors(alpha);
             fillWhiteImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-            Texture2D.setAlpha(1);
+            Texture2D.setColors(1);
         }
         if (monsterGoalBlinkCount > 0) {
             float al = (monsterGoalBlinkCount < 3 ? monsterGoalBlinkCount : 6 - monsterGoalBlinkCount) * MONSTER_GOAL_BLINK_ALPHA_DEGREE;
             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-            Texture2D.setAlpha(al);
+            Texture2D.setColors(al);
             fillWhiteImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-            Texture2D.setAlpha(1);
+            Texture2D.setColors(1);
         }
         if (characterMenuMonsterViewCount > 0) {
             if (characterMenuMonsterViewCount < 10) {
@@ -1423,7 +1425,7 @@ public class StagePage extends StageBase {
                         substate = cTLS + 2;
                         darkViewCount = 0;
                     } else if (cTLS == 4 && startViewCount < 270) {
-                        GameThread.playSound(1);
+                        GameThread.playSound(15);
                         startViewCount = 270;
                     }
                 }
@@ -1548,9 +1550,9 @@ public class StagePage extends StageBase {
         TouchManager.clearTouchMap();
         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
 
-        Texture2D.setAlpha(0.2f);
+        Texture2D.setColors(0.2f);
         fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH, 343);
-        Texture2D.setAlpha(1);
+        Texture2D.setColors(1);
         uiCharEtcImage[0].drawAtPointOption(0, 343, 18);
         if (upgradeCount > 0) {
             if (upgradeCount > 5) {
@@ -1644,24 +1646,24 @@ public class StagePage extends StageBase {
                 fillWhiteImage.fillRect(670, 350, 115, 115);
                 Texture2D.setColors(1);
             }
+            if (hero != null && Config.rewardValues[3]) {
+                int dInd = (hero.type * 2) + 8;
+                if (cTLS == CHARMENU_SPECIAL)
+                    dInd++;
+                uiCharButtonImage[dInd].drawAtPointOption(625, 272, 18);
+
+                if (hero.specialCooltime > 0 || st.mana < hero.specialMana) {
+                    Texture2D.gl.glTexEnvf(8960, 8704, 8448);
+                    Texture2D.setColors(0.5f);
+                    fillBlackImage.fillRect(631, 278, (hero.specialCooltime * 148f) / hero.specialMaxCooltime, 57);
+                    Texture2D.setColors(1);
+                }
+                GameRenderer.drawStringM(String.valueOf(hero.specialMana), 730, 318, 20);
+            }
         } else if (characterMenuSelectFlag == SEL_HEROMENU) {
             uiCharButtonImage[TouchManager.checkTouchListStatus() == CHARMENU_LVL ? 5 : 4].drawAtPointOption(670, 350, 18);
             uiUpperImage[upper_mana].drawAtPointOption(696, 428, 18);
             GameRenderer.drawStringM(String.valueOf(buyPrice), 755, 430, 20);
-        }
-        if (hero != null && Config.rewardValues[3]) {
-            int dInd = (hero.type * 2) + 8;
-            if (cTLS == CHARMENU_SPECIAL)
-                dInd++;
-            uiCharButtonImage[dInd].drawAtPointOption(625, 272, 18);
-
-            if (hero.specialCooltime > 0 || st.mana < hero.specialMana) {
-                Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                Texture2D.setColors(0.5f);
-                fillBlackImage.fillRect(631, 278, (hero.specialCooltime * 148f) / hero.specialMaxCooltime, 57);
-                Texture2D.setColors(1);
-            }
-            GameRenderer.drawStringM(String.valueOf(hero.specialMana), 730, 318, 20);
         }
     }
 
@@ -1705,7 +1707,7 @@ public class StagePage extends StageBase {
         if (characterMenuSelectFlag == SEL_HSPWN && myOscillator[8].currentCount < 10) {
             float f = myOscillator[8].currentCount * 0.1f;
             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-            Texture2D.setAlpha(f);
+            Texture2D.setColors(f);
         }
         int heroX = 586;
         for (int i = 0; i < 3; i++)
@@ -1721,7 +1723,7 @@ public class StagePage extends StageBase {
                 heroX += 60;
             }
         if (characterMenuSelectFlag == SEL_HSPWN && myOscillator[8].currentCount < 10)
-            Texture2D.setAlpha(1);
+            Texture2D.setColors(1);
         uiButtonImage[18].drawAtPointOption(770, 12, 17);
 
         if (characterMenuSelectFlag >= SEL_CHARMENU) {
@@ -1731,9 +1733,9 @@ public class StagePage extends StageBase {
                 TouchManager.addTouchRectListData(CHARMENU_YES, CGRect.make(162, 290, 236, 43));
                 TouchManager.addTouchRectListData(CHARMENU_NO, CGRect.make(402, 290, 236, 43));
                 TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = CHARMENU_YES + 1;
-                Texture2D.setAlpha(0.5f);
+                Texture2D.setColors(0.5f);
                 fillBlackImage.fillRect(0, 0, GameRenderer.SCRWIDTH_SMALL, GameRenderer.SCRHEIGHT_SMALL);
-                Texture2D.setAlpha(1);
+                Texture2D.setColors(1);
 
                 uiPopupImage[popup_background].drawAtPointOption(152, 144, 18);
                 if (characterMenuSelectFlag == SEL_UPGRMENU) {

@@ -124,14 +124,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         drawFont.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD));
     }
 
-    public static void setFontName(String str) {
-        String str2 = lastFontName;
-        if (str2 == null || !str2.equals(str)) {
-            lastFontName = str;
-            drawFont.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD));
-        }
-    }
-
     public static void setFontColor(int i) {
         fontColor = i;
         strokeColor = i;
@@ -219,25 +211,16 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         } else
             maxCount = numSiz;
 
-        if (pivot == 9 || pivot == 10 || pivot == 12)
-            y -= bnsY / 2f;
-        else if (pivot == 36 || pivot == 33 || pivot == 34)
-            y -= bnsY;
-
-        if (pivot != 9) {
-            if (pivot != 10 && pivot != 17 && pivot != 18 && pivot != 33 && pivot != 34)
-                nwidth /= 2;
-
-            x += nwidth;
-            float dx = x;
-            for (int i11 = 0; i11 < maxCount; i11++) {
-                int idrw = number % 10;
-                texture2DArr[idrw].drawAtPointOption(dx, y + bnsY, 36);
-                dx -= texture2DArr[idrw]._sizeX + extW;
-                if (number > 0)
-                    number /= 10;
-            }
-            return x;
+        if (pivot != 18)
+            nwidth /= 2;
+        x += nwidth;
+        float dx = x;
+        for (int i = 0; i < maxCount; i++) {
+            int idrw = number % 10;
+            texture2DArr[idrw].drawAtPointOption(dx, y + bnsY, 36);
+            dx -= texture2DArr[idrw]._sizeX + extW;
+            if (number > 0)
+                number /= 10;
         }
         return x;
     }
@@ -245,11 +228,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static void drawStringM(String str, float x, float y, int pivot) {
         if (setDrawStringBuffer(str, fontColor))
             drawStringBuffer.drawAtPointOption(x, y, pivot);
-    }
-
-    static void drawStringGuideM(String str, float x, float y, int pivot, CGRect cGRect) {
-        if (setDrawStringBuffer(str, fontColor))
-            drawStringBuffer.drawAtPointOptionGuide(x, y, pivot, cGRect);
     }
 
     public static void drawStringDoubleM(String str, float x, float y, int pivot) {

@@ -255,7 +255,7 @@ public abstract class StageBase extends TPage {
     }
 
     public int getNextDrawObject(int uInd, int mInd, int oInd) {
-        int high = -1, poS = Integer.MIN_VALUE;
+        int high = -1, poS = Integer.MAX_VALUE;
         if (oInd < tmap.objectUnit.size()) {
             high = 2;
             poS = tmap.objectUnit.get(oInd).posY;

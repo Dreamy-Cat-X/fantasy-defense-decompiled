@@ -9,20 +9,18 @@ public class MediaManager2 {
     MediaPlayer[] mPlayer;
 
     public MediaManager2(int i) {
-        this.mPlayer = new MediaPlayer[i];
+        mPlayer = new MediaPlayer[i];
     }
 
-    //Z is always false lol
     public void setMediaFile(int i, Context context, int rid) {
-        MediaPlayer[] mediaPlayerArr = this.mPlayer;
-        if (i >= mediaPlayerArr.length)
+        if (i >= mPlayer.length)
             return;
 
-        mediaPlayerArr[i] = MediaPlayer.create(context, rid);
-        this.mPlayer[i].setLooping(false);
+        mPlayer[i] = MediaPlayer.create(context, rid);
+        mPlayer[i].setLooping(false);
         // from class: com.sncompany.newtower.MediaManager2.1
 // android.media.MediaPlayer.OnCompletionListener
-        this.mPlayer[i].setOnCompletionListener(mediaPlayer -> {
+        mPlayer[i].setOnCompletionListener(mediaPlayer -> {
             try {
                 mediaPlayer.stop();
                 mediaPlayer.prepare();
@@ -35,16 +33,15 @@ public class MediaManager2 {
 
     public void setVolume(int i, int i2, int i3) {
         float f = i2 / i3;
-        this.mPlayer[i].setVolume(f, f);
+        mPlayer[i].setVolume(f, f);
     }
 
     public void play(int i) {
-        MediaPlayer[] mediaPlayerArr = this.mPlayer;
-        if (mediaPlayerArr[i] == null || mediaPlayerArr[i].isPlaying()) {
+        if (mPlayer[i] == null || mPlayer[i].isPlaying())
             return;
-        }
+
         try {
-            this.mPlayer[i].start();
+            mPlayer[i].start();
             Log.d("SOUND", "START");
         } catch (Exception unused) {
             Log.d("SOUND", "START ERROR2");
@@ -52,10 +49,10 @@ public class MediaManager2 {
     }
 
     public void stop(int i) {
-        this.mPlayer[i].stop();
+        mPlayer[i].stop();
     }
 
     public void release(int i) {
-        this.mPlayer[i].release();
+        mPlayer[i].release();
     }
 }

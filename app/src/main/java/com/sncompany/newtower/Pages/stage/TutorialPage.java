@@ -192,7 +192,7 @@ public class TutorialPage extends StageBase {
                 float a = timeInterval * 0.1f;
                 if (a < 1) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);
-                    Texture2D.setAlpha(a);
+                    Texture2D.setColors(a);
                 }
                 tutorialImage[tutorialUnitPos[pInd][2]].drawAtPointOption(tutorialUnitPos[pInd][3], tutorialUnitPos[pInd][4], 18);
             } else if (div > 2 && div < 6)

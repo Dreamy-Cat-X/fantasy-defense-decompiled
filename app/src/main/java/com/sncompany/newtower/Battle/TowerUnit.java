@@ -287,7 +287,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
                 unitStatusCount = 0;
             }
 
-            if (unitStatus == 1 && (soundAttackType = getSoundAttackType()) != -1)
+            if (unitStatus == 1 && (soundAttackType = getVoice()) != -1)
                 GameThread.playSound(soundAttackType);
         }
     }
@@ -305,17 +305,17 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         }
     }
 
-    public int getSoundAttackType() {
+    protected int getVoice() {
         switch (type) {
-            case 0: case 2: return 21;
-            case 1: return 23;
-            case 3: return 22;
-            case 4: case 6: return 24;
-            case 5: return 26;
-            case 7: return 25;
-            case 8: return 27;
-            case 9: return 29;
-            case 10: case 11: return 28;
+            case 0: case 2: return 21;//Warrior,Knight
+            case 1: return 23;//Brandisher
+            case 3: return 22;//Warlord
+            case 4: case 6: return 24;//Archer, Sharpshooter
+            case 5: return 26;//Holy Eye
+            case 7: return 25;//Sky Arrow
+            case 8: return 27;//Mage
+            case 9: return 29;//IceMage
+            case 10: case 11: return 28;//Sorceress, Blaster
             default: return -1;
         }
     }

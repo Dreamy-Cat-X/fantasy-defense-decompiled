@@ -70,14 +70,6 @@ public class Texture2D {
     public static final float VIEW_SCRWIDTH = 800;
     public static final float VIEW_SCRHEIGHT = 480;
 
-    public static void setAlpha(float a) {
-        gl.glColor4f(1, 1, 1, a);
-    }
-
-    /**
-     * Similar to setAlpha, but darkens the picture as the opacity lowers
-     * @param a RGBA value
-     */
     public static void setColors(float a) {
         gl.glColor4f(a, a, a, a);
     }
@@ -427,53 +419,6 @@ public class Texture2D {
             pointY = dY - height;
     }
 
-    public void drawAtPointFill(float dX, float dY, float w, float h) {
-        if (this.name == -1)
-            return;
-
-        coordinates[0] = 0f;
-        coordinates[1] = _maxT;
-        coordinates[2] = _maxS;
-        coordinates[3] = _maxT;
-        coordinates[4] = 0;
-        coordinates[5] = 0;
-        coordinates[6] = _maxS;
-        coordinates[7] = 0;
-        width = w;
-        height = h;
-        pointX = dX;
-        pointY = (VIEW_SCRHEIGHT - dY) - h;
-        if (w <= 0 || h <= 0 || dX + w <= 0 || dX >= VIEW_SCRWIDTH || pointY + h <= 0 || pointY >= VIEW_SCRHEIGHT)
-            return;
-
-        pointX = dX + DRAW_ADJUST_X_MOVE;
-        pointY += DRAW_ADJUST_Y_MOVE;
-        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0;
-        vertices[3] = pointX + w;
-        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[5] = 0;
-        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[7] = pointY + h;
-        vertices[8] = 0;
-        vertices[9] = pointX + w;
-        vertices[10] = pointY + h;
-        vertices[11] = 0;
-        mVertexBuffer.put(vertices);
-        mVertexBuffer.position(0);
-        coordinatesBuffer.put(coordinates);
-        coordinatesBuffer.position(0);
-        gl.glFrontFace(2304);
-        gl.glEnableClientState(32888);
-        gl.glEnableClientState(32884);
-        gl.glEnable(3553);
-        gl.glBindTexture(3553, this.name);
-        gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
-        gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
-        gl.glDrawArrays(5, 0, 4);
-    }
-
     public void drawAtPointOptionHorizonSize(float dX, float dY, int pivot, float hgt) {
         if (this.name == -1)
             return;
@@ -490,54 +435,6 @@ public class Texture2D {
         height = _height * _maxT * hgt;
         pointX = dX;
         pointY = dY;
-        setPivot(dX, dY, pivot);
-
-        pointY = VIEW_SCRHEIGHT - pointY - height;
-        if (width <= 0 || height <= 0 || pointX + width <= 0 || pointX >= VIEW_SCRWIDTH || pointY + height <= 0 || pointY >= VIEW_SCRHEIGHT)
-            return;
-
-        pointX += DRAW_ADJUST_X_MOVE;
-        pointY += DRAW_ADJUST_Y_MOVE;
-        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0;
-        vertices[3] = pointX + width;
-        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[5] = 0;
-        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[7] = pointY + height;
-        vertices[8] = 0;
-        vertices[9] = pointX + width;
-        vertices[10] = pointY + height;
-        vertices[11] = 0;
-        mVertexBuffer.put(vertices);
-        mVertexBuffer.position(0);
-        coordinatesBuffer.put(coordinates);
-        coordinatesBuffer.position(0);
-        gl.glFrontFace(2304);
-        gl.glEnableClientState(32888);
-        gl.glEnableClientState(32884);
-        gl.glEnable(3553);
-        gl.glBindTexture(3553, this.name);
-        gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
-        gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
-        gl.glDrawArrays(5, 0, 4);
-    }
-
-    public void drawAtPointOptionVerticalSize(float dX, float dY, int pivot, float wdt) {
-        if (this.name == -1)
-            return;
-
-        coordinates[0] = 0;
-        coordinates[1] = _maxT;
-        coordinates[2] = _maxS;
-        coordinates[3] = _maxT;
-        coordinates[4] = 0;
-        coordinates[5] = 0;
-        coordinates[6] = _maxS;
-        coordinates[7] = 0;
-        width = _width * _maxS * wdt;
-        height = _height * _maxT;
         setPivot(dX, dY, pivot);
 
         pointY = VIEW_SCRHEIGHT - pointY - height;
@@ -650,50 +547,6 @@ public class Texture2D {
         vertices[7] = pointY + height;
         vertices[8] = 0;
         vertices[9] = pointX + f8;
-        vertices[10] = pointY + height;
-        vertices[11] = 0;
-        mVertexBuffer.put(vertices);
-        mVertexBuffer.position(0);
-        coordinatesBuffer.put(coordinates);
-        coordinatesBuffer.position(0);
-        gl.glBindTexture(3553, this.name);
-        gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
-        gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
-        gl.glDrawArrays(5, 0, 4);
-    }
-
-    public void drawAtPointOptionClipSize(float x, float y, int pivot, CGRect rect, float siz) {
-        if (this.name == -1) {
-            return;
-        }
-        coordinates[0] = (rect.originX * _maxS) / _sizeX;
-        coordinates[1] = Math.min(((rect.originY + rect.sizeHeight) * _maxT) / _sizeY, 1);
-        coordinates[2] = Math.min(((rect.originX + rect.sizeWidth) * _maxS) / _sizeX, 1);
-        coordinates[3] = Math.min(((rect.originY + rect.sizeHeight) * _maxT) / _sizeY, 1);
-        coordinates[4] = (rect.originX * _maxS) / _sizeX;
-        coordinates[5] = (rect.originY * _maxT) / _sizeY;
-        coordinates[6] = Math.min(((rect.originX + rect.sizeWidth) * _maxS) / _sizeX, 1);
-        coordinates[7] = (rect.originY * _maxT) / _sizeY;
-
-        width = (((_width * _maxS) * rect.sizeWidth) / _sizeX) * siz;
-        height = (((_height * _maxT) * rect.sizeHeight) / _sizeY) * siz;
-        setPivot(x, y, pivot);
-        pointY = VIEW_SCRHEIGHT - pointY - height;
-        if (width <= 0 || height <= 0 || pointX + width <= 0 || pointX >= VIEW_SCRWIDTH || pointY + height <= 0 || pointY >= VIEW_SCRHEIGHT)
-            return;
-
-        pointX += DRAW_ADJUST_X_MOVE;
-        pointY += DRAW_ADJUST_Y_MOVE;
-        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0;
-        vertices[3] = pointX + width;
-        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[5] = 0;
-        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[7] = pointY + height;
-        vertices[8] = 0;
-        vertices[9] = pointX + width;
         vertices[10] = pointY + height;
         vertices[11] = 0;
         mVertexBuffer.put(vertices);
@@ -891,95 +744,6 @@ public class Texture2D {
         createBitmap.recycle();
     }
 
-    public void drawAtPointOptionRotate(float x, float y, int pivot, float angle, float siz) {
-        if (name == -1)
-            return;
-
-        coordinates[0] = 0;
-        coordinates[1] = _maxT;
-        coordinates[2] = _maxS;
-        coordinates[3] = _maxT;
-        coordinates[4] = 0;
-        coordinates[5] = 0;
-        coordinates[6] = _maxS;
-        coordinates[7] = 0;
-
-        width = _width * _maxS * siz;
-        height = _height * _maxT * siz;
-        setPivot(0, 0, pivot);
-        pointX += DRAW_ADJUST_X_MOVE;
-        pointY = (-height) - pointY + DRAW_ADJUST_Y_MOVE;
-        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0;
-        vertices[3] = pointX + width;
-        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[5] = 0;
-        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[7] = pointY + height;
-        vertices[8] = 0;
-        vertices[9] = pointX + width;
-        vertices[10] = pointY + height;
-        vertices[11] = 0;
-        mVertexBuffer.put(vertices);
-        mVertexBuffer.position(0);
-        coordinatesBuffer.put(coordinates);
-        coordinatesBuffer.position(0);
-        gl.glBindTexture(3553, this.name);
-        gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
-        gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
-        gl.glPushMatrix();
-        gl.glTranslatef(x, VIEW_SCRHEIGHT - y, 0);
-        gl.glRotatef(-angle, 0, 0, 1);
-        gl.glDrawArrays(5, 0, 4);
-        gl.glPopMatrix();
-    }
-
-    public void drawAtPointOptionPosRotate(float x, float y, float dX, float dY, int p, float ro, float siz) {
-        if (this.name == -1)
-            return;
-
-        coordinates[0] = 0;
-        coordinates[1] = _maxT;
-        coordinates[2] = _maxS;
-        coordinates[3] = _maxT;
-        coordinates[4] = 0;
-        coordinates[5] = 0;
-        coordinates[6] = _maxS;
-        coordinates[7] = 0;
-
-        width = _width * _maxS * siz;
-        height = _height * _maxT * siz;
-        setPivot(dX * siz, dY * siz, p);
-        pointX += DRAW_ADJUST_X_MOVE;
-        pointY = ((-height) - pointY) + DRAW_ADJUST_Y_MOVE;
-
-        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0;
-        vertices[3] = pointX + width;
-        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[5] = 0;
-        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[7] = pointY + height;
-        vertices[8] = 0;
-        vertices[9] = pointX + width;
-        vertices[10] = pointY + height;
-        vertices[11] = 0;
-        mVertexBuffer.put(vertices);
-        mVertexBuffer.position(0);
-        coordinatesBuffer.put(coordinates);
-        coordinatesBuffer.position(0);
-        gl.glBindTexture(3553, this.name);
-        gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
-        gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
-        gl.glPushMatrix();
-        gl.glTranslatef(x, VIEW_SCRHEIGHT - y, 0);
-        gl.glRotatef(-ro, 0, 0, 1);
-        gl.glDrawArrays(5, 0, 4);
-        gl.glPopMatrix();
-    }
-
     public void drawLineWithImage(float x, float y, float eX, float eY, float hh) {
         if (name == -1 || (eX == 0 && eY == 0) || hh == 0)
             return;
@@ -1139,66 +903,6 @@ public class Texture2D {
         coordinatesBuffer.put(coordinates);
         coordinatesBuffer.position(0);
         gl.glBindTexture(3553, name);
-        gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
-        gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
-        gl.glDrawArrays(5, 0, 4);
-    }
-
-    public void fillRectGuide(float dX, float dY, float wdt, float hgt, CGRect rect) {
-        if (name == -1)
-            return;
-
-        guideStartX = rect.originX;
-        guideStartY = rect.originY;
-        guideEndX = rect.originX + rect.sizeWidth;
-        guideEndY = rect.originY + rect.sizeHeight;
-        coordinates[0] = 0;
-        coordinates[1] = _maxT;
-        coordinates[2] = _maxS;
-        coordinates[3] = _maxT;
-        coordinates[4] = 0;
-        coordinates[5] = 0;
-        coordinates[6] = _maxS;
-        coordinates[7] = 0;
-        width = wdt;
-        height = hgt;
-        pointX = dX;
-        pointY = (VIEW_SCRHEIGHT - dY) - hgt;
-        if (wdt <= 0 || hgt <= 0 || wdt + dX <= 0 || dX >= VIEW_SCRWIDTH || hgt + pointY <= 0 || pointY >= VIEW_SCRHEIGHT)
-            return;
-
-        if (dX < guideStartX) {
-            guideEndX -= guideStartX - dX;
-            pointX = guideStartX;
-        }
-        if (pointY < guideStartY) {
-            guideEndY -= guideStartY - pointY;
-            pointY = guideStartY;
-        }
-        if (width + pointX > guideEndX)
-            width = guideEndX - pointX;
-        if (height + pointY > guideEndY)
-            height = guideEndY - pointY;
-
-        pointX += DRAW_ADJUST_X_MOVE;
-        pointY += DRAW_ADJUST_Y_MOVE;
-        vertices[0] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[1] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[2] = 0;
-        vertices[3] = pointX + width;
-        vertices[4] = pointY - TEXTURE_DRAW_MARGIN;
-        vertices[5] = 0;
-        vertices[6] = pointX - TEXTURE_DRAW_MARGIN;
-        vertices[7] = pointY + height;
-        vertices[8] = 0;
-        vertices[9] = pointX + width;
-        vertices[10] = pointY + height;
-        vertices[11] = 0;
-        mVertexBuffer.put(vertices);
-        mVertexBuffer.position(0);
-        coordinatesBuffer.put(coordinates);
-        coordinatesBuffer.position(0);
-        gl.glBindTexture(3553, this.name);
         gl.glVertexPointer(3, 5126, 0, mVertexBuffer);
         gl.glTexCoordPointer(2, 5126, 0, coordinatesBuffer);
         gl.glDrawArrays(5, 0, 4);

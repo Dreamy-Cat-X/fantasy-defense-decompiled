@@ -126,10 +126,8 @@ public class DataAward {
         Config.awardValues[AWARD_Cleared_Wilderness] |= SID == 29;
         Config.awardValues[AWARD_Cleared_Volcano] |= SID == 39;
         Config.awardValues[AWARD_Cleared_Ether_Region] |= SID == 49;
-
-        heroAvail[0] = Config.rewardValues[0];
-        heroAvail[1] = Config.rewardValues[2];
-        heroAvail[2] = Config.rewardValues[4];
+        for (int i = 0; i <= 2; i++)
+            heroAvail[i] = Config.rewardValues[i * 2];
 
         check_heroPoint();
         boolean all = true, perfect = true, moon = true;
