@@ -459,10 +459,8 @@ public class StagePage extends StageBase {
                         NewTower.switchPage(parent.parent, true); //TODO Make it actually switch to upgrade
                     } else if (substate == 3) {
                         restart();
-                    } else {
+                    } else
                         NewTower.switchPage(parent, true);
-                        GameThread.playLoopSound(1);
-                    }
                 }
                 break;
             case PAUSE:
@@ -473,10 +471,8 @@ public class StagePage extends StageBase {
                 if (darkViewCount >= 45) {
                     if (substate == 1)
                         restart();
-                    else {
+                    else
                         NewTower.switchPage(parent, true);
-                        GameThread.playLoopSound(1);
-                    }
                 }
                 break;
         }
@@ -570,7 +566,6 @@ public class StagePage extends StageBase {
                 uiIngameImage[cTLS == 0 ? 2 : 1].drawAtPointOption(GameRenderer.CX, 136, 17);
                 uiIngameImage[cTLS == 1 ? 4 : 3].drawAtPointOption(GameRenderer.CX, 236, 17);
                 uiIngameImage[cTLS == 2 ? 6 : 5].drawAtPointOption(GameRenderer.CX, 336, 17);
-                System.out.println(substate);
 
                 if (substate != 0) {
                     Texture2D.gl.glTexEnvf(8960, 8704, 8448);

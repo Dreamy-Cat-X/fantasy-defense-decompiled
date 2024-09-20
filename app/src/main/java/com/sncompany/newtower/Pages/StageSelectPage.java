@@ -59,6 +59,7 @@ public class StageSelectPage extends TPage {
         if (prog != null)
             prog.accept(1f);
         loaded = true;
+        GameThread.playLoopSound(1);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class StageSelectPage extends TPage {
                 stageLoad = -1;
                 GameThread.stopLoopSound(1);
             }
-        } //End of update_GAME_STAGE_SELECT
+        }
         if (stageLoad != -1)
             return;
 
@@ -168,7 +169,7 @@ public class StageSelectPage extends TPage {
         }
 
         uiStageImage[30].drawAtPointOption(549f, 349f, 18);
-        int i2 = GameThread.gameTimeCount % 28;
+        int i2 = GameThread.gameTimeCount % GAME_STAGE_SELECT_VIEW_LOOP_BLOCK_SIZE;
         if (i2 > 0) {
             float f2 = 1f - ((i2 < 17 ? i2 : 34 - i2) * GAME_STAGE_SELECT_STAGE_FADE_DEGREE);
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
@@ -286,8 +287,8 @@ public class StageSelectPage extends TPage {
             }
         float f4 = 0f;
         float f5 = 0f;
-        for (int i4 = 0; i4 < map.objectUnit.size(); i4++) {
-            int i5 = map.objectUnit.get(i4).type;
+        for (int i4 = 0; i4 < map.defaultObjs.size(); i4++) {
+            int i5 = map.defaultObjs.get(i4).type;
             if (i5 != -1) {
                 switch (i5) {
                     case 28:
@@ -314,7 +315,7 @@ public class StageSelectPage extends TPage {
                         f5 = 34f;
                         break;
                 }
-                map.backObjectImage[i5].drawAtPointOptionSize((f3 * 62f) + f + (f4 * f3) + ((map.objectUnit.get(i4).posX / 50f) * f3), (f3 * 30f) + f2 + (f5 * f3) + (((map.objectUnit.get(i4).posY / 50f) + 22) * f3), 33, f3);
+                map.backObjectImage[i5].drawAtPointOptionSize((f3 * 62f) + f + (f4 * f3) + ((map.defaultObjs.get(i4).posX / 50f) * f3), (f3 * 30f) + f2 + (f5 * f3) + (((map.defaultObjs.get(i4).posY / 50f) + 22) * f3), 33, f3);
             }
         }
     }
@@ -334,7 +335,7 @@ public class StageSelectPage extends TPage {
         stageSelectStageNumber = Config.lastPlayed % 10;
         mapNumber = -1;
         stageLoad = 0;
-
+        GameThread.playLoopSound(1);
         map = DataMap.loadMap(getStageIndex());
     }
 

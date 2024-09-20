@@ -50,6 +50,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
     public void load(Consumer<Float> prog) {
         loadP(mainmenuImage, mainmenuResource, prog, 1, mainmenuImage.length);
         loaded = true;
+        GameThread.playLoopSound(1);
     }
 
     @Override

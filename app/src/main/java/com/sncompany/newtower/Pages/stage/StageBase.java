@@ -205,7 +205,7 @@ public abstract class StageBase extends TPage {
     }
 
     public ObjectUnit searchObjectTouch(float bX, float bY) {
-        for (ObjectUnit obj : st.map.objectUnit) {
+        for (ObjectUnit obj : st.objectUnit) {
             if (!obj.dead()) {
                 int sX = (obj.posX / 50) / 45;
                 int sY = (obj.posY / 50) / 45;
@@ -243,7 +243,7 @@ public abstract class StageBase extends TPage {
             else if (nextDrawObject == 1)
                 st.towerUnit.get(uInd++).draw();
             else
-                tmap.objectUnit.get(oInd++).draw();
+                st.objectUnit.get(oInd++).draw();
             nextDrawObject = getNextDrawObject(uInd, mInd, oInd);
         }
         for (int i2 = 0; i2 < st.arrowUnit.size(); i2++)
@@ -256,9 +256,9 @@ public abstract class StageBase extends TPage {
 
     public int getNextDrawObject(int uInd, int mInd, int oInd) {
         int high = -1, poS = Integer.MAX_VALUE;
-        if (oInd < tmap.objectUnit.size()) {
+        if (oInd < st.objectUnit.size()) {
             high = 2;
-            poS = tmap.objectUnit.get(oInd).posY;
+            poS = st.objectUnit.get(oInd).posY;
         }
         if (uInd < st.towerUnit.size() && st.towerUnit.get(uInd).posY < poS) {
             high = 1;

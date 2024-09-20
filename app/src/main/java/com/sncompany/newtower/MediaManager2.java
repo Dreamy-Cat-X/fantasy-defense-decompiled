@@ -15,11 +15,8 @@ public class MediaManager2 {
     public void setMediaFile(int i, Context context, int rid) {
         if (i >= mPlayer.length)
             return;
-
         mPlayer[i] = MediaPlayer.create(context, rid);
         mPlayer[i].setLooping(false);
-        // from class: com.sncompany.newtower.MediaManager2.1
-// android.media.MediaPlayer.OnCompletionListener
         mPlayer[i].setOnCompletionListener(mediaPlayer -> {
             try {
                 mediaPlayer.stop();

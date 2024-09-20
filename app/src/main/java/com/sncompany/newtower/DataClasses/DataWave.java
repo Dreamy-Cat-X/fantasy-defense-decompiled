@@ -173,7 +173,7 @@ public class DataWave {
             return 0;
 
         boolean z = false;
-        for (ObjectUnit obj : map.objectUnit) {
+        for (ObjectUnit obj : st.objectUnit) {
             int i5 = obj.type;
             if (i5 == 28 || i5 == 29 || i5 == 32) {
                 z = true;

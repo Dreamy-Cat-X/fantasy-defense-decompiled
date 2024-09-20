@@ -35,6 +35,7 @@ public class DataStage {
     public final ArrayList<EffectUnit> effectUnit = new ArrayList<>(100);
 
     public final ArrayList<MonsterUnit> monsterUnit = new ArrayList<>(50);
+    public final ArrayList<ObjectUnit> objectUnit = new ArrayList<>(50);
     public EnemyUnit selectedTarget;
 
     public final ArrayList<TowerUnit> towerUnit = new ArrayList<>(50);
@@ -63,14 +64,15 @@ public class DataStage {
             waveManager = DataWave.loadWave(map, SID);
         }
         waveManager.st = this;
+        for (ObjectUnit obj : map.defaultObjs)
+            objectUnit.add(new ObjectUnit(this, obj));
         if (mapType == 2)
-            for (ObjectUnit o : map.objectUnit)
+            for (ObjectUnit o : objectUnit)
                 if (o.type == 28 || o.type == 29 || o.type == 32) {
                     o.unitHP = DataWaveMob.DATA_WAVE_GATE_HP[SID] / map.mapStartPositionCount;
                     o.unitMaxHP = o.unitHP / map.mapStartPositionCount;
                     o.destroyEnableFlag = true;
                 }
-        map.objectUnit.replaceAll(ori -> new ObjectUnit(this, ori)); //Albeit stupid, it's needed to update stage variable on objects
         setCurrentWave();
     }
 
@@ -139,8 +141,8 @@ public class DataStage {
     }
 
     public void updateObjectUnit() {
-        map.objectUnit.removeIf(o -> o.type == -1);
-        for (ObjectUnit o : map.objectUnit)
+        objectUnit.removeIf(o -> o.type == -1);
+        for (ObjectUnit o : objectUnit)
             o.update();
     }
 
@@ -188,7 +190,7 @@ public class DataStage {
     public void sortEntities() {
         monsterUnit.sort(null);
         towerUnit.sort(null);
-        map.objectUnit.sort(null);
+        objectUnit.sort(null);
     }
 
     public TowerUnit addUnit(int type, int bX, int bY) {
@@ -213,9 +215,9 @@ public class DataStage {
         money = DataStage.stageData[SID][DATA_STAGE_START_MONEY];
         mana = DataStage.stageData[SID][DATA_STAGE_START_MANA];
 
-        map.objectUnit.clear();
+        objectUnit.clear();
         for (ObjectUnit obj : map.defaultObjs)
-            map.objectUnit.add(new ObjectUnit(this, obj));
+            objectUnit.add(new ObjectUnit(this, obj));
         waveManager.current = 0;
         waveManager.waveStartT = 90;
         selectedTarget = null;

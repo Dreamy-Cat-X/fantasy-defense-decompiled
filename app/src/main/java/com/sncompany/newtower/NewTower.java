@@ -45,10 +45,7 @@ public class NewTower extends Activity {
 
     public static void switchPage(TPage p, boolean unload) {
         if (!p.loaded) {
-            LoadingPage lp = new LoadingPage(p);
-            lp.load(null);
-            switchPage(lp, unload);
-            return;
+            p = new LoadingPage(p);
         } else
             p.onReload();
 

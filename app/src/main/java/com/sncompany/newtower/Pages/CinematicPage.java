@@ -325,8 +325,7 @@ public class CinematicPage extends TPage {
         } else if (mode == RunMode.ENDING) {
             GameThread.playSound(14);
             GameThread.stopLoopSound(2);
-            //Switch back to stage select page, on last stage played. First we must find out how exactly is ending page accessed tho
-            GameThread.playLoopSound(1);
+            NewTower.switchPage(parent, true);
         }
     }
 

@@ -76,6 +76,8 @@ public class LoadingPage extends TPage {
 
     @Override
     public void update() {
+        if (!loaded)
+            load(null);
         if (prog >= 1f)
             NewTower.switchPage(parent, true);
     }

@@ -344,7 +344,6 @@ public class TutorialPage extends StageBase {
                     tutorStep = 22;
             }
         } else if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 0) {
-            GameThread.playLoopSound(1);
             if (tutorStep == 21) {
                 Config.tutorial = true;
                 Config.heroPoints += 300;

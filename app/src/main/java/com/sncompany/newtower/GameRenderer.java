@@ -211,9 +211,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         } else
             maxCount = numSiz;
 
-        if (pivot != 18)
+        if (pivot == 17)
             nwidth /= 2;
-        x += nwidth;
+        if (pivot != 20)
+            x += nwidth;
         float dx = x;
         for (int i = 0; i < maxCount; i++) {
             int idrw = number % 10;
