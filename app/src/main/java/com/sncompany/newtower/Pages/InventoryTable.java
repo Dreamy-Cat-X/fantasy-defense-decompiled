@@ -71,29 +71,29 @@ public class InventoryTable { //Probably useless, but only one way to tell
 
     public void drawInventoryWindow(int x, int y, int touch, boolean drawSell) {
         ShopPage sh = getShop();
-        sh.uiShopImage[ShopPage.shop_underbar].drawAtPointOption(x, y, 18);
+        sh.uiShopImage[ShopPage.underbar].drawAtPointOption(x, y, 18);
         for (int i = 0; i < 8; i++) {
             int i10 = getFirstInPage() + i;
-            if (Config.inventory[i10] != null)
-                drawUpItemImage(Config.inventory[i10], x + 53 + ((i % 8) * 70), y + 28, 18);
+            if (Config.s.inventory[i10] != null)
+                drawUpItemImage(Config.s.inventory[i10], x + 53 + ((i % 8) * 70), y + 28, 18);
             else
-                sh.uiShopImage[ShopPage.shop_iconempty].drawAtPointOption(x + 53 + ((i % 8) * 70), y + 28, 18);
+                sh.uiShopImage[ShopPage.iconempty].drawAtPointOption(x + 53 + ((i % 8) * 70), y + 28, 18);
         }
         for (int i = 0; i < 3; i++) {
             TPage.uiEtcImage[TPage.etc_stageboxone].drawAtPointOption(x + 312 + (i * 10), y + 92, 18);
         }
         TPage.uiEtcImage[TPage.etc_stageselect].drawAtPointOption(x + 306 + (getPage() * 10), y + 86, 18);
-        if (drawSell && Config.inventory[shopShopInventorySelectPos] != null)
-            sh.uiShopImage[touch != 3 ? ShopPage.shop_btnselloff : ShopPage.shop_btnsellon].drawAtPointOption(x + 639, y + 19, 18);
+        if (drawSell && Config.s.inventory[shopShopInventorySelectPos] != null)
+            sh.uiShopImage[touch != 3 ? ShopPage.btnselloff : ShopPage.btnsellon].drawAtPointOption(x + 639, y + 19, 18);
 
-        sh.uiShopImage[touch != 1 ? ShopPage.shop_btnleftarrowoff : ShopPage.shop_btnleftarrowon].drawAtPointOption(x + 9, y + 35, 18);
-        sh.uiShopImage[touch != 2 ? ShopPage.shop_btnrightarrowoff : ShopPage.shop_btnrightarrowon].drawAtPointOption(x + 600, y + 35, 18);
-        if (!drawSell || shopShopInventorySelectPos == -1 || Config.inventory[shopShopInventorySelectPos] == null)
+        sh.uiShopImage[touch != 1 ? ShopPage.btnleftarrowoff : ShopPage.btnleftarrowon].drawAtPointOption(x + 9, y + 35, 18);
+        sh.uiShopImage[touch != 2 ? ShopPage.btnrightarrowoff : ShopPage.btnrightarrowon].drawAtPointOption(x + 600, y + 35, 18);
+        if (!drawSell || shopShopInventorySelectPos == -1 || Config.s.inventory[shopShopInventorySelectPos] == null)
             return;
 
         float y2 = y + 28;
         drawSelectRedBox(x + 53 + ((getSelectedInd() % 8) * 70), y2);
-        drawInvenItemDescription(x + 83 + ((getSelectedInd() % 8) * 70), y2, Config.inventory[shopShopInventorySelectPos]); //Might be wrong
+        drawInvenItemDescription(x + 83 + ((getSelectedInd() % 8) * 70), y2, Config.s.inventory[shopShopInventorySelectPos]); //Might be wrong
     }
 
     public void drawUpItemImage(byte[] itm, float x, float y, int pivot) {

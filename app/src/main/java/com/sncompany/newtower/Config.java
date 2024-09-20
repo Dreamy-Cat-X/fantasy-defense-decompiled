@@ -2,9 +2,13 @@ package com.sncompany.newtower;
 
 import static com.sncompany.newtower.DataClasses.DataStage.heroAvail;
 
-import android.content.Context;
+import androidx.annotation.NonNull;
 
 import com.sncompany.newtower.DataClasses.DataAward;
+import com.sncompany.newtower.Pages.LoadingPage;
+import com.sncompany.newtower.Pages.ShopPage;
+import com.sncompany.newtower.Pages.TPage;
+import com.sncompany.newtower.Pages.stage.StagePage;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,137 +20,240 @@ import java.util.Arrays;
  * Manages in-game settings and game data alike.
  */
 public class Config {
-    static final String SAVEFILE_NAME = "SAVEDATA";
-    static final String SAVEFILE_NAME2 = "SAVEDATA2";
-    public static final int SAVEFILE_SIZE = 880;
-    static byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
+    public static final int SAVEFILE_SIZE = 868;
     public static int musicVolume, effectVolume, musicMaxVolume;
-    public static byte lastPlayed = 0, limitBreak;
-    public static int heroPoints, killCount, top_money;
-    public static long curPlaytime = 0, totalPlaytime = 0;
-    public static boolean movie, tutorial, vibration;
-    /**
-     * Indicates if a given story reward has been claimed
-     */
-    public static final boolean[] rewardValues = new boolean[10];
-    /**
-     * Indicates if a misc trophy has been claimed
-     */
-    public static final boolean[] awardValues = new boolean[62];
-    /**
-     * Highest score player has on a given stage. -1 means the stage has not been tried ever.
-     */
-    public static final int[][] highScores = new int[50][3];
-    public static final byte[][] stageProg = new byte[50][3]; //-1 = locked, 0 = uncleared, 1 = clear, 2 = perfect
-    public static final byte[][] unitUpgrades = new byte[3][6];
-    public static final byte[][] heroUpgrades = new byte[3][6];
-    public static final byte[][][] heroEquips = new byte[3][2][]; //[i][0] stores type, [i][1] effect degree. Length is 2, but not stored so it inits as null
-    public static final byte[][] inventory = new byte[24][]; //same as heroEquips
+    public static long curPlaytime = 0;
+    public static boolean movie = true, vibration = true, uncensor;
+
+    public static class SaveFile {
+
+        private final int file_index;
+
+        public byte lastPlayed = 0, limitBreak;
+        public int heroPoints, killCount;
+        public long totalPlaytime = 0;
+        public boolean tutorial;
+
+        /**
+         * Indicates if a given story reward has been claimed
+         */
+        public final boolean[] rewardValues = new boolean[10];
+        /**
+         * Indicates if a misc trophy has been claimed
+         */
+        public final boolean[] awardValues = new boolean[62];
+        /**
+         * Highest score player has on a given stage. -1 means the stage has not been tried ever.
+         */
+        public final int[][] highScores = new int[50][3];
+        public final byte[][] stageProg = new byte[50][3]; //-1 = locked, 0 = uncleared, 1 = clear, 2 = perfect
+        public final byte[][] unitUpgrades = new byte[3][6];
+        public final byte[][] heroUpgrades = new byte[3][6];
+        public final byte[][][] heroEquips = new byte[3][2][]; //[i][0] stores type, [i][1] effect degree. Length is 2, but not stored so it inits as null
+        public final byte[][] inventory = new byte[24][]; //same as heroEquips
+
+        public SaveFile(int ind) {
+            file_index = ind;
+        }
+
+        /**
+         * Writes save Data
+         */
+        public void saveData() {
+            byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
+            LongToByteArray(saveTotalBuffer, 0, totalPlaytime);
+            IntToByteArray(saveTotalBuffer, 8, heroPoints);
+            IntToByteArray(saveTotalBuffer, 12, killCount);
+            int cbit = 16;
+            for (int[] highScore : highScores)
+                for (int i : highScore) {
+                    IntToByteArray(saveTotalBuffer, cbit, i);
+                    cbit += 4;
+                }
+            //cbit = 616
+            for (byte[] stp : stageProg)
+                for (byte st : stp)
+                    saveTotalBuffer[cbit++] = st;
+            //cbit = 766
+            for (byte[] cups : unitUpgrades)
+                for (byte cup : cups)
+                    saveTotalBuffer[cbit++] = cup;
+            //cbit = 784
+            for (byte[] hups : heroUpgrades)
+                for (byte hup : hups)
+                    saveTotalBuffer[cbit++] = hup;
+            //cbit = 802
+            for (byte[][] equips : heroEquips) {
+                for (byte[] equip : equips)
+                    if (equip == null)
+                        saveTotalBuffer[cbit++] = -1;
+                    else
+                        saveTotalBuffer[cbit++] = (byte) ((equip[0] * 10) + equip[1]); //Equip[0] never exceeds EQ_Misc and equip[1] never exceeds 4;
+            }
+            //cbit = 808
+            for (byte[] item : inventory) {
+                if (item == null)
+                    saveTotalBuffer[cbit++] = -1;
+                else
+                    saveTotalBuffer[cbit++] = (byte) ((item[0] * 10) + item[1]); //Equip[0] never exceeds EQ_Misc and equip[1] never exceeds 4;
+            }
+            //cbit = 832
+            for (int j = 0; j < awardValues.length; j += 2)
+                saveTotalBuffer[cbit++] = BooleansToByte(awardValues[j], awardValues[j + 1]);
+            //cbit = 863
+            for (int j = 0; j < rewardValues.length; j += 5)
+                saveTotalBuffer[cbit++] = BooleansToByte(rewardValues[j], rewardValues[j + 1], rewardValues[j + 2], rewardValues[j + 3], rewardValues[j + 4]);
+            //cbit = 865
+            saveTotalBuffer[cbit++] = lastPlayed;
+            saveTotalBuffer[cbit++] = limitBreak;
+            saveTotalBuffer[cbit] = BooleansToByte(tutorial);
+            //cbit = 868
+            try {
+                FileOutputStream openFileOutput = GameThread.newTower.openFileOutput("SAVEDATA" + (file_index + 1), 0);
+                openFileOutput.write(saveTotalBuffer);
+                openFileOutput.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void readSaveData() {
+            byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
+            curPlaytime = System.currentTimeMillis();
+            try (FileInputStream lfile = GameThread.newTower.openFileInput("SAVEDATA" + (file_index + 1))) {
+                int readData = lfile.read(saveTotalBuffer);
+                lfile.close();
+                if (readData <= 0) {
+                    newGame();
+                    return;
+                }
+
+                s.totalPlaytime = ByteArrayToLong(saveTotalBuffer, 0);
+                if (s.totalPlaytime == 0) {
+                    newGame();
+                    return;
+                }
+                heroPoints = ByteArrayToInt(saveTotalBuffer, 8);
+                killCount = ByteArrayToInt(saveTotalBuffer, 12);
+
+                int cbit = 16;
+                for (int j = 0; j < highScores.length; j++)
+                    for (int k = 0; k < highScores[j].length; k++) {
+                        highScores[j][k] = ByteArrayToInt(saveTotalBuffer, cbit);
+                        cbit += 4;
+                    }
+                //cbit = 616
+                for (int j = 0; j < stageProg.length; j++)
+                    for (int k = 0; k < stageProg[j].length; k++)
+                        stageProg[j][k] = saveTotalBuffer[cbit++];
+                //cbit = 766
+                for (int j = 0; j < unitUpgrades.length; j++)
+                    for (int k = 0; k < unitUpgrades[j].length; k++)
+                        unitUpgrades[j][k] = saveTotalBuffer[cbit++];
+                //cbit = 784
+                for (int j = 0; j < heroUpgrades.length; j++)
+                    for (int k = 0; k < heroUpgrades[j].length; k++)
+                        heroUpgrades[j][k] = saveTotalBuffer[cbit++];
+                //cbit = 802
+                for (int j = 0; j < heroEquips.length; j++)
+                    for (int k = 0; k < 2; k++) {
+                        int eq = saveTotalBuffer[cbit++];
+                        heroEquips[j][k] = eq == -1 ? null : new byte[]{(byte) (eq / 10), (byte) (eq % 10)};
+                    }
+                //cbit = 808
+                for (int j = 0; j < inventory.length; j++) {
+                    int itm = saveTotalBuffer[cbit++];
+                    inventory[j] = itm == -1 ? null : new byte[]{(byte)(itm / 10), (byte)(itm % 10)};
+                }
+                //cbit = 832
+                for (int j = 0; j < awardValues.length; j += 2) {
+                    boolean[] bs = ByteToBooleans(saveTotalBuffer[cbit++]);
+                    awardValues[j] = bs[0];
+                    awardValues[j + 1] = bs[1];
+                }
+                //cbit = 863
+                for (int j = 0; j < rewardValues.length; j += 5) {
+                    boolean[] bs = ByteToBooleans(saveTotalBuffer[cbit++]);
+                    for (int k = 0; k < 5; k++)
+                        rewardValues[j + k] = bs[k];
+                }
+                //cbit = 865
+                lastPlayed = saveTotalBuffer[cbit++];
+                limitBreak = saveTotalBuffer[cbit++];
+                boolean[] lbs = ByteToBooleans(saveTotalBuffer[cbit]);
+                //cbit = 868
+                tutorial = lbs[0];
+                movie = lbs[1];
+                vibration = lbs[2];
+
+                for (int i = 0; i <= 2; i++)
+                    heroAvail[i] = rewardValues[i * 2];
+            } catch (Exception e) {
+                e.printStackTrace();
+                newGame();
+            }
+        }
+
+        private void newGame() {
+            for (byte[] prog : stageProg)
+                Arrays.fill(prog, (byte) -1);
+            stageProg[0][0] = 0;
+            for (int[] highScore : highScores)
+                Arrays.fill(highScore, (byte) -1);
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return GameThread.getString(R.string.file) + " " + (file_index + 1);
+        }
+    }
+    public static SaveFile s;
 
 
     public static int getAwardCount() {
         int t = 0;
-        for (boolean b : awardValues)
+        for (boolean b : s.awardValues)
             if (b)
                 t++;
         int rwc = t;
         for (int i = DataAward.AWARD_10_Title; i <= DataAward.AWARD_30_Title; i++)
-            if (awardValues[i]) rwc--;
-            else awardValues[i] = rwc >= (1 + (i - DataAward.AWARD_10_Title)) * 10;
+            if (s.awardValues[i]) rwc--;
+            else s.awardValues[i] = rwc >= (1 + (i - DataAward.AWARD_10_Title)) * 10;
         return t;
     }
 
     public static int getAwardScore() {
         int t = 0;
-        for (int i = 0; i < awardValues.length; i++)
-            if (awardValues[i])
+        for (int i = 0; i < s.awardValues.length; i++)
+            if (s.awardValues[i])
                 t += DataAward.awardScoreValue[i];
         return t;
     }
 
-    public static void saveAll() {
-        NewTower context = GameThread.newTower;
-        timeSave();
-        saveData(context, false);
-        saveData(context, true);
-    }
-
-    public static void timeSave() {
-        long currentTimeMillis = System.currentTimeMillis();
-        totalPlaytime += (int) ((currentTimeMillis - curPlaytime) / 1000);
-        curPlaytime = currentTimeMillis;
+    public static void saveFile() {
+        long millis = System.currentTimeMillis();
+        s.totalPlaytime += (int) ((millis - curPlaytime) / 1000);
+        curPlaytime = millis;
         DataAward.check_time();
+        s.saveData();
     }
 
     /**
-     * Writes save Data
-     * @param context ???
-     * @param file2 If this data will be saved in file 2
+     * Writes config Data
      */
-    public static void saveData(Context context, boolean file2) {
-        //TODO - Saving/Loading ArrayLists
-        FileOutputStream openFileOutput;
-        Arrays.fill(saveTotalBuffer, (byte) 0);
-
+    public static void saveConfig() {
+        byte[] saveTotalBuffer = new byte[9];
         if (musicVolume > musicMaxVolume)
             musicVolume = musicMaxVolume;
         if (effectVolume > musicMaxVolume)
             effectVolume = musicMaxVolume;
 
-        LongToByteArray(saveTotalBuffer, 0, totalPlaytime);
-        IntToByteArray(saveTotalBuffer, 8, heroPoints);
-        IntToByteArray(saveTotalBuffer, 12, musicVolume);
-        IntToByteArray(saveTotalBuffer, 16, effectVolume);
-        IntToByteArray(saveTotalBuffer, 20, killCount);
-        IntToByteArray(saveTotalBuffer, 24, top_money);
-
-        int cbit = 28;
-        for (int[] highScore : highScores)
-            for (int i : highScore) {
-                IntToByteArray(saveTotalBuffer, cbit, i);
-                cbit += 4;
-            }
-        //cbit = 628
-        for (byte[] stp : stageProg)
-            for (byte st : stp)
-                saveTotalBuffer[cbit++] = st;
-        //cbit = 778
-        for (byte[] cups : unitUpgrades)
-            for (byte cup : cups)
-                saveTotalBuffer[cbit++] = cup;
-        //cbit = 796
-        for (byte[] hups : heroUpgrades)
-            for (byte hup : hups)
-                saveTotalBuffer[cbit++] = hup;
-        //cbit = 814
-        for (byte[][] equips : heroEquips) {
-            for (byte[] equip : equips)
-                if (equip == null)
-                    saveTotalBuffer[cbit++] = -1;
-                else
-                    saveTotalBuffer[cbit++] = (byte) ((equip[0] * 10) + equip[1]); //Equip[0] never exceeds EQ_Misc and equip[1] never exceeds 4;
-        }
-        //cbit = 820
-        for (byte[] item : inventory) {
-            if (item == null)
-                saveTotalBuffer[cbit++] = -1;
-            else
-                saveTotalBuffer[cbit++] = (byte) ((item[0] * 10) + item[1]); //Equip[0] never exceeds EQ_Misc and equip[1] never exceeds 4;
-        }
-        //cbit = 844
-
-        for (int j = 0; j < awardValues.length; j += 2)
-            saveTotalBuffer[cbit++] = BooleansToByte(awardValues[j], awardValues[j+1]);
-        //cbit = 875
-        for (int j = 0; j < rewardValues.length; j += 5)
-            saveTotalBuffer[cbit++] = BooleansToByte(rewardValues[j], rewardValues[j+1], rewardValues[j+2], rewardValues[j+3], rewardValues[j+4]);
-        //cbit = 877
-        saveTotalBuffer[cbit++] = lastPlayed;
-        saveTotalBuffer[cbit++] = limitBreak;
-        saveTotalBuffer[cbit] = BooleansToByte(tutorial, movie, vibration);
-        //cbit = 880
+        IntToByteArray(saveTotalBuffer, 0, musicVolume);
+        IntToByteArray(saveTotalBuffer, 4, effectVolume);
+        saveTotalBuffer[8] = BooleansToByte(movie, vibration);
         try {
-            openFileOutput = context.openFileOutput(file2 ? SAVEFILE_NAME2 : SAVEFILE_NAME, 0);
+            FileOutputStream openFileOutput = GameThread.newTower.openFileOutput("CFG", 0);
             openFileOutput.write(saveTotalBuffer);
             openFileOutput.close();
         } catch (Exception e) {
@@ -154,94 +261,24 @@ public class Config {
         }
     }
 
-    private static void newGame() {
-        for (byte[] prog : stageProg)
-            Arrays.fill(prog, (byte) -1);
-        stageProg[0][0] = 0;
-        for (int[] highScore : highScores)
-            Arrays.fill(highScore, (byte) -1);
-
-        vibration = true;
-        movie = true;
-        tutorial = false;
-    }
-
-    public static void readSaveData(NewTower context, int file) {
-        Arrays.fill(saveTotalBuffer, (byte)0);
-        try (FileInputStream lfile = context.openFileInput(file == 1 ? SAVEFILE_NAME : SAVEFILE_NAME2)) {
+    public static void readConfig() {
+        s = new SaveFile(0);
+        s.readSaveData();
+        //updateCensor();
+        //Temporary code above
+        byte[] saveTotalBuffer = new byte[9];
+        try (FileInputStream lfile = GameThread.newTower.openFileInput("CFG")) {
             int readData = lfile.read(saveTotalBuffer);
             lfile.close();
-            if (readData <= 0) {
-                newGame();
+            if (readData <= 0)
                 return;
-            }
-
-            totalPlaytime = ByteArrayToLong(saveTotalBuffer, 0);
-            if (totalPlaytime == 0) {
-                newGame();
-                return;
-            }
-            heroPoints = ByteArrayToInt(saveTotalBuffer, 8);
-            musicVolume = ByteArrayToInt(saveTotalBuffer, 12);
-            effectVolume = ByteArrayToInt(saveTotalBuffer, 16);
-            killCount = ByteArrayToInt(saveTotalBuffer, 20);
-            top_money = ByteArrayToInt(saveTotalBuffer, 24);
-
-            int cbit = 28;
-            for (int j = 0; j < highScores.length; j++)
-                for (int k = 0; k < highScores[j].length; k++) {
-                    highScores[j][k] = ByteArrayToInt(saveTotalBuffer, cbit);
-                    cbit += 4;
-                }
-            //cbit = 628
-            for (int j = 0; j < stageProg.length; j++)
-                for (int k = 0; k < stageProg[j].length; k++)
-                    stageProg[j][k] = saveTotalBuffer[cbit++];
-            //cbit = 778
-            for (int j = 0; j < unitUpgrades.length; j++)
-                for (int k = 0; k < unitUpgrades[j].length; k++)
-                    unitUpgrades[j][k] = saveTotalBuffer[cbit++];
-            //cbit = 796
-            for (int j = 0; j < heroUpgrades.length; j++)
-                for (int k = 0; k < heroUpgrades[j].length; k++)
-                    heroUpgrades[j][k] = saveTotalBuffer[cbit++];
-            //cbit = 814
-            for (int j = 0; j < heroEquips.length; j++)
-                for (int k = 0; k < 2; k++) {
-                    int eq = saveTotalBuffer[cbit++];
-                    heroEquips[j][k] = eq == -1 ? null : new byte[]{(byte) (eq / 10), (byte) (eq % 10)};
-                }
-            //cbit = 820
-            for (int j = 0; j < inventory.length; j++) {
-                int itm = saveTotalBuffer[cbit++];
-                inventory[j] = itm == -1 ? null : new byte[]{(byte)(itm / 10), (byte)(itm % 10)};
-            }
-            //cbit = 844
-            for (int j = 0; j < awardValues.length; j += 2) {
-                boolean[] bs = ByteToBooleans(saveTotalBuffer[cbit++]);
-                awardValues[j] = bs[0];
-                awardValues[j + 1] = bs[1];
-            }
-            //cbit = 875
-            for (int j = 0; j < rewardValues.length; j += 5) {
-                boolean[] bs = ByteToBooleans(saveTotalBuffer[cbit++]);
-                for (int k = 0; k < 5; k++)
-                    rewardValues[j + k] = bs[k];
-            }
-            //cbit = 877
-            lastPlayed = saveTotalBuffer[cbit++];
-            limitBreak = saveTotalBuffer[cbit++];
-            boolean[] lbs = ByteToBooleans(saveTotalBuffer[cbit]);
-            //cbit = 880
-            tutorial = lbs[0];
+            musicVolume = ByteArrayToInt(saveTotalBuffer, 0);
+            effectVolume = ByteArrayToInt(saveTotalBuffer, 4);
+            boolean[] lbs = ByteToBooleans(saveTotalBuffer[8]);
             movie = lbs[1];
             vibration = lbs[2];
-
-            for (int i = 0; i <= 2; i++)
-                heroAvail[i] = rewardValues[i * 2];
         } catch (Exception e) {
             e.printStackTrace();
-            newGame();
         }
     }
 
@@ -308,5 +345,21 @@ public class Config {
                 }
             }
         }
+    }
+
+    public static void updateCensor() {
+        uncensor = !uncensor;
+        ShopPage.uiShopResource[ShopPage.wizardbody] = uncensor ? R.drawable.ui_shop_wizardbody_u : R.drawable.ui_shop_wizardbody;
+        LoadingPage.uiCharFaceResource[5] = uncensor ? R.drawable.ui_char_face_holyeye_u : R.drawable.ui_char_face_holyeye;
+        LoadingPage.uiCharFaceResource[9] = uncensor ? R.drawable.ui_char_face_colddiviner_u : R.drawable.ui_char_face_colddiviner;
+        LoadingPage.uiCharFaceResource[11] = uncensor ? R.drawable.ui_char_face_magmablaster_u : R.drawable.ui_char_face_magmablaster;
+        StagePage.uiCharFaceResource[5] = uncensor ? R.drawable.ui_char_face_holyeye_u : R.drawable.ui_char_face_holyeye;
+        StagePage.uiCharFaceResource[9] = uncensor ? R.drawable.ui_char_face_colddiviner_u : R.drawable.ui_char_face_colddiviner;
+        StagePage.uiCharFaceResource[11] = uncensor ? R.drawable.ui_char_face_magmablaster_u : R.drawable.ui_char_face_magmablaster;
+        StagePage.uiCharFaceResource[14] = uncensor ? R.drawable.ui_char_face_hero2_u : R.drawable.ui_char_face_hero2;
+        StagePage.specialIceResource[0] = uncensor ? R.drawable.special_ice_body_u : R.drawable.special_ice_body;
+        TPage.alwaysResource[TPage.ALWAYS_R_HERO2] = uncensor ? R.drawable.always_hero2_u : R.drawable.always_hero2;
+        if (TPage.alwaysImage[TPage.ALWAYS_R_HERO2].name != -1)
+            TPage.alwaysImage[TPage.ALWAYS_R_HERO2].initWithImageName(TPage.alwaysResource[3]);
     }
 }

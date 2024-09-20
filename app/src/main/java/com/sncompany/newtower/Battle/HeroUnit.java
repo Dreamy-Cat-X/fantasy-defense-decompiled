@@ -86,7 +86,7 @@ public class HeroUnit extends TowerUnit {
     }
 
     private byte[][] getEquipment() {
-        return Config.heroEquips[type];
+        return Config.s.heroEquips[type];
     }
 
     @Override
@@ -107,7 +107,7 @@ public class HeroUnit extends TowerUnit {
         specialAttPower = dat[7] + ((dat[7] * (getUpgradeRate(16) + getEquipEffect(DataUpgradeItem.EQ_CHARM, 0))) / 100);
         specialAttCount = dat[8];
         specialMaxCooltime = (dat[9] * 41) + ((dat[9] * getUpgradeRate(18)) / 100);
-        if (Config.rewardValues[6]) {
+        if (Config.s.rewardValues[6]) {
             if (type == 0 || type == 2)
                 effectType = 1;
             else if (type == 1) {
@@ -140,7 +140,7 @@ public class HeroUnit extends TowerUnit {
         int tot = 0;
         for (int g = 0; g < 6; g++)
             if (DataUpgradeHero.upgradeHeroData[g][4] == ind)
-                tot += Config.heroUpgrades[type][g] * DataUpgradeHero.upgradeHeroData[g][0];
+                tot += Config.s.heroUpgrades[type][g] * DataUpgradeHero.upgradeHeroData[g][0];
         return tot;
     }
 
@@ -158,7 +158,7 @@ public class HeroUnit extends TowerUnit {
         if (type == -1 || !DataStage.heroAvail[type])
             return 0;
         int i3 = DataHero.heroData[type * 5][0];
-        return i3 + ((Config.heroUpgrades[type][0] * DataUpgradeHero.upgradeHeroData[type][0] * i3) / 100);
+        return i3 + ((Config.s.heroUpgrades[type][0] * DataUpgradeHero.upgradeHeroData[type][0] * i3) / 100);
     }
 
     @Override
@@ -175,8 +175,8 @@ public class HeroUnit extends TowerUnit {
         level++;
 
         if (level == 4) {
-            Config.awardValues[DataAward.AWARD_Awakening_Heros_Soul] = true;
-            Config.awardValues[DataAward.AWARD_War_GOD + type] = true;
+            Config.s.awardValues[DataAward.AWARD_Awakening_Heros_Soul] = true;
+            Config.s.awardValues[DataAward.AWARD_War_GOD + type] = true;
         }
 
         st.addEffectUnit(14, posX, posY);
@@ -354,7 +354,7 @@ public class HeroUnit extends TowerUnit {
 
             }
         if (i >= 5)
-            Config.awardValues[DataAward.AWARD_Swords_Banquet + type] = true;
+            Config.s.awardValues[DataAward.AWARD_Swords_Banquet + type] = true;
     }
 
     public void draw() {

@@ -84,7 +84,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
 
             if (titleCount >= TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT && (titlePressed == START || titlePressed == BACK)) {
                 GameThread.stopLoopSound(0);
-                if (!Config.tutorial && titlePressed == START) {
+                if (!Config.s.tutorial && titlePressed == START) {
                     child.unload();
                     child = new TutorialPage(new StageSelectPage(this));
                 }

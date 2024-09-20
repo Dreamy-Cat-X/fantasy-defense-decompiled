@@ -50,9 +50,9 @@ public class UpgradePage extends TPage {
         loadP(numberHeroismImage, MenuPage.numberHeroismResource, prog, uiUpgradeImage.length + numberUpgradeImage.length + 1, tot);
         loadP(uiUpunitImage, uiUpunitResource, prog, uiUpgradeImage.length + numberUpgradeImage.length + numberHeroismImage.length + 1, tot);
         loadP(uiUpheroImage, uiUpheroResource, prog, uiUpgradeImage.length + numberUpgradeImage.length + numberHeroismImage.length + uiUpunitImage.length + 1, tot);
-        shopImages[0] = new Texture2D(ShopPage.uiShopResource[ShopPage.shop_underbar]); //Inventory img
-        shopImages[1] = new Texture2D(ShopPage.uiShopResource[ShopPage.shop_btnbackoff]);
-        shopImages[2] = new Texture2D(ShopPage.uiShopResource[ShopPage.shop_btnbackon]);
+        shopImages[0] = new Texture2D(ShopPage.uiShopResource[ShopPage.underbar]); //Inventory img
+        shopImages[1] = new Texture2D(ShopPage.uiShopResource[ShopPage.btnbackoff]);
+        shopImages[2] = new Texture2D(ShopPage.uiShopResource[ShopPage.btnbackon]);
         if (prog != null)
             prog.accept(1f);
         loaded = true;
@@ -107,7 +107,7 @@ public class UpgradePage extends TPage {
         uiUpgradeImage[hero ? upgrade_titlehero : upgrade_titleunit].drawAtPointOption(66, 5, 18);
         uiUpgradeImage[hero ? upgrade_basehero : upgrade_baseunit].drawAtPointOption(20, 60, 18);
 
-        byte[][] sUpgrades = hero ? Config.heroUpgrades : Config.unitUpgrades;
+        byte[][] sUpgrades = hero ? Config.s.heroUpgrades : Config.s.unitUpgrades;
         for (int I = 0; I < 3; I++)
             if (!hero || DataStage.heroAvail[I]) {
                 for (int j = 0; j < 6; j++) {
@@ -130,7 +130,7 @@ public class UpgradePage extends TPage {
                 GameRenderer.drawStringDoubleM(HeroUnit.getUnlock(I), 149 + (I * 255), 284, 17);
             }
         uiUpgradeImage[upgrade_uprightbar].drawAtPointOption(572, 8, 18);
-        GameRenderer.drawNumberBlock(Config.heroPoints, numberHeroismImage, 779, 24, 1, 20, 1);
+        GameRenderer.drawNumberBlock(Config.s.heroPoints, numberHeroismImage, 779, 24, 1, 20, 1);
         shopImages[0].drawAtPointOption(72, 362, 18);
         uiUpgradeImage[cTLS == UPGRADE ? upgrade_btnupgradeon : upgrade_btnupgradeoff].drawAtPointOption(680, 367, 18);
 
@@ -184,8 +184,8 @@ public class UpgradePage extends TPage {
     }
 
     public int getUpgradeMax() {
-        int lbreak = !hero ? Config.limitBreak * 5 : 0;
-        if (Config.rewardValues[5])
+        int lbreak = !hero ? Config.s.limitBreak * 5 : 0;
+        if (Config.s.rewardValues[5])
             return 10 + lbreak;
         return 5 + lbreak;
     }
@@ -238,13 +238,13 @@ public class UpgradePage extends TPage {
 
     public int getUpgradeCost(int i, int j) {
         if (hero) {
-            if (!DataStage.heroAvail[i] || (Config.heroUpgrades[i][j] >= getUpgradeMax()))
+            if (!DataStage.heroAvail[i] || (Config.s.heroUpgrades[i][j] >= getUpgradeMax()))
                 return -1;
-            return DataUpgradeHero.upgradeHeroData[j][1] * (Config.heroUpgrades[i][j] + 1);
+            return DataUpgradeHero.upgradeHeroData[j][1] * (Config.s.heroUpgrades[i][j] + 1);
         }
-        if (Config.unitUpgrades[i][j] >= getUpgradeMax())
+        if (Config.s.unitUpgrades[i][j] >= getUpgradeMax())
             return -1;
-        return DataUpgradeUnit.upgradeUnitData[(i * 6) + j][1] * (Config.unitUpgrades[i][j] + 1);
+        return DataUpgradeUnit.upgradeUnitData[(i * 6) + j][1] * (Config.s.unitUpgrades[i][j] + 1);
     }
 
     @Override
@@ -265,15 +265,15 @@ public class UpgradePage extends TPage {
                     unload();
                     break;
                 case UPGRADE:
-                    byte[] upgrades = hero ? Config.heroUpgrades[upgradeUnitSelectPos / 6] : Config.unitUpgrades[upgradeUnitSelectPos / 6];
+                    byte[] upgrades = hero ? Config.s.heroUpgrades[upgradeUnitSelectPos / 6] : Config.s.unitUpgrades[upgradeUnitSelectPos / 6];
                     int pos = upgradeUnitSelectPos % 6;
                     int price = getUpgradeCost(upgradeUnitSelectPos / 6, pos);
-                    if (price != -1 && Config.heroPoints > price) {
-                        Config.heroPoints -= price;
+                    if (price != -1 && Config.s.heroPoints > price) {
+                        Config.s.heroPoints -= price;
                         upgrades[pos]++;
                         GameThread.playSound(13);
                         DataAward.check_upgrade();
-                        Config.saveAll();
+                        Config.saveFile();
                         lastUpdateItemPos = upgradeUnitSelectPos;
                         lastUpdateItemViewDelay = 15;
                         break;

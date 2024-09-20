@@ -130,7 +130,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                         float f5 = CorrectedBLA + 162 + (j * 20);
                         GameRenderer.drawStringDoubleGuideM(String.format("Stage %d", stInd + 1), 80, f5, 18, rect);
                         for (int k = 0; k < 3; k++)
-                            GameRenderer.drawStringDoubleGuideM(String.valueOf(Math.max(0, Config.highScores[stInd][k])), (k * 190) + 245, f5, 17, rect);
+                            GameRenderer.drawStringDoubleGuideM(String.valueOf(Math.max(0, Config.s.highScores[stInd][k])), (k * 190) + 245, f5, 17, rect);
                     }
                     px = CorrectedBLA;
                 }
@@ -158,7 +158,7 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     GameRenderer.setFontSize(12);
                     GameRenderer.drawStringDoubleGuideM(DataAward.awardDescription[awd], 150, y + 32, 18, rect);
 
-                    if (!Config.awardValues[awd])
+                    if (!Config.s.awardValues[awd])
                         uiRecordImage[rec_lock].drawAtPointOptionGuide(669, y + 5, 18, rect);
                     else
                         uiRecordImage[rec_cup].drawAtPointOptionGuide(672, y + 15, 18, rect);

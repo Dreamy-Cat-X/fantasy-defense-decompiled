@@ -93,7 +93,7 @@ public class GameThread extends Thread {
             GameRenderer.textTombstone.removeAllTombstones();
             GameRenderer.lastFontName = null;
             GameRenderer.makeBaseStruct();
-            Config.readSaveData(newTower, 1);
+            Config.readConfig();
             return;
         }
         Log.d("UPDATE", "GL NO!!!");

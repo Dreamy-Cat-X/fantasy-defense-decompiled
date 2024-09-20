@@ -4,6 +4,7 @@ import com.sncompany.newtower.Battle.HeroUnit;
 import com.sncompany.newtower.Battle.TowerUnit;
 import com.sncompany.newtower.Config;
 import com.sncompany.newtower.DataClasses.CGRect;
+import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataMap;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameRenderer;
@@ -338,19 +339,19 @@ public class TutorialPage extends StageBase {
             }
         } else if (tutorStep == 18) {
             if (TouchManager.lastActionStatus == 2 && cTLS == 0) {
-                if (!Config.tutorial)
+                if (!Config.s.tutorial)
                     tutorStep++;
                 else
                     tutorStep = 22;
             }
         } else if (TouchManager.lastActionStatus == 2 && TouchManager.checkTouchListStatus() == 0) {
             if (tutorStep == 21) {
-                Config.tutorial = true;
-                Config.heroPoints += 300;
-                Config.saveAll();
+                Config.s.tutorial = true;
+                DataAward.check_heroPoint(300);
+                Config.saveFile();
             }
             GameThread.playSound(14);
-            Config.lastPlayed = 0;
+            Config.s.lastPlayed = 0;
             NewTower.switchPage(parent, true);
         }
     }

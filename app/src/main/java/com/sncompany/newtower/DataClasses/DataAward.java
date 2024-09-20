@@ -76,63 +76,62 @@ public class DataAward {
 
     public static void check_upgrade() {
         boolean allMax = true;
-        for (int i = 0; i < Config.unitUpgrades.length; i++) {
+        for (int i = 0; i < Config.s.unitUpgrades.length; i++) {
             boolean uAwd = true;
-            for (int j = 0; j < Config.unitUpgrades[i].length; j++) {
-                int lv = Config.unitUpgrades[i][j];
-                Config.awardValues[AWARD_Upgrader] |= lv >= 3;
-                Config.awardValues[AWARD_Perfect_Upgrader] |= lv >= 10;
+            for (int j = 0; j < Config.s.unitUpgrades[i].length; j++) {
+                int lv = Config.s.unitUpgrades[i][j];
+                Config.s.awardValues[AWARD_Upgrader] |= lv >= 3;
+                Config.s.awardValues[AWARD_Perfect_Upgrader] |= lv >= 10;
                 uAwd &= lv >= 10;
                 allMax &= uAwd;
             }
             if (uAwd)
-                Config.awardValues[AWARD_Master_Blade + i] = true;
+                Config.s.awardValues[AWARD_Master_Blade + i] = true;
         }
-        for (int i = 0; i < Config.heroUpgrades.length; i++) {
+        for (int i = 0; i < Config.s.heroUpgrades.length; i++) {
             boolean uAwd = true;
-            for (int j = 0; j < Config.heroUpgrades[i].length; j++) {
-                int lv = Config.unitUpgrades[i][j];
-                Config.awardValues[AWARD_Upgrader] |= lv >= 3;
-                Config.awardValues[AWARD_Perfect_Upgrader] |= lv >= 10;
+            for (int j = 0; j < Config.s.heroUpgrades[i].length; j++) {
+                int lv = Config.s.unitUpgrades[i][j];
+                Config.s.awardValues[AWARD_Upgrader] |= lv >= 3;
+                Config.s.awardValues[AWARD_Perfect_Upgrader] |= lv >= 10;
                 uAwd &= lv >= 10;
                 allMax &= uAwd;
             }
             if (uAwd)
-                Config.awardValues[AWARD_Legend_Of_Hero] = true;
+                Config.s.awardValues[AWARD_Legend_Of_Hero] = true;
         }
-        Config.awardValues[AWARD_Maximum_morale] = allMax;
+        Config.s.awardValues[AWARD_Maximum_morale] = allMax;
     }
 
     public static void check_time() {
-        int mins = (int)(Config.totalPlaytime / 60);
-        Config.awardValues[AWARD_Amateur_Defender] |= mins >= 30;
+        int mins = (int)(Config.s.totalPlaytime / 60);
+        Config.s.awardValues[AWARD_Amateur_Defender] |= mins >= 30;
 
         int hours = mins / 60;
-        Config.awardValues[AWARD_High_Class_Defender] |= hours >= 2;
-        Config.awardValues[AWARD_Professional_Defender] |= hours >= 5;
-        Config.awardValues[AWARD_Defense_Mania] |= hours >= 10;
-        Config.awardValues[AWARD_Defense_Master] |= hours >= 20;
-        Config.awardValues[AWARD_Defense_Hero] |= hours >= 50;
-        Config.awardValues[AWARD_Defense_King] |= hours >= 100;
-        Config.awardValues[AWARD_Defense_G_O_D] |= hours >= 200;
+        Config.s.awardValues[AWARD_High_Class_Defender] |= hours >= 2;
+        Config.s.awardValues[AWARD_Professional_Defender] |= hours >= 5;
+        Config.s.awardValues[AWARD_Defense_Mania] |= hours >= 10;
+        Config.s.awardValues[AWARD_Defense_Master] |= hours >= 20;
+        Config.s.awardValues[AWARD_Defense_Hero] |= hours >= 50;
+        Config.s.awardValues[AWARD_Defense_King] |= hours >= 100;
+        Config.s.awardValues[AWARD_Defense_G_O_D] |= hours >= 200;
     }
 
     public static void clear_award(int SID) {
-        Config.awardValues[AWARD_Champion] |= Config.rewardValues[0];
-        Config.awardValues[AWARD_Bow_Master] |= Config.rewardValues[2];
-        Config.awardValues[AWARD_Archmage] |= Config.rewardValues[4];
-        Config.awardValues[AWARD_Cleared_Forest] |= SID == 9;
-        Config.awardValues[AWARD_Cleared_Swamp] |= SID == 19;
-        Config.awardValues[AWARD_Cleared_Wilderness] |= SID == 29;
-        Config.awardValues[AWARD_Cleared_Volcano] |= SID == 39;
-        Config.awardValues[AWARD_Cleared_Ether_Region] |= SID == 49;
+        Config.s.awardValues[AWARD_Champion] |= Config.s.rewardValues[0];
+        Config.s.awardValues[AWARD_Bow_Master] |= Config.s.rewardValues[2];
+        Config.s.awardValues[AWARD_Archmage] |= Config.s.rewardValues[4];
+        Config.s.awardValues[AWARD_Cleared_Forest] |= SID == 9;
+        Config.s.awardValues[AWARD_Cleared_Swamp] |= SID == 19;
+        Config.s.awardValues[AWARD_Cleared_Wilderness] |= SID == 29;
+        Config.s.awardValues[AWARD_Cleared_Volcano] |= SID == 39;
+        Config.s.awardValues[AWARD_Cleared_Ether_Region] |= SID == 49;
         for (int i = 0; i <= 2; i++)
-            heroAvail[i] = Config.rewardValues[i * 2];
+            heroAvail[i] = Config.s.rewardValues[i * 2];
 
-        check_heroPoint();
         boolean all = true, perfect = true, moon = true;
-        for (int j = 0; j < Config.stageProg.length; j++) {//In the real game, time attack and base destroyer clear aren't required for the Crasto Guardian trophy, but that made it no different than EtherRegion clear trophy
-            byte[] scores = Config.stageProg[j];
+        for (int j = 0; j < Config.s.stageProg.length; j++) {//In the real game, time attack and base destroyer clear aren't required for the Crasto Guardian trophy, but that made it no different than EtherRegion clear trophy
+            byte[] scores = Config.s.stageProg[j];
             for (int i = 0; i < 3; i += 2)
                 if (scores[i] <= 0) {
                     all = perfect = false; //moonbreak isn't required for perfect either in real game lol
@@ -142,38 +141,35 @@ public class DataAward {
             if (!all && !moon)
                 break;
             if (perfect && j == 14)
-                Config.awardValues[AWARD_A_Perfectionist] = true;
+                Config.s.awardValues[AWARD_A_Perfectionist] = true;
         }
         if (all)
-            Config.awardValues[AWARD_Crasto_s_guardian] = true;
+            Config.s.awardValues[AWARD_Crasto_s_guardian] = true;
         if (perfect)
-            Config.awardValues[AWARD_No_more_Enemy] = true;
+            Config.s.awardValues[AWARD_No_more_Enemy] = true;
         if (moon)
-            Config.awardValues[AWARD_Destroyer] = true;
+            Config.s.awardValues[AWARD_Destroyer] = true;
     }
 
-    public static void check_heroPoint() {
-        Config.awardValues[AWARD_Brave] |= Config.heroPoints >= 1000;
-        Config.awardValues[AWARD_Fighter] |= Config.heroPoints >= 10000;
+    public static void check_heroPoint(int amount) {
+        Config.s.heroPoints += amount;
+        Config.s.awardValues[AWARD_Brave] |= Config.s.heroPoints >= 1000;
+        Config.s.awardValues[AWARD_Fighter] |= Config.s.heroPoints >= 10000;
     }
 
     public static void check_money(int money) {
-        if (money <= Config.top_money)
-            return;
-        Config.top_money = money;
-
-        Config.awardValues[AWARD_Rich] = Config.top_money >= 5000;
-        Config.awardValues[AWARD_Wealthy] = Config.top_money >= 10000;
+        Config.s.awardValues[AWARD_Rich] |= money >= 5000;
+        Config.s.awardValues[AWARD_Wealthy] |= money >= 10000;
     }
 
     public static void check_kill() {
-        Config.killCount++;
+        Config.s.killCount++;
 
-        Config.awardValues[AWARD_100_Kill] = Config.killCount >= 100;
-        Config.awardValues[AWARD_500_Kill] = Config.killCount >= 500;
-        Config.awardValues[AWARD_1_000_Kill] = Config.killCount >= 1000;
-        Config.awardValues[AWARD_2_000_Kill] = Config.killCount >= 2000;
-        Config.awardValues[AWARD_5_000_Kill] = Config.killCount >= 5000;
-        Config.awardValues[AWARD_10_000_Kill] = Config.killCount >= 10000;
+        Config.s.awardValues[AWARD_100_Kill] = Config.s.killCount >= 100;
+        Config.s.awardValues[AWARD_500_Kill] = Config.s.killCount >= 500;
+        Config.s.awardValues[AWARD_1_000_Kill] = Config.s.killCount >= 1000;
+        Config.s.awardValues[AWARD_2_000_Kill] = Config.s.killCount >= 2000;
+        Config.s.awardValues[AWARD_5_000_Kill] = Config.s.killCount >= 5000;
+        Config.s.awardValues[AWARD_10_000_Kill] = Config.s.killCount >= 10000;
     }
 }

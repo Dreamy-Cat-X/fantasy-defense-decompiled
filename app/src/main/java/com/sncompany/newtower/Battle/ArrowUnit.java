@@ -227,7 +227,7 @@ public class ArrowUnit extends StageEntity {
                 default:
                     moveCount++;
                     if (moveCount >= moveMaxCount) {
-                        if (shooter instanceof HeroUnit && (shooter.type == 2) && Config.rewardValues[6])
+                        if (shooter instanceof HeroUnit && (shooter.type == 2) && Config.s.rewardValues[6])
                             st.addEffectUnit(EffectUnit.EFFECT_TYPE_FIREBALL2, target.posX, target.posY);
                         else
                             st.addEffectUnit(shooter.attackEffect, target.posX, target.posY);

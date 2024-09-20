@@ -44,8 +44,8 @@ public class StageSelectPage extends TPage {
 
     public StageSelectPage(TPage par) {
         super(par);
-        stageSelectChapterNumber = Config.lastPlayed / 10;
-        stageSelectStageNumber = Config.lastPlayed % 10;
+        stageSelectChapterNumber = Config.s.lastPlayed / 10;
+        stageSelectStageNumber = Config.s.lastPlayed % 10;
     }
 
     @Override
@@ -74,19 +74,19 @@ public class StageSelectPage extends TPage {
         if (stageLoad != -1)
             return;
 
-        Config.highScores[mapNumber][mapAttackType] = Math.max(0, Config.highScores[mapNumber][mapAttackType]);
-        Config.lastPlayed = (byte)mapNumber;
+        Config.s.highScores[mapNumber][mapAttackType] = Math.max(0, Config.s.highScores[mapNumber][mapAttackType]);
+        Config.s.lastPlayed = (byte)mapNumber;
         if (samePlay[0] == mapNumber) {
             samePlay[1]++;
             if (samePlay[1] == 3)
-                Config.awardValues[DataAward.AWARD_Persevering] = true;
+                Config.s.awardValues[DataAward.AWARD_Persevering] = true;
         } else {
             samePlay[0] = mapNumber;
             samePlay[1] = 0;
         }
         if (mapNumber == 4)
-            Config.awardValues[DataAward.AWARD_Crossroads_Of_Destiny] = true;
-        Config.saveAll();
+            Config.s.awardValues[DataAward.AWARD_Crossroads_Of_Destiny] = true;
+        Config.saveFile();
         DataStage nst = new DataStage(map, mapAttackType);
 
         NewTower.switchPage(new StagePage(this, nst), true); //End of update_GAME_STAGE_START_LOADING
@@ -103,11 +103,11 @@ public class StageSelectPage extends TPage {
             TouchManager.addTouchRectListData(ARROW_L, CGRect.make(429f, 180f, 54f, 82f));
         if (stageSelectStageNumber < 9)
             TouchManager.addTouchRectListData(ARROW_R, CGRect.make(717f, 180f, 54f, 82f));
-        if (Config.stageProg[getStageIndex()][0] != -1)
+        if (Config.s.stageProg[getStageIndex()][0] != -1)
             TouchManager.addTouchRectListData(MIN_MAPMODE, CGRect.make(409f, 368f, 130f, 44f));
-        if (Config.stageProg[getStageIndex()][0] >= 1)
+        if (Config.s.stageProg[getStageIndex()][0] >= 1)
             TouchManager.addTouchRectListData(MIN_MAPMODE + 1, CGRect.make(535f, 368f, 130f, 44f));
-        if (Config.stageProg[getStageIndex()][0] == 2)
+        if (Config.s.stageProg[getStageIndex()][0] == 2)
             TouchManager.addTouchRectListData(MAX_MAPMODE, CGRect.make(661f, 368f, 130f, 44f));
         TouchManager.addTouchRectListData(7, CGRect.make(500f, 160f, 200f, 120f)); //Appears to be the minimap box
         TouchManager.addTouchRectListData(MIN_CHAPTER, CGRect.make(0f, 301f, 204f, 147f));
@@ -131,7 +131,7 @@ public class StageSelectPage extends TPage {
         uiStageImage[28].drawAtPointOption(624f, 96f, 18);
         GameRenderer.drawNumberBlock(DataWaveMob.DATA_WAVE_COUNT_FOR_LEVEL[getStageIndex()], numberStagePointImage, 705f, 97f, 0, 18, 2);
         uiStageImage[29].drawAtPointOption(469f, 124f, 18);
-        GameRenderer.drawNumberBlock(Math.max(0, Config.highScores[getStageIndex()][mapAttackType]), numberStagePointImage, 732f, 125f, 0, 20, 1);
+        GameRenderer.drawNumberBlock(Math.max(0, Config.s.highScores[getStageIndex()][mapAttackType]), numberStagePointImage, 732f, 125f, 0, 20, 1);
 
         if (stageSelectStageNumber > 0)
             uiStageImage[LTS == 3 ? 14 : 13].drawAtPointOption(429f, 180f, 18);
@@ -139,9 +139,9 @@ public class StageSelectPage extends TPage {
             uiStageImage[LTS == 4 ? 16 : 15].drawAtPointOption(717f, 180f, 18);
         map.checkBackBase();
         drawSmallMap(500f, 160f, 0.25f);
-        if (Config.stageProg[getStageIndex()][0] == 2)
+        if (Config.s.stageProg[getStageIndex()][0] == 2)
             uiStageImage[46].drawAtPointOption(503f, 163f, 18);
-        else if (Config.stageProg[getStageIndex()][0] == -1) {
+        else if (Config.s.stageProg[getStageIndex()][0] == -1) {
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
             Texture2D.setColors(0.5f);
             fillBlackImage.fillRect(500f, 160f, 200f, 120f);
@@ -150,21 +150,21 @@ public class StageSelectPage extends TPage {
         }
 
         uiStageImage[mapAttackType == 0 ? 36 : 35].drawAtPointOption(409f, 368f, 18);
-        if (Config.stageProg[getStageIndex()][1] == 0 && Config.highScores[getStageIndex()][0] == -1)
+        if (Config.s.stageProg[getStageIndex()][1] == 0 && Config.s.highScores[getStageIndex()][0] == -1)
             uiStageImage[43].drawAtPointOption(415f, 364f, 18);
 
-        if (Config.stageProg[getStageIndex()][0] < 1) {
+        if (Config.s.stageProg[getStageIndex()][0] < 1) {
             uiStageImage[41].drawAtPointOption(535f, 368f, 18);
         } else {
             uiStageImage[mapAttackType == 1 ? 38 : 37].drawAtPointOption(535f, 368f, 18);
-            if (Config.highScores[getStageIndex()][1] == -1) //NEW Text
+            if (Config.s.highScores[getStageIndex()][1] == -1) //NEW Text
                 uiStageImage[43].drawAtPointOption(541f, 364f, 18);
         }
-        if (Config.stageProg[getStageIndex()][0] < 2) {
+        if (Config.s.stageProg[getStageIndex()][0] < 2) {
             uiStageImage[42].drawAtPointOption(661f, 368f, 18);
         } else {
             uiStageImage[mapAttackType == 2 ? 40 : 39].drawAtPointOption(661f, 368f, 18);
-            if (Config.highScores[getStageIndex()][2] == -1)
+            if (Config.s.highScores[getStageIndex()][2] == -1)
                 uiStageImage[43].drawAtPointOption(667f, 364f, 18);
         }
 
@@ -188,7 +188,7 @@ public class StageSelectPage extends TPage {
         Texture2D.setColors(1);
         uiStageImage[LTS == 5 ? 33 : 32].drawAtPointOption(519f, f, 18);
 
-        if (Config.stageProg[getStageIndex()][0] == -1) {
+        if (Config.s.stageProg[getStageIndex()][0] == -1) {
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
             Texture2D.setColors(0.5f);
             fillBlackImage.fillRect(527f, 294f, 145f, 37f);
@@ -248,7 +248,7 @@ public class StageSelectPage extends TPage {
                     break;
                 case START:
                     GameThread.playSound(14);
-                    if (Config.stageProg[getStageIndex()][mapAttackType] >= 0) {
+                    if (Config.s.stageProg[getStageIndex()][mapAttackType] >= 0) {
                         mapNumber = getStageIndex();
                         stageLoad++;
                     }
@@ -331,8 +331,8 @@ public class StageSelectPage extends TPage {
 
     @Override
     public void onReload() {
-        stageSelectChapterNumber = Config.lastPlayed / 10;
-        stageSelectStageNumber = Config.lastPlayed % 10;
+        stageSelectChapterNumber = Config.s.lastPlayed / 10;
+        stageSelectStageNumber = Config.s.lastPlayed % 10;
         mapNumber = -1;
         stageLoad = 0;
         GameThread.playLoopSound(1);

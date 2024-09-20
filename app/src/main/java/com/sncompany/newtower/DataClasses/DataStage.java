@@ -177,8 +177,8 @@ public class DataStage {
         scr += (money * 10);
         scr += (mana * 30);
 
-        if (scr > Config.highScores[SID][mapType])
-            Config.highScores[SID][mapType] = scr;
+        if (scr > Config.s.highScores[SID][mapType])
+            Config.s.highScores[SID][mapType] = scr;
 
         return scr;
     }

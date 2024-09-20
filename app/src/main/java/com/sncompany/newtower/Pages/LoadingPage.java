@@ -88,7 +88,7 @@ public class LoadingPage extends TPage {
             return;
         int uiname = loadingViewType < 3 ? 12 + loadingViewType : (loadingViewType - 3) * 4;
 
-        alwaysImage[0].drawAtPointOption(0, 0, 18);
+        alwaysImage[ALWAYS_R_BG].drawAtPointOption(0, 0, 18);
         if (loadingViewType < 3) {
             alwaysImage[loadingViewType + 1].drawAtPointOption(GameRenderer.CX, GameRenderer.SCRHEIGHT_SMALL, 33);
             uiCharNameImage[uiname].drawAtPointOption(9, 10, 18);

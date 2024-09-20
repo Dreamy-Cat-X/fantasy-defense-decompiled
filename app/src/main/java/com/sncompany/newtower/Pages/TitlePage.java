@@ -257,24 +257,24 @@ public class TitlePage extends TPage {
                 uiEtcImage[etc_about].drawAtPointOption(GameRenderer.CX, 5, 17);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontColor(-1);
-                GameRenderer.drawStringM("'Fantasy Defence' Version 2.0.1", GameRenderer.CX, 100, 17);
-                GameRenderer.drawStringM("Developed by SN Mobile Technology Inc.", GameRenderer.CX, 150, 17);
-                GameRenderer.drawStringM("Copyright 2011", GameRenderer.CX, 175, 17);
-                GameRenderer.drawStringM("SN Mobile Technology", GameRenderer.CX, 200, 17);
-                GameRenderer.drawStringM("All rights reserved", GameRenderer.CX, 225, 17);
-                GameRenderer.drawStringM("For support, please contact", GameRenderer.CX, 250, 17);
-                GameRenderer.drawStringM("cs@sncompany.com", GameRenderer.CX, 275, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit0_0), GameRenderer.CX, 100, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit0_1), GameRenderer.CX, 150, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit0_2), GameRenderer.CX, 175, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit0_3), GameRenderer.CX, 200, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit0_4), GameRenderer.CX, 225, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit0_5), GameRenderer.CX, 250, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit0_6), GameRenderer.CX, 275, 17);
             } else if (gameSubStatus == 1) {
                 uiEtcImage[etc_developer].drawAtPointOption(GameRenderer.CX, 5, 17);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontColor(-1);
-                GameRenderer.drawStringM("General Director : Dong Hwa, Woo.", GameRenderer.CX, 140, 17);
-                GameRenderer.drawStringM("Producer : Min Young, Han.", GameRenderer.CX, 165, 17);
-                GameRenderer.drawStringM("Programmer : Haeng Bok, Lee.", GameRenderer.CX, 190, 17);
-                GameRenderer.drawStringM("Artist : Han Joo, Kang.", GameRenderer.CX, 215, 17);
-                GameRenderer.drawStringM("Game Designer : Min Young, Han.", GameRenderer.CX, 240, 17);
-                GameRenderer.drawStringM("Sub. Game Designer : Jin Kook, Park.", GameRenderer.CX, 265, 17);
-                GameRenderer.drawStringM("Production Company : SN Mobile Technology.", GameRenderer.CX, 290, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit1_0), GameRenderer.CX, 140, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit1_1), GameRenderer.CX, 165, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit1_2), GameRenderer.CX, 190, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit1_3), GameRenderer.CX, 215, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit1_4), GameRenderer.CX, 240, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit1_5), GameRenderer.CX, 265, 17);
+                GameRenderer.drawStringM(GameThread.getString(R.string.credit1_6), GameRenderer.CX, 290, 17);
             }
             uiEtcImage[cTLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11, 412, 18);
         }
@@ -333,7 +333,7 @@ public class TitlePage extends TPage {
                 soundBars[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
                 Config.effectVolume = soundBars[1].BarLastValue;
             }
-            Config.saveAll();
+            Config.saveConfig();
             return;
         }
         if (TouchManager.lastActionStatus != TouchManager.TOUCH_STATUS_START_PROCESSED)

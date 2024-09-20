@@ -52,7 +52,7 @@ public class StagePage extends StageBase {
     }
     private static final int[] specialSwordResource = {R.drawable.special_sword_blade0, R.drawable.special_sword_blade1, R.drawable.special_sword_blade2, R.drawable.special_sword_blade3, R.drawable.special_sword_body, R.drawable.special_sword_background, R.drawable.special_sword_lineb, R.drawable.special_sword_linem, R.drawable.special_sword_lines, R.drawable.special_sword_wind0, R.drawable.special_sword_wind1, R.drawable.special_sword_wind2};
     private static final int[] specialArrowResource = {R.drawable.special_arrow_arrow_center1, R.drawable.special_arrow_arrow_center2, R.drawable.special_arrow_arrow_center3, R.drawable.special_arrow_arrow_center4, R.drawable.special_arrow_arrow_left1, R.drawable.special_arrow_arrow_left2, R.drawable.special_arrow_arrow_left3, R.drawable.special_arrow_arrow_left4, R.drawable.special_arrow_arrow_right1, R.drawable.special_arrow_arrow_right2, R.drawable.special_arrow_arrow_right3, R.drawable.special_arrow_arrow_right4, R.drawable.special_arrow_land, R.drawable.special_arrow_body, R.drawable.special_arrow_body2, R.drawable.special_arrow_background, R.drawable.special_arrow_lineb, R.drawable.special_arrow_linem, R.drawable.special_arrow_lines, R.drawable.special_arrow_unit};
-    private static final int[] specialIceResource = {R.drawable.special_ice_body, R.drawable.special_ice_background, R.drawable.special_ice_unit, R.drawable.special_ice_1, R.drawable.special_ice_2, R.drawable.special_ice_3, R.drawable.special_ice_4, R.drawable.special_ice_5, R.drawable.special_ice_6, R.drawable.special_ice_7, R.drawable.special_ice_8, R.drawable.special_ice_9, R.drawable.special_ice_10, R.drawable.special_ice_11, R.drawable.special_ice_12, R.drawable.special_ice_13, R.drawable.special_ice_14, R.drawable.special_ice_lineb, R.drawable.special_ice_linem, R.drawable.special_ice_lines};
+    public static final int[] specialIceResource = {R.drawable.special_ice_body, R.drawable.special_ice_background, R.drawable.special_ice_unit, R.drawable.special_ice_1, R.drawable.special_ice_2, R.drawable.special_ice_3, R.drawable.special_ice_4, R.drawable.special_ice_5, R.drawable.special_ice_6, R.drawable.special_ice_7, R.drawable.special_ice_8, R.drawable.special_ice_9, R.drawable.special_ice_10, R.drawable.special_ice_11, R.drawable.special_ice_12, R.drawable.special_ice_13, R.drawable.special_ice_14, R.drawable.special_ice_lineb, R.drawable.special_ice_linem, R.drawable.special_ice_lines};
     public static final int[] arrowResource0 = {R.drawable.arrow_0_0};
     public static final int[] arrowResource1 = {R.drawable.arrow_1_0, R.drawable.arrow_1_1};
     public static final int[] arrowResource2 = {R.drawable.arrow_2_0, R.drawable.arrow_2_1};
@@ -260,8 +260,8 @@ public class StagePage extends StageBase {
                                     GameThread.stopLoopSound(2);
                                     GameThread.playSound(11);
                                     if (st.mapType == 1) {
-                                        Config.highScores[st.SID][1] = Math.max(Config.highScores[st.SID][1], st.getTotalScore());
-                                        Config.stageProg[st.SID][1] = (byte)Math.max(Config.stageProg[st.SID][1], (st.waveManager.current > 100 ? 2 : st.waveManager.current > st.waveManager.wcc ? 1 : 0));
+                                        Config.s.highScores[st.SID][1] = Math.max(Config.s.highScores[st.SID][1], st.getTotalScore());
+                                        Config.s.stageProg[st.SID][1] = (byte)Math.max(Config.s.stageProg[st.SID][1], (st.waveManager.current > 100 ? 2 : st.waveManager.current > st.waveManager.wcc ? 1 : 0));
                                     }
                                     /*if (st.mapType == 0) {
                                         st.victoryH = (st.waveManager.current * 8) + (st.Life * 10); //This is actually just 0 every time keeeek
@@ -273,9 +273,8 @@ public class StagePage extends StageBase {
                                         st.victoryH = (st.victoryH * 7) / 10;*/
                                     //I didn't add this here, but commented it for performance purposes. I think it's better than making it 50 for all instances, but eh gotta stay true to game
                                     st.victoryH = 50;
-                                    Config.heroPoints += (int)st.victoryH;
-                                    DataAward.check_heroPoint();
-                                    Config.saveAll();
+                                    DataAward.check_heroPoint((int)st.victoryH);
+                                    Config.saveFile();
                                     myOscillator[11].initWithTwoWayStartPosition(-350, 0, 15, 30, 10);
                                     return;
                                 }
@@ -310,9 +309,8 @@ public class StagePage extends StageBase {
                     if (st.perfectClear())
                         st.victoryH *= 2;*/
                     st.victoryH = 50;
-                    Config.heroPoints += (int)st.victoryH;
-                    DataAward.check_heroPoint();
-                    Config.saveAll();
+                    DataAward.check_heroPoint((int)st.victoryH);
+                    Config.saveFile();
                     myOscillator[11].initWithTwoWayStartPosition(-350, 0, 15, 30, 10);
                     return;
                 } else if (checkWaveAndFinishCheck != 1)
@@ -321,21 +319,21 @@ public class StagePage extends StageBase {
                 GameThread.playSound(10);
 
                 if (st.SID + 1 < 50)
-                    Config.stageProg[st.SID + 1][0] = 0;
+                    Config.s.stageProg[st.SID + 1][0] = 0;
                 if (st.perfectClear())
-                    Config.stageProg[st.SID][st.mapType] = 2;
+                    Config.s.stageProg[st.SID][st.mapType] = 2;
                 else {
                     if (st.life == 1)
-                        Config.awardValues[DataAward.AWARD_Narrowly_Victory] = true;
-                    Config.stageProg[st.SID][st.mapType] = (byte)Math.max(Config.stageProg[st.SID][st.mapType], 1);
+                        Config.s.awardValues[DataAward.AWARD_Narrowly_Victory] = true;
+                    Config.s.stageProg[st.SID][st.mapType] = (byte)Math.max(Config.s.stageProg[st.SID][st.mapType], 1);
                 }
-                Config.highScores[st.SID][st.mapType] = Math.max(Config.highScores[st.SID][st.mapType], st.getTotalScore());
+                Config.s.highScores[st.SID][st.mapType] = Math.max(Config.s.highScores[st.SID][st.mapType], st.getTotalScore());
 
                 int wus = 0;
                 boolean archerOnly = true, mageOnly = true;
                 for (TowerUnit twr : st.towerUnit) {
                     if (twr.attackCount == 0)
-                        Config.awardValues[DataAward.AWARD_Surplus] = true;
+                        Config.s.awardValues[DataAward.AWARD_Surplus] = true;
                     if (!(twr instanceof HeroUnit)) {
                         wus |= 1 << twr.type;
                         archerOnly &= twr.getRole() == 1;
@@ -343,13 +341,13 @@ public class StagePage extends StageBase {
                     }
                 }
                 if (wus == 4095)
-                    Config.awardValues[DataAward.AWARD_Full_Party] = true;
+                    Config.s.awardValues[DataAward.AWARD_Full_Party] = true;
                 else if (wus < 16)
-                    Config.awardValues[DataAward.AWARD_Warriors_March] = true;
+                    Config.s.awardValues[DataAward.AWARD_Warriors_March] = true;
                 else if (archerOnly)
-                    Config.awardValues[DataAward.AWARD_Snipers_Toast] = true;
+                    Config.s.awardValues[DataAward.AWARD_Snipers_Toast] = true;
                 else if (mageOnly)
-                    Config.awardValues[DataAward.AWARD_Mages_Rally] = true;
+                    Config.s.awardValues[DataAward.AWARD_Mages_Rally] = true;
 
                 /*if (st.mapType == 0)
                     st.victoryH = (st.SID * 20) + 50 + (st.waveManager.wcc * 8) + (st.life * 10);
@@ -358,20 +356,20 @@ public class StagePage extends StageBase {
                 else
                     st.victoryH = (st.SID * 10) + (st.waveManager.current * 8) + (st.life * 3);*/
                 st.victoryH = 100;
-                Config.heroPoints += (int)st.victoryH;
+                DataAward.check_heroPoint((int)st.victoryH);
 
                 int[] srds = new int[]{0, 14, 9, 4, 24, 19, 29, 34, 39, 44};
                 for (int i = 0; i < srds.length; i++)
-                    if (st.SID == srds[i] && !Config.rewardValues[i]) {
-                        Config.rewardValues[i] = true;
+                    if (st.SID == srds[i] && !Config.s.rewardValues[i]) {
+                        Config.s.rewardValues[i] = true;
                         rewardShowOrder = i;
                         switch (i) {
                             case 9:
-                                Config.heroPoints += 1500;
+                                Config.s.heroPoints += 1500; //3500
                             case 7:
-                                Config.heroPoints += 500; //2000
+                                Config.s.heroPoints += 500; //2000
                             case 1:
-                                Config.heroPoints += 1500; //3500
+                                DataAward.check_heroPoint(1500);
                                 break;
                             case 0:
                             case 2:
@@ -379,14 +377,14 @@ public class StagePage extends StageBase {
                                 DataStage.heroAvail[i / 2] = true;
                                 break;
                             case 8:
-                                Config.rewardValues[8] = getItem(15);
-                                if (!Config.rewardValues[8])
+                                Config.s.rewardValues[8] = getItem(15);
+                                if (!Config.s.rewardValues[8])
                                     rewardShowOrder = -2;
                                 break;
                         }
                     }
                 DataAward.clear_award(st.SID);
-                Config.saveAll();
+                Config.saveFile();
 
                 state = STATE.CLEAR;
                 myOscillator[11].initWithTwoWayStartPosition(-150, 0, 15, 30, 10);
@@ -427,15 +425,15 @@ public class StagePage extends StageBase {
                 darkViewCount++;
                 if (darkViewCount >= 45) {
                     if (st.SID < 49) {
-                        Config.lastPlayed++;
-                        Config.saveAll();
+                        Config.s.lastPlayed++;
+                        Config.saveFile();
                     }
                     if (substate == VIC_TOMAP) {
                         NewTower.switchPage(parent, true); //Stage select
                     } else if (substate == VIC_TOUPGR) {
                         NewTower.switchPage(parent.parent, true); //TODO - Make it switch to list upgrade page
                     } else
-                        NewTower.switchPage(new StagePage(parent, new DataStage(DataMap.loadMap(Config.lastPlayed), st.mapType)), true);
+                        NewTower.switchPage(new StagePage(parent, new DataStage(DataMap.loadMap(st.SID + 1), st.mapType)), true);
                 }
                 break;
             case GAMEOVER:
@@ -480,8 +478,8 @@ public class StagePage extends StageBase {
 
     public boolean getItem(int id) {
         int slot = -1;
-        for (int i = 0; i < Config.inventory.length; i++)
-            if (Config.inventory[i] == null) {
+        for (int i = 0; i < Config.s.inventory.length; i++)
+            if (Config.s.inventory[i] == null) {
                 slot = i;
                 break;
             }
@@ -489,7 +487,7 @@ public class StagePage extends StageBase {
             return false;
 
         int rid = id - 1;
-        Config.inventory[slot] = new byte[]{(byte) (rid / 4), (byte) (rid % 4)};
+        Config.s.inventory[slot] = new byte[]{(byte) (rid / 4), (byte) (rid % 4)};
         return true;
     }
 
@@ -586,7 +584,7 @@ public class StagePage extends StageBase {
                 drawAllUnit(gl10);
                 drawPlayingUi(false);
                 TouchManager.clearTouchMap();
-                boolean z = st.mapType == 0 || Config.highScores[st.SID + 1][2] == -1;
+                boolean z = st.mapType == 0 || Config.s.highScores[st.SID + 1][2] == -1;
                 switch (substate) {
                     case VIC_DEF: case VIC_PERFECT: case VIC_MAPUNLK:
                         TouchManager.addTouchRectListData(0, CGRect.make(0, 0, GameRenderer.SCRWIDTH, GameRenderer.SCRHEIGHT));
@@ -737,7 +735,7 @@ public class StagePage extends StageBase {
                             Texture2D.setColors(f);
                             GameRenderer.setFontDoubleColor(-1, -15385258);
                             GameRenderer.drawStringDoubleM("Highest Score", 290, 328, 18);
-                            GameRenderer.drawStringDoubleM(String.valueOf(Config.highScores[st.SID][st.mapType]), 508, 328, 20);
+                            GameRenderer.drawStringDoubleM(String.valueOf(Config.s.highScores[st.SID][st.mapType]), 508, 328, 20);
                             Texture2D.setColors(1);
                         } else break;
                         f = startViewCount < 270 ? (startViewCount - 240) * 0.033f : 1;
@@ -761,7 +759,7 @@ public class StagePage extends StageBase {
                         }
                         break;
                     case VIC_RWDULK:
-                        uiPopupImage[7].drawAtPointOption(201, 101, 18);
+                        uiPopupImage[popup_background2].drawAtPointOption(201, 101, 18);
                         stageClearImage[14].drawAtPointOption(291, 111, 18);
                         switch (rewardShowOrder) {
                             case 0:
@@ -791,11 +789,11 @@ public class StagePage extends StageBase {
                                 GameRenderer.setFontSize(15);
                                 GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153, 17);
                                 GameRenderer.setFontColor(-16777216);
-                                if (rewardShowOrder == 6)
+                                if (rewardShowOrder == -3)
                                     GameRenderer.drawStringM("Champion: Splashed damage", GameRenderer.CX, 243, 17);
-                                else if (rewardShowOrder == -3)
+                                else if (rewardShowOrder == -4)
                                     GameRenderer.drawStringM("Bow Master: Double Shot", GameRenderer.CX, 243, 17);
-                                else
+                                else if (rewardShowOrder == -5)
                                     GameRenderer.drawStringM("Archmage: Splashed damage", GameRenderer.CX, 243, 17);
                                 break;
                             case 7:
@@ -814,7 +812,9 @@ public class StagePage extends StageBase {
                                 GameRenderer.drawStringDoubleM("2500", 400, 220, 17);
                                 break;
                         }
-                        uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(213, 289, 18);
+                        uiPopupImage[cTLS == 0 ? popup_okon2 : popup_okoff2].drawAtPointOption(213, 289, 18);
+                        if (rewardShowOrder < 0)
+                            break;
                         GameRenderer.setFontDoubleColor(-16777216, -16777216);
                         GameRenderer.setFontSize(15);
                         GameRenderer.drawStringDoubleM(rewardDataString[substate * 3], GameRenderer.CX, 153, 17);
@@ -931,7 +931,7 @@ public class StagePage extends StageBase {
                         Texture2D.setColors(f);
                         GameRenderer.setFontDoubleColor(-1, -15385258);
                         GameRenderer.drawStringDoubleM("Highest Score", 290, 328, 18);
-                        GameRenderer.drawStringDoubleM(String.valueOf(Config.highScores[st.SID][st.mapType]), 508, 328, 20);
+                        GameRenderer.drawStringDoubleM(String.valueOf(Config.s.highScores[st.SID][st.mapType]), 508, 328, 20);
                         Texture2D.setColors(1);
                     }
                     f = startViewCount < 270 ? (startViewCount - 240) * 0.033f : 1;
@@ -1400,7 +1400,7 @@ public class StagePage extends StageBase {
                         if (TouchManager.checkTouchListStatus() == 0) {
                             if (rewardShowOrder == 6) {
                                 rewardShowOrder = -3;
-                            } else if (rewardShowOrder == -3) {
+                            } else if (rewardShowOrder <= -3 && rewardShowOrder >= -4) {
                                 rewardShowOrder--;
                             } else if (st.SID % 10 == 9 && st.SID != 49) {
                                 darkViewCount = 0;
@@ -1582,7 +1582,7 @@ public class StagePage extends StageBase {
 
         GameRenderer.drawStringM(String.valueOf(st.selectedUnit.attackRange), 420, 416, 20);
         GameRenderer.drawStringM(TowerUnit.getEffectTypeString(st.selectedUnit.effectType), 420, 442, 20);
-        if (characterMenuSelectFlag == SEL_HEROMENU && Config.rewardValues[3] && hero != null)
+        if (characterMenuSelectFlag == SEL_HEROMENU && Config.s.rewardValues[3] && hero != null)
             uiCharEtcImage[9 + hero.type].drawAtPointOption(440, 400, 18);
 
         if (!(st.selectedUnit instanceof HeroUnit))
@@ -1591,7 +1591,7 @@ public class StagePage extends StageBase {
             TouchManager.addTouchRectListData(CHARMENU_UPGRADE, CGRect.make(435, 350, 235, 115));
         if (st.selectedUnit.level < getTowerMaxLevel(st.selectedUnit instanceof HeroUnit) - 1 && canLvl)
             TouchManager.addTouchRectListData(CHARMENU_LVL, CGRect.make(670, 350, 115, 115));
-        if (characterMenuSelectFlag < SEL_HEROMENU && hero != null && Config.rewardValues[3] && hero.specialCooltime <= 0 && st.mana >= hero.specialMana)
+        if (characterMenuSelectFlag < SEL_HEROMENU && hero != null && Config.s.rewardValues[3] && hero.specialCooltime <= 0 && st.mana >= hero.specialMana)
             TouchManager.addTouchRectListData(CHARMENU_SPECIAL, CGRect.make(625, 272, 160, 69));
 
         TouchManager.addTouchRectListData(CHARMENU_BODY, CGRect.make(0, 343, GameRenderer.SCRWIDTH, 137));
@@ -1641,7 +1641,7 @@ public class StagePage extends StageBase {
                 fillWhiteImage.fillRect(670, 350, 115, 115);
                 Texture2D.setColors(1);
             }
-            if (hero != null && Config.rewardValues[3]) {
+            if (hero != null && Config.s.rewardValues[3]) {
                 int dInd = (hero.type * 2) + 8;
                 if (cTLS == CHARMENU_SPECIAL)
                     dInd++;

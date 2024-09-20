@@ -95,7 +95,6 @@ public class CinematicPage extends TPage {
             case USE12:
                 currentCheckTime = System.currentTimeMillis();
                 if (currentCheckTime - lastCheckTime > 2000) {
-                    Config.curPlaytime = System.currentTimeMillis();
                     if (Config.movie) {
                         gameSubStatus = 0;
                         setOpeningData();

@@ -150,7 +150,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         int tot = 0;
         for (int g = role * 6; g < (role * 6) + 6; g++)
             if (DataUpgradeUnit.upgradeUnitData[g][4] == ind)
-                tot += Config.unitUpgrades[role][g % 6] * DataUpgradeUnit.upgradeUnitData[g][0];
+                tot += Config.s.unitUpgrades[role][g % 6] * DataUpgradeUnit.upgradeUnitData[g][0];
         return tot;
     }
 
@@ -178,7 +178,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
 
         int role = type / 4;
         int i2 = DataCharacter.charData[type * 3][0];
-        int reduction = (i2 * Config.unitUpgrades[role][0] * DataUpgradeUnit.upgradeUnitData[role * 6][0]) / 100;
+        int reduction = (i2 * Config.s.unitUpgrades[role][0] * DataUpgradeUnit.upgradeUnitData[role * 6][0]) / 100;
 
         return i2 + reduction;
     }
@@ -195,7 +195,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         level++;
 
         if (level == 2 && (getTier() == 1 || getTier() == 3))
-            Config.awardValues[(getTier() == 1 ? DataAward.AWARD_Guardian_Of_War : DataAward.AWARD_Thrill_Of_The_Hammer) + getRole()] = true;
+            Config.s.awardValues[(getTier() == 1 ? DataAward.AWARD_Guardian_Of_War : DataAward.AWARD_Thrill_Of_The_Hammer) + getRole()] = true;
 
         restatTowerUnit(false);
         st.addEffectUnit(14, posX, posY);
