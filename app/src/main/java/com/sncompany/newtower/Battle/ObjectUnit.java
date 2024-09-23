@@ -1,6 +1,7 @@
 package com.sncompany.newtower.Battle;
 
 import com.sncompany.newtower.DataClasses.DataAward;
+import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataObject;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameRenderer;
@@ -106,7 +107,7 @@ public class ObjectUnit extends EnemyUnit {
         unitHP -= ent.unitPower;
         if (unitHP <= 0)
             kill(ent);
-        if (ent.effectType == 1)
+        if (ent.effectType == DataCharacter.EFF_SPLASH)
             ent.hitUnitSplash(0, this);
     }
 

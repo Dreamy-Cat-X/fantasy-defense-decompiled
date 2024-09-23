@@ -1,6 +1,7 @@
 package com.sncompany.newtower.Battle;
 
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.DataClasses.DataCharacter;
 import com.sncompany.newtower.DataClasses.DataStage;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
@@ -235,7 +236,7 @@ public class ArrowUnit extends StageEntity {
                         if (target instanceof MonsterUnit) {
                             MonsterUnit mon = (MonsterUnit)target;
                             hitMons.add(mon);
-                            if (shooter.effectType == 4)
+                            if (shooter.effectType == DataCharacter.EFF_PIERCE)
                                 mon.hitUnitFierce(this, shooter);
                         }
                         type = -1;

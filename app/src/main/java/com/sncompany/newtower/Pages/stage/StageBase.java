@@ -383,7 +383,7 @@ public abstract class StageBase extends TPage {
             return;
 
         if (type < 12) {
-            rang = DataCharacter.charData[type * 3][4];
+            rang = DataCharacter.charData[type * 3][DataCharacter.RANGE];
             rngUpgr = TowerUnit.getUpgradeRate(type / 6, 9);
         } else {
             int t2 = type - 12;

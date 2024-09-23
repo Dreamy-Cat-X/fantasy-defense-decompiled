@@ -101,7 +101,7 @@ public class HeroUnit extends TowerUnit {
         targetMaxNum = dat[4];
         unitPower = dat[1];
         attackType = dat[11];
-        effectType = -1;
+        effectType = DataCharacter.EFF_NONE;
         attackEffect = dat[12];
         specialMana = dat[6] + ((dat[6] * getUpgradeRate(17)) / 100);
         specialAttPower = dat[7] + ((dat[7] * (getUpgradeRate(16) + getEquipEffect(DataUpgradeItem.EQ_CHARM, 0))) / 100);
@@ -109,10 +109,10 @@ public class HeroUnit extends TowerUnit {
         specialMaxCooltime = (dat[9] * 41) + ((dat[9] * getUpgradeRate(18)) / 100);
         if (Config.s.rewardValues[6]) {
             if (type == 0 || type == 2)
-                effectType = 1;
+                effectType = DataCharacter.EFF_SPLASH;
             else if (type == 1) {
                 targetMaxNum = 2;
-                effectType = 8;
+                effectType = DataCharacter.EFF_DOUBLESHOT;
             }
         }
         if (st != null) {//Check because this is used on equipPage
@@ -348,7 +348,7 @@ public class HeroUnit extends TowerUnit {
                         i++;
                 if (type == 1) {
                     mon.dotHolyDamage = getSpecialHitDamage(mon) / 20;
-                    mon.dotHolyCount = DataCharacter.charData[17][8];
+                    mon.dotHolyCount = DataCharacter.charData[17][DataCharacter.CONT_TIME];
                 } else if (type == 2)
                     mon.slowRate = DataHero.heroData[i][10];
 

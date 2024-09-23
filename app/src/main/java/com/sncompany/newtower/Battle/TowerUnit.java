@@ -104,17 +104,17 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
 
         int[] dat = DataCharacter.charData[ot];
         towerCoolTime = 0;
-        towerCoolTimeMax = Math.max(0, dat[3] - ((dat[3] * getUpgradeRate(8)) / 100));
+        towerCoolTimeMax = Math.max(0, dat[DataCharacter.ATKRATE] - ((dat[DataCharacter.ATKRATE] * getUpgradeRate(8)) / 100));
 
-        attackRange = dat[4] + ((dat[4] * getUpgradeRate(9)) / 100);
+        attackRange = dat[DataCharacter.RANGE] + ((dat[DataCharacter.RANGE] * getUpgradeRate(9)) / 100);
         attackDistance = (((attackRange * 45) / 100) + 22) * 50;
-        targetMaxNum = dat[5];
-        unitPower = dat[2];
-        attackType = dat[9];
-        effectType = dat[6];
-        attackEffect = dat[10];
-        if (targetMaxNum >= 2 && effectType == -1)
-            effectType = 7;
+        targetMaxNum = dat[DataCharacter.TARGET];
+        unitPower = dat[DataCharacter.ATK];
+        attackType = dat[DataCharacter.ATK_TYPE];
+        effectType = dat[DataCharacter.EFFECT];
+        attackEffect = dat[DataCharacter.ATK_EFFECT];
+        if (targetMaxNum >= 2 && effectType == DataCharacter.EFF_NONE)
+            effectType = DataCharacter.EFF_MULTISHOT;
         if (classChange) {
             drawData = DataAnim.towerDrawData[type];
             drawTexture = st.page.towerImages[type];
@@ -175,16 +175,22 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public static int getBuyPrice(int type) {
         if (type == -1)
             return 0;
-
         int role = type / 4;
-        int i2 = DataCharacter.charData[type * 3][0];
-        int reduction = (i2 * Config.s.unitUpgrades[role][0] * DataUpgradeUnit.upgradeUnitData[role * 6][0]) / 100;
-
-        return i2 + reduction;
+        int c = DataCharacter.charData[type * 3][DataCharacter.COST];
+        return c + ((c * Config.s.unitUpgrades[role][0] * DataUpgradeUnit.upgradeUnitData[role * 6][0]) / 100);
     }
 
     public int getSellPrice() {
-        return DataCharacter.charData[oldType()][13] / 2;
+        int pri = 0;
+        for (int i = 0; i <= level; i++)
+            pri += DataCharacter.charData[oldType() - i][DataCharacter.COST];
+        if (getTier() >= 2) {
+            if (getTier() == 3)
+                pri += DataCharacter.charData[(type - 1) * 3][DataCharacter.UPGRADE_COST];
+            pri += DataCharacter.charData[getRole() * 12][DataCharacter.UPGRADE_COST];
+            pri += DataCharacter.charData[getRole() * 12][DataCharacter.COST];
+        }
+        return pri / 2;
     }
 
     public void levelUpUnit() {
@@ -204,7 +210,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public int getLevelupPrice() {
-        return DataCharacter.charData[oldType() + 1][0];
+        return DataCharacter.charData[oldType() + 1][DataCharacter.COST];
     }
 
     public void upgradeUnit() {
@@ -218,7 +224,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public int getUpgradePrice() {
-        return DataCharacter.charData[oldType()][1];
+        return DataCharacter.charData[oldType()][DataCharacter.UPGRADE_COST];
     }
 
     public void update() {

@@ -7,5 +7,5 @@
 ## Other TODO
 - PC Port
 - File Select menu + way to delete files
-- Store BGM/SFX/Vibration/Intro settings in a config file outside of save files
 - Move all display strings to strings.xml
+- Bitmask-ify effect type, to allow an unit to have multiple effects

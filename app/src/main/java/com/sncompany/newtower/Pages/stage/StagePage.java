@@ -31,17 +31,17 @@ public class StagePage extends StageBase {
     /**
      * Contains all the dialog for reward attaining.
      */
-    static final String[] rewardDataString = {
-            "You've acquired a Hero.", "Hero: Champion acquired.", "Check for more info under the Item > Equipment menu.",
-            "Hero Points obtained.", "You obtained 1,500 Hero Points.", " ",
-            "You've acquired a Hero.", "Hero: Bow Master acquired.", "Check for more info under the Item > Equipment menu.",
-            "You acquired special skills.", "You can now use the special skill for all of your Heroes.", "Select a Hero character while playing.",
-            "You've acquired a Hero.", "Hero: Archmage acquired.", "Check for more info under the Item> Equipment menu.",
-            "The upgrade limit is now uncapped.", "The upgrade limit of your Hero units has increased.(+5)", " ",
-            "A Hero's normal attack has been upgraded.", "All of your Heroes now cause a special effect with their Normal attacks.", " ",
-            "Hero Points obtained.", "You obtained 2,000 Hero Points.", " ",
-            "You obtained a Hero item.", "You obtained a Zephyrus Amulet.", " ",
-            "Hero Points obtained.", "You obtained 3,500 Hero Points.", " "
+    static final int[][] rewardInfos = {
+            {R.string.unlk_hero, R.string.unlk_hero2, R.string.unlk_hero1},
+            {R.string.unlk_points, R.string.unlk_points0},
+            {R.string.unlk_hero, R.string.unlk_hero3, R.string.unlk_hero1},
+            {R.string.unlk_upgr, R.string.unlk_upgr1, R.string.unlk_upgr2},
+            {R.string.unlk_hero, R.string.unlk_hero4, R.string.unlk_hero1},
+            {R.string.unlk_cap, R.string.unlk_cap1},
+            {R.string.reward_hero, R.string.reward_hero_s},
+            {R.string.unlk_points, R.string.unlk_points0},
+            {R.string.unlk_item, R.string.unlk_item1},
+            {R.string.unlk_points, R.string.unlk_points0}
     };
     private enum STATE {
         START,
@@ -85,11 +85,12 @@ public class StagePage extends StageBase {
     private int startViewCount, rewardShowOrder = -1;
     public int upgradeCount = 0, specialBlinkCount = 0, characterMenuMonsterViewCount, characterMenuMonsterStartViewCount, levelUpCount = 0, darkViewCount = 0, monsterGoalBlinkCount = 0;
     private STATE state = STATE.START;
-    private int substate;
+    private byte substate;
+    private short rwd_hero;
 
-    private static final int PLAY_HEROS = 6, PLAY_PAUSE = 10, PLAY_SOFTPAUSE = 11, PLAY_TURBO = 12, CHARMENU_SELL = 0, CHARMENU_UPGRADE = 1, CHARMENU_LVL = 2, CHARMENU_SPECIAL = 3, CHARMENU_BODY = 4, CHARMENU_NO = 5, CHARMENU_YES = 7;
-    private static final int SEL_DEF = 0, SEL_USPWN = 1, SEL_HERO = 2, SEL_HSPWN = 3, SEL_CHARMENU = 4, SEL_UPGRMENU = 5, SEL_LVMENU = 6, SEL_HEROMENU = 7;
-    private static final int VIC_DEF = 0, VIC_PERFECT = 1, VIC_MAPUNLK = 2, VIC_RWDULK = 3, VIC_MENU = 4, VIC_TOMAP = 5, VIC_TOUPGR = 6, VIC_NEXTST = 7, VTCH_MAP = 0, VTCH_UPG = 1, VTCH_NEXT = 2;
+    private static final byte PLAY_HEROS = 6, PLAY_PAUSE = 10, PLAY_SOFTPAUSE = 11, PLAY_TURBO = 12, CHARMENU_SELL = 0, CHARMENU_UPGRADE = 1, CHARMENU_LVL = 2, CHARMENU_SPECIAL = 3, CHARMENU_BODY = 4, CHARMENU_NO = 5, CHARMENU_YES = 7;
+    private static final byte SEL_DEF = 0, SEL_USPWN = 1, SEL_HERO = 2, SEL_HSPWN = 3, SEL_CHARMENU = 4, SEL_UPGRMENU = 5, SEL_LVMENU = 6, SEL_HEROMENU = 7;
+    private static final byte VIC_DEF = 0, VIC_PERFECT = 1, VIC_MAPUNLK = 2, VIC_RWDULK = 3, VIC_MENU = 4, VIC_TOMAP = 5, VIC_TOUPGR = 6, VIC_NEXTST = 7, VTCH_MAP = 0, VTCH_UPG = 1, VTCH_NEXT = 2;
 
     public StagePage(TPage par, DataStage s) {
         super(par, s);
@@ -365,11 +366,11 @@ public class StagePage extends StageBase {
                         rewardShowOrder = i;
                         switch (i) {
                             case 9:
-                                Config.s.heroPoints += 1500; //3500
+                                rwd_hero += 1500; //3500
                             case 7:
-                                Config.s.heroPoints += 500; //2000
+                                rwd_hero += 500; //2000
                             case 1:
-                                DataAward.check_heroPoint(1500);
+                                DataAward.check_heroPoint(rwd_hero += 1500);
                                 break;
                             case 0:
                             case 2:
@@ -530,14 +531,14 @@ public class StagePage extends StageBase {
                     GameRenderer.setFontSize(50);
                     GameRenderer.drawStringDoubleM(GameThread.chapterName[st.SID / 10], GameRenderer.CX, 115, 9);
                     GameRenderer.setFontSize(35);
-                    GameRenderer.drawStringDoubleM(String.format("Stage %d", st.SID + 1), 183, 220, 18);
-                    GameRenderer.drawStringDoubleM(String.format("%-2d Waves", st.waveManager.wcc), 435, 220, 18);
+                    GameRenderer.drawStringDoubleM(String.format(GameThread.getString(R.string.start_stind), st.SID + 1), 183, 220, 18);
+                    GameRenderer.drawStringDoubleM(String.format(GameThread.getString(R.string.start_wvind), st.waveManager.wcc), 435, 220, 18);
                     if (st.SID % 10 == 9)
                         uiUpperImage[upper_bossstage].drawAtPointOption(GameRenderer.CX, 308, 17);
 
                     GameRenderer.setFontDoubleColor(-65703, -9816043);
                     GameRenderer.setFontSize(25);
-                    GameRenderer.drawStringDoubleM("Touch the screen!!", GameRenderer.CX, 391, 17);
+                    GameRenderer.drawStringDoubleM(GameThread.getString(R.string.start_battle), GameRenderer.CX, 391, 17);
                     Texture2D.setColors(1);
                 }
                 TouchManager.clearTouchMap();
@@ -662,9 +663,9 @@ public class StagePage extends StageBase {
 
                                 GameRenderer.setFontSize(25);
                                 GameRenderer.setFontColor(-1);
-                                GameRenderer.drawStringM(String.format("Theme %d. %s Cleared", chapter + 1, GameThread.chapterName[chapter]), GameRenderer.CX, yy + 104, 17);
+                                GameRenderer.drawStringM(String.format(GameThread.getString(R.string.theme_ulk), chapter + 1, GameThread.chapterName[chapter]), GameRenderer.CX, yy + 104, 17);
                                 if (chapter < 4)
-                                    GameRenderer.drawStringM(String.format("Opened Next Theme. %s", GameThread.chapterName[chapter + 1]), GameRenderer.CX, yy + 385, 17);
+                                    GameRenderer.drawStringM(String.format(GameThread.getString(R.string.theme_ulk1), GameThread.chapterName[chapter + 1]), GameRenderer.CX, yy + 385, 17);
                                 i++;
                             }
                         }
@@ -683,7 +684,7 @@ public class StagePage extends StageBase {
                         if (f > 0) {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                             Texture2D.setColors(f);
-                            GameRenderer.drawStringM("Score", 259, 108, 18);
+                            GameRenderer.drawStringM(GameThread.getString(R.string.score), 259, 108, 18);
                             GameRenderer.drawStringM(String.valueOf((int) st.bScore), 540, 108, 20);
                             Texture2D.setColors(1);
                         } else break;
@@ -691,7 +692,7 @@ public class StagePage extends StageBase {
                         if (f > 0) {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                             Texture2D.setColors(f);
-                            GameRenderer.drawStringM("Life", 259, 140, 18);
+                            GameRenderer.drawStringM(GameThread.getString(R.string.health), 259, 140, 18);
                             GameRenderer.drawStringM(String.format("%d/%d", st.life, DataStage.maxLife), 540, 140, 20);
                             if (st.perfectClear())
                                 stageClearImage[13].drawAtPointOption(553, 131, 18);
@@ -701,7 +702,7 @@ public class StagePage extends StageBase {
                         if (f > 0) {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                             Texture2D.setColors(f);
-                            GameRenderer.drawStringM("Gold", 259, 172, 18);
+                            GameRenderer.drawStringM(GameThread.getString(R.string.money), 259, 172, 18);
                             GameRenderer.drawStringM(String.valueOf(st.money), 540, 172, 20);
                             Texture2D.setColors(1);
                         } else break;
@@ -709,7 +710,7 @@ public class StagePage extends StageBase {
                         if (f > 0) {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                             Texture2D.setColors(f);
-                            GameRenderer.drawStringM("Mana", 259, 206, 18);
+                            GameRenderer.drawStringM(GameThread.getString(R.string.mana), 259, 206, 18);
                             GameRenderer.drawStringM(String.valueOf(st.mana), 540, 206, 20);
                             Texture2D.setColors(1);
                         } else break;
@@ -734,7 +735,7 @@ public class StagePage extends StageBase {
                             Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                             Texture2D.setColors(f);
                             GameRenderer.setFontDoubleColor(-1, -15385258);
-                            GameRenderer.drawStringDoubleM("Highest Score", 290, 328, 18);
+                            GameRenderer.drawStringDoubleM(GameThread.getString(R.string.highscore), 290, 328, 18);
                             GameRenderer.drawStringDoubleM(String.valueOf(Config.s.highScores[st.SID][st.mapType]), 508, 328, 20);
                             Texture2D.setColors(1);
                         } else break;
@@ -766,10 +767,12 @@ public class StagePage extends StageBase {
                                 stageClearImage[19].drawAtPointOption(365, 169, 18);
                                 break;
                             case 1:
+                            case 7:
+                            case 9:
                                 stageClearImage[18].drawAtPointOption(365, 169, 18);
                                 GameRenderer.setFontSize(11);
                                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                                GameRenderer.drawStringDoubleM("1500", 400, 220, 17);
+                                GameRenderer.drawStringDoubleM(String.valueOf(rwd_hero), 400, 220, 17);
                                 break;
                             case 2:
                                 stageClearImage[20].drawAtPointOption(365, 169, 18);
@@ -787,29 +790,18 @@ public class StagePage extends StageBase {
                                 stageClearImage[22].drawAtPointOption(365, 169, 18);
                                 GameRenderer.setFontDoubleColor(-16777216, -16777216);
                                 GameRenderer.setFontSize(15);
-                                GameRenderer.drawStringDoubleM("A Hero's normal attack has been upgraded.", GameRenderer.CX, 153, 17);
+                                if (rewardShowOrder != 6)
+                                    GameRenderer.drawStringDoubleM(GameThread.getString(R.string.reward_hero), GameRenderer.CX, 153, 17);
                                 GameRenderer.setFontColor(-16777216);
                                 if (rewardShowOrder == -3)
-                                    GameRenderer.drawStringM("Champion: Splashed damage", GameRenderer.CX, 243, 17);
+                                    GameRenderer.drawStringM(GameThread.getString(R.string.reward_hero0), GameRenderer.CX, 243, 17);
                                 else if (rewardShowOrder == -4)
-                                    GameRenderer.drawStringM("Bow Master: Double Shot", GameRenderer.CX, 243, 17);
+                                    GameRenderer.drawStringM(GameThread.getString(R.string.reward_hero1), GameRenderer.CX, 243, 17);
                                 else if (rewardShowOrder == -5)
-                                    GameRenderer.drawStringM("Archmage: Splashed damage", GameRenderer.CX, 243, 17);
-                                break;
-                            case 7:
-                                stageClearImage[18].drawAtPointOption(365, 169, 18);
-                                GameRenderer.setFontSize(11);
-                                GameRenderer.setFontDoubleColor(-1, -16777216);
-                                GameRenderer.drawStringDoubleM("1000", 400, 220, 17);
+                                    GameRenderer.drawStringM(GameThread.getString(R.string.reward_hero2), GameRenderer.CX, 243, 17);
                                 break;
                             case 8:
                                 stageClearImage[17].drawAtPointOption(365, 169, 18);
-                                break;
-                            case 9:
-                                stageClearImage[18].drawAtPointOption(365, 169, 18);
-                                GameRenderer.setFontSize(11);
-                                GameRenderer.setFontDoubleColor(-1, -16777216);
-                                GameRenderer.drawStringDoubleM("2500", 400, 220, 17);
                                 break;
                         }
                         uiPopupImage[cTLS == 0 ? popup_okon2 : popup_okoff2].drawAtPointOption(213, 289, 18);
@@ -817,10 +809,12 @@ public class StagePage extends StageBase {
                             break;
                         GameRenderer.setFontDoubleColor(-16777216, -16777216);
                         GameRenderer.setFontSize(15);
-                        GameRenderer.drawStringDoubleM(rewardDataString[substate * 3], GameRenderer.CX, 153, 17);
+
+                        GameRenderer.drawStringDoubleM(GameThread.getString(rewardInfos[rewardShowOrder][0]), GameRenderer.CX, 153, 17);
                         GameRenderer.setFontColor(-16777216);
-                        GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 1], GameRenderer.CX, 243, 17);
-                        GameRenderer.drawStringM(rewardDataString[(rewardShowOrder * 3) + 2], GameRenderer.CX, 262, 17);
+                        GameRenderer.drawStringM(GameThread.getString(rewardInfos[rewardShowOrder][1]), GameRenderer.CX, 243, 17);
+                        if (rewardInfos[rewardShowOrder].length >= 3)
+                            GameRenderer.drawStringM(GameThread.getString(rewardInfos[rewardShowOrder][2]), GameRenderer.CX, 262, 17);
                         break;
                 }
                 break;
@@ -879,7 +873,7 @@ public class StagePage extends StageBase {
                     if (f > 0) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                         Texture2D.setColors(f);
-                        GameRenderer.drawStringM("Score", 259, 108, 18);
+                        GameRenderer.drawStringM(GameThread.getString(R.string.score), 259, 108, 18);
                         GameRenderer.drawStringM(String.valueOf((int) st.bScore), 540, 108, 20);
                         Texture2D.setColors(1);
                     }
@@ -887,7 +881,7 @@ public class StagePage extends StageBase {
                     if (f > 0) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                         Texture2D.setColors(f);
-                        GameRenderer.drawStringM("Health:", 259, 140, 18);
+                        GameRenderer.drawStringM(GameThread.getString(R.string.health), 259, 140, 18);
                         GameRenderer.drawStringM(String.format("%d/%d", st.life, DataStage.maxLife), 540, 140, 20);
                         if (st.perfectClear())
                             stageClearImage[13].drawAtPointOption(553, 131, 18);
@@ -897,7 +891,7 @@ public class StagePage extends StageBase {
                     if (f > 0) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                         Texture2D.setColors(f);
-                        GameRenderer.drawStringM("Gold", 259, 172, 18);
+                        GameRenderer.drawStringM(GameThread.getString(R.string.money), 259, 172, 18);
                         GameRenderer.drawStringM(String.valueOf(st.money), 540, 172, 20);
                         Texture2D.setColors(1);
                     }
@@ -905,7 +899,7 @@ public class StagePage extends StageBase {
                     if (f > 0) {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                         Texture2D.setColors(f);
-                        GameRenderer.drawStringM("Mana", 259, 206, 18);
+                        GameRenderer.drawStringM(GameThread.getString(R.string.mana), 259, 206, 18);
                         GameRenderer.drawStringM(String.valueOf(st.mana), 540, 206, 20);
                         Texture2D.setColors(1);
                     }
@@ -930,7 +924,7 @@ public class StagePage extends StageBase {
                         Texture2D.gl.glTexEnvf(8960, 8704, 8448);
                         Texture2D.setColors(f);
                         GameRenderer.setFontDoubleColor(-1, -15385258);
-                        GameRenderer.drawStringDoubleM("Highest Score", 290, 328, 18);
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.highscore), 290, 328, 18);
                         GameRenderer.drawStringDoubleM(String.valueOf(Config.s.highScores[st.SID][st.mapType]), 508, 328, 20);
                         Texture2D.setColors(1);
                     }
@@ -1169,7 +1163,7 @@ public class StagePage extends StageBase {
 
     @Override
     public void touchCheck() {
-        int cTLS = TouchManager.checkTouchListStatus();
+        byte cTLS = (byte)TouchManager.checkTouchListStatus();
         switch (state) {
             case START:
                 if (TouchManager.lastActionStatus == 2 && cTLS != -1 && startViewCount == 15) {
@@ -1388,7 +1382,7 @@ public class StagePage extends StageBase {
                             GameThread.playLoopSound(2);
                             NewTower.switchPage(new CinematicPage(parent), true);
                         } else if (cTLS <= VTCH_NEXT) {
-                            substate += cTLS + 1;
+                            substate += (byte)(cTLS + 1);
                             darkViewCount = 0;
                         }
                         break;
@@ -1417,7 +1411,7 @@ public class StagePage extends StageBase {
                     substate++;
                 } else if (substate == 1) {
                     if (cTLS <= 2) {
-                        substate = cTLS + 2;
+                        substate = (byte)(cTLS + 2);
                         darkViewCount = 0;
                     } else if (cTLS == 4 && startViewCount < 270) {
                         GameThread.playSound(15);
@@ -1747,7 +1741,7 @@ public class StagePage extends StageBase {
                         GameRenderer.setFontSize(16);
                         GameRenderer.setFontDoubleColor(-1, -16777216);
 
-                        GameRenderer.drawStringDoubleM("Do you want to change this unit's class?", GameRenderer.CX, 270, 17);
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.cnf_upgr), GameRenderer.CX, 270, 17);
                         GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getHitPower()), 540, 162, 20);
                         if (st.selectedUnit.towerCoolTimeMax == 1) {
                             GameRenderer.drawStringDoubleM("MAX", 540, 189, 20);
@@ -1771,7 +1765,7 @@ public class StagePage extends StageBase {
                         GameRenderer.setFontSize(16);
                         GameRenderer.setFontDoubleColor(-1, -16777216);
 
-                        GameRenderer.drawStringDoubleM("Do you want to Level Up?", GameRenderer.CX, 270, 17);
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.cnf_lvlup), GameRenderer.CX, 270, 17);
                         GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getHitPower()), 430, 162, 20);
                         if (st.selectedUnit.towerCoolTimeMax == 1) {
                             GameRenderer.drawStringDoubleM("MAX", 430, 189, 20);
