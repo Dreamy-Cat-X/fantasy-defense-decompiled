@@ -108,7 +108,7 @@ public class ObjectUnit extends EnemyUnit {
         if (unitHP <= 0)
             kill(ent);
         if (ent.effectType == DataCharacter.EFF_SPLASH)
-            ent.hitUnitSplash(0, this);
+            ent.hitUnitSplash(ent.attackType, this);
     }
 
     @Override

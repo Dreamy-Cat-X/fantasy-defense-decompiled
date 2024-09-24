@@ -142,7 +142,7 @@ public class StagePage extends StageBase {
         loaded = true;
         if (prog != null)
             prog.accept(1f);
-        GameThread.playLoopSound(2);
+        GameThread.playBGM(2);
     }
 
     @Override
@@ -258,7 +258,7 @@ public class StagePage extends StageBase {
                                     st.sortEntities();
                                     startViewCount = 0;
                                     state = STATE.GAMEOVER;
-                                    GameThread.stopLoopSound(2);
+                                    GameThread.stopBGM(2);
                                     GameThread.playSound(11);
                                     if (st.mapType == 1) {
                                         Config.s.highScores[st.SID][1] = Math.max(Config.s.highScores[st.SID][1], st.getTotalScore());
@@ -299,7 +299,7 @@ public class StagePage extends StageBase {
                 if (checkWaveAndFinishCheck == 3) {
                     startViewCount = 0;
                     state = STATE.GAMEOVER;
-                    GameThread.stopLoopSound(2);
+                    GameThread.stopBGM(2);
                     GameThread.playSound(11);
                     /*if (mapType == 0)
                         victoryH = (waveManager.current * 8) + (Life * 10);
@@ -316,7 +316,7 @@ public class StagePage extends StageBase {
                     return;
                 } else if (checkWaveAndFinishCheck != 1)
                     return;
-                GameThread.stopLoopSound(2); //win
+                GameThread.stopBGM(2); //win
                 GameThread.playSound(10);
 
                 if (st.SID + 1 < 50)
@@ -502,7 +502,7 @@ public class StagePage extends StageBase {
         st.turbo = 1;
         softPause = false;
         state = STATE.START;
-        GameThread.playLoopSound(2);
+        GameThread.playBGM(2);
     }
 
     @Override
@@ -1223,7 +1223,7 @@ public class StagePage extends StageBase {
                 }
                 switch (cTLS) {
                     case PLAY_PAUSE:
-                        GameThread.stopLoopSound(2);
+                        GameThread.stopBGM(2);
                         GameThread.playSound(14);
                         inGamePause = true;
                         state = STATE.PAUSE;
@@ -1355,7 +1355,7 @@ public class StagePage extends StageBase {
                 if (TouchManager.lastActionStatus != 2 || substate != 0)
                     return;
                 if (cTLS == 0) {
-                    GameThread.playLoopSound(2);
+                    GameThread.playBGM(2);
                     GameThread.playSound(15);
                     inGamePause = false;
                     state = STATE.PLAYING;
@@ -1379,7 +1379,7 @@ public class StagePage extends StageBase {
                             GameThread.playSound(1);
                             startViewCount = 270;
                         } else if (st.SID == 49) {
-                            GameThread.playLoopSound(2);
+                            GameThread.playBGM(2);
                             NewTower.switchPage(new CinematicPage(parent), true);
                         } else if (cTLS <= VTCH_NEXT) {
                             substate += (byte)(cTLS + 1);

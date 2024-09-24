@@ -27,9 +27,9 @@ public class GLGameSurfaceView extends GLSurfaceView {
     @Override // android.opengl.GLSurfaceView
     public void onPause() {
         super.onPause();
-        GameThread.stopLoopSound(0);
-        GameThread.stopLoopSound(1);
-        GameThread.stopLoopSound(2);
+        GameThread.stopBGM(0);
+        GameThread.stopBGM(1);
+        GameThread.stopBGM(2);
         GameThread.pauseFlag = true;
     }
 

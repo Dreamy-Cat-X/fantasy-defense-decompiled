@@ -383,11 +383,11 @@ public abstract class StageBase extends TPage {
             return;
 
         if (type < 12) {
-            rang = DataCharacter.charData[type * 3][DataCharacter.RANGE];
+            rang = DataCharacter.charLvlData[type][0][DataCharacter.RANGE];
             rngUpgr = TowerUnit.getUpgradeRate(type / 6, 9);
         } else {
             int t2 = type - 12;
-            rang = DataHero.heroData[t2][3];
+            rang = DataHero.heroLvData[t2][0][DataHero.RANGE];
             rngUpgr = HeroUnit.getEquipEffect(Config.s.heroEquips[t2], DataUpgradeItem.EQ_HELM, 4);
         }
         rang += (rngUpgr * rang) / 100f;

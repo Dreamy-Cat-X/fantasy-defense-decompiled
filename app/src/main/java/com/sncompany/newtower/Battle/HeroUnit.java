@@ -91,39 +91,35 @@ public class HeroUnit extends TowerUnit {
 
     @Override
     public void restatTowerUnit(boolean classChange) {
-        int i = oldType();
-        int[] dat = DataHero.heroData[i];
-        towerCoolTimeMax = Math.max(0, dat[2] - (dat[2] * (getUpgradeRate(8) + getEquipEffect(DataUpgradeItem.EQ_AMLT, 0))) / 100);
-
-        attackRange = dat[3] + ((dat[3] * getEquipEffect(DataUpgradeItem.EQ_HELM, 0)) / 100);
+        int[] dat = DataHero.heroLvData[type][level];
+        unitPower = dat[DataHero.ATK];
+        towerCoolTimeMax = Math.max(0, dat[DataHero.ATKRATE] - (dat[DataHero.ATKRATE] * (getUpgradeRate(8) + getEquipEffect(DataUpgradeItem.EQ_AMLT, 0))) / 100);
+        attackRange = dat[DataHero.RANGE] + ((dat[DataHero.RANGE] * getEquipEffect(DataUpgradeItem.EQ_HELM, 0)) / 100);
         attackDistance = (((attackRange * 45) / 100) + 22) * 50;
+        specialAttPower = dat[DataHero.SP_ATK] + ((dat[DataHero.SP_ATK] * (getUpgradeRate(16) + getEquipEffect(DataUpgradeItem.EQ_CHARM, 0))) / 100);
+        specialMaxCooltime = (dat[DataHero.SP_COOLDOWN] * 41) + ((dat[DataHero.SP_COOLDOWN] * getUpgradeRate(18)) / 100);
 
-        targetMaxNum = dat[4];
-        unitPower = dat[1];
-        attackType = dat[11];
-        effectType = DataCharacter.EFF_NONE;
-        attackEffect = dat[12];
-        specialMana = dat[6] + ((dat[6] * getUpgradeRate(17)) / 100);
-        specialAttPower = dat[7] + ((dat[7] * (getUpgradeRate(16) + getEquipEffect(DataUpgradeItem.EQ_CHARM, 0))) / 100);
-        specialAttCount = dat[8];
-        specialMaxCooltime = (dat[9] * 41) + ((dat[9] * getUpgradeRate(18)) / 100);
-        if (Config.s.rewardValues[6]) {
-            if (type == 0 || type == 2)
-                effectType = DataCharacter.EFF_SPLASH;
-            else if (type == 1) {
-                targetMaxNum = 2;
-                effectType = DataCharacter.EFF_DOUBLESHOT;
+        if (classChange) {
+            int[] def = DataHero.heroData[type];
+            targetMaxNum = def[DataHero.TARGET];
+            specialMana = def[DataHero.SP_MANA] + ((def[DataHero.SP_MANA] * getUpgradeRate(17)) / 100);
+            specialAttCount = def[DataHero.SP_ATK_COUNT];
+            attackType = def[DataHero.ATK_TYPE];
+            attackEffect = def[DataHero.ATK_EFFECT];
+            effectType = DataCharacter.EFF_NONE;
+            if (Config.s.rewardValues[6]) {
+                if (type == 0 || type == 2)
+                    effectType = DataCharacter.EFF_SPLASH;
+                else if (type == 1) {
+                    targetMaxNum++;
+                    effectType = DataCharacter.EFF_DOUBLESHOT;
+                }
+            }
+            if (st != null) {//Check because this is used on equipPage
+                drawData = DataAnim.heroDrawData[type];
+                drawTexture = st.page.heroImages[type];
             }
         }
-        if (st != null) {//Check because this is used on equipPage
-            drawData = DataAnim.heroDrawData[type];
-            drawTexture = st.page.heroImages[type];
-        }
-    }
-
-    @Override
-    public int oldType() {
-        return (type * 5) + level;
     }
 
     @Override
@@ -157,8 +153,8 @@ public class HeroUnit extends TowerUnit {
     public static int getHeroBuyPrice(int type) {
         if (type == -1 || !DataStage.heroAvail[type])
             return 0;
-        int i3 = DataHero.heroData[type * 5][0];
-        return i3 + ((Config.s.heroUpgrades[type][0] * DataUpgradeHero.upgradeHeroData[type][0] * i3) / 100);
+        int pri = DataHero.heroLvData[type][0][DataHero.PRICE];
+        return pri + ((Config.s.heroUpgrades[type][0] * DataUpgradeHero.upgradeHeroData[type][0] * pri) / 100);
     }
 
     @Override
@@ -187,8 +183,8 @@ public class HeroUnit extends TowerUnit {
 
     @Override
     public int getLevelupPrice() {
-        int i3 = DataHero.heroData[oldType() + 1][0];
-        return i3 + ((getEquipEffect(DataUpgradeItem.EQ_ARMOR, 0) * i3) / 100);
+        int pri = DataHero.heroLvData[type][level + 1][DataHero.PRICE];
+        return pri + ((getEquipEffect(DataUpgradeItem.EQ_ARMOR, 0) * pri) / 100);
     }
 
     public int getEquipEffect(int type, int pos) {
@@ -266,8 +262,6 @@ public class HeroUnit extends TowerUnit {
         return pow + (((getUpgradeRate(7) + getEquipEffect(DataUpgradeItem.EQ_RING, 0)) * pow) / 100);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to find 'out' block for switch in B:13:0x0043. Please report as an issue. */
     public void useSpecialAttack() {
         GameThread.playSound(16);
 
@@ -278,20 +272,20 @@ public class HeroUnit extends TowerUnit {
 
         switch (type) {
             case 0:
-                for (int i4 = 0; i4 < 60; i4++)
-                    st.addSpecialArrowUnit(NewTower.getRandom(4) + 15, this, 33750, NewTower.getRandom(450) * 50, -(i4 + 65));
+                for (int i = 0; i < 60; i++)
+                    st.addSpecialArrowUnit(NewTower.getRandom(4) + 15, this, 33750, NewTower.getRandom(450) * 50, -(i + 65));
 
-                for (int i5 = 0; i5 < 20; i5++) {
-                    int i6 = i5 % 3;
-                    specialDataValue[i5][0] = i6;
-                    specialDataValue[i5][1] = NewTower.getRandom(GameRenderer.SCRWIDTH_SMALL);
-                    specialDataValue[i5][2] = NewTower.getRandom(GameRenderer.SCRHEIGHT_SMALL);
-                    if (i6 == 0) {
-                        specialDataValue[i5][3] = 100;
-                    } else if (i6 == 1) {
-                        specialDataValue[i5][3] = 160;
+                for (int i = 0; i < 20; i++) {
+                    int d = i % 3;
+                    specialDataValue[i][0] = d;
+                    specialDataValue[i][1] = NewTower.getRandom(GameRenderer.SCRWIDTH_SMALL);
+                    specialDataValue[i][2] = NewTower.getRandom(GameRenderer.SCRHEIGHT_SMALL);
+                    if (d == 0) {
+                        specialDataValue[i][3] = 100;
+                    } else if (d == 1) {
+                        specialDataValue[i][3] = 160;
                     } else
-                        specialDataValue[i5][3] = 200;
+                        specialDataValue[i][3] = 200;
                 }
                 break;
             case 1:
@@ -313,10 +307,10 @@ public class HeroUnit extends TowerUnit {
         if (mon.dead())
             return 0;
 
-        int i3 = (((unitPower * specialAttPower) / 100) * (100 - mon.unitDefense)) / 100;
-        if (i3 <= 0)
+        int dmg = (((unitPower * specialAttPower) / 100) * (100 - mon.unitDefense)) / 100;
+        if (dmg <= 0)
             return 1;
-        return i3;
+        return dmg;
     }
 
     /**
@@ -326,12 +320,13 @@ public class HeroUnit extends TowerUnit {
      */
     public boolean hitSpecialAttackUnit(MonsterUnit mon) {
         if (!mon.dead()) {
-            int specialHitDamage = getSpecialHitDamage(mon);
+            int dmg = getSpecialHitDamage(mon);
             if (type == 1) {
-                mon.dotHolyDamage = specialHitDamage / 20;
-                mon.dotHolyCount = DataHero.heroData[oldType()][10];
-            }
-            mon.damaged(specialHitDamage, this);
+                mon.dotHolyDamage = dmg / 20;
+                mon.dotHolyCount = DataHero.heroLvData[1][level][DataHero.SP_PROCTIME];
+            } else if (type == 2)
+                mon.slowRate = DataHero.heroLvData[2][level][DataHero.SP_PROCTIME];
+            mon.damaged(dmg, this);
             return mon.dead();
         }
         return false;
@@ -346,12 +341,6 @@ public class HeroUnit extends TowerUnit {
                 for (int i3 = 0; i3 < specialAttCount; i3++)
                     if (hitSpecialAttackUnit(mon))
                         i++;
-                if (type == 1) {
-                    mon.dotHolyDamage = getSpecialHitDamage(mon) / 20;
-                    mon.dotHolyCount = DataCharacter.charData[17][DataCharacter.CONT_TIME];
-                } else if (type == 2)
-                    mon.slowRate = DataHero.heroData[i][10];
-
             }
         if (i >= 5)
             Config.s.awardValues[DataAward.AWARD_Swords_Banquet + type] = true;
@@ -365,7 +354,7 @@ public class HeroUnit extends TowerUnit {
         if (specialShowCount > 0) {
             specialShowCount--;
             dire = lastViewDirection == 6 ? 4 : 5;
-        } else if (unitStatus == 1) {
+        } else if (unitStatus == STATUS_ATTACK) {
             dire = lastViewDirection == 6 ? 2 : 3;
             sprSpd = 3;
         }
@@ -376,7 +365,7 @@ public class HeroUnit extends TowerUnit {
         int sCur = drawData[drawData[0] + drawData[sCount + 1 + ((unitStatusCount / sprSpd) % drawData[sCount])]];
         st.page.shadowImage[0].drawAtPointOption(x, y + 10, 9);
         for (int i = 0; i < drawData[sCur]; i++) {
-            boolean glow = i == 0 && unitStatus == 0;
+            boolean glow = i == 0 && unitStatus == STATUS_STAND;
             if (glow) {
                 float f5 = 1;
                 if (specialMaxCooltime > 0)

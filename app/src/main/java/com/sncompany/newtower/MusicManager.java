@@ -4,16 +4,16 @@ import android.content.Context;
 import android.media.MediaPlayer;
 
 /* loaded from: D:\decomp\classes.dex */
-public class MediaManager {
+public class MusicManager {
     MediaPlayer mPlayer;
 
-    public MediaManager(Context context, int i) {
+    public MusicManager(Context context, int i) {
         mPlayer = MediaPlayer.create(context, i);
         mPlayer.setLooping(true);
     }
 
-    public void setVolume(int i, int i2) {
-        float f = (float)i / i2;
+    public void setVolume(int vol, int max) {
+        float f = (float)vol / max;
         mPlayer.setVolume(f, f);
     }
 

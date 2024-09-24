@@ -104,7 +104,7 @@ public class TitlePage extends TPage {
             gameSubStatus++;
             gameTitleViewCount = 0;
             if (gameSubStatus == countLimit.length)
-                GameThread.playLoopSound(0);
+                GameThread.playBGM(0);
         }
     }
 
@@ -289,7 +289,7 @@ public class TitlePage extends TPage {
                 int cTLS = TouchManager.checkTouchListStatus();
                 if (cTLS == BGM) {
                     soundBars[0].setUpdatePosition(action.x);
-                    Config.updateVolume(soundBars[0].BarLastValue);
+                    Config.setBGMVolume(soundBars[0].BarLastValue);
                 } else if (cTLS == SFX) {
                     soundBars[1].setUpdatePosition(action.x);
                     Config.effectVolume = soundBars[1].BarLastValue;
@@ -298,7 +298,7 @@ public class TitlePage extends TPage {
                 int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
                 if (cTLP == BGM) {
                     soundBars[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-                    Config.updateVolume(soundBars[0].BarLastValue);
+                    Config.setBGMVolume(soundBars[0].BarLastValue);
                     return;
                 }
                 if (cTLP != SFX)
@@ -328,7 +328,7 @@ public class TitlePage extends TPage {
             int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
             if (cTLP == BGM) {
                 soundBars[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
-                Config.updateVolume(soundBars[0].BarLastValue);
+                Config.setBGMVolume(soundBars[0].BarLastValue);
             } else if (cTLP == SFX) {
                 soundBars[1].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
                 Config.effectVolume = soundBars[1].BarLastValue;
@@ -345,12 +345,12 @@ public class TitlePage extends TPage {
                 if (TouchManager.checkTouchListStatus() == 0) {
                     gameSubStatus = countLimit.length;
                     gameTitleViewCount = 0;
-                    GameThread.playLoopSound(0);
+                    GameThread.playBGM(0);
                 }
             } else {
                 if (cTLS == START) {
                     GameThread.playSound(14);
-                    GameThread.stopLoopSound(0);
+                    GameThread.stopBGM(0);
                     NewTower.switchPage(new MenuPage(this), true);
                     TouchManager.curruptFlag = true;
                 } else if (cTLS == CONFIG) {

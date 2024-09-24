@@ -5,10 +5,10 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 /* loaded from: D:\decomp\classes.dex */
-public class MediaManager2 {
+public class SoundManager {
     MediaPlayer[] mPlayer;
 
-    public MediaManager2(int i) {
+    public SoundManager(int i) {
         mPlayer = new MediaPlayer[i];
     }
 
@@ -28,8 +28,8 @@ public class MediaManager2 {
         });
     }
 
-    public void setVolume(int i, int i2, int i3) {
-        float f = i2 / i3;
+    public void setVolume(int i, int vol, int max) {
+        float f = (float)vol / max;
         mPlayer[i].setVolume(f, f);
     }
 
@@ -47,9 +47,5 @@ public class MediaManager2 {
 
     public void stop(int i) {
         mPlayer[i].stop();
-    }
-
-    public void release(int i) {
-        mPlayer[i].release();
     }
 }

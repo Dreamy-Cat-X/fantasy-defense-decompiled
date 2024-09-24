@@ -8,12 +8,12 @@ import com.sncompany.newtower.Pages.LoadingPage;
 
 /* loaded from: D:\decomp\classes.dex */
 public class GameThread extends Thread {
-    public static final MediaManager[] bgmMedia = new MediaManager[3];
+    public static final MusicManager[] bgmMedia = new MusicManager[3];
     public static long currentDate;
     public static long currentDrawDate;
     public static int currentFrameCount;
     public static final int total_SFX = 31;
-    public static final MediaManager2 effectMedia = new MediaManager2(total_SFX);
+    public static final SoundManager effectMedia = new SoundManager(total_SFX);
 
     public static int gameSubStatus;
     public static int lastDrawCount;
@@ -100,9 +100,9 @@ public class GameThread extends Thread {
     }
 
     public static void loadSounds() {
-        bgmMedia[0] = new MediaManager(newTower, R.raw.bgm_1);
-        bgmMedia[1] = new MediaManager(newTower, R.raw.bgm_2);
-        bgmMedia[2] = new MediaManager(newTower, R.raw.bgm_3);
+        bgmMedia[0] = new MusicManager(newTower, R.raw.bgm_1);
+        bgmMedia[1] = new MusicManager(newTower, R.raw.bgm_2);
+        bgmMedia[2] = new MusicManager(newTower, R.raw.bgm_3);
         effectMedia.setMediaFile(0, newTower, R.raw.snlogo);
         effectMedia.setMediaFile(1, newTower, R.raw.att_1);
         effectMedia.setMediaFile(2, newTower, R.raw.att_2);
@@ -137,7 +137,7 @@ public class GameThread extends Thread {
     }
 
     public static void playSound(int i) {
-        if (Config.effectVolume > 0)
+        if (soundFlag && Config.effectVolume > 0)
             soundPlayCheckFlag[i] = true;
     }
 
@@ -147,13 +147,11 @@ public class GameThread extends Thread {
             if (soundPlayCheckFlag[i]) {
                 soundPlayDelayCount[i]++;
                 if (soundPlayDelayCount[i] >= 12) {
-                    if (soundFlag) {
-                        try {
-                            effectMedia.setVolume(i, Config.effectVolume, Config.musicMaxVolume);
-                            effectMedia.play(i);
-                            ind++;
-                        } catch (Exception ignored) {
-                        }
+                    try {
+                        effectMedia.setVolume(i, Config.effectVolume, Config.musicMaxVolume);
+                        effectMedia.play(i);
+                        ind++;
+                    } catch (Exception ignored) {
                     }
                     soundPlayCheckFlag[i] = false;
                     soundPlayDelayCount[i] = 0;
@@ -172,7 +170,7 @@ public class GameThread extends Thread {
         }
     }
 
-    public static void playLoopSound(int i) {
+    public static void playBGM(int i) {
         if (soundFlag) {
             try {
                 bgmMedia[i].setVolume(Config.musicVolume, Config.musicMaxVolume);
@@ -182,7 +180,7 @@ public class GameThread extends Thread {
         }
     }
 
-    public static void stopLoopSound(int i) {
+    public static void stopBGM(int i) {
         try {
             bgmMedia[i].stop();
         } catch (Exception ignored) {

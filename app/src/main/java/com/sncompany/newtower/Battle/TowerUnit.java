@@ -19,20 +19,12 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public static final int DUST_FAN_BODY_EFFECT_ROTATE_RATE = 20;
     public static final int DUST_FAN_STAND_ROTATE_RATE = 2;
     public static final int LAVA_CATAPULT_BODY_UP_POSITION = -29;
-    public static final int LOCK_MAX_COUNT = 3;
-    public static final int LOCK_TYPE_MONSTER = 0;
-    public static final int LOCK_TYPE_NONE = -1;
-    public static final int LOCK_TYPE_OBJECT = 1;
+
     public static final int TOWER_ATTACK_FIRE_FRAME = 6;
     public static final int TOWER_ATTACK_FRAME_PER_SHOT = 3;
     static final float TOWER_ATTACK_SWORD_MOVE_DEGREE = 0.5f;
     public static final int TOWER_ATTACK_TOTAL_FRAME = 15;
     public static final int TOWER_SPECIAL_SHOW_COUNT = 4;
-    public static final int TOWER_STATUS_ATTACK = 1;
-    public static final int TOWER_STATUS_CREATING = 2;
-    public static final int TOWER_STATUS_STAND = 0;
-    public static final int TOWER_TYPE_HERO = 1;
-    public static final int TOWER_TYPE_NORMAL = 0;
     static final float SPECIAL_ATTACK_ARROW_UNIT_SIZE_START = 0.5f;
     public int attackCount = 0;
     public int attackDistance;
@@ -53,12 +45,14 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public int towerCoolTimeMax;
     public int level = 0;
     public int unitPower;
-    /**
-     * 0 means Idle, 1 means attacking, 2 is locked apparently
-     */
-    public int unitStatus = 2;
+
+    public static final byte STATUS_STAND = 0;
+    public static final byte STATUS_ATTACK = 1;
+    public static final byte STATUS_LOCKED = 2;
+    public byte unitStatus = STATUS_LOCKED;
     public int unitStatusCount = 0;
-    public ArrayList<EnemyUnit> lockedEnemies = new ArrayList<>(3);
+    public static final int LOCK_MAX_COUNT = 3;
+    public ArrayList<EnemyUnit> lockedEnemies = new ArrayList<>(LOCK_MAX_COUNT);
     protected final DataStage st;
 
     public static final String[] effectTypeString = {"Stun", "Splash", "DoT", "Slow", "Pierce", "Slow Mud", "Dot Fire", "Multi Shot", "Double Shot", "None"};
@@ -84,7 +78,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         originalPosX = posX;
         originalPosY = posY;
 
-        restatTowerUnit(s != null);
+        restatTowerUnit(true);
     }
 
     public TowerUnit(TowerUnit twr, int tType, int lvl) { //Used exclusively for comparison upgrades
@@ -100,33 +94,28 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public void restatTowerUnit(boolean classChange) {
-        int ot = oldType();
-
-        int[] dat = DataCharacter.charData[ot];
-        towerCoolTime = 0;
-        towerCoolTimeMax = Math.max(0, dat[DataCharacter.ATKRATE] - ((dat[DataCharacter.ATKRATE] * getUpgradeRate(8)) / 100));
-
-        attackRange = dat[DataCharacter.RANGE] + ((dat[DataCharacter.RANGE] * getUpgradeRate(9)) / 100);
+        int[] lev = DataCharacter.charLvlData[type][level];
+        towerCoolTimeMax = Math.max(0, lev[DataCharacter.ATKRATE] - ((lev[DataCharacter.ATKRATE] * getUpgradeRate(8)) / 100));
+        unitPower = lev[DataCharacter.ATK];
+        attackRange = lev[DataCharacter.RANGE] + ((lev[DataCharacter.RANGE] * getUpgradeRate(9)) / 100);
         attackDistance = (((attackRange * 45) / 100) + 22) * 50;
-        targetMaxNum = dat[DataCharacter.TARGET];
-        unitPower = dat[DataCharacter.ATK];
-        attackType = dat[DataCharacter.ATK_TYPE];
-        effectType = dat[DataCharacter.EFFECT];
-        attackEffect = dat[DataCharacter.ATK_EFFECT];
-        if (targetMaxNum >= 2 && effectType == DataCharacter.EFF_NONE)
-            effectType = DataCharacter.EFF_MULTISHOT;
         if (classChange) {
+            towerCoolTime = 0;
             drawData = DataAnim.towerDrawData[type];
             drawTexture = st.page.towerImages[type];
+
+            int[] dat = DataCharacter.charData[type];
+            targetMaxNum = dat[DataCharacter.TARGET];
+            attackType = dat[DataCharacter.ATK_TYPE];
+            effectType = dat[DataCharacter.EFFECT];
+            attackEffect = dat[DataCharacter.ATK_EFFECT];
+            if (targetMaxNum >= 2 && effectType == DataCharacter.EFF_NONE)
+                effectType = DataCharacter.EFF_MULTISHOT;
         }
     }
 
     public int atkDistanceSquare() {
         return attackDistance * attackDistance;
-    }
-
-    public int oldType() {
-        return (type * 3) + level;
     }
 
     public int getRole() {
@@ -176,19 +165,19 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         if (type == -1)
             return 0;
         int role = type / 4;
-        int c = DataCharacter.charData[type * 3][DataCharacter.COST];
+        int c = DataCharacter.charLvlData[type][0][DataCharacter.COST];
         return c + ((c * Config.s.unitUpgrades[role][0] * DataUpgradeUnit.upgradeUnitData[role * 6][0]) / 100);
     }
 
     public int getSellPrice() {
         int pri = 0;
-        for (int i = 0; i <= level; i++)
-            pri += DataCharacter.charData[oldType() - i][DataCharacter.COST];
+        for (int i = level; i >= 0; i--)
+            pri += DataCharacter.charLvlData[type][i][DataCharacter.COST];
         if (getTier() >= 2) {
             if (getTier() == 3)
-                pri += DataCharacter.charData[(type - 1) * 3][DataCharacter.UPGRADE_COST];
-            pri += DataCharacter.charData[getRole() * 12][DataCharacter.UPGRADE_COST];
-            pri += DataCharacter.charData[getRole() * 12][DataCharacter.COST];
+                pri += DataCharacter.charLvlData[type][2][DataCharacter.UPGRADE_COST];
+            pri += DataCharacter.charLvlData[type][0][DataCharacter.UPGRADE_COST];
+            pri += DataCharacter.charLvlData[type][0][DataCharacter.COST];
         }
         return pri / 2;
     }
@@ -196,13 +185,11 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public void levelUpUnit() {
         if (level == 2)
             return;
-
         st.money -= getLevelupPrice();
         level++;
 
         if (level == 2 && (getTier() == 1 || getTier() == 3))
             Config.s.awardValues[(getTier() == 1 ? DataAward.AWARD_Guardian_Of_War : DataAward.AWARD_Thrill_Of_The_Hammer) + getRole()] = true;
-
         restatTowerUnit(false);
         st.addEffectUnit(14, posX, posY);
         GameThread.playSound(13);
@@ -210,7 +197,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public int getLevelupPrice() {
-        return DataCharacter.charData[oldType() + 1][DataCharacter.COST];
+        return DataCharacter.charLvlData[type][level + 1][DataCharacter.COST];
     }
 
     public void upgradeUnit() {
@@ -224,22 +211,20 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public int getUpgradePrice() {
-        return DataCharacter.charData[oldType()][DataCharacter.UPGRADE_COST];
+        return DataCharacter.charLvlData[type][level][DataCharacter.UPGRADE_COST];
     }
 
     public void update() {
-        int soundAttackType;
-
         unitStatusCount++;
         if (towerCoolTime > 0)
             towerCoolTime--;
 
         int oStatus = unitStatus;
-        if (unitStatus == 1) {
+        if (unitStatus == STATUS_ATTACK) {
             EnemyUnit e = lockedEnemies.get(0);
-            if (unitStatusCount <= 6 && ((this instanceof HeroUnit && type == 0) || ((!(this instanceof HeroUnit) && type < 4)))) {
-                posX = (int) (originalPosX + ((((e.posX - posX) * unitStatusCount) / 6) * SPECIAL_ATTACK_ARROW_UNIT_SIZE_START));
-                posY = (int) (originalPosY + ((((e.posY - posY) * unitStatusCount) / 6) * SPECIAL_ATTACK_ARROW_UNIT_SIZE_START));
+            if (unitStatusCount <= TOWER_ATTACK_FIRE_FRAME && attackType == DataCharacter.ATK_SWORD) {
+                posX = (int) (originalPosX + ((((e.posX - posX) * unitStatusCount) / 6) * TOWER_ATTACK_SWORD_MOVE_DEGREE));
+                posY = (int) (originalPosY + ((((e.posY - posY) * unitStatusCount) / 6) * TOWER_ATTACK_SWORD_MOVE_DEGREE));
             }
             headRotateDegree = getRotateDegree(e.posX - posX, e.posY - posY);
             if (posX < e.posX) {
@@ -247,7 +232,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
             } else if (posX > e.posX)
                 lastViewDirection = 6;
 
-            if (unitStatusCount == 6) {
+            if (unitStatusCount == TOWER_ATTACK_FIRE_FRAME) {
                 boolean attack = false;
                 for (int j = 0; j < lockedEnemies.size(); j++)
                     if (!lockedEnemies.get(j).dead()) {
@@ -257,7 +242,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
                 if (attack) {
                     attackCount++;
                     towerCoolTime = towerCoolTimeMax;
-                    if (attackType == 0) {
+                    if (attackType == DataCharacter.ATK_SWORD) {
                         int soundHitType = getSoundHitType();
                         if (soundHitType != -1)
                             GameThread.playSound(soundHitType);
@@ -267,34 +252,34 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
                             st.addEffectUnit(attackEffect, locked.posX, locked.posY);
                             locked.hit(0, this);
                         }
-                    } else if (attackType == 1)
+                    } else if (attackType == DataCharacter.ATK_ARROW)
                         for (int j = 0; j < Math.min(targetMaxNum, lockedEnemies.size()); j++)
                             addArrowUnit(attackEffect, j);
                 } else {
-                    unitStatus = 0;
+                    unitStatus = STATUS_STAND;
                     unitStatusCount = 0;
                     towerCoolTime = 0;
                     posX = originalPosX;
                     posY = originalPosY;
                 }
             }
-            if (unitStatusCount == 15) {
-                unitStatus = 0;
+            if (unitStatusCount == TOWER_ATTACK_TOTAL_FRAME) {
+                unitStatus = STATUS_STAND;
                 unitStatusCount = 0;
                 towerCoolTime = towerCoolTimeMax;
                 posX = originalPosX;
                 posY = originalPosY;
             }
         }
-        if (oStatus == 0 && towerCoolTime == 0) {
+        if (oStatus == STATUS_STAND && towerCoolTime == 0) {
             getCloseEnemyUnitInRange();
             if (!lockedEnemies.isEmpty()) {
-                unitStatus = 1;
+                unitStatus = STATUS_ATTACK;
                 unitStatusCount = 0;
             }
-
-            if (unitStatus == 1 && (soundAttackType = getVoice()) != -1)
-                GameThread.playSound(soundAttackType);
+            int voice;
+            if (unitStatus == STATUS_ATTACK && (voice = getVoice()) != -1)
+                GameThread.playSound(voice);
         }
     }
 
@@ -360,12 +345,10 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     }
 
     public void getCloseEnemyUnitInRange() {
-        lockedEnemies.removeIf(mon -> mon.dead() || Math.abs(posX - mon.posX) + Math.abs(posY - mon.posY) > attackDistance * 2 ||
-                !(((posX - mon.posX) * (posX - mon.posX)) + ((posY - mon.posY) * (posY - mon.posY)) <= atkDistanceSquare()) ||
-                (mon instanceof ObjectUnit && st.selectedTarget != mon));
+        lockedEnemies.clear();
 
         EnemyUnit targ = st.selectedTarget;
-        if (targ != null && !lockedEnemies.contains(targ) && !(Math.abs(posX - targ.posX) + Math.abs(posY - targ.posY) > attackDistance * 2) &&
+        if (targ != null && !(Math.abs(posX - targ.posX) + Math.abs(posY - targ.posY) > attackDistance * 2) &&
                 ((posX - targ.posX) * (posX - targ.posX)) + ((posY - targ.posY) * (posY - targ.posY)) <= atkDistanceSquare()) {
             lockedEnemies.add(0, targ);
             if (lockedEnemies.size() >= targetMaxNum) {
@@ -374,7 +357,6 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
                 return;
             }
         }
-
         for (MonsterUnit mon : st.monsterUnit) {
             if (mon == targ || mon.dead() || Math.abs(posX - mon.posX) + Math.abs(posY - mon.posY) > attackDistance * 2)
                 continue;
@@ -414,10 +396,10 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
 
         int sprSpd = 5;
         int dire = lastViewDirection == 6 ? 0 : 1;
-        if (unitStatus == 1) {
+        if (unitStatus == STATUS_ATTACK) {
             dire = lastViewDirection == 6 ? 2 : 3;
             sprSpd = 3;
-        } else if (unitStatus != 2)
+        } else if (unitStatus != STATUS_LOCKED)
             dire = 0;
 
         if (st.turbo > 0)

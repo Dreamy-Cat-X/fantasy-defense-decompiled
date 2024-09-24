@@ -50,7 +50,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
     public void load(Consumer<Float> prog) {
         loadP(mainmenuImage, mainmenuResource, prog, 1, mainmenuImage.length);
         loaded = true;
-        GameThread.playLoopSound(1);
+        GameThread.playBGM(1);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                 return;
 
             if (titleCount >= TITLE_MAINMENU_COUNT_SHORT_MOVE_MAX_COUNT && (titlePressed == START || titlePressed == BACK)) {
-                GameThread.stopLoopSound(0);
+                GameThread.stopBGM(0);
                 if (!Config.s.tutorial && titlePressed == START) {
                     child.unload();
                     child = new TutorialPage(new StageSelectPage(this));
@@ -216,8 +216,8 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                     break;
                 } case BACK:
                     child = parent; //lol
-                    GameThread.stopLoopSound(1);
-                    GameThread.stopLoopSound(0);
+                    GameThread.stopBGM(1);
+                    GameThread.stopBGM(0);
                     break;
             }
             titleCount = 0;

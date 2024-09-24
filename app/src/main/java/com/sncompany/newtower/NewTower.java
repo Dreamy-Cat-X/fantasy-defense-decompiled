@@ -142,9 +142,9 @@ public class NewTower extends Activity {
         try {
             if (wl != null)
                 wl.release();
-            GameThread.stopLoopSound(0);
-            GameThread.stopLoopSound(1);
-            GameThread.stopLoopSound(2);
+            GameThread.stopBGM(0);
+            GameThread.stopBGM(1);
+            GameThread.stopBGM(2);
             super.onDestroy();
         } catch (Exception unused) {
             Log.d("DESTROY TRY", "DESTROY ERROR 1");
@@ -197,7 +197,7 @@ public class NewTower extends Activity {
                 p = p.parent;
 
             switchPage(p, true);
-            GameThread.stopLoopSound(2);
+            GameThread.stopBGM(2);
         });
         builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
 

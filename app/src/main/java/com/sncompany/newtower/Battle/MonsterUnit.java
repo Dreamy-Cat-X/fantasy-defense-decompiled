@@ -226,7 +226,7 @@ public class MonsterUnit extends EnemyUnit {
             int itemBuff = hero.getEquipEffect(DataUpgradeItem.EQ_MISC, 0);
             if (itemBuff > 0 && NewTower.getRandom(100) < itemBuff) {
                 dotHolyDamage = (unit.getHitDamage(this) * 3) / 100;
-                dotHolyCount = DataCharacter.charData[17][DataCharacter.CONT_TIME];
+                dotHolyCount = DataCharacter.charLvlData[5][2][DataCharacter.CONT_TIME];
             }
             itemBuff = hero.getEquipEffect(DataUpgradeItem.EQ_MISC, 1);
             if (itemBuff > 0 && !bossFlag && NewTower.getRandom(100) < itemBuff) {
@@ -235,42 +235,41 @@ public class MonsterUnit extends EnemyUnit {
             }
             itemBuff = hero.getEquipEffect(DataUpgradeItem.EQ_MISC, 2);
             if (itemBuff > 0 && stunCount <= 0 && NewTower.getRandom(100) < itemBuff) {
-                stunCount = DataCharacter.charData[5][DataCharacter.CONT_TIME];
+                stunCount = DataCharacter.charLvlData[1][2][DataCharacter.CONT_TIME];
                 if (bossFlag)
                     stunCount /= 2;
             }
             itemBuff = hero.getEquipEffect(DataUpgradeItem.EQ_MISC, 3);
             if (itemBuff > 0 && NewTower.getRandom(100) < itemBuff) {
-                slowRate += DataCharacter.charData[29][DataCharacter.CONT_TIME];
+                slowRate += DataCharacter.charLvlData[9][2][DataCharacter.CONT_TIME];
                 if (slowRate > 80)
                     slowRate = 80;
             }
         } else {
-            int oType = unit.oldType();
             switch (unit.effectType) {
                 case DataCharacter.EFF_STUN: {
-                    int upgradeRate = (DataCharacter.charData[oType][DataCharacter.SUC_RATE] * (unit.getUpgradeRate(10) + 100)) / 100;
+                    int upgradeRate = (DataCharacter.charLvlData[unit.type][unit.level][DataCharacter.SUC_RATE] * (unit.getUpgradeRate(10) + 100)) / 100;
                     int prob = upgradeRate - ((DataMonster.monsterData[type][6] * (DataWave.monsterWaveData[dWave][bossFlag ? 12 : 4] + 100)) / 100);
                     if (stunCount == 0 && NewTower.getRandom(100) < prob) {
-                        stunCount = (DataCharacter.charData[oType][DataCharacter.CONT_TIME] * (unit.getUpgradeRate(11) + 100)) / 100;
+                        stunCount = (DataCharacter.charLvlData[unit.type][unit.level][DataCharacter.CONT_TIME] * (unit.getUpgradeRate(11) + 100)) / 100;
                         if (bossFlag)
                             stunCount /= 2;
                     }
                     break;
                 } case DataCharacter.EFF_SPLASH:
-                    unit.hitUnitSplash(unit.attackType * 3, this);
+                    unit.hitUnitSplash(unit.attackType, this);
                     break;
                 case DataCharacter.EFF_HOLY:
                     int hitDamage = unit.getHitDamage(this);
                     dotHolyDamage = ((hitDamage + ((unit.getUpgradeRate(7) * hitDamage) / 100)) * ((unit.getUpgradeRate(12) + 100) / 100)) / 20;
-                    dotHolyCount = (DataCharacter.charData[oType][DataCharacter.CONT_TIME] * (unit.getUpgradeRate(13) + 100)) / 100;
+                    dotHolyCount = (DataCharacter.charLvlData[unit.type][unit.level][DataCharacter.CONT_TIME] * (unit.getUpgradeRate(13) + 100)) / 100;
                     break;
                 case DataCharacter.EFF_SLOW:
                     int mRes = (DataMonster.monsterData[type][7] * (DataWave.monsterWaveData[dWave][bossFlag ? 13 : 5] + 100)) / 100;
-                    int rawProb = ((DataCharacter.charData[oType][DataCharacter.SUC_RATE] * (unit.getUpgradeRate(14) + 100)) / 100) - mRes;
+                    int rawProb = ((DataCharacter.charLvlData[unit.type][unit.level][DataCharacter.SUC_RATE] * (unit.getUpgradeRate(14) + 100)) / 100) - mRes;
                     mRes = rawProb - mRes;
                     if (NewTower.getRandom(100) < mRes)
-                        slowRate += Math.min((DataCharacter.charData[oType][DataCharacter.CONT_TIME] * (unit.getUpgradeRate(15) + 100)) / 100f, SLOW_MAX_MINUS_RATE);
+                        slowRate += Math.min((DataCharacter.charLvlData[unit.type][unit.level][DataCharacter.CONT_TIME] * (unit.getUpgradeRate(15) + 100)) / 100f, SLOW_MAX_MINUS_RATE);
                     break;
             }
         }

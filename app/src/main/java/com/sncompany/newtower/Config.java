@@ -328,19 +328,18 @@ public class Config {
     }
 
     /**
-     * Changes the general setting volume, and updates it for all currently playing sounds
+     * Changes the BGM volume, and updates it for all currently playing sounds
      * @param vol The new volume
      */
-    public static void updateVolume(int vol) {
+    public static void setBGMVolume(int vol) {
         if (musicVolume == vol)
             return;
 
         musicVolume = vol;
-        for (int i = 0; i < 3; i++) {
-            MediaManager[] mediaManagerArr = GameThread.bgmMedia;
-            if (mediaManagerArr[i] != null) {
+        for (int i = 0; i < GameThread.bgmMedia.length; i++) {
+            if (GameThread.bgmMedia[i] != null) {
                 try {
-                    mediaManagerArr[i].setVolume(musicVolume, musicMaxVolume);
+                    GameThread.bgmMedia[i].setVolume(musicVolume, musicMaxVolume);
                 } catch (Exception ignored) {
                 }
             }

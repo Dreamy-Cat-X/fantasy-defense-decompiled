@@ -98,7 +98,7 @@ public class CinematicPage extends TPage {
                     if (Config.movie) {
                         gameSubStatus = 0;
                         setOpeningData();
-                        GameThread.playLoopSound(2);
+                        GameThread.playBGM(2);
                         mode = RunMode.OPENING;
                     } else
                         NewTower.switchPage(root, true);
@@ -117,7 +117,7 @@ public class CinematicPage extends TPage {
                             gameSubStatus++;
                             setOpeningData();
                         } else if (gameSubStatus == 25) {
-                            GameThread.stopLoopSound(2);
+                            GameThread.stopBGM(2);
                             NewTower.switchPage(root, true);
                         }
                         return;
@@ -319,11 +319,11 @@ public class CinematicPage extends TPage {
 
         if (mode == RunMode.OPENING) {
             GameThread.playSound(14);
-            GameThread.stopLoopSound(2);
+            GameThread.stopBGM(2);
             NewTower.switchPage(root, true);
         } else if (mode == RunMode.ENDING) {
             GameThread.playSound(14);
-            GameThread.stopLoopSound(2);
+            GameThread.stopBGM(2);
             NewTower.switchPage(parent, true);
         }
     }

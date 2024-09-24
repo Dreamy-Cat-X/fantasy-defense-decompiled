@@ -59,7 +59,7 @@ public class StageSelectPage extends TPage {
         if (prog != null)
             prog.accept(1f);
         loaded = true;
-        GameThread.playLoopSound(1);
+        GameThread.playBGM(1);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class StageSelectPage extends TPage {
             stageLoad++;
             if (stageLoad >= 15) {
                 stageLoad = -1;
-                GameThread.stopLoopSound(1);
+                GameThread.stopBGM(1);
             }
         }
         if (stageLoad != -1)
@@ -276,8 +276,6 @@ public class StageSelectPage extends TPage {
         drawMapTileSize(f, f2, f3);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to find 'out' block for switch in B:29:0x005a. Please report as an issue. */
     public void drawMapTileSize(float f, float f2, float f3) {
         for (int i = 0; i < 15; i++)
             for (int j = 0; j < 10; j++) {
@@ -335,7 +333,7 @@ public class StageSelectPage extends TPage {
         stageSelectStageNumber = Config.s.lastPlayed % 10;
         mapNumber = -1;
         stageLoad = 0;
-        GameThread.playLoopSound(1);
+        GameThread.playBGM(1);
         map = DataMap.loadMap(getStageIndex());
     }
 

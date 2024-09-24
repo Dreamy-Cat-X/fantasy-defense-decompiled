@@ -164,8 +164,8 @@ public class DataStage {
 
     public void unlockUnit() {
         for (TowerUnit two : towerUnit)
-            if (two.unitStatus == 2)
-                two.unitStatus = 0;
+            if (two.unitStatus == TowerUnit.STATUS_LOCKED)
+                two.unitStatus = TowerUnit.STATUS_STAND;
     }
 
     public int getTotalScore() {

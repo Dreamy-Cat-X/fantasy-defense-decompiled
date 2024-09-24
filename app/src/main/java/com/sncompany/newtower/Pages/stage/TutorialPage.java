@@ -39,7 +39,7 @@ public class TutorialPage extends StageBase {
         super.load(prog);
         loadP(tutorialImage, tutorialResource, prog, 1, tutorialImage.length);
         loaded = true;
-        GameThread.stopLoopSound(1);
+        GameThread.stopBGM(1);
     }
 
     @Override
