@@ -351,7 +351,7 @@ public class TitlePage extends TPage {
                 if (cTLS == START) {
                     GameThread.playSound(14);
                     GameThread.stopBGM(0);
-                    NewTower.switchPage(new MenuPage(this), true);
+                    NewTower.switchPage(new FileSelectPage(this), true);
                     TouchManager.curruptFlag = true;
                 } else if (cTLS == CONFIG) {
                     GameThread.playSound(14);

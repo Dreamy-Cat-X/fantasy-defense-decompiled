@@ -109,7 +109,7 @@ public class Config {
             saveTotalBuffer[cbit] = BooleansToByte(tutorial);
             //cbit = 868
             try {
-                FileOutputStream openFileOutput = GameThread.newTower.openFileOutput("SAVEDATA" + (file_index + 1), 0);
+                FileOutputStream openFileOutput = GameThread.newTower.openFileOutput("SAVEDATA" + file_index, 0);
                 openFileOutput.write(saveTotalBuffer);
                 openFileOutput.close();
             } catch (Exception e) {
@@ -117,10 +117,16 @@ public class Config {
             }
         }
 
+        public void delete() {
+            GameThread.newTower.deleteFile("SAVEDATA" + file_index);
+            if (s == this)
+                s = null;
+        }
+
         public void readSaveData() {
             byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
             curPlaytime = System.currentTimeMillis();
-            try (FileInputStream lfile = GameThread.newTower.openFileInput("SAVEDATA" + (file_index + 1))) {
+            try (FileInputStream lfile = GameThread.newTower.openFileInput("SAVEDATA" + file_index)) {
                 int readData = lfile.read(saveTotalBuffer);
                 lfile.close();
                 if (readData <= 0) {
@@ -128,8 +134,8 @@ public class Config {
                     return;
                 }
 
-                s.totalPlaytime = ByteArrayToLong(saveTotalBuffer, 0);
-                if (s.totalPlaytime == 0) {
+                totalPlaytime = ByteArrayToLong(saveTotalBuffer, 0);
+                if (totalPlaytime == 0) {
                     newGame();
                     return;
                 }
@@ -205,7 +211,7 @@ public class Config {
         @NonNull
         @Override
         public String toString() {
-            return GameThread.getString(R.string.file) + " " + (file_index + 1);
+            return GameThread.getString(R.string.file) + " " + file_index;
         }
     }
     public static SaveFile s;
@@ -262,8 +268,6 @@ public class Config {
     }
 
     public static void readConfig() {
-        s = new SaveFile(0);
-        s.readSaveData();
         //updateCensor();
         //Temporary code above
         byte[] saveTotalBuffer = new byte[9];
