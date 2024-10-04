@@ -21,8 +21,8 @@ public class FileSelectPage extends TPage {
     private final ArrayList<Config.SaveFile> fileList = new ArrayList<>();
     private final MyScrollbar scrollbar;
     public final CircleItemDraw drawer;
-    public static final int[] resources = {R.drawable.fileselect_top, R.drawable.fileselect_bar, R.drawable.ui_award_09, R.drawable.ui_award_10, R.drawable.ui_award_11};
-    public static final int top = 0, bar = 1;
+    public static final int[] resources = {R.drawable.fileselect_top, R.drawable.fileselect_bar, R.drawable.etc_heroism, R.drawable.ui_record_cup, R.drawable.ui_award_09, R.drawable.ui_award_10, R.drawable.ui_award_11};
+    public static final int top = 0, bar = 1, heroism = 2, cup = 3;
     public final Texture2D[] images = new Texture2D[resources.length];
     public static final int sdis = 50, ydis = 104, max_bars = 5;
 
@@ -101,24 +101,41 @@ public class FileSelectPage extends TPage {
                 int abs = Math.abs(j - drawer.totalHalfBlockSize);
                 int blen = j < drawer.totalHalfBlockSize ? -drawer.blockLengthArray[abs] : drawer.blockLengthArray[abs];
 
-                CGRect rect = CGRect.make(70, 100, 660, 300);
+                CGRect rect = CGRect.make(sdis, 100, 660, 300);
                 float y = blen + drawer.blockCorrectionPixel + ydis;
                 images[bar].drawAtPointOptionGuide(sdis, y, 18, rect);
-                images[3].drawAtPointOptionGuide(74, y + 4, 18, rect);
                 GameRenderer.setFontDoubleColor(-1, -11106408);
                 if (awd < fileList.size()) {
+                    images[6].drawAtPointOptionGuide(sdis + 4, y + 4, 18, rect);
                     GameRenderer.setFontSize(22);
                     Config.SaveFile sav = fileList.get(awd);
-                    GameRenderer.drawStringDoubleGuideM(sav.toString(), 149, y + 5, 18, rect);
-                    GameRenderer.drawStringDoubleGuideM(sav.totalPlaytime / 3600 + ":" + sav.totalPlaytime / 60 + ":" + sav.totalPlaytime, 149, y + 35, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(sav.toString(), 60+sdis, y + 5, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM((sav.totalPlaytime/3600) + ":" + duo(sav.totalPlaytime/60) +
+                            ":" + duo(sav.totalPlaytime),60+sdis,y + 35,18, rect);
+                    for (int i = sav.stageProg.length - 1; i >= -1; i--)
+                        if (i == -1 || sav.stageProg[i][0] != -1) {
+                            String s = i == -1 ? "Tutorial" : String.format(GameThread.getString(R.string.start_stind), i+1);
+                            GameRenderer.drawStringDoubleGuideM(s, 175+sdis, y + 5, 18, rect);
+                            break;
+                        }
+                    images[heroism].drawAtPointOptionGuide(175+sdis, y + 35, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(":" + sav.heroPoints, 195+sdis, y + 35, 18, rect);
+                    images[cup].drawAtPointOptionGuide(290+sdis, y + 15, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(":" + sav.getAwardCount() + "/" + (sav.awardValues.length-1), 320+sdis, y+21, 18, rect);
                 } else {
                     GameRenderer.setFontSize(44);
-                    GameRenderer.drawStringDoubleGuideM("New File", 149, y + 5, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM("New File", 155+sdis, y + 5, 18, rect);
                 }
             }
 
         if (scrollbar != null)
             uiEtcImage[etc_scrollbutton].drawAtPointOption(747, scrollbar.BarLastPosition, 9);
+    }
+
+    private static String duo(long t) {
+        if (t >= 10)
+            return t + "";
+        return "0" + t;
     }
 
     @Override

@@ -1,11 +1,8 @@
 # fantasy-defense-decompiled
  Decompiled code for a 2011 game no one ever knows about, with some tweaks to make it more manageable. Not affiliated with SN Mobile Technology
-
-## Untested Things:
-- Infinity/Gate Breaker mode
+- Everything runs as it should. Decensored designs mode & file selection menu were also things I took the luxury to add that weren't present in the original game
 
 ## Other TODO
 - PC Port
-- File Select menu + way to delete files
 - Move all display strings to strings.xml
-- Bitmask-ify effect type, to allow an unit to have multiple effects
+- Bitmask-ify effect type, to allow an unit to have multiple effects (for modding)

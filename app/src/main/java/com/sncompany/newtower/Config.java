@@ -209,6 +209,26 @@ public class Config {
                 Arrays.fill(highScore, (byte) -1);
         }
 
+        public int getAwardCount() {
+            int t = 0;
+            for (boolean b : awardValues)
+                if (b)
+                    t++;
+            int rwc = t;
+            for (int i = DataAward.AWARD_10_Title; i <= DataAward.AWARD_30_Title; i++)
+                if (awardValues[i]) rwc--;
+                else awardValues[i] = rwc >= (1 + (i - DataAward.AWARD_10_Title)) * 10;
+            return t;
+        }
+
+        public int getAwardScore() {
+            int t = 0;
+            for (int i = 0; i < awardValues.length; i++)
+                if (awardValues[i])
+                    t += DataAward.awardScoreValue[i];
+            return t;
+        }
+
         @NonNull
         @Override
         public String toString() {
@@ -219,27 +239,6 @@ public class Config {
     public static void setFile(SaveFile sf) {
         s = sf;
         curPlaytime = System.currentTimeMillis();
-    }
-
-
-    public static int getAwardCount() {
-        int t = 0;
-        for (boolean b : s.awardValues)
-            if (b)
-                t++;
-        int rwc = t;
-        for (int i = DataAward.AWARD_10_Title; i <= DataAward.AWARD_30_Title; i++)
-            if (s.awardValues[i]) rwc--;
-            else s.awardValues[i] = rwc >= (1 + (i - DataAward.AWARD_10_Title)) * 10;
-        return t;
-    }
-
-    public static int getAwardScore() {
-        int t = 0;
-        for (int i = 0; i < s.awardValues.length; i++)
-            if (s.awardValues[i])
-                t += DataAward.awardScoreValue[i];
-        return t;
     }
 
     public static void saveFile() {

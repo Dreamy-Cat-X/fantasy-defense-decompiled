@@ -139,7 +139,7 @@ public class StageSelectPage extends TPage {
             uiStageImage[LTS == 4 ? 16 : 15].drawAtPointOption(717f, 180f, 18);
         map.checkBackBase();
         drawSmallMap(500f, 160f, 0.25f);
-        if (Config.s.stageProg[getStageIndex()][0] == 2)
+        if (Config.s.stageProg[getStageIndex()][mapAttackType] == 2)
             uiStageImage[46].drawAtPointOption(503f, 163f, 18);
         else if (Config.s.stageProg[getStageIndex()][0] == -1) {
             Texture2D.gl.glTexEnvf(8960, 8704, 8448f);
@@ -248,7 +248,7 @@ public class StageSelectPage extends TPage {
                     break;
                 case START:
                     GameThread.playSound(14);
-                    if (Config.s.stageProg[getStageIndex()][mapAttackType] >= 0) {
+                    if (Config.s.stageProg[getStageIndex()][0] >= mapAttackType) {//0 - playable main, 1 - clear, playable infimode, 2 - perfect, playable basebreak
                         mapNumber = getStageIndex();
                         stageLoad++;
                     }

@@ -166,11 +166,11 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
             uiEtcImage[etc_scrollbutton].drawAtPointOption(731, (((awardListDraw.blockCurrentArray[awardListDraw.totalHalfBlockSize] * 250) / 58f) + 120) - (((awardListDraw.blockCorrectionPixel * 250) / 58f) / 250f), 10);
             GameRenderer.setFontColor(-16777216);
             GameRenderer.setFontSize(20);
-            GameRenderer.drawStringM(String.format("%02d%%", (Config.getAwardCount() * 100) / 62), 320, 366, 20);
+            GameRenderer.drawStringM(String.format("%02d%%", (Config.s.getAwardCount() * 100) / 62), 320, 366, 20);
             GameRenderer.setFontSize(13);
-            GameRenderer.drawStringM(String.format("(%02d/%02d)", Config.getAwardCount(), 62), 323, 368, 18);
+            GameRenderer.drawStringM(String.format("(%02d/%02d)", Config.s.getAwardCount(), 62), 323, 368, 18);
             GameRenderer.setFontSize(20);
-            GameRenderer.drawStringM(String.format("%d", Config.getAwardScore()), 610, 365, 18);
+            GameRenderer.drawStringM(String.format("%d", Config.s.getAwardScore()), 610, 365, 18);
         }
 
         uiEtcImage[TLS == 0 ? etc_back_on : etc_back_off].drawAtPointOption(11, 412, 18);
