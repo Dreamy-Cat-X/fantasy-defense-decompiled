@@ -28,7 +28,7 @@ public class TitlePage extends TPage {
 
     public static final int VOLUMEBAR_START_POS_X = 331;
     public static final int BACK = 0, DEVELOPER = 1, ABOUT_TOTAL = 2;
-    public static final int BGM = 1, SFX = 2, INTRO = 3, VIBRATE = 4, CONFIG_TOTAL = 5;
+    public static final int BGM = 1, SFX = 2, INTRO = 3, VIBRATE = 4, CENSOR = 5, CONFIG_TOTAL = 6;
     public static final int START = 0, CONFIG = 1, ABOUT = 2, FACEBOOK = 3, TWITTER = 4, TITLE_TOTAL = 5;
     static final float GLOW_MOVE_DG = 0.05f;
     public static final int[] BOSS_POS = {77, 26, 41, 21, -30};
@@ -82,6 +82,7 @@ public class TitlePage extends TPage {
 
     @Override
     public void onReload() {
+        Config.setFile(null);
         gameSubStatus = gameTitleViewCount = 0;
         reloadBoss(null, 0);
     }
@@ -212,8 +213,8 @@ public class TitlePage extends TPage {
                     titleImage[title_titleglow].drawAtPointOption(24, 6, 18);
                     Texture2D.setColors(1);
 
-                    titleImage[cTLS == 0 ? 9 : 8].drawAtPointOption(296, 337, 18);
-                    titleImage[cTLS == 1 ? 11 : 10].drawAtPointOption(326, 412, 18);
+                    titleImage[cTLS == START ? title_starton : title_startoff].drawAtPointOption(296, 337, 18);
+                    titleImage[cTLS == CONFIG ? title_optionon : title_optionoff].drawAtPointOption(326, 412, 18);
                     titleImage[title_sncompany].drawAtPointOption(GameRenderer.CX, 456, 17);
                     titleImage[title_about].drawAtPointOption(9, 429, 18);
                     titleImage[title_twitter].drawAtPointOption(56, 429, 18);
@@ -234,6 +235,7 @@ public class TitlePage extends TPage {
             TouchManager.addTouchRectListData(SFX, CGRect.make(310, 225, 390, 40));
             TouchManager.addTouchRectListData(INTRO, CGRect.make(218, 307, 118, 46));
             TouchManager.addTouchRectListData(VIBRATE, CGRect.make(583, 307, 118, 46));
+            TouchManager.addTouchRectListData(CENSOR, CGRect.make(583, 357, 118, 46));
             TouchManager.touchListCheckCount[TouchManager.touchSettingSlot] = CONFIG_TOTAL;
 
             alwaysImage[ALWAYS_R_BG].drawAtPointOption(0, 0, 18);
@@ -242,6 +244,11 @@ public class TitlePage extends TPage {
 
             uiEtcImage[Config.movie ? etc_onon : etc_offoff].drawAtPointOption(218, 307, 18);
             uiEtcImage[Config.vibration ? etc_onon : etc_offoff].drawAtPointOption(583, 307, 18);
+
+            GameRenderer.setFontSize(36);
+            GameRenderer.setFontColor(-1);
+            GameRenderer.drawStringM("Censor", 425, 360, 18);
+            uiEtcImage[Config.uncensor ? etc_offoff : etc_onon].drawAtPointOption(583, 357, 18);
 
             uiEtcImage[etc_scrollbutton].drawAtPointOption(soundBars[0].BarLastPosition, 159, 9);
             uiEtcImage[etc_scrollbutton].drawAtPointOption(soundBars[1].BarLastPosition, 244, 9);
@@ -324,7 +331,9 @@ public class TitlePage extends TPage {
             } else if (cTLS == VIBRATE) {
                 GameThread.playSound(14);
                 Config.vibration = !Config.vibration;
-            }
+            } else if (cTLS == CENSOR)
+                Config.updateCensor();
+
             int cTLP = TouchManager.checkTouchListPressed(TouchManager.getFirstFirstActionTouch());
             if (cTLP == BGM) {
                 soundBars[0].setUpdatePosition(TouchManager.getFirstLastActionTouch().x);
@@ -351,7 +360,7 @@ public class TitlePage extends TPage {
                 if (cTLS == START) {
                     GameThread.playSound(14);
                     GameThread.stopBGM(0);
-                    NewTower.switchPage(new FileSelectPage(this), true);
+                    NewTower.switchPage(new FileSelectPage(this));
                     TouchManager.curruptFlag = true;
                 } else if (cTLS == CONFIG) {
                     GameThread.playSound(14);

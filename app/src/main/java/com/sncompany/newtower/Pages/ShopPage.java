@@ -127,7 +127,7 @@ public class ShopPage extends TPage {
         uiShopImage[shopbase].drawAtPointOption(14, 54, 18);
         int curBlock = upgradeItemListDraw.totalHalfBlockSize - 1;
         int buyInd = -1;
-        while (curBlock <= upgradeItemListDraw.totalHalfBlockSize + 3 + 1) {
+        while (curBlock <= upgradeItemListDraw.totalHalfBlockSize + 4) {
             int curInd = upgradeItemListDraw.blockCurrentArray[curBlock];
             if (curInd != -1) {
                 int abs = Math.abs(curBlock - upgradeItemListDraw.totalHalfBlockSize);

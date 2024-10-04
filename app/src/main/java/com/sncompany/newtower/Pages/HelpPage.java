@@ -87,7 +87,7 @@ public class HelpPage extends TPage {
                 break;
             case GAME_HELP_TOUCH_LIST_1_TUTORIAL:
                 GameThread.stopBGM(0);
-                NewTower.switchPage(new TutorialPage(new StageSelectPage(parent)), true);
+                NewTower.switchPage(new TutorialPage(new StageSelectPage(parent)));
                 break;
             case GAME_HELP_TOUCH_LIST_2_LEFTARROW:
                 gameHelpViewNum--;

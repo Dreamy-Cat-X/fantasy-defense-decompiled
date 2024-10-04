@@ -21,33 +21,33 @@ public class CircleItemDraw {
     public int totalDataBlockSize;
     public int totalHalfBlockSize;
 
-    public CircleItemDraw(int i, int i2) {
-        setBlockArray(i);
-        this.totalDataBlockSize = i2;
-        this.currentDrawPosition = 0;
-        this.targetDrawPosition = 0;
-        this.moveCloseFlag = false;
+    public CircleItemDraw(int maxVis, int length) {
+        setBlockArray(maxVis);
+        totalDataBlockSize = length;
+        currentDrawPosition = 0;
+        targetDrawPosition = 0;
+        moveCloseFlag = false;
     }
 
     public void resetArrayPosition() {
-        this.currentDrawPosition = 0;
-        this.targetDrawPosition = 0;
+        currentDrawPosition = 0;
+        targetDrawPosition = 0;
         getArrayAndCorrection();
     }
 
     public void setBlockArray(int i) {
-        this.totalHalfBlockSize = i;
-        int i2 = (i * 2) + 1;
-        this.totalBlockSize = i2;
-        this.blockLastViewCount = 0;
-        this.blockLengthArray = new int[i];
-        this.blockSizeArray = new float[i];
-        this.blockAlphaArray = new float[i];
-        this.blockCurrentArray = new int[i2];
+        totalHalfBlockSize = i;
+        int siz = (i * 2) + 1;
+        totalBlockSize = siz;
+        blockLastViewCount = 0;
+        blockLengthArray = new int[i];
+        blockSizeArray = new float[i];
+        blockAlphaArray = new float[i];
+        blockCurrentArray = new int[siz];
     }
 
     public void getArrayAndCorrection() {
-        int i = Math.abs(currentDrawPosition);
+        int curP = Math.abs(currentDrawPosition);
 
         if (FIRST_BLOCK_SIZE == 0) {
             for (int i3 = 0; i3 < totalBlockSize; i3++)
@@ -55,30 +55,28 @@ public class CircleItemDraw {
             blockCorrectionPixel = 0;
             return;
         }
-        int i4 = i / FIRST_BLOCK_SIZE;
-        int i5 = i % FIRST_BLOCK_SIZE;
-        if (i5 > FIRST_BLOCK_SIZE / 2) {
-            i4++;
-            i5 -= FIRST_BLOCK_SIZE;
+        int divP = curP / FIRST_BLOCK_SIZE;
+        int perP = curP % FIRST_BLOCK_SIZE;
+        if (perP > FIRST_BLOCK_SIZE / 2) {
+            divP++;
+            perP -= FIRST_BLOCK_SIZE;
         }
 
-        blockCorrectionPixel = currentDrawPosition < 0 ? i5 : -i5;
+        blockCorrectionPixel = currentDrawPosition < 0 ? perP : -perP;
         if (currentDrawPosition < 0)
-            i4 = -i4;
+            divP = -divP;
 
-        int i6 = i4 - totalHalfBlockSize;
-        int i7 = 0;
-        while (i7 < totalBlockSize) {
+        int helf = divP - totalHalfBlockSize;
+        for (int i = 0; i < totalBlockSize; i++) {
             if (!moveCloseFlag) {
-                if (i6 < 0)
-                    i6 = totalDataBlockSize - ((-i6) % totalDataBlockSize);
-                blockCurrentArray[i7] = i6 % totalDataBlockSize;
-            } else if (i6 < 0 || i6 >= this.totalDataBlockSize) {
-                blockCurrentArray[i7] = -1;
+                if (helf < 0)
+                    helf = totalDataBlockSize - ((-helf) % totalDataBlockSize);
+                blockCurrentArray[i] = helf % totalDataBlockSize;
+            } else if (helf < 0 || helf >= totalDataBlockSize) {
+                blockCurrentArray[i] = -1;
             } else
-                blockCurrentArray[i7] = i6;
-            i7++;
-            i6++;
+                blockCurrentArray[i] = helf;
+            helf++;
         }
         leftArrowDrawFlag = true;
         rightArrowDrawFlag = true;
@@ -92,89 +90,77 @@ public class CircleItemDraw {
     }
 
     public void resetTargetPosition() {
-        int i = Math.abs(this.currentDrawPosition);
+        int pos = Math.abs(currentDrawPosition);
 
-        int i2 = this.FIRST_BLOCK_SIZE;
-        int i3 = i / i2;
-        int i4 = i % i2;
-        if (this.currentDrawPosition < 0) {
-            i3 = (-i3) - 1;
-            i4 = i2 - i4;
+        int dP = pos / FIRST_BLOCK_SIZE;
+        int pP = pos % FIRST_BLOCK_SIZE;
+        if (currentDrawPosition < 0) {
+            dP = (-dP) - 1;
+            pP = FIRST_BLOCK_SIZE - pP;
         }
-        int i5 = this.FIRST_BLOCK_SIZE;
-        if (i4 > i5 / 2) {
-            i3++;
-            i4 -= i5;
+        if (pP > FIRST_BLOCK_SIZE / 2) {
+            dP++;
+            pP -= FIRST_BLOCK_SIZE;
         }
-        if ((i4 < 0 ? -i4 : i4) >= this.nextMoveCheckDegree) {
-            if (i4 < 0 && this.currentDrawPosition - this.backupDrawPosition < 0)
-                i3--;
-
-            if (i4 > 0 && this.currentDrawPosition - this.backupDrawPosition > 0)
-                i3++;
+        if ((pP < 0 ? -pP : pP) >= nextMoveCheckDegree) {
+            if (pP < 0 && currentDrawPosition - backupDrawPosition < 0)
+                dP--;
+            if (pP > 0 && currentDrawPosition - backupDrawPosition > 0)
+                dP++;
         }
-        this.targetDrawPosition = i3 * this.FIRST_BLOCK_SIZE;
+        targetDrawPosition = dP * FIRST_BLOCK_SIZE;
     }
 
     public void backupCurrentDrawPosition() {
-        this.backupDrawPosition = this.currentDrawPosition;
+        backupDrawPosition = currentDrawPosition;
     }
 
     public void setAnchorDrawPosition(int i) {
-        this.currentDrawPosition = i;
-        this.targetDrawPosition = i;
+        currentDrawPosition = i;
+        targetDrawPosition = i;
     }
 
     public void resetWithDegree(int i) {
-        int i2 = this.backupDrawPosition;
-        int i3 = i2 + i;
-        this.currentDrawPosition = i3;
-        this.targetDrawPosition = i2 + i;
-        this.leftArrowDrawFlag = true;
-        this.rightArrowDrawFlag = true;
-        if (this.moveCloseFlag) {
-            if (i3 < 0) {
-                this.currentDrawPosition = 0;
-                this.targetDrawPosition = 0;
+        int bI = backupDrawPosition + i;
+        currentDrawPosition = bI;
+        targetDrawPosition = backupDrawPosition + i;
+        leftArrowDrawFlag = true;
+        rightArrowDrawFlag = true;
+        if (moveCloseFlag) {
+            if (bI < 0) {
+                currentDrawPosition = 0;
+                targetDrawPosition = 0;
             }
-            int i4 = this.currentDrawPosition;
-            int i5 = this.totalDataBlockSize;
-            int i6 = this.blockLastViewCount;
-            int i7 = this.FIRST_BLOCK_SIZE;
-            if (i4 > ((i5 - 1) - i6) * i7) {
-                this.currentDrawPosition = ((i5 - 1) - i6) * i7;
-                this.targetDrawPosition = ((i5 - 1) - i6) * i7;
+            int v = ((totalDataBlockSize - 1) - blockLastViewCount) * FIRST_BLOCK_SIZE;
+            if (currentDrawPosition > v) {
+                currentDrawPosition = v;
+                targetDrawPosition = v;
             }
 
-            if (this.currentDrawPosition == 0)
-                this.leftArrowDrawFlag = false;
-            if (this.currentDrawPosition == ((this.totalDataBlockSize - 1) - this.blockLastViewCount) * this.FIRST_BLOCK_SIZE)
-                this.rightArrowDrawFlag = false;
+            if (currentDrawPosition == 0)
+                leftArrowDrawFlag = false;
+            if (currentDrawPosition == v)
+                rightArrowDrawFlag = false;
         }
     }
 
     public void correctDistance() {
-        int i = this.currentDrawPosition;
-        int i2 = this.targetDrawPosition;
-        if (i != i2) {
-            if (i > i2) {
-                int i3 = i - i2;
-                int i4 = this.moveSpeed;
-                this.currentDrawPosition = i3 < i4 ? i2 : i - i4;
-            } else {
-                int i5 = i2 - i;
-                int i6 = this.moveSpeed;
-                this.currentDrawPosition = i5 < i6 ? i2 : i + i6;
-            }
+        int cb = currentDrawPosition;
+        int tb = targetDrawPosition;
+        if (cb != tb) {
+            if (cb > tb) {
+                currentDrawPosition = cb - tb < moveSpeed ? tb : cb - moveSpeed;
+            } else
+                currentDrawPosition = cb - tb < moveSpeed ? tb : cb + moveSpeed;
         }
-        this.leftArrowDrawFlag = true;
-        this.rightArrowDrawFlag = true;
-        if (this.moveCloseFlag) {
-            if (this.currentDrawPosition == 0)
-                this.leftArrowDrawFlag = false;
+        leftArrowDrawFlag = true;
+        rightArrowDrawFlag = true;
+        if (moveCloseFlag) {
+            if (currentDrawPosition == 0)
+                leftArrowDrawFlag = false;
 
-            if (this.currentDrawPosition == (this.totalDataBlockSize - 1) * this.FIRST_BLOCK_SIZE)
-                this.rightArrowDrawFlag = false;
+            if (currentDrawPosition == (totalDataBlockSize - 1) * FIRST_BLOCK_SIZE)
+                rightArrowDrawFlag = false;
         }
     }
 }

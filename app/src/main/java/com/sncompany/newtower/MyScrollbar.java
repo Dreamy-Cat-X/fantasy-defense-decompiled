@@ -16,9 +16,13 @@ public class MyScrollbar {
         BarEndPos = endP;
         BarPosWidth = endP - startP;
         BarStartValue = startVal;
-        BarEndValue = endVal;
-        BarValueWidth = endVal - startVal;
+        setEnd(endVal);
         BarLastPosition = startP;
+    }
+
+    public void setEnd(int val) {
+        BarEndValue = val;
+        BarValueWidth = val - BarStartValue;
     }
 
     public void setUpdatePosition(float f) {
@@ -49,7 +53,7 @@ public class MyScrollbar {
         float val = BarStartValue + ((BarEndValue - BarStartValue) * f2);
         if (val >= 0)
             val += 0.5f;
-        this.BarLastValue = (int) val;
+        BarLastValue = (int) val;
     }
 
     public void setReverseUpdatePosition(float f) {
@@ -61,18 +65,18 @@ public class MyScrollbar {
                 BarLastPosition = BarEndPos;
                 return;
             } else if (i < BarStartValue) {
-                this.BarLastValue = BarStartValue;
-                this.BarLastPosition = this.BarStartPos;
+                BarLastValue = BarStartValue;
+                BarLastPosition = BarStartPos;
                 return;
             }
         } else {
             if (i < BarEndValue) {
-                this.BarLastValue = BarEndValue;
-                this.BarLastPosition = this.BarEndPos;
+                BarLastValue = BarEndValue;
+                BarLastPosition = BarEndPos;
                 return;
             } else if (i > BarStartValue) {
-                this.BarLastValue = BarStartValue;
-                this.BarLastPosition = this.BarStartPos;
+                BarLastValue = BarStartValue;
+                BarLastPosition = BarStartPos;
                 return;
             }
         }
@@ -80,6 +84,6 @@ public class MyScrollbar {
         float val = BarStartPos + ((BarEndPos - BarStartPos) * f2);
         if (val >= 0)
             val += 0.5f;
-        this.BarLastPosition = (int) val;
+        BarLastPosition = (int) val;
     }
 }

@@ -430,11 +430,11 @@ public class StagePage extends StageBase {
                         Config.saveFile();
                     }
                     if (substate == VIC_TOMAP) {
-                        NewTower.switchPage(parent, true); //Stage select
+                        NewTower.switchPage(parent); //Stage select
                     } else if (substate == VIC_TOUPGR) {
-                        NewTower.switchPage(parent.parent, true); //TODO - Make it switch to list upgrade page
+                        NewTower.switchPage(parent.parent); //TODO - Make it switch to list upgrade page
                     } else
-                        NewTower.switchPage(new StagePage(parent, new DataStage(DataMap.loadMap(st.SID + 1), st.mapType)), true);
+                        NewTower.switchPage(new StagePage(parent, new DataStage(DataMap.loadMap(st.SID + 1), st.mapType)));
                 }
                 break;
             case GAMEOVER:
@@ -455,11 +455,11 @@ public class StagePage extends StageBase {
                 darkViewCount++;
                 if (darkViewCount >= 45) {
                     if (substate == 2) {
-                        NewTower.switchPage(parent.parent, true); //TODO Make it actually switch to upgrade
+                        NewTower.switchPage(parent.parent); //TODO Make it actually switch to upgrade
                     } else if (substate == 3) {
                         restart();
                     } else
-                        NewTower.switchPage(parent, true);
+                        NewTower.switchPage(parent);
                 }
                 break;
             case PAUSE:
@@ -471,7 +471,7 @@ public class StagePage extends StageBase {
                     if (substate == 1)
                         restart();
                     else
-                        NewTower.switchPage(parent, true);
+                        NewTower.switchPage(parent);
                 }
                 break;
         }
@@ -1380,7 +1380,7 @@ public class StagePage extends StageBase {
                             startViewCount = 270;
                         } else if (st.SID == 49) {
                             GameThread.playBGM(2);
-                            NewTower.switchPage(new CinematicPage(parent), true);
+                            NewTower.switchPage(new CinematicPage(parent));
                         } else if (cTLS <= VTCH_NEXT) {
                             substate += (byte)(cTLS + 1);
                             darkViewCount = 0;

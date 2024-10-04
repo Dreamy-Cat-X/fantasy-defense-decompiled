@@ -53,7 +53,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         gl10.glClearDepthf(1);
         gl10.glDisable(2929);
         GameThread.update_GAME_PRE_LOAD();
-        NewTower.switchPage(new CinematicPage(null), false);
+        NewTower.switchPage(new CinematicPage(null));
     }
 
     @Override // android.opengl.GLSurfaceView.Renderer

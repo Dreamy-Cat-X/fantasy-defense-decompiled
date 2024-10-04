@@ -89,7 +89,7 @@ public class StageSelectPage extends TPage {
         Config.saveFile();
         DataStage nst = new DataStage(map, mapAttackType);
 
-        NewTower.switchPage(new StagePage(this, nst), true); //End of update_GAME_STAGE_START_LOADING
+        NewTower.switchPage(new StagePage(this, nst)); //End of update_GAME_STAGE_START_LOADING
     }
 
     private static final float[][] uiStageCoords = {{0f, 286f},{169f, 252f},{0f, 49f},{189f, 0f},{0f, 0f}};
@@ -228,7 +228,7 @@ public class StageSelectPage extends TPage {
             switch (TouchManager.checkTouchListStatus()) {
                 case BACK:
                     GameThread.playSound(15);
-                    NewTower.switchPage(parent, true);
+                    NewTower.switchPage(parent);
                     break;
                 case ARROW_L:
                     if (stageSelectStageNumber > 0) {

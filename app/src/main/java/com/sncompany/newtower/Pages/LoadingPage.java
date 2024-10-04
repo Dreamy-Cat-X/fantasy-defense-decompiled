@@ -79,7 +79,7 @@ public class LoadingPage extends TPage {
         if (!loaded)
             load(null);
         if (prog >= 1f)
-            NewTower.switchPage(parent, true);
+            NewTower.switchPage(parent);
     }
 
     @Override

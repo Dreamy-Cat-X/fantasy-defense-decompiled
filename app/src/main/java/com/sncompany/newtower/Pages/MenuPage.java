@@ -88,7 +88,7 @@ public class MenuPage extends TPage { //Note: This one's parent will always be T
                     child.unload();
                     child = new TutorialPage(new StageSelectPage(this));
                 }
-                NewTower.switchPage(child, true);
+                NewTower.switchPage(child);
             } else if (titleCount >= TITLE_MAINMENU_REV_COUNT_MOVE_MAX_COUNT)
                 child.update();
         } else {

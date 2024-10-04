@@ -52,8 +52,12 @@ public class Config {
         public final byte[][][] heroEquips = new byte[3][2][]; //[i][0] stores type, [i][1] effect degree. Length is 2, but not stored so it inits as null
         public final byte[][] inventory = new byte[24][]; //same as heroEquips
 
-        public SaveFile(int ind) {
+        public SaveFile(int ind, boolean read) {
             file_index = ind;
+            if (read)
+                readSaveData();
+            else
+                newGame();
         }
 
         /**
@@ -61,7 +65,9 @@ public class Config {
          */
         public void saveData() {
             byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
+            System.out.println(totalPlaytime);
             LongToByteArray(saveTotalBuffer, 0, totalPlaytime);
+            System.out.println(ByteArrayToLong(saveTotalBuffer, 0));
             IntToByteArray(saveTotalBuffer, 8, heroPoints);
             IntToByteArray(saveTotalBuffer, 12, killCount);
             int cbit = 16;
@@ -119,13 +125,10 @@ public class Config {
 
         public void delete() {
             GameThread.newTower.deleteFile("SAVEDATA" + file_index);
-            if (s == this)
-                s = null;
         }
 
-        public void readSaveData() {
+        private void readSaveData() {
             byte[] saveTotalBuffer = new byte[SAVEFILE_SIZE];
-            curPlaytime = System.currentTimeMillis();
             try (FileInputStream lfile = GameThread.newTower.openFileInput("SAVEDATA" + file_index)) {
                 int readData = lfile.read(saveTotalBuffer);
                 lfile.close();
@@ -189,8 +192,6 @@ public class Config {
                 boolean[] lbs = ByteToBooleans(saveTotalBuffer[cbit]);
                 //cbit = 868
                 tutorial = lbs[0];
-                movie = lbs[1];
-                vibration = lbs[2];
 
                 for (int i = 0; i <= 2; i++)
                     heroAvail[i] = rewardValues[i * 2];
@@ -215,6 +216,10 @@ public class Config {
         }
     }
     public static SaveFile s;
+    public static void setFile(SaveFile sf) {
+        s = sf;
+        curPlaytime = System.currentTimeMillis();
+    }
 
 
     public static int getAwardCount() {
@@ -239,7 +244,7 @@ public class Config {
 
     public static void saveFile() {
         long millis = System.currentTimeMillis();
-        s.totalPlaytime += (int) ((millis - curPlaytime) / 1000);
+        s.totalPlaytime += (millis - curPlaytime) / 1000;
         curPlaytime = millis;
         DataAward.check_time();
         s.saveData();
@@ -257,7 +262,7 @@ public class Config {
 
         IntToByteArray(saveTotalBuffer, 0, musicVolume);
         IntToByteArray(saveTotalBuffer, 4, effectVolume);
-        saveTotalBuffer[8] = BooleansToByte(movie, vibration);
+        saveTotalBuffer[8] = BooleansToByte(movie, vibration, uncensor);
         try {
             FileOutputStream openFileOutput = GameThread.newTower.openFileOutput("CFG", 0);
             openFileOutput.write(saveTotalBuffer);
@@ -268,8 +273,6 @@ public class Config {
     }
 
     public static void readConfig() {
-        //updateCensor();
-        //Temporary code above
         byte[] saveTotalBuffer = new byte[9];
         try (FileInputStream lfile = GameThread.newTower.openFileInput("CFG")) {
             int readData = lfile.read(saveTotalBuffer);
@@ -279,8 +282,10 @@ public class Config {
             musicVolume = ByteArrayToInt(saveTotalBuffer, 0);
             effectVolume = ByteArrayToInt(saveTotalBuffer, 4);
             boolean[] lbs = ByteToBooleans(saveTotalBuffer[8]);
-            movie = lbs[1];
-            vibration = lbs[2];
+            movie = lbs[0];
+            vibration = lbs[1];
+            if (lbs[2])
+                updateCensor();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,12 +304,12 @@ public class Config {
         return tt;
     }
     public static void IntToByteArray(byte[] bArr, int sect, int num) {
-        for (int i3 = 0; i3 < 4; i3++)
-            bArr[sect + i3] = (byte) ((num >> (i3 * 8)) & 255);
+        for (int i = 0; i < 4; i++)
+            bArr[sect + i] = (byte) ((num >> (i * 8)) & 255);
     }
     public static void LongToByteArray(byte[] bArr, int sect, long num) {
-        for (int i3 = 0; i3 < 8; i3++)
-            bArr[sect + i3] = (byte) ((num >> (i3 * 8)) & 255);
+        for (int i = 0; i < 8; i++)
+            bArr[sect + i] = (byte) ((num >> (i * 8)) & 255);
     }
 
     public static boolean[] ByteToBooleans(byte b) {
@@ -315,18 +320,18 @@ public class Config {
     }
     public static int ByteArrayToInt(byte[] bArr, int i) {
         ByteBuffer.allocate(4);
-        byte[] bArr2 = new byte[4];
-        for (int i2 = 0; i2 < 4; i2++) {
-            bArr2[i2] = bArr[(i + 3) - i2];
+        byte[] b = new byte[4];
+        for (int j = 0; j < 4; j++) {
+            b[j] = bArr[(i + 3) - j];
         }
-        ByteBuffer wrap = ByteBuffer.wrap(bArr2);
+        ByteBuffer wrap = ByteBuffer.wrap(b);
         wrap.order(ByteOrder.BIG_ENDIAN);
         return wrap.getInt();
     }
     public static long ByteArrayToLong(byte[] bArr, int i) {
         long j = 0;
-        for (int i2 = 0; i2 < 8; i2++) {
-            j = (j << 8) | (bArr[i + i2] & 255);
+        for (int k = 0; k < 8; k++) {
+            j += (long)(bArr[i + k] & 255) << (k * 8);
         }
         return j;
     }

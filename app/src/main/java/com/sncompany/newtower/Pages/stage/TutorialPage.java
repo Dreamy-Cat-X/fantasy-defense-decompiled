@@ -352,7 +352,7 @@ public class TutorialPage extends StageBase {
             }
             GameThread.playSound(14);
             Config.s.lastPlayed = 0;
-            NewTower.switchPage(parent, true);
+            NewTower.switchPage(parent);
         }
     }
 }

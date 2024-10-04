@@ -27,8 +27,6 @@ public class NewTower extends Activity {
     public static boolean initActivityFirstFlag = false;
     public static Vibrator vibe;
     public static PowerManager.WakeLock wl;
-    private String ErrorTitle = "";
-    private String ErrorMessage = "";
 
     public static TPage currentPage;
 
@@ -43,15 +41,14 @@ public class NewTower extends Activity {
         getWindow().getDecorView().setSystemUiVisibility(3846);
     }
 
-    public static void switchPage(TPage p, boolean unload) {
+    public static void switchPage(TPage p) {
+        TPage par = currentPage;
         if (!p.loaded) {
             p = new LoadingPage(p);
-        } else
+        } else if (!(par instanceof LoadingPage))
             p.onReload();
-
-        TPage par = currentPage;
         currentPage = p;
-        if (unload)
+        if (par != null)
             unloadRec(par);
     }
 
@@ -74,8 +71,6 @@ public class NewTower extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.alert_dialog_icon);
         builder.setCancelable(false);
-        builder.setTitle(this.ErrorTitle);
-        builder.setMessage(this.ErrorMessage);
 
         builder.setPositiveButton("종료", (dialogInterface, i) -> {
             NewTower.this.finish();
@@ -196,7 +191,7 @@ public class NewTower extends Activity {
             while (!(p instanceof MenuPage) && p != null)
                 p = p.parent;
 
-            switchPage(p, true);
+            switchPage(p);
             GameThread.stopBGM(2);
         });
         builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());

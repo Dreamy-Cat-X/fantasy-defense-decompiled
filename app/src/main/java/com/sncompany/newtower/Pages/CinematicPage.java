@@ -101,7 +101,7 @@ public class CinematicPage extends TPage {
                         GameThread.playBGM(2);
                         mode = RunMode.OPENING;
                     } else
-                        NewTower.switchPage(root, true);
+                        NewTower.switchPage(root);
                 }
                 break;
             case OPENING:
@@ -118,7 +118,7 @@ public class CinematicPage extends TPage {
                             setOpeningData();
                         } else if (gameSubStatus == 25) {
                             GameThread.stopBGM(2);
-                            NewTower.switchPage(root, true);
+                            NewTower.switchPage(root);
                         }
                         return;
                     }
@@ -320,11 +320,11 @@ public class CinematicPage extends TPage {
         if (mode == RunMode.OPENING) {
             GameThread.playSound(14);
             GameThread.stopBGM(2);
-            NewTower.switchPage(root, true);
+            NewTower.switchPage(root);
         } else if (mode == RunMode.ENDING) {
             GameThread.playSound(14);
             GameThread.stopBGM(2);
-            NewTower.switchPage(parent, true);
+            NewTower.switchPage(parent);
         }
     }
 
