@@ -110,8 +110,8 @@ public class FileSelectPage extends TPage {
                     GameRenderer.setFontSize(22);
                     Config.SaveFile sav = fileList.get(awd);
                     GameRenderer.drawStringDoubleGuideM(sav.toString(), 60+sdis, y + 5, 18, rect);
-                    GameRenderer.drawStringDoubleGuideM((sav.totalPlaytime/3600) + ":" + duo(sav.totalPlaytime/60) +
-                            ":" + duo(sav.totalPlaytime),60+sdis,y + 35,18, rect);
+                    GameRenderer.drawStringDoubleGuideM((sav.totalPlaytime/3600) + ":" + duo((sav.totalPlaytime/60) % 60)
+                            + ":" + duo(sav.totalPlaytime % 60),60+sdis,y + 35,18, rect);
                     for (int i = sav.stageProg.length - 1; i >= -1; i--)
                         if (i == -1 || sav.stageProg[i][0] != -1) {
                             String s = i == -1 ? "Tutorial" : String.format(GameThread.getString(R.string.start_stind), i+1);
