@@ -189,7 +189,7 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
         level++;
 
         if (level == 2 && (getTier() == 1 || getTier() == 3))
-            Config.s.awardValues[(getTier() == 1 ? DataAward.AWARD_Guardian_Of_War : DataAward.AWARD_Thrill_Of_The_Hammer) + getRole()] = true;
+            Config.s.awardValues[(getTier() == 1 ? DataAward.AWARD_Thrill_Of_The_Hammer : DataAward.AWARD_Guardian_Of_War) + getRole()] = true;
         restatTowerUnit(false);
         st.addEffectUnit(14, posX, posY);
         GameThread.playSound(13);
