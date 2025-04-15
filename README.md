@@ -4,5 +4,4 @@
 
 ## Other TODO
 - PC Port
-- Move all display strings to strings.xml
 - Bitmask-ify effect type, to allow an unit to have multiple effects (for modding)

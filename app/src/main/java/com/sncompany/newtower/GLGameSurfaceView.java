@@ -44,7 +44,7 @@ public class GLGameSurfaceView extends GLSurfaceView {
         int x = (int) motionEvent.getX();
         int y = (int) motionEvent.getY();
         int action = motionEvent.getAction();
-        if (MotionEvent.ACTION_DOWN >= 0 && action <= MotionEvent.ACTION_MOVE) {
+        if (action >= MotionEvent.ACTION_DOWN && action <= MotionEvent.ACTION_MOVE) {
             touchManager.addLastInputPoint(1, 0, CGPoint.make((int) ((x / GameRenderer.DRAW_SCALE_SIZE) - GameRenderer.DRAW_SCALE_X_MOVE), (int) ((y / GameRenderer.DRAW_SCALE_SIZE) - GameRenderer.DRAW_SCALE_Y_MOVE)), 1);
             if (action == MotionEvent.ACTION_DOWN)
                 touchManager.processTouchEvent(MotionEvent.ACTION_DOWN);
