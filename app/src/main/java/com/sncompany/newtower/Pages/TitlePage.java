@@ -247,7 +247,7 @@ public class TitlePage extends TPage {
 
             GameRenderer.setFontSize(36);
             GameRenderer.setFontColor(-1);
-            GameRenderer.drawStringM("Censor", 425, 360, 18);
+            GameRenderer.drawStringM(GameThread.getString(R.string.censor), 425, 360, 18);
             uiEtcImage[Config.uncensor ? etc_offoff : etc_onon].drawAtPointOption(583, 357, 18);
 
             uiEtcImage[etc_scrollbutton].drawAtPointOption(soundBars[0].BarLastPosition, 159, 9);

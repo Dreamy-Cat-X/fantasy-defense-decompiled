@@ -9,6 +9,7 @@ import com.sncompany.newtower.DataClasses.DataUpgradeUnit;
 import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.Pages.stage.StagePage;
 import com.sncompany.newtower.Pages.stage.StageBase;
+import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 
 import java.util.ArrayList;
@@ -55,11 +56,11 @@ public class TowerUnit extends StageEntity implements Comparable<TowerUnit> {
     public ArrayList<EnemyUnit> lockedEnemies = new ArrayList<>(LOCK_MAX_COUNT);
     protected final DataStage st;
 
-    public static final String[] effectTypeString = {"Stun", "Splash", "DoT", "Slow", "Pierce", "Slow Mud", "Dot Fire", "Multi Shot", "Double Shot", "None"};
+    public static final int[] effectTypeString = {R.string.eff_stun, R.string.eff_splash, R.string.eff_dot, R.string.eff_slow, R.string.eff_pierce, R.string.eff_slow_mud, R.string.eff_dot_fire, R.string.eff_multi_shot, R.string.eff_double_shot, R.string.eff_none};
     public static String getEffectTypeString(int i) {
         if (i == -1 || i > 9)
-            return effectTypeString[9];
-        return effectTypeString[i];
+            return GameThread.getString(effectTypeString[9]);
+        return GameThread.getString(effectTypeString[i]);
     }
 
     public static int getTowerBoxImageOrder(int type) {

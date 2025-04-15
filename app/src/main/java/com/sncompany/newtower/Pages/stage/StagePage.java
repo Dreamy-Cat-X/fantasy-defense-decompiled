@@ -1570,7 +1570,7 @@ public class StagePage extends StageBase {
         GameRenderer.setFontColor(-8128317);
         GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getHitPower()), 420, 360, 20);
         if (st.selectedUnit.towerCoolTimeMax == 1) {
-            GameRenderer.drawStringM("MAX", 420, 388, 20);
+            GameRenderer.drawStringM(GameThread.getString(R.string.max), 420, 388, 20);
         } else
             GameRenderer.drawStringM(String.valueOf(st.selectedUnit.getAttackSpeed()), 420, 388, 20);
 
@@ -1744,7 +1744,7 @@ public class StagePage extends StageBase {
                         GameRenderer.drawStringDoubleM(GameThread.getString(R.string.cnf_upgr), GameRenderer.CX, 270, 17);
                         GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getHitPower()), 540, 162, 20);
                         if (st.selectedUnit.towerCoolTimeMax == 1) {
-                            GameRenderer.drawStringDoubleM("MAX", 540, 189, 20);
+                            GameRenderer.drawStringDoubleM(GameThread.getString(R.string.max), 540, 189, 20);
                         } else
                             GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getAttackSpeed()), 540, 189, 20);
                         GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.attackRange), 540, 217, 20);
@@ -1753,7 +1753,7 @@ public class StagePage extends StageBase {
                         TowerUnit nextFrm = new TowerUnit(st.selectedUnit, upgradeType, 0);
                         GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.getHitPower()), 625, 162, 20);
                         if (nextFrm.towerCoolTimeMax == 1) {
-                            GameRenderer.drawStringDoubleM("MAX", 625, 189, 20);
+                            GameRenderer.drawStringDoubleM(GameThread.getString(R.string.max), 625, 189, 20);
                         } else
                             GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.getAttackSpeed()), 625, 189, 20);
                         GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.attackRange), 625, 217, 20);
@@ -1768,7 +1768,7 @@ public class StagePage extends StageBase {
                         GameRenderer.drawStringDoubleM(GameThread.getString(R.string.cnf_lvlup), GameRenderer.CX, 270, 17);
                         GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getHitPower()), 430, 162, 20);
                         if (st.selectedUnit.towerCoolTimeMax == 1) {
-                            GameRenderer.drawStringDoubleM("MAX", 430, 189, 20);
+                            GameRenderer.drawStringDoubleM(GameThread.getString(R.string.max), 430, 189, 20);
                         } else
                             GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.getAttackSpeed()), 430, 189, 20);
                         GameRenderer.drawStringDoubleM(String.valueOf(st.selectedUnit.attackRange), 430, 217, 20);
@@ -1778,7 +1778,7 @@ public class StagePage extends StageBase {
                         TowerUnit nextFrm = st.selectedUnit instanceof HeroUnit ? new HeroUnit(st.selectedUnit, tp, plv) : new TowerUnit(st.selectedUnit, tp, plv);
                         GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.getHitPower()), 526, 162, 20);
                         if (nextFrm.towerCoolTimeMax == 1) {
-                            GameRenderer.drawStringDoubleM("MAX", 526, 189, 20);
+                            GameRenderer.drawStringDoubleM(GameThread.getString(R.string.max), 526, 189, 20);
                         } else
                             GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.getAttackSpeed()), 526, 189, 20);
                         GameRenderer.drawStringDoubleM(String.valueOf(nextFrm.attackRange), 526, 217, 20);

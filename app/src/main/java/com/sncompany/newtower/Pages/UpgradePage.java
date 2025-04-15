@@ -156,27 +156,24 @@ public class UpgradePage extends TPage {
             uiUpunitImage[upgradeUnitSelectPos].drawAtPointOption(97, 387, 18);
         GameRenderer.setFontSize(20);
         GameRenderer.setFontColor(-2560);
-        if (hero)
-            GameRenderer.drawStringM(DataUpgradeHero.upgradeHeroName[upgradeUnitSelectPos % 6], 183, 384, 18);
-        else
-            GameRenderer.drawStringM(DataUpgradeUnit.upgradeUnitName[upgradeUnitSelectPos], 183, 384, 18);
+        GameRenderer.drawStringM(GameThread.getString(hero ? DataUpgradeHero.upgradeHeroName[upgradeUnitSelectPos % 6] : DataUpgradeUnit.upgradeUnitName[upgradeUnitSelectPos]), 183, 384, 18);
         GameRenderer.setFontSize(18);
         GameRenderer.setFontColor(-1);
         int lvE;
         int nexE;
 
         if (hero) {
-            GameRenderer.drawStringM(String.format(DataUpgradeHero.upgradeHeroDescription[sPos], DataUpgradeHero.upgradeHeroData[sPos][0]), 183, 410, 18);
+            GameRenderer.drawStringM(String.format(GameThread.getString(DataUpgradeHero.upgradeHeroDescription[sPos]), DataUpgradeHero.upgradeHeroData[sPos][0]), 183, 410, 18);
             lvE = DataUpgradeHero.upgradeHeroData[sPos][0] * sUpgrades[upgradeUnitSelectPos / 6][sPos];
             nexE = lvE + DataUpgradeHero.upgradeHeroData[sPos][0];
         } else {
-            GameRenderer.drawStringM(String.format(DataUpgradeUnit.upgradeUnitDescription[sPos], DataUpgradeUnit.upgradeUnitData[sPos][0]), 183, 410, 18);
+            GameRenderer.drawStringM(String.format(GameThread.getString(DataUpgradeUnit.upgradeUnitDescription[sPos]), DataUpgradeUnit.upgradeUnitData[sPos][0]), 183, 410, 18);
             lvE = DataUpgradeUnit.upgradeUnitData[sPos][0] * sUpgrades[upgradeUnitSelectPos / 6][sPos];
             nexE = lvE + DataUpgradeUnit.upgradeUnitData[sPos][0];
         }
         GameRenderer.setFontSize(14);
         if (sUpgrades[upgradeUnitSelectPos / 6][sPos] >= getUpgradeMax())
-            GameRenderer.drawStringM(String.format("( MAX : %d )", lvE), 183, 435, 18);
+            GameRenderer.drawStringM(String.format("( " + GameThread.getString(R.string.max_lv) + " : %d )", lvE), 183, 435, 18);
         else
             GameRenderer.drawStringM(String.format("( %d > %d )", lvE, nexE), 183, 435, 18);
         if (init)
@@ -202,7 +199,7 @@ public class UpgradePage extends TPage {
 
     public void drawUpgradeDescription(float x, float y, int unI, int upgI) {
         GameRenderer.setFontSize(17);
-        String name = hero ? DataUpgradeHero.upgradeHeroName[upgI] : DataUpgradeUnit.upgradeUnitName[(unI * 6) + upgI];
+        String name = GameThread.getString(hero ? DataUpgradeHero.upgradeHeroName[upgI] : DataUpgradeUnit.upgradeUnitName[(unI * 6) + upgI]);
         GameRenderer.drawFont.getTextBounds(name, 0, name.length(), Texture2D.bounds_);
         int bound = Texture2D.bounds_.right - Texture2D.bounds_.left;
         int upgradeUnitHeroism = getUpgradeCost(unI, upgI);
@@ -215,7 +212,7 @@ public class UpgradePage extends TPage {
         }
         GameRenderer.setFontSize(14);
         int eff = hero ? DataUpgradeHero.upgradeHeroData[upgI][0] : DataUpgradeUnit.upgradeUnitData[(unI * 6) + upgI][0];
-        String desc = hero ? DataUpgradeHero.upgradeHeroDescription[upgI] : DataUpgradeUnit.upgradeUnitDescription[(unI * 6) + upgI];
+        String desc = GameThread.getString(hero ? DataUpgradeHero.upgradeHeroDescription[upgI] : DataUpgradeUnit.upgradeUnitDescription[(unI * 6) + upgI]);
         String format2 = String.format(desc, eff);
         GameRenderer.drawFont.getTextBounds(format2, 0, format2.length(), Texture2D.bounds_);
         int rbound = Math.max((Texture2D.bounds_.right - Texture2D.bounds_.left) + 28, bound + bound2 + 65);

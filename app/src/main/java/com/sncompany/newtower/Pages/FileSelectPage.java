@@ -114,7 +114,7 @@ public class FileSelectPage extends TPage {
                             + ":" + duo(sav.totalPlaytime % 60),60+sdis,y + 35,18, rect);
                     for (int i = sav.stageProg.length - 1; i >= -1; i--)
                         if (i == -1 || sav.stageProg[i][0] != -1) {
-                            String s = i == -1 ? "Tutorial" : String.format(GameThread.getString(R.string.start_stind), i+1);
+                            String s = i == -1 ? GameThread.getString(R.string.tutorial) : String.format(GameThread.getString(R.string.start_stind), i+1);
                             GameRenderer.drawStringDoubleGuideM(s, 175+sdis, y + 5, 18, rect);
                             break;
                         }
@@ -124,7 +124,7 @@ public class FileSelectPage extends TPage {
                     GameRenderer.drawStringDoubleGuideM(":" + sav.getAwardCount() + "/" + (sav.awardValues.length-1), 320+sdis, y+21, 18, rect);
                 } else {
                     GameRenderer.setFontSize(44);
-                    GameRenderer.drawStringDoubleGuideM("New File", 155+sdis, y + 5, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(GameThread.getString(R.string.newfile), 155+sdis, y + 5, 18, rect);
                 }
             }
 

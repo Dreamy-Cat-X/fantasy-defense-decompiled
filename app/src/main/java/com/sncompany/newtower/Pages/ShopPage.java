@@ -161,7 +161,7 @@ public class ShopPage extends TPage {
             uiPopupImage[popup_background].drawAtPointOption(152, 144, 18);
             GameRenderer.setFontSize(32);
             GameRenderer.setFontDoubleColor(-1, -16777216);
-            String fail = buyFail == 1 ? "Insufficient Hero Points." : buyFail == 2 ? "Inventory is full!" : "Can't buy any more of these";
+            String fail = GameThread.getString(buyFail == 1 ? R.string.shop_no_point : buyFail == 2 ? R.string.shop_inv_full : R.string.shop_lim_reached);
             GameRenderer.drawStringDoubleM(fail, GameRenderer.CX, 180, 17);
             uiPopupImage[cTLS == 53 ? popup_okon2 : popup_okoff2].drawAtPointOption(213, 259, 18);
         }

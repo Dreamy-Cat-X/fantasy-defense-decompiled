@@ -242,39 +242,30 @@ public class TutorialPage extends StageBase {
                 Texture2D.setColors(1);
                 tutorialImage[15].drawAtPointOption(tutorialBoxLinePos[16][4], tutorialBoxLinePos[16][5], 18);
                 break;
-            case 19:
+            default:
                 uiPopupImage[7].drawAtPointOption(201, 101, 18);
                 GameRenderer.setFontSize(20);
                 GameRenderer.setFontDoubleColor(-1, -16777216);
-                GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 156, 17);
-                GameRenderer.drawStringDoubleM("You have obtained 300 Hero Points.", GameRenderer.CX, 206, 17);
-                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209, 289, 18);
-                break;
-            case 20:
-                uiPopupImage[7].drawAtPointOption(201, 101, 18);
-                GameRenderer.setFontSize(20);
-                GameRenderer.setFontDoubleColor(-1, -16777216);
-                GameRenderer.drawStringDoubleM("Use Hero Points to buy items ", GameRenderer.CX, 156, 17);
-                GameRenderer.drawStringDoubleM("or upgrade your units.", GameRenderer.CX, 206, 17);
-                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209, 289, 18);
-                break;
-            case 21:
-                uiPopupImage[7].drawAtPointOption(201, 101, 18);
-                GameRenderer.setFontSize(20);
-                GameRenderer.setFontDoubleColor(-1, -16777216);
-                GameRenderer.drawStringDoubleM("Use Help if you want ", GameRenderer.CX, 122, 17);
-                GameRenderer.drawStringDoubleM("to replay the Tutorial.", GameRenderer.CX, 162, 17);
-                GameRenderer.drawStringDoubleM("(No Hero Points will be rewarded", GameRenderer.CX, 202, 17);
-                GameRenderer.drawStringDoubleM("when replaying the Tutorial.)", GameRenderer.CX, 242, 17);
-                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209, 289, 18);
-                break;
-            case 22:
-                uiPopupImage[7].drawAtPointOption(201, 101, 18);
-                GameRenderer.setFontSize(20);
-                GameRenderer.setFontDoubleColor(-1, -16777216);
-                GameRenderer.drawStringDoubleM("You have cleared the Tutorial stage.", GameRenderer.CX, 182, 17);
-                uiPopupImage[cTLS == 0 ? 13 : 12].drawAtPointOption(209, 289, 18);
-                break;
+                switch (tutorStep) {
+                    case 19:
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.tutorial_clear), GameRenderer.CX, 156, 17);
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.unlk_points0).replace("_","300"), GameRenderer.CX, 206, 17);
+                        break;
+                    case 20:
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.tutorial_clear00), GameRenderer.CX, 156, 17);
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.tutorial_clear01), GameRenderer.CX, 206, 17);
+                        break;
+                    case 21:
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.tutorial_clear10), GameRenderer.CX, 122, 17);
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.tutorial_clear11), GameRenderer.CX, 162, 17);
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.tutorial_clear12), GameRenderer.CX, 202, 17);
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.tutorial_clear13), GameRenderer.CX, 242, 17);
+                        break;
+                    case 22:
+                        GameRenderer.drawStringDoubleM(GameThread.getString(R.string.tutorial_clear), GameRenderer.CX, 182, 17);
+                        break;
+                }
+                uiPopupImage[cTLS == 0 ? popup_okon2 : popup_okoff2].drawAtPointOption(209, 289, 18);
         }
         TouchManager.swapTouchMap();
     }

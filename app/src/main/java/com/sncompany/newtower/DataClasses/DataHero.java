@@ -1,8 +1,6 @@
 package com.sncompany.newtower.DataClasses;
 
 public class DataHero {
-    public static final String[] heroName = {"Champion", "Bow Master", "Archmage"};
-
     public static final int TARGET = 0;
     public static final int SP_MANA = 1;
     public static final int SP_ATK_COUNT = 2;

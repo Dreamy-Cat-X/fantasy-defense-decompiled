@@ -225,7 +225,7 @@ public class Config {
             int t = 0;
             for (int i = 0; i < awardValues.length; i++)
                 if (awardValues[i])
-                    t += DataAward.awardScoreValue[i];
+                    t += DataAward.data[i][2];
             return t;
         }
 

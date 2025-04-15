@@ -115,20 +115,20 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     uiRecordImage[rec_scoreback].drawAtPointOptionGuide(70f, CorrectedBLA + 100, 18, rect);
                     GameRenderer.setFontDoubleColor(-1, -16107151);
                     GameRenderer.setFontSize(27);
-                    GameRenderer.drawStringDoubleGuideM(String.format("Theme %d. %s", bit + 1, GameThread.chapterName[bit]), 79, CorrectedBLA + 108, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(String.format(GameThread.getString(R.string.theme), bit + 1, GameThread.chapterName[bit]), 79, CorrectedBLA + 108, 18, rect);
                     GameRenderer.setFontSize(16);
                     GameRenderer.setFontDoubleColor(-84043, -8835532);
                     float y = CorrectedBLA + 142;
-                    GameRenderer.drawStringDoubleGuideM("Normal", 245, y, 17, rect);
+                    GameRenderer.drawStringDoubleGuideM(GameThread.getString(R.string.stmode_normal), 245, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-3223, -10065378);
-                    GameRenderer.drawStringDoubleGuideM("Infinite", 435, y, 17, rect);
+                    GameRenderer.drawStringDoubleGuideM(GameThread.getString(R.string.stmode_infinite), 435, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-10030377, -16031651);
-                    GameRenderer.drawStringDoubleGuideM("Destroy the Moon", 625, y, 17, rect);
+                    GameRenderer.drawStringDoubleGuideM(GameThread.getString(R.string.stmode_destroy_moon), 625, y, 17, rect);
                     GameRenderer.setFontDoubleColor(-1, -11106408);
                     for (int j = 0; j < 10; j++) {
                         int stInd = (bit * 10) + j;
                         float f5 = CorrectedBLA + 162 + (j * 20);
-                        GameRenderer.drawStringDoubleGuideM(String.format("Stage %d", stInd + 1), 80, f5, 18, rect);
+                        GameRenderer.drawStringDoubleGuideM(String.format(GameThread.getString(R.string.start_stind), stInd + 1), 80, f5, 18, rect);
                         for (int k = 0; k < 3; k++)
                             GameRenderer.drawStringDoubleGuideM(String.valueOf(Math.max(0, Config.s.highScores[stInd][k])), (k * 190) + 245, f5, 17, rect);
                     }
@@ -154,9 +154,9 @@ public class RecordPage extends TPage { //Parent will always be a MainPage
                     uiAwardImage[awd].drawAtPointOptionGuide(74, y, 18, rect);
                     GameRenderer.setFontDoubleColor(-1, -11106408);
                     GameRenderer.setFontSize(22);
-                    GameRenderer.drawStringDoubleGuideM(DataAward.awardTitle[awd], 149, y + 5, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(GameThread.getString(DataAward.data[awd][0]), 149, y + 5, 18, rect);
                     GameRenderer.setFontSize(12);
-                    GameRenderer.drawStringDoubleGuideM(DataAward.awardDescription[awd], 150, y + 32, 18, rect);
+                    GameRenderer.drawStringDoubleGuideM(GameThread.getString(DataAward.data[awd][1]), 150, y + 32, 18, rect);
 
                     if (!Config.s.awardValues[awd])
                         uiRecordImage[rec_lock].drawAtPointOptionGuide(669, y + 5, 18, rect);

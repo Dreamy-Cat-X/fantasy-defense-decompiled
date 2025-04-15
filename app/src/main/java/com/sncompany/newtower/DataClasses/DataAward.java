@@ -3,6 +3,7 @@ package com.sncompany.newtower.DataClasses;
 import static com.sncompany.newtower.DataClasses.DataStage.heroAvail;
 
 import com.sncompany.newtower.Config;
+import com.sncompany.newtower.R;
 
 /* loaded from: D:\decomp\classes.dex */
 public class DataAward {
@@ -70,9 +71,70 @@ public class DataAward {
     public static final int AWARD_Defense_G_O_D = 61;
     public static final int AWARD_TOTAL_COUNT = 62;
 
-    public static final int[] awardScoreValue = {10, 10, 10, 10, 10, 15, 20, 20, 10, 10, 10, 5, 15, 20, 20, 20, 20, 20, 10, 15, 10, 10, 15, 10, 10, 5, 10, 10, 10, 10, 10, 15, 20, 5, 5, 10, 10, 15, 20, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 10, 15, 15, 20, 20};
-    public static final String[] awardTitle = {"Purifying the Forest", "Purifying the Swamp", "Purifying the Desert", "Purifying the Volcano", "Purifying the Demon World", "Guardian of Crasto", "The Almighty", "Gate Destroyer", "Champion", "Bow Master", "Archmage","Upgrader", "Perfectly Upgraded", "Fighter", "Robin Hood", "Sage", "Legendary Hero", "High Spirit", "Brave", "Brawler", "Fully Armed", "Rich", "Filthy Rich", "Whew, that was close~", "Awakened Hero", "Surplus Soldiers?", "Pool Party", "March of Soldiers", "Celebration of Snipers", "Rally of Wizards", "10 Titles", "20 Titles", "30 Titles", "100 Kill", "500 Kill", "1,000 Kill", "2,000 Kill", "5,000 Kill", "10,000 Kill", "Battlefield Guardian", "Battlefield Sniper", "Battlefield Light", "Lurid Hammer", "Glance of Terror", "Ice Queen", "Battlefield Guardian", "Deathly Shadow", "Chaos Witch", "Banquet of Swords", "Deathly Arrow Shower", "Frozen Heart", "Crossroads of Destiny", "Unyielding", "Perfectionist", "Amateur Defender", "High-class Defender", "Professional Defender", "World-class Defender", "Defense Master", "Defense Hero", "Defense King", "Defense God"};
-    public static final String[] awardDescription = {"Theme 1 - All stages cleared.", "Theme 2 - All stages cleared.", "Theme 3 - All stages cleared.", "Theme 4 - All stages cleared.", "Theme 5 - All stages cleared.", "All stages cleared.", "All stages perfect-cleared.", "Destroy the Moon - All stages cleared.", "Hero [Champion] acquired.", "Hero [Bow Master] acquired.", "Hero [Archmage] acquired.", "Upgraded 3 or more times.", "1 upgrade menu has been perfectly upgraded.", "All the upgrades for the Warrior unit have been perfectly upgraded.", "All the upgrades for the Archer unit have been perfectly upgraded.", "All the upgrades for the Wizard unit have been perfectly upgraded.", "1 or more Hero units have been perfectly upgraded.", "All the upgrades have been perfectly upgraded.", "You have 1,000 or more Hero Points", "You have 1,0000 or more Hero Points", "All of your Heroes are armed with items.", "You have 5,000 or more gold.", "You have 10,000 or more gold.", "You just barely cleared a stage.", "You upgraded your Heroes to Level 5.", "One or more of your units were idle until a stage was cleared.", "You used all types of a unit in one stage. (The 12 types of Heroes are not included.)", "You cleared a stage by only using Warrior units. The (4 types of Heroes not included.)", "You cleared a stage by only using Archer units. The (4 types of Heroes not included.)", "You cleared a stage by only using Wizard units. The (4 types of Heroes not included.)", "You acquired 10 or more titles.", "You acquired 20 or more titles.", "You acquired 30 or more titles.", "You defeated 100 enemies.", "You defeated 500 enemies.", "You defeated 1,000 enemies.", "You defeated 2,000 enemies.", "You defeated 5,000 enemies.", "You defeated 10,000 enemies.", "Your Warlord reached the maximum Level.", "Your Sky Arrows reached the maximum Level.", "Your Blasters reached the maximum Level.", "Your Brandishers reached the maximum Level.", "Your Holy Eyes reached the maximum Level.", "Your Ice Mages reached the maximum Level.", "Your Champion reached the maximum Level.", "Your Bow Master reached the maximum Level.", "Your Archmage reached the maximum Level.", "You eliminated 5 or more enemies by using Champion's special skill.", "You eliminated 5 or more enemies by using Bow Master's special skill.", "You eliminated 5 or more enemies by using Archmage's special skill.", "You entered a map with crossroads for the first time.", "You challenged one stage 3 or more times.", "You perfect-cleared Stages 1 to 15.", "Your accumulated playtime has reached 30 minutes.", "Your accumulated playtime has reached 2 hours.", "Your accumulated playtime has reached 5 hours.", "Your accumulated playtime has reached 10 hours.", "Your accumulated playtime has reached 20 hours.", "Your accumulated playtime has reached 50 hours.", "Your accumulated playtime has reached 100 hours.", "Your accumulated playtime has reached 200 hours."};
+    public static final int[][] data = {
+            {R.string.award0_name, R.string.award0_desc, 10},
+            {R.string.award1_name, R.string.award1_desc, 10},
+            {R.string.award2_name, R.string.award2_desc, 10},
+            {R.string.award3_name, R.string.award3_desc, 10},
+            {R.string.award4_name, R.string.award4_desc, 10},
+            {R.string.award5_name, R.string.award5_desc, 15},
+            {R.string.award6_name, R.string.award6_desc, 20},
+            {R.string.award7_name, R.string.award7_desc, 20},
+            {R.string.award8_name, R.string.award8_desc, 10},
+            {R.string.award9_name, R.string.award9_desc, 10},
+            {R.string.award10_name, R.string.award10_desc, 10},
+            {R.string.award11_name, R.string.award11_desc, 5},
+            {R.string.award12_name, R.string.award12_desc, 15},
+            {R.string.award13_name, R.string.award13_desc, 20},
+            {R.string.award14_name, R.string.award14_desc, 20},
+            {R.string.award15_name, R.string.award15_desc, 20},
+            {R.string.award16_name, R.string.award16_desc, 20},
+            {R.string.award17_name, R.string.award17_desc, 20},
+            {R.string.award18_name, R.string.award18_desc, 10},
+            {R.string.award19_name, R.string.award19_desc, 15},
+            {R.string.award20_name, R.string.award20_desc, 10},
+            {R.string.award21_name, R.string.award21_desc, 10},
+            {R.string.award22_name, R.string.award22_desc, 15},
+            {R.string.award23_name, R.string.award23_desc, 10},
+            {R.string.award24_name, R.string.award24_desc, 10},
+            {R.string.award25_name, R.string.award25_desc, 5},
+            {R.string.award26_name, R.string.award26_desc, 10},
+            {R.string.award27_name, R.string.award27_desc, 10},
+            {R.string.award28_name, R.string.award28_desc, 10},
+            {R.string.award29_name, R.string.award29_desc, 10},
+            {R.string.award30_name, R.string.award30_desc, 10},
+            {R.string.award31_name, R.string.award31_desc, 15},
+            {R.string.award32_name, R.string.award32_desc, 20},
+            {R.string.award33_name, R.string.award33_desc, 5},
+            {R.string.award34_name, R.string.award34_desc, 5},
+            {R.string.award35_name, R.string.award35_desc, 10},
+            {R.string.award36_name, R.string.award36_desc, 10},
+            {R.string.award37_name, R.string.award37_desc, 15},
+            {R.string.award38_name, R.string.award38_desc, 20},
+            {R.string.award39_name, R.string.award39_desc, 5},
+            {R.string.award40_name, R.string.award40_desc, 5},
+            {R.string.award41_name, R.string.award41_desc, 5},
+            {R.string.award42_name, R.string.award42_desc, 5},
+            {R.string.award43_name, R.string.award43_desc, 5},
+            {R.string.award44_name, R.string.award44_desc, 5},
+            {R.string.award45_name, R.string.award45_desc, 5},
+            {R.string.award46_name, R.string.award46_desc, 5},
+            {R.string.award47_name, R.string.award47_desc, 5},
+            {R.string.award48_name, R.string.award48_desc, 10},
+            {R.string.award49_name, R.string.award49_desc, 10},
+            {R.string.award50_name, R.string.award50_desc, 10},
+            {R.string.award51_name, R.string.award51_desc, 10},
+            {R.string.award52_name, R.string.award52_desc, 10},
+            {R.string.award53_name, R.string.award53_desc, 10},
+            {R.string.award54_name, R.string.award54_desc, 5},
+            {R.string.award55_name, R.string.award55_desc, 5},
+            {R.string.award56_name, R.string.award56_desc, 10},
+            {R.string.award57_name, R.string.award57_desc, 10},
+            {R.string.award58_name, R.string.award58_desc, 15},
+            {R.string.award59_name, R.string.award59_desc, 15},
+            {R.string.award60_name, R.string.award60_desc, 20},
+            {R.string.award61_name, R.string.award61_desc, 20},
+    };
 
     public static void check_upgrade() {
         boolean allMax = true;

@@ -9,6 +9,7 @@ import com.sncompany.newtower.DataClasses.DataAward;
 import com.sncompany.newtower.DataClasses.DataUpgradeItem;
 import com.sncompany.newtower.GameRenderer;
 import com.sncompany.newtower.GameThread;
+import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 import com.sncompany.newtower.TouchManager;
 
@@ -116,7 +117,7 @@ public class EquipPage extends TPage {
                     GameRenderer.setFontColor(-65536);
                 } else
                     GameRenderer.setFontColor(-8519745);
-                GameRenderer.drawStringDoubleM(heroes[j].towerCoolTimeMax <= 1 ? "MAX" : String.valueOf(heroes[j].getAttackSpeed()), 167 + pDis, 284, 20);
+                GameRenderer.drawStringDoubleM(heroes[j].towerCoolTimeMax <= 1 ? GameThread.getString(R.string.max) : String.valueOf(heroes[j].getAttackSpeed()), 167 + pDis, 284, 20);
 
                 if (avail && heq[0] == DataUpgradeItem.EQ_AMLT) {
                     GameRenderer.setFontColor(-65536);

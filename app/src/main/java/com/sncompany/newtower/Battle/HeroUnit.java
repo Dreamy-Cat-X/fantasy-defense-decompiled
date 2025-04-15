@@ -13,6 +13,7 @@ import com.sncompany.newtower.GameThread;
 import com.sncompany.newtower.NewTower;
 import com.sncompany.newtower.Pages.stage.StagePage;
 import com.sncompany.newtower.Pages.stage.StageBase;
+import com.sncompany.newtower.R;
 import com.sncompany.newtower.Texture2D;
 
 public class HeroUnit extends TowerUnit {
@@ -74,7 +75,7 @@ public class HeroUnit extends TowerUnit {
     public final int[][] specialDataValue = new int[20][4];
 
     public static String getUnlock(int h) {
-        return "Clear Stage " + (h == 0 ? 1 : h == 1 ? 10 : 25);
+        return String.format(GameThread.getString(R.string.hero_unlk_stage), h == 0 ? 1 : h == 1 ? 10 : 25);
     }
 
     public HeroUnit(DataStage s, int tType, int bX, int bY) {
@@ -225,7 +226,6 @@ public class HeroUnit extends TowerUnit {
     }
 
     //skip will be handled by setting specialAttackFrameCount to the maximum
-
     /**
      * Updates the time of a special attack
      * @return true if the special ended or it's not in use
